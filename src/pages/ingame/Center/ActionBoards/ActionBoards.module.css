@@ -1,0 +1,7 @@
+.container {
+  flex: 4;
+  width: 100%;
+}
+.header {
+  height: 20%;
+}

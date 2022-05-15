@@ -1,0 +1,19 @@
+.container {
+  /* border-right: 3px dashed navy; */
+  height: 100%;
+  width: 33%;
+}
+.textHeader {
+  text-align: center;
+}
+
+.textCounter {
+  text-align: center;
+  font-size: 40px;
+  width: 100%;
+}
+.deckImg {
+  height: auto;
+  width: 66%;
+  align-self: center;
+}

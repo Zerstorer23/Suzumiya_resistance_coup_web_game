@@ -1,0 +1,12 @@
+.container {
+  width: 66%;
+}
+.itemContainer {
+  width: 100%;
+}
+.itemImg {
+  width: 15%;
+}
+.itemDesc {
+  text-align: center;
+}

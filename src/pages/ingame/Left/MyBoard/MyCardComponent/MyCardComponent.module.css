@@ -1,0 +1,12 @@
+.container {
+  height: 30%;
+}
+.characterIcon {
+  width: 20%;
+  height: auto;
+}
+.descPanel {
+  width: 80%;
+  border-left: 2px dashed navy;
+  padding-left: 10px;
+}

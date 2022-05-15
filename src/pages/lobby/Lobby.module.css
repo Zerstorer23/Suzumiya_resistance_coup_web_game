@@ -1,0 +1,6 @@
+.container {
+  display: flex;
+  height: 100vh;
+  background-color: rgb(159, 180, 198);
+  padding: 10px;
+}
