@@ -1,3 +1,6 @@
+export const PAGE_INGAME = "game";
+export const PAGE_LOBBY = "lobby";
+
 export enum BoardState {
   MyTurn,
   ReactForeignAid,

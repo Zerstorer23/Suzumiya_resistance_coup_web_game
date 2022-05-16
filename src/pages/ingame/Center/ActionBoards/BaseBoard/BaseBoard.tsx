@@ -1,17 +1,28 @@
+import BaseActionButton from "pages/ingame/Center/ActionBoards/BaseBoard/BaseActionButton";
+import {
+  ActionType,
+  BoardState,
+  getActionsFromState,
+} from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
 
 export default function BaseBoard(): JSX.Element {
   //TODO change by board state
+  const actions = getActionsFromState(BoardState.MyTurn);
+
   return (
     <div className={classes.container}>
-      <div className={`${classes.cell} ${classes.cell1}`}>1</div>
-      <div className={`${classes.cell} ${classes.cell2}`}>2</div>
-      <div className={`${classes.cell} ${classes.cell3}`}>3</div>
-      <div className={`${classes.cell} ${classes.cell4}`}>4</div>
-      <div className={`${classes.cell} ${classes.cell5}`}>5</div>
-      <div className={`${classes.cell} ${classes.cell6}`}>6</div>
-      <div className={`${classes.cell} ${classes.cell7}`}>7</div>
-      <div className={`${classes.cell} ${classes.cell8}`}>8</div>
+      {actions.map((action: ActionType, index: number) => {
+        const baseIndex = index + 1;
+        const cssName = classes[`cell${baseIndex}`];
+        return (
+          <BaseActionButton
+            key={index}
+            className={`${cssName}`}
+            actionType={action}
+          />
+        );
+      })}
     </div>
   );
 }

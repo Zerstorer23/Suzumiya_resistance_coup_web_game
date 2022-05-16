@@ -17,6 +17,15 @@
   background-color: antiquewhite;
   height: 100%;
   width: 100%;
+  justify-self: center;
+  align-self: center;
+  text-align: center;
+}
+.cell:hover {
+  background-color: bisque;
+}
+.cell:focus {
+  background-color: aquamarine;
 }
 
 .cell1 {

@@ -2,3 +2,7 @@
   flex: 6;
   width: 100%;
 }
+
+.topContainer {
+  border-bottom: 3px dashed navy;
+}

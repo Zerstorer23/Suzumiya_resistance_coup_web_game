@@ -10,3 +10,9 @@
   border-left: 2px dashed navy;
   padding-left: 10px;
 }
+.deadPanel {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background-color: gray;
+}

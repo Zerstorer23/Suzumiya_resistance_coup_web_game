@@ -1,0 +1,29 @@
+.container {
+}
+.profileContainer {
+  width: 25%;
+}
+.imgLastUsed {
+  width: 80%;
+  align-self: center;
+  justify-self: center;
+}
+.textLastClaim {
+  font-size: 12px;
+  text-align: center;
+  margin-left: -15%;
+}
+.playerName {
+  text-align: center;
+  margin-left: -15%;
+}
+
+.actionContainer {
+  width: 70%;
+}
+.textMainAction {
+  text-align: center;
+}
+.textSideAction {
+  text-align: center;
+}
