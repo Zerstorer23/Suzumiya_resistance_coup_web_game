@@ -3,12 +3,8 @@ import { DB_PLAYER, joinLocalPlayer } from "system/Database/PlayerDatabase";
 import { Game, GameAction, Player, Room } from "system/GameStates/GameTypes";
 import firebase from "firebase/compat/app";
 import { randomInt } from "system/GameConstants";
-import {
-  DbRef,
-  GameListenerMap,
-  PlayerListenerMap,
-  voidReturn,
-} from "system/types/CommonTypes";
+import { DbRef, ListenerTypes } from "system/types/CommonTypes";
+import { RoomStateType } from "system/context/RoomContextProvider";
 
 export const DB_GAME = "game";
 
@@ -78,15 +74,12 @@ export async function loadRoom(onLoaded: (data: Room | null) => void) {
     onLoaded(room);
   }
 }
-export type LobbyReferences = {
-  room: Room;
-  listenerMap: PlayerListenerMap;
-};
-export async function loadAndListenLobby(): Promise<LobbyReferences | null> {
+
+export async function loadAndListenLobby(): Promise<RoomStateType | null> {
   const roomRef = db.ref("/");
   const snapshot = await roomRef.get();
-  const listenerMap = new Map<string, firebase.database.Reference>();
-
+  const listeners = new Map<ListenerTypes, DbRef>();
+  const playerListeners = new Map<string, DbRef>();
   if (!snapshot.exists()) {
     console.log("no data");
     return null;
@@ -108,8 +101,10 @@ export async function loadAndListenLobby(): Promise<LobbyReferences | null> {
         isSpectating: players[k].isSpectating,
         lastActive: players[k].lastActive,
       });
-      listenerMap.set(k, playerRef);
+      playerListeners.set(k, playerRef);
     }
+    const playerListRef = db.ref(`/${DB_PLAYER}`);
+    listeners.set(ListenerTypes.PlayerList, playerListRef);
     let room: Room = {
       playerList,
       game: {
@@ -121,65 +116,57 @@ export async function loadAndListenLobby(): Promise<LobbyReferences | null> {
       },
       hostId: data.hostId,
     };
-    return { room, listenerMap };
+    return { room, listeners, playerListeners };
   }
 }
 
-export async function loadAndListenGame(
-  onLoaded: (
-    data: Room,
-    listenerMap: PlayerListenerMap,
-    gameListenerMap: GameListenerMap
-  ) => void,
-  onFail: voidReturn
-) {
-  const roomRef = db.ref("/");
-  const snapshot = await roomRef.get();
-  if (!snapshot.exists()) {
-    console.log("no data");
-    onFail();
-  } else {
-    const data = snapshot.val();
-    console.log(data);
-    const players = data.players;
-    const game = data.game;
-    const playerList: Player[] = [];
+// export async function loadAndListenGame() {
+//   const roomRef = db.ref("/");
+//   const snapshot = await roomRef.get();
+//   if (!snapshot.exists()) {
+//     console.log("no data");
+//     return;
+//   }
+//   const data = snapshot.val();
+//   console.log(data);
+//   const players = data.players;
+//   const game = data.game;
+//   const playerList: Player[] = [];
 
-    const listenerMap = new Map<string, firebase.database.Reference>();
-    for (const k in players) {
-      const playerRef = db.ref(`/${DB_PLAYER}/${k}`);
-      playerList.push({
-        id: k,
-        name: players[k].name,
-        cards: players[k].cards,
-        coins: players[k].coins,
-        isConnected: players[k].isConnected,
-        isSpectating: players[k].isSpectating,
-        lastActive: players[k].lastActive,
-      });
-      listenerMap.set(k, playerRef);
-    }
-    const room: Room = {
-      playerList,
-      game: {
-        deck: game.deck,
-        currentTurn: game.currentTurn,
-        pierAction: game.pierAction,
-        clientAction: game.clientAction,
-        seed: game.randomSeed,
-      },
-      hostId: data.hostId,
-    };
+//   const playerListeners = new Map<string, firebase.database.Reference>();
+//   for (const k in players) {
+//     const playerRef = db.ref(`/${DB_PLAYER}/${k}`);
+//     playerList.push({
+//       id: k,
+//       name: players[k].name,
+//       cards: players[k].cards,
+//       coins: players[k].coins,
+//       isConnected: players[k].isConnected,
+//       isSpectating: players[k].isSpectating,
+//       lastActive: players[k].lastActive,
+//     });
+//     playerListeners.set(k, playerRef);
+//   }
+//   const room: Room = {
+//     playerList,
+//     game: {
+//       deck: game.deck,
+//       currentTurn: game.currentTurn,
+//       pierAction: game.pierAction,
+//       clientAction: game.clientAction,
+//       seed: game.randomSeed,
+//     },
+//     hostId: data.hostId,
+//   };
 
-    const gameRefUrl = `/${DB_GAME}`;
-    const gameListener: GameListenerMap = {
-      deckListener: db.ref(`${gameRefUrl}/deck`),
-      pierListener: db.ref(`${gameRefUrl}/pierAction`),
-      clientListener: db.ref(`${gameRefUrl}/clientAction`),
-      seedListener: db.ref(`${gameRefUrl}/seed`),
-      turnListener: db.ref(`${gameRefUrl}/currentTurn`),
-    };
+//   const gameRefUrl = `/${DB_GAME}`;
+//   // const gameListener: GameListenerMap = {
+//   //   deckListener: db.ref(`${gameRefUrl}/deck`),
+//   //   pierListener: db.ref(`${gameRefUrl}/pierAction`),
+//   //   clientListener: db.ref(`${gameRefUrl}/clientAction`),
+//   //   seedListener: db.ref(`${gameRefUrl}/seed`),
+//   //   turnListener: db.ref(`${gameRefUrl}/currentTurn`),
+//   // };
 
-    onLoaded(room, listenerMap, gameListener);
-  }
-}
+//   // onLoaded(room, playerListeners, gameListener);
+// }

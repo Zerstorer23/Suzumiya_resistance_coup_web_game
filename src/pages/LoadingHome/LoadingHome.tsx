@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import PlayersContext from "system/context/players-context";
+import PlayersContext from "system/context/room-context";
 import { db } from "system/Database/Firebase";
 import { joinLobby, loadRoom, setUpGame } from "system/Database/RoomDatabase";
 import { PAGE_LOBBY } from "system/GameStates/States";
