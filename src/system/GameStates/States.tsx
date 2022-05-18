@@ -11,6 +11,7 @@ export enum BoardState {
 }
 
 export enum ActionType {
+  None,
   GetOne,
   GetForeignAid,
   Coup,
@@ -23,7 +24,6 @@ export enum ActionType {
   DefendWithCaptain,
   DefendWithAmbassador,
   Accept,
-  None,
 }
 
 export function getActionsFromState(state: BoardState): ActionType[] {

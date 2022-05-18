@@ -1,46 +1,35 @@
-import React, { Fragment } from "react";
-import { IProps } from "../../../App";
 import classes from "./PlayersPanel.module.css";
-import VerticalLayout from "../../components/ui/VerticalLayout";
+import VerticalLayout from "pages/components/ui/VerticalLayout";
 import PlayerListItem from "./PlayerListItem";
 import { useHistory } from "react-router-dom";
+import { PlayerMap } from "system/GameStates/GameTypes";
+import { IProps } from "system/types/CommonTypes";
 
-export default function PlayersPanel() {
+type Props = IProps & {
+  playerMap: PlayerMap;
+};
+export default function PlayersPanel(props: Props) {
   const history = useHistory();
   const onClickStart = () => {
-    history.push("/game");
+    history.replace("/game");
   };
+  const elemList: JSX.Element[] = [];
+  const playerMap: PlayerMap = props.playerMap;
+  const currPlayer = playerMap.size;
+  playerMap.forEach((player, key) => {
+    const elem = <PlayerListItem key={key} player={player} />;
+    elemList.push(elem);
+  });
+
   //props: IProps
-  let currPlayer = 1;
-  const playerList = [
-    "ㅇㅇ(39.7)",
-    "ㅇㅇ(122.42)",
-    "ㅇㅇ(47.1)",
-    `Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit iusto, sint voluptates quidem nihil dolore consequuntur soluta, corporis vitae ducimus nesciunt minima itaque cumque quibusdam asperiores, iure eum magni fugiat?`,
-    `Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit iusto, sint voluptates quidem nihil dolore consequuntur soluta, corporis vitae ducimus nesciunt minima itaque cumque quibusdam asperiores, iure eum magni fugiat?`,
-    `Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit iusto, sint voluptates quidem nihil dolore consequuntur soluta, corporis vitae ducimus nesciunt minima itaque cumque quibusdam asperiores, iure eum magni fugiat?`,
-    `Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit iusto, sint voluptates quidem nihil dolore consequuntur soluta, corporis vitae ducimus nesciunt minima itaque cumque quibusdam asperiores, iure eum magni fugiat?`,
-    `Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit iusto, sint voluptates quidem nihil dolore consequuntur soluta, corporis vitae ducimus nesciunt minima itaque cumque quibusdam asperiores, iure eum magni fugiat?`,
-    `Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit iusto, sint voluptates quidem nihil dolore consequuntur soluta, corporis vitae ducimus nesciunt minima itaque cumque quibusdam asperiores, iure eum magni fugiat?`,
-    `Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit iusto, sint voluptates quidem nihil dolore consequuntur soluta, corporis vitae ducimus nesciunt minima itaque cumque quibusdam asperiores, iure eum magni fugiat?`,
-    `Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit iusto, sint voluptates quidem nihil dolore consequuntur soluta, corporis vitae ducimus nesciunt minima itaque cumque quibusdam asperiores, iure eum magni fugiat?`,
-    `Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit iusto, sint voluptates quidem nihil dolore consequuntur soluta, corporis vitae ducimus nesciunt minima itaque cumque quibusdam asperiores, iure eum magni fugiat?`,
-    `Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit iusto, sint voluptates quidem nihil dolore consequuntur soluta, corporis vitae ducimus nesciunt minima itaque cumque quibusdam asperiores, iure eum magni fugiat?`,
-  ];
+
   return (
     <VerticalLayout className={`${classes.container} `}>
       <div className={classes.headerContainer}>
         <p className={classes.headerTitle}>Hamang No.6</p>
         <p className={classes.headerPlayerNum}>{`${currPlayer}/20`}</p>
       </div>
-      <VerticalLayout className={classes.list}>
-        {playerList.map((item) => (
-          <PlayerListItem
-            key={Math.random().toString()}
-            value={item}
-          ></PlayerListItem>
-        ))}
-      </VerticalLayout>
+      <VerticalLayout className={classes.list}>{elemList}</VerticalLayout>
       <button className={classes.buttonStart} onClick={onClickStart}>
         start
       </button>

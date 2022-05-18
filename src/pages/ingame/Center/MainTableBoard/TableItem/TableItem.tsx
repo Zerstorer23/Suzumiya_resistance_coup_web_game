@@ -1,4 +1,4 @@
-import { IProps } from "App";
+import { IProps } from "system/types/CommonTypes";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import getImage, { Images } from "resources/Resources";
 import classes from "./TableItem.module.css";

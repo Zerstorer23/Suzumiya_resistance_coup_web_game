@@ -1,4 +1,4 @@
-import { IProps } from "App";
+import { IProps } from "system/types/CommonTypes";
 import { ActionType } from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
 

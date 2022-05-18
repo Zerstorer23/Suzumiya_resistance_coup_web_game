@@ -2,9 +2,9 @@ import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import gc from "global.module.css";
 import classes from "./RevealedDeckDisplay.module.css";
 import getImage, { Images } from "resources/Resources";
-import { IProps } from "App";
 import { CardRole } from "system/cards/Card";
 import { Deck } from "system/cards/Deck";
+import { IProps } from "system/types/CommonTypes";
 
 type Prop = IProps & { card: CardRole; deck: Deck };
 export default function RevealedDeckItem(props: Prop): JSX.Element {

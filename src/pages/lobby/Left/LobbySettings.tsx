@@ -36,7 +36,7 @@ export default function LobbySettings() {
   // , []);
 
   useEffect(() => {
-    onInitDB();
+    // onInitDB();
   }, [onInitDB]);
 
   const onChangeNetworkCondition = (event: any) => {

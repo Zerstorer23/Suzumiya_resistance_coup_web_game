@@ -1,6 +1,9 @@
-import { IProps } from "App";
 import firebase from "firebase/compat/app";
 import { Room } from "system/GameStates/GameTypes";
+export type IProps = {
+  className?: string;
+  children?: JSX.Element[] | JSX.Element;
+};
 
 export type ItemPair = {
   key: string;
@@ -20,22 +23,14 @@ export enum ListenerTypes {
   Deck,
   Pier,
   Client,
-  Seed,
   Turn,
   PlayerList,
-  EachPlayer,
+  Header,
 }
-// export type DbSnapshot = {
-//   room: Room;
-//   listeners: Listeners;
-// };
 export type Listeners = Map<ListenerTypes, DbRef>;
-export type PlayerListeners = Map<string, DbRef>;
-//export type PlayerListenerMap = Map<string, DbRef>;
-// export type GameListenerMap = {
-//   deckListener: DbRef;
-//   pierListener: DbRef;
-//   clientListener: DbRef;
-//   seedListener: DbRef;
-//   turnListener: DbRef;
-// } | null;
+
+export const LISTEN_VALUE = "value";
+export const LISTEN_CHILD_ADDED = "child_added";
+export const LISTEN_CHILD_REMOVED = "child_removed";
+export const LISTEN_CHILD_CHANGED = "child_changed";
+export const LISTEN_CHILD_MOVED = "child_moved";

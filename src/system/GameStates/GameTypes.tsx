@@ -1,15 +1,21 @@
+import { ActionType } from "system/GameStates/States";
+
 export type Player = {
   isSpectating: boolean;
   isConnected: boolean;
   lastActive: Object;
-  id: string;
   name: string;
   cards: number;
   coins: number;
 };
+export type PlayerEntry = {
+  id: string;
+  player: Player;
+};
+
 export type GameAction = {
   id: string;
-  action: number;
+  action: ActionType;
   time: Object;
 };
 export type Game = {
@@ -17,11 +23,14 @@ export type Game = {
   currentTurn: number;
   pierAction: GameAction;
   clientAction: GameAction;
-  seed: number;
 };
-
-export type Room = {
-  playerList: Player[];
-  game: Game;
+export type RoomHeader = {
+  seed: number;
   hostId: string | null;
+};
+export type PlayerMap = Map<string, Player>;
+export type Room = {
+  playerMap: PlayerMap;
+  game: Game;
+  header: RoomHeader;
 };

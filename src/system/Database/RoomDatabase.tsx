@@ -1,17 +1,32 @@
 import { db } from "system/Database/Firebase";
-import { DB_PLAYER, joinLocalPlayer } from "system/Database/PlayerDatabase";
-import { Game, GameAction, Player, Room } from "system/GameStates/GameTypes";
+import { joinLocalPlayer } from "system/Database/PlayerDatabase";
+import {
+  Game,
+  GameAction,
+  Player,
+  PlayerMap,
+  Room,
+  RoomHeader,
+} from "system/GameStates/GameTypes";
 import firebase from "firebase/compat/app";
 import { randomInt } from "system/GameConstants";
-import { DbRef, ListenerTypes } from "system/types/CommonTypes";
-import { RoomStateType } from "system/context/RoomContextProvider";
+import { DbRef, Listeners, ListenerTypes } from "system/types/CommonTypes";
+import { ActionType } from "system/GameStates/States";
 
-export const DB_GAME = "game";
+export const DB_GAME = "/game";
+export const DB_GAME_deck = `${DB_GAME}/deck`;
+export const DB_GAME_currentTurn = `${DB_GAME}/currentTurn`;
+export const DB_GAME_pierAction = `${DB_GAME}/pierAction`;
+export const DB_GAME_clientAction = `${DB_GAME}/clientAction`;
+export const DB_PLAYERS = `/playerMap`;
+export const DB_HEADER = `/header`;
+export const DB_HEADER_hostId = `${DB_HEADER}/hostId`;
+export const DB_HEADER_seed = `${DB_HEADER}/seed`;
 
 export function getDefaultAction(): GameAction {
   return {
     id: "",
-    action: 0,
+    action: ActionType.None,
     time: firebase.database.ServerValue.TIMESTAMP,
   };
 }
@@ -21,152 +36,102 @@ export function getDefaultGame(): Game {
     deck: "",
     pierAction: getDefaultAction(),
     clientAction: getDefaultAction(),
+  };
+}
+export function getDefaultHeader(): RoomHeader {
+  return {
+    hostId: "",
     seed: randomInt(0, 100),
   };
 }
-
-export async function setUpGame() {
-  const gameRef = db.ref(DB_GAME);
-  const game = getDefaultGame();
-  gameRef.set(game);
-  await joinLocalPlayer();
+export function getDefaultRoom(): Room {
+  return {
+    playerMap: new Map<string, Player>(),
+    game: getDefaultGame(),
+    header: getDefaultHeader(),
+  };
+}
+export async function initialiseRoom() {
+  const roomRef = db.ref("/");
+  const defaultRoom = getDefaultRoom();
+  await roomRef.set(defaultRoom);
+  const myId = await joinLocalPlayer(true);
+  return myId;
 }
 
-export async function joinLobby() {
-  await joinLocalPlayer();
+export async function joinLobby(): Promise<string> {
+  return await joinLocalPlayer(false);
 }
 
-export async function loadRoom(onLoaded: (data: Room | null) => void) {
+export async function loadRoom(): Promise<Room> {
   const roomRef = db.ref("/");
   const snapshot = await roomRef.get();
   if (!snapshot.exists()) {
     console.log("no data");
-    onLoaded(null);
+    return getDefaultRoom();
   } else {
-    const data = snapshot.val();
-    console.log(data);
-    const players = data.players;
-    const game = data.game;
-    const playerList: Player[] = [];
-    for (const k in players) {
-      playerList.push({
-        id: k,
-        name: players[k].name,
-        cards: players[k].cards,
-        coins: players[k].coins,
-        isConnected: players[k].isConnected,
-        isSpectating: players[k].isSpectating,
-        lastActive: players[k].lastActive,
-      });
+    const room: Room = snapshot.val();
+    if (room["playerMap"] === undefined) {
+      room.playerMap = new Map<string, Player>();
+    } else {
+      room.playerMap = parsePlayerMap(room.playerMap);
     }
-    const room: Room = {
-      playerList,
-      game: {
-        deck: game.deck,
-        currentTurn: game.currentTurn,
-        pierAction: game.pierAction,
-        clientAction: game.clientAction,
-        seed: game.randomSeed,
-      },
-      hostId: data.hostId,
-    };
-
-    onLoaded(room);
+    return room;
   }
 }
 
-export async function loadAndListenLobby(): Promise<RoomStateType | null> {
-  const roomRef = db.ref("/");
-  const snapshot = await roomRef.get();
+function parseGame(listeners: Listeners) {
+  const deckRef = db.ref(DB_GAME_deck);
+  const turnRef = db.ref(DB_GAME_currentTurn);
+  const pierRef = db.ref(DB_GAME_pierAction);
+  const clientRef = db.ref(DB_GAME_clientAction);
+
+  listeners.set(ListenerTypes.Deck, deckRef);
+  listeners.set(ListenerTypes.Turn, turnRef);
+  listeners.set(ListenerTypes.Pier, pierRef);
+  listeners.set(ListenerTypes.Client, clientRef);
+}
+function parseHeader(listeners: Listeners) {
+  const headerRef = db.ref(DB_HEADER);
+  listeners.set(ListenerTypes.Header, headerRef);
+
+  const playersRef = db.ref(DB_PLAYERS);
+  listeners.set(ListenerTypes.PlayerList, playersRef);
+}
+
+function parseListeners(): Listeners {
   const listeners = new Map<ListenerTypes, DbRef>();
-  const playerListeners = new Map<string, DbRef>();
-  if (!snapshot.exists()) {
-    console.log("no data");
-    return null;
-  } else {
-    const data = snapshot.val();
-    console.log(data);
-    const players = data.players;
-    const game = data.game;
-    const playerList: Player[] = [];
-
-    for (const k in players) {
-      const playerRef = db.ref(`/${DB_PLAYER}/${k}`);
-      playerList.push({
-        id: k,
-        name: players[k].name,
-        cards: players[k].cards,
-        coins: players[k].coins,
-        isConnected: players[k].isConnected,
-        isSpectating: players[k].isSpectating,
-        lastActive: players[k].lastActive,
-      });
-      playerListeners.set(k, playerRef);
-    }
-    const playerListRef = db.ref(`/${DB_PLAYER}`);
-    listeners.set(ListenerTypes.PlayerList, playerListRef);
-    let room: Room = {
-      playerList,
-      game: {
-        deck: game.deck,
-        currentTurn: game.currentTurn,
-        pierAction: game.pierAction,
-        clientAction: game.clientAction,
-        seed: game.randomSeed,
-      },
-      hostId: data.hostId,
-    };
-    return { room, listeners, playerListeners };
-  }
+  parseGame(listeners);
+  parseHeader(listeners);
+  return listeners;
 }
-
-// export async function loadAndListenGame() {
+function parsePlayerMap(roomMap: PlayerMap): PlayerMap {
+  const playerMap = new Map<string, Player>();
+  if (roomMap === undefined) return playerMap;
+  Object.entries(roomMap).forEach(([key, value]) => {
+    playerMap.set(key, value);
+  });
+  return playerMap;
+}
+// export async function loadAndListenLobby(): Promise<RoomStateType | null> {
+//   //TODO DONT EVEN LOAD>
+//   //JUST LISTEN
 //   const roomRef = db.ref("/");
 //   const snapshot = await roomRef.get();
 //   if (!snapshot.exists()) {
 //     console.log("no data");
-//     return;
+//     return null;
+//   } else {
+//     const room: Room = snapshot.val();
+//     room.playerMap = parsePlayerMap(room.playerMap);
+//     const listeners = parseListeners();
+//     console.log("Loaded Room: ");
+//     console.log(room);
+//     return { room, listeners };
 //   }
-//   const data = snapshot.val();
-//   console.log(data);
-//   const players = data.players;
-//   const game = data.game;
-//   const playerList: Player[] = [];
-
-//   const playerListeners = new Map<string, firebase.database.Reference>();
-//   for (const k in players) {
-//     const playerRef = db.ref(`/${DB_PLAYER}/${k}`);
-//     playerList.push({
-//       id: k,
-//       name: players[k].name,
-//       cards: players[k].cards,
-//       coins: players[k].coins,
-//       isConnected: players[k].isConnected,
-//       isSpectating: players[k].isSpectating,
-//       lastActive: players[k].lastActive,
-//     });
-//     playerListeners.set(k, playerRef);
-//   }
-//   const room: Room = {
-//     playerList,
-//     game: {
-//       deck: game.deck,
-//       currentTurn: game.currentTurn,
-//       pierAction: game.pierAction,
-//       clientAction: game.clientAction,
-//       seed: game.randomSeed,
-//     },
-//     hostId: data.hostId,
-//   };
-
-//   const gameRefUrl = `/${DB_GAME}`;
-//   // const gameListener: GameListenerMap = {
-//   //   deckListener: db.ref(`${gameRefUrl}/deck`),
-//   //   pierListener: db.ref(`${gameRefUrl}/pierAction`),
-//   //   clientListener: db.ref(`${gameRefUrl}/clientAction`),
-//   //   seedListener: db.ref(`${gameRefUrl}/seed`),
-//   //   turnListener: db.ref(`${gameRefUrl}/currentTurn`),
-//   // };
-
-//   // onLoaded(room, playerListeners, gameListener);
 // }
+
+export function registerListeners(): Listeners {
+  const listeners = parseListeners();
+  return listeners;
+}

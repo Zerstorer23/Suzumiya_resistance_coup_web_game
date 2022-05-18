@@ -1,36 +1,33 @@
 import React from "react";
-import { RoomStateType } from "system/context/RoomContextProvider";
-import { getDefaultAction } from "system/Database/RoomDatabase";
-import { Player, Room } from "system/GameStates/GameTypes";
-import { Listeners, PlayerListeners } from "system/types/CommonTypes";
+import { getDefaultRoom } from "system/Database/RoomDatabase";
+import { GameAction, PlayerEntry, Room } from "system/GameStates/GameTypes";
+import { ListenerTypes } from "system/types/CommonTypes";
 
+export enum UpdateType {
+  Insert = "insert",
+  Delete = "delete",
+  Update = "update",
+}
+export enum ActionPerformer {
+  Pier,
+  Client,
+}
 export type RoomContextType = {
   room: Room;
-  listeners: Listeners;
-  playerListeners: PlayerListeners;
-  onRoomLoaded: (snapshot: RoomStateType) => void;
-  onUpdatePlayer: (player: Player) => void;
-  onPlayerJoin: (id: string) => void;
-  onPlayerDisconnect: (id: string) => void;
+  onRoomLoaded: (snapshot: Room) => void;
+  onUpdatePlayer: (playerEntry: PlayerEntry, utype: UpdateType) => void;
+  onUpdateGameAction: (action: GameAction, performer: ActionPerformer) => void;
+  onUpdateField: (field: ListenerTypes, data: any) => void;
+  // onUpdateDeck: (action: GameAction, performer: ActionPerformer) => void;
+  // onUpdateHeader: (action: GameAction, performer: ActionPerformer) => void;
+  // onUpdateTurn: (action: GameAction, performer: ActionPerformer) => void;
 };
 
 const RoomContext = React.createContext<RoomContextType>({
-  room: {
-    playerList: [],
-    game: {
-      currentTurn: -1,
-      deck: "",
-      pierAction: getDefaultAction(),
-      clientAction: getDefaultAction(),
-      seed: 0,
-    },
-    hostId: null,
-  },
-  listeners: new Map(),
-  playerListeners: new Map(),
-  onRoomLoaded: (snapshot: RoomStateType) => {},
-  onUpdatePlayer: (player: Player) => {},
-  onPlayerJoin: () => {},
-  onPlayerDisconnect: () => {},
+  room: getDefaultRoom(),
+  onRoomLoaded: (snapshot: Room) => {},
+  onUpdatePlayer: (playerEntry: PlayerEntry, utype: UpdateType) => {},
+  onUpdateGameAction: (action: GameAction, performer: ActionPerformer) => {},
+  onUpdateField: (field: ListenerTypes, data: any) => {},
 });
 export default RoomContext;

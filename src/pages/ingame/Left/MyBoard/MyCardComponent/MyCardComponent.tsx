@@ -1,6 +1,6 @@
 import classes from "./MyCardComponent.module.css";
 import gc from "global.module.css";
-import { IProps } from "App";
+import { IProps } from "system/types/CommonTypes";
 import { Card } from "system/cards/Card";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 type Props = IProps & { card: Card };

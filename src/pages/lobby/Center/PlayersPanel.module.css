@@ -28,6 +28,7 @@
 .list {
   flex: 8;
   overflow-y: scroll;
+  width: 100%;
 }
 .buttonStart {
   flex: 1;
