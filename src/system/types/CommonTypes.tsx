@@ -14,7 +14,16 @@ export type FlexPair = {
   element: JSX.Element;
   flex: number;
 };
+export type Snapshot = firebase.database.DataSnapshot;
 
+export enum LoadStatus {
+  init = "Initialising",
+  isLoading = "Loading room",
+  loaded = "Room loadd",
+  listening = "Listening changes",
+  joined = "Joined room",
+  outerSpace = "A outer space",
+}
 export type voidReturn = () => void;
 export type DbRef = firebase.database.Reference;
 export type LinearParam = IProps & { elements: FlexPair[] };

@@ -2,13 +2,19 @@ import { db } from "system/Database/Firebase";
 import { Player } from "system/GameStates/GameTypes";
 import firebase from "firebase/compat/app";
 import { DB_HEADER_hostId, DB_PLAYERS } from "system/Database/RoomDatabase";
+import { randomInt } from "system/GameConstants";
+import { DbRef } from "system/types/CommonTypes";
+
+export function getMyRef(myId: string): DbRef {
+  return db.ref(`${DB_PLAYERS}/${myId}`);
+}
 
 export function getDefaultPlayer() {
   const newPlayer: Player = {
     isSpectating: false,
     isConnected: true,
     lastActive: firebase.database.ServerValue.TIMESTAMP,
-    name: "ㅇㅇ",
+    name: `ㅇㅇ (${randomInt(1, 255)}.${randomInt(1, 255)})`,
     cards: 0,
     coins: 0,
   };

@@ -1,60 +1,45 @@
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import gc from "global.module.css";
 import { ItemPair } from "system/types/CommonTypes";
 import Dropdown from "pages/components/ui/Dropdown";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import classes from "./LobbySettings.module.css";
-import { firebase, db } from "system/Database/Firebase";
+import RoomContext from "system/context/room-context";
+import LocalContext from "system/context/localInfo/local-context";
+import { Player } from "system/GameStates/GameTypes";
+import { getMyRef } from "system/Database/PlayerDatabase";
 
 export const networkOptions: ItemPair[] = [
   { key: "1", label: "Normal", value: "100" },
   { key: "2", label: "Slow", value: "500" },
 ];
+const MAX_NAME_LENGTH = 16;
 export default function LobbySettings() {
   const [networkCondition, setNetworkCondition] = useState("100");
-  const [playerName, setPlayerName] = useState("ㅇㅇ");
-  const [playerId, setPlayerId] = useState("null");
-  var nameRef: firebase.database.Reference;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onInitDB =
-    // useCallback(
-    async () => {
-      if (playerId === "null") {
-        const playerNameRef = db.ref("players");
-        nameRef = await playerNameRef.push();
-        const a = nameRef.key;
-        setPlayerId(a!);
-      } else {
-        nameRef = db.ref(`players/${playerId}`);
-      }
-      nameRef.onDisconnect().remove();
-      nameRef.on("value", (snapshot) => {
-        const data = snapshot.val();
-        console.log(data);
-      });
-    };
-  // , []);
-
-  useEffect(() => {
-    // onInitDB();
-  }, [onInitDB]);
+  const ctx = useContext(RoomContext);
+  const localCtx = useContext(LocalContext);
+  const myId: string | null = localCtx.myId;
+  if (myId === null) {
+    return <p>Need to reload</p>;
+  }
+  const myPlayer: Player = ctx.room.playerMap.get(myId)!;
+  const myRef = getMyRef(myId);
 
   const onChangeNetworkCondition = (event: any) => {
     console.log(event.target.value);
     setNetworkCondition(event.target.value.value);
   };
   //TODO useEffect to listen to change.
-  function onChangeName(event: any) {
-    setPlayerName(event.target.value);
-  }
 
   async function onFinishEditName(event: any) {
-    console.log(event.target.value);
-    if (nameRef != null) console.log(nameRef.key);
-    await nameRef.update({
-      name: playerName,
-    });
-    console.log("Updated name ");
+    let newName: string = event.target.value;
+    if (newName.length <= 1) return;
+    if (newName.length > MAX_NAME_LENGTH) {
+      newName = newName.substring(0, MAX_NAME_LENGTH);
+    }
+    console.log(newName);
+    myPlayer.name = newName;
+    myRef.set(myPlayer);
   }
 
   return (
@@ -64,9 +49,8 @@ export default function LobbySettings() {
         <input
           className={classes.inputName}
           type="text"
-          onChange={onChangeName}
           onBlur={onFinishEditName}
-          value={playerName}
+          defaultValue={myPlayer.name}
         ></input>
       </HorizontalLayout>
       <HorizontalLayout>

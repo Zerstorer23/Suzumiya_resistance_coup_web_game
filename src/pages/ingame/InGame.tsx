@@ -8,8 +8,18 @@ import MainTableBoard from "./Center/MainTableBoard/MainTableBoard";
 import ActionBoards from "./Center/ActionBoards/ActionBoards";
 import GameDeckBoard from "./Right/GameDeckBoard/GameDeckBoard";
 import InGameChatBoard from "./Right/ChatBoard/InGameChatBoard";
+import { useContext } from "react";
+import RoomContext from "system/context/room-context";
+import LocalContext from "system/context/localInfo/local-context";
+import { useHistory } from "react-router-dom";
 
 export default function InGame() {
+  const context = useContext(RoomContext);
+  const localCtx = useContext(LocalContext);
+  const history = useHistory();
+  if (localCtx.myId === null) {
+    history.replace("/");
+  }
   return (
     <div className={classes.container}>
       <HorizontalLayout>

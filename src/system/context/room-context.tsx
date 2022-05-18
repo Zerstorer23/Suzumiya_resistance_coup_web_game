@@ -1,6 +1,6 @@
 import React from "react";
-import { getDefaultRoom } from "system/Database/RoomDatabase";
 import { GameAction, PlayerEntry, Room } from "system/GameStates/GameTypes";
+import { getDefaultRoom } from "system/GameStates/RoomGenerator";
 import { ListenerTypes } from "system/types/CommonTypes";
 
 export enum UpdateType {
@@ -18,9 +18,6 @@ export type RoomContextType = {
   onUpdatePlayer: (playerEntry: PlayerEntry, utype: UpdateType) => void;
   onUpdateGameAction: (action: GameAction, performer: ActionPerformer) => void;
   onUpdateField: (field: ListenerTypes, data: any) => void;
-  // onUpdateDeck: (action: GameAction, performer: ActionPerformer) => void;
-  // onUpdateHeader: (action: GameAction, performer: ActionPerformer) => void;
-  // onUpdateTurn: (action: GameAction, performer: ActionPerformer) => void;
 };
 
 const RoomContext = React.createContext<RoomContextType>({

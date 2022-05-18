@@ -3,7 +3,7 @@
   margin-right: 10px;
 }
 .container * {
-  margin: 10px;
+  margin-bottom: 10px;
   font-size: 24px;
 }
 .helpButton {
@@ -15,5 +15,6 @@
   width: 60%;
 }
 .pingDropdown {
-  width: 60%;
+  margin-top: 15px;
+  width: 50%;
 }

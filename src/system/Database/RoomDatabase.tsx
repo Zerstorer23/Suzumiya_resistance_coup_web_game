@@ -1,17 +1,8 @@
 import { db } from "system/Database/Firebase";
 import { joinLocalPlayer } from "system/Database/PlayerDatabase";
-import {
-  Game,
-  GameAction,
-  Player,
-  PlayerMap,
-  Room,
-  RoomHeader,
-} from "system/GameStates/GameTypes";
-import firebase from "firebase/compat/app";
-import { randomInt } from "system/GameConstants";
+import { Player, PlayerMap, Room } from "system/GameStates/GameTypes";
+import { getDefaultRoom } from "system/GameStates/RoomGenerator";
 import { DbRef, Listeners, ListenerTypes } from "system/types/CommonTypes";
-import { ActionType } from "system/GameStates/States";
 
 export const DB_GAME = "/game";
 export const DB_GAME_deck = `${DB_GAME}/deck`;
@@ -23,34 +14,6 @@ export const DB_HEADER = `/header`;
 export const DB_HEADER_hostId = `${DB_HEADER}/hostId`;
 export const DB_HEADER_seed = `${DB_HEADER}/seed`;
 
-export function getDefaultAction(): GameAction {
-  return {
-    id: "",
-    action: ActionType.None,
-    time: firebase.database.ServerValue.TIMESTAMP,
-  };
-}
-export function getDefaultGame(): Game {
-  return {
-    currentTurn: -1,
-    deck: "",
-    pierAction: getDefaultAction(),
-    clientAction: getDefaultAction(),
-  };
-}
-export function getDefaultHeader(): RoomHeader {
-  return {
-    hostId: "",
-    seed: randomInt(0, 100),
-  };
-}
-export function getDefaultRoom(): Room {
-  return {
-    playerMap: new Map<string, Player>(),
-    game: getDefaultGame(),
-    header: getDefaultHeader(),
-  };
-}
 export async function initialiseRoom() {
   const roomRef = db.ref("/");
   const defaultRoom = getDefaultRoom();
@@ -70,12 +33,14 @@ export async function loadRoom(): Promise<Room> {
     console.log("no data");
     return getDefaultRoom();
   } else {
+    // const val: any = snapshot.val();
     const room: Room = snapshot.val();
+    console.log("Room val = ");
+    console.log(room);
     if (room["playerMap"] === undefined) {
       room.playerMap = new Map<string, Player>();
-    } else {
-      room.playerMap = parsePlayerMap(room.playerMap);
     }
+    room.playerMap = parsePlayerMap(room.playerMap);
     return room;
   }
 }

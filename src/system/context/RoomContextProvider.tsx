@@ -4,8 +4,8 @@ import RoomContext, {
   RoomContextType,
   UpdateType,
 } from "system/context/room-context";
-import { getDefaultRoom } from "system/Database/RoomDatabase";
 import { GameAction, PlayerEntry, Room } from "system/GameStates/GameTypes";
+import { getDefaultRoom } from "system/GameStates/RoomGenerator";
 import { IProps, ListenerTypes } from "system/types/CommonTypes";
 enum RoomContextAction {
   RoomLoaded,
@@ -91,8 +91,9 @@ export default function RoomProvider(props: IProps) {
       mainParam: entry,
       sideParam: utype,
     };
-    console.log("Player updated: " + entry.id + " / " + utype);
-    console.log(entry.player);
+    console.log(
+      `Player updated:  ${entry.id}/ ${entry.player.name} utype ${utype}`
+    );
     dispatchRoomState(param);
   }
   function onUpdateGameAction(action: GameAction, performer: ActionPerformer) {
@@ -102,7 +103,6 @@ export default function RoomProvider(props: IProps) {
       sideParam: performer,
     };
     console.log("Game Action Updated " + action.id + " / " + performer);
-    console.log(action);
     dispatchRoomState(param);
   }
 
