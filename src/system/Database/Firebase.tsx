@@ -30,5 +30,5 @@ function initFirebase() {
 }
 initFirebase();
 const db = firebase.database();
-const messaging = firebase.messaging();
-export { firebase, db, messaging };
+//const messaging = firebase.messaging();
+export { firebase, db };
