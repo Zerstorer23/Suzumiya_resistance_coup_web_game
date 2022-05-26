@@ -1,4 +1,5 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/BaseBoard/BaseActionButton";
+import { ActionInfo } from "system/GameStates/ActionInfo";
 import {
   ActionType,
   BoardState,
@@ -8,7 +9,15 @@ import classes from "./BaseBoard.module.css";
 
 export default function BaseBoard(): JSX.Element {
   //TODO change by board state
-  const actions = getActionsFromState(BoardState.ChoosingBaseAction);
+  const actions = [
+    ActionType.GetOne,
+    ActionType.GetThree,
+    ActionType.GetForeignAid,
+    ActionType.Steal,
+    ActionType.Coup,
+    ActionType.Assassinate,
+    ActionType.ChangeCards,
+  ];
 
   return (
     <div className={classes.container}>
@@ -19,7 +28,8 @@ export default function BaseBoard(): JSX.Element {
           <BaseActionButton
             key={index}
             className={`${cssName}`}
-            actionType={action}
+            actionInfo={new ActionInfo(action)}
+            onClickButton={() => {}}
           />
         );
       })}

@@ -1,11 +1,11 @@
 import { IProps } from "system/types/CommonTypes";
 import { ActionType } from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
+import { ActionInfo } from "system/GameStates/ActionInfo";
 
 type Prop = IProps & {
-  name: string;
-  actionType: ActionType;
-  onClickButton: () => {};
+  actionInfo: ActionInfo;
+  onClickButton: () => void;
 };
 export default function BaseActionButton(props: Prop) {
   return (
@@ -13,7 +13,7 @@ export default function BaseActionButton(props: Prop) {
       className={`${classes.cell} ${props.className}`}
       onClick={props.onClickButton}
     >
-      {props.name}
+      {props.actionInfo.getName()}
     </button>
   );
 }
