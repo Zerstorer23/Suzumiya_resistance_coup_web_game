@@ -1,13 +1,11 @@
 import classes from "./PlayersPanel.module.css";
 import VerticalLayout from "pages/components/ui/VerticalLayout";
 import PlayerListItem from "./PlayerListItem";
-import { useHistory } from "react-router-dom";
 import { PlayerMap } from "system/GameStates/GameTypes";
 import { IProps } from "system/types/CommonTypes";
 import { useContext } from "react";
 import RoomContext from "system/context/room-context";
 import { setStartingRoom } from "system/GameStates/RoomGenerator";
-import { getRoomRef } from "system/Database/RoomDatabase";
 import LocalContext, {
   LocalField,
 } from "system/context/localInfo/local-context";
@@ -16,7 +14,6 @@ import LocalContext, {
 //   playerMap: PlayerMap;
 // };
 export default function PlayersPanel(props: IProps) {
-  const history = useHistory();
   const ctx = useContext(RoomContext);
   const localCtx = useContext(LocalContext);
   console.log("Panel loaded");

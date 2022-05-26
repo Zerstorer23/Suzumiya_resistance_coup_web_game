@@ -3,17 +3,17 @@ import { ActionType } from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
 
 type Prop = IProps & {
+  name: string;
   actionType: ActionType;
+  onClickButton: () => {};
 };
 export default function BaseActionButton(props: Prop) {
   return (
     <button
       className={`${classes.cell} ${props.className}`}
-      onClick={() => {
-        console.log(`Clicked ${props.actionType} `);
-      }}
+      onClick={props.onClickButton}
     >
-      Action
+      {props.name}
     </button>
   );
 }

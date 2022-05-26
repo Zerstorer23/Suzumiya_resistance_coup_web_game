@@ -13,7 +13,7 @@ export enum BoardState {
   CalledAssassin, //assassin None
   CalledAmbassador, //amba None
   ContessaBlockedAssassin, //assassin contessa
-  ReactionIsALie, //lie any
+  ClientIsALie, //lie any
   CaptainBlockedCaptain, //Cap Cap
   AmbassadorBlockedCaptain, //Cap Amba
   PierIsALie, //Any Lie
@@ -80,7 +80,7 @@ export function readStateFromRoom(
     case ActionType.ChangeCards:
       return BoardState.CalledAmbassador;
     case ActionType.IsALie:
-      return BoardState.ReactionIsALie;
+      return BoardState.ClientIsALie;
     default:
       return BoardState.Exception;
   }
