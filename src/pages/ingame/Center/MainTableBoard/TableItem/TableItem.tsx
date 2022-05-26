@@ -14,12 +14,12 @@ export default function TableItem(props: IProps) {
           alt="lastchar"
           className={classes.imgLastUsed}
         />
-        <p className={classes.textLastClaim}>마지막 주장:간첩</p>
+        <p className={classes.textLastClaim}>Last claim: Spy</p>
         <p className={classes.playerName}>ㅇㅇ</p>
       </div>
       <div className={classes.actionContainer}>
-        <p className={classes.textMainAction}>ㅇㅇ님이 턴을 진행중...</p>
-        <p className={classes.textSideAction}>5초 남았습니다...</p>
+        <p className={classes.textMainAction}>ㅇㅇ is doing the turn...</p>
+        <p className={classes.textSideAction}>5 seconds remaining...</p>
       </div>
     </HorizontalLayout>
   );
