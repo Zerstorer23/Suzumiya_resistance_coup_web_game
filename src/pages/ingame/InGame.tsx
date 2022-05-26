@@ -25,7 +25,7 @@ export default function InGame() {
     if (myId === null) {
       history.replace("/");
     }
-  }, [myId]);
+  }, [myId, history]);
   if (myId === null) {
     return <p>Loading...</p>;
   }
