@@ -8,6 +8,7 @@ import { IProps } from "system/types/CommonTypes";
 export default function RemainingDeckDisplay(): JSX.Element {
   //TODO calc remaining deck
   //Compare last living player index vs last DEAD card index
+  //Compare last living player index vs last DEAD card index
   const remaining = 3;
 
   return (
