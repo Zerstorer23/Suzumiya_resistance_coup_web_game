@@ -14,7 +14,7 @@ export default function Lobby() {
   const localCtx = useContext(LocalContext);
   const history = useHistory();
 
-  const myId = localCtx.get(LocalField.Id)?.val;
+  const myId = localCtx.getVal(LocalField.Id);
   const turns = context.room.game.currentTurn;
   if (myId === null) {
     history.replace("/");

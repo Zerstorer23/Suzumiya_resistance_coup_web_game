@@ -166,6 +166,6 @@ export default function DataLoader(props: IProps) {
     localCtx.setVal(LocalField.SortedList, sortedList);
     console.log("New sorted list: ");
     console.log(sortedList);
-  }, [context.room.playerMap]);
+  }, [context.room.playerMap.size]);
   return <Fragment>{props.children}</Fragment>;
 }

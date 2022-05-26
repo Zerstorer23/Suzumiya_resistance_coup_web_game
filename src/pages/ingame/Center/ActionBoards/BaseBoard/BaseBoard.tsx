@@ -1,10 +1,6 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/BaseBoard/BaseActionButton";
 import { ActionInfo } from "system/GameStates/ActionInfo";
-import {
-  ActionType,
-  BoardState,
-  getActionsFromState,
-} from "system/GameStates/States";
+import { ActionType } from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
 
 export default function BaseBoard(): JSX.Element {
@@ -16,9 +12,14 @@ export default function BaseBoard(): JSX.Element {
     ActionType.Steal,
     ActionType.Coup,
     ActionType.Assassinate,
+    ActionType.None,
     ActionType.ChangeCards,
   ];
-
+  function onMakeAction(action: ActionType) {
+    switch (action) {
+    }
+    console.log(`Clicked ${action}`);
+  }
   return (
     <div className={classes.container}>
       {actions.map((action: ActionType, index: number) => {
@@ -29,7 +30,9 @@ export default function BaseBoard(): JSX.Element {
             key={index}
             className={`${cssName}`}
             actionInfo={new ActionInfo(action)}
-            onClickButton={() => {}}
+            onClickButton={() => {
+              onMakeAction(action);
+            }}
           />
         );
       })}

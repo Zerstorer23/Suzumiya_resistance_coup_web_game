@@ -8,7 +8,7 @@ import MainTableBoard from "./Center/MainTableBoard/MainTableBoard";
 import ActionBoards from "./Center/ActionBoards/ActionBoards";
 import GameDeckBoard from "./Right/GameDeckBoard/GameDeckBoard";
 import InGameChatBoard from "./Right/ChatBoard/InGameChatBoard";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import RoomContext from "system/context/room-context";
 import LocalContext, {
   LocalField,
@@ -19,9 +19,17 @@ export default function InGame() {
   const context = useContext(RoomContext);
   const localCtx = useContext(LocalContext);
   const history = useHistory();
-  if (localCtx.getVal(LocalField.Id) === null) {
-    history.replace("/");
+  const myId = localCtx.getVal(LocalField.Id);
+  useEffect(() => {
+    console.log(`In game id ${myId}`);
+    if (myId === null) {
+      history.replace("/");
+    }
+  }, [myId]);
+  if (myId === null) {
+    return <p>Loading...</p>;
   }
+
   return (
     <div className={classes.container}>
       <HorizontalLayout>

@@ -70,7 +70,6 @@ export function getSortedListFromMap(map: PlayerMap): PlayerEntry[] {
 
     return 0;
   });
-
   return sortedArr;
 }
 
