@@ -9,16 +9,27 @@ export default function LocalProvider(props: IProps) {
   const [myId, setMyId] = useState(null);
   const [sortedPlayerList, setSortedPlayerList] = useState([]);
 
-  const context: LocalContextType = new Map();
-  context.set(LocalField.Id, {
+  const map = new Map();
+  map.set(LocalField.Id, {
     val: myId,
     set: setMyId,
   });
-  context.set(LocalField.SortedList, {
+  map.set(LocalField.SortedList, {
     val: sortedPlayerList,
     set: setSortedPlayerList,
   });
-
+  const context: LocalContextType = {
+    map,
+    // get: (field: LocalField) => {
+    //   return map.get(field)!;
+    // },
+    getVal: (field: LocalField) => {
+      return map.get(field).val!;
+    },
+    setVal: (field: LocalField, val: any) => {
+      map.get(field).set(val);
+    },
+  };
   return (
     <LocalContext.Provider value={context}>
       {props.children}

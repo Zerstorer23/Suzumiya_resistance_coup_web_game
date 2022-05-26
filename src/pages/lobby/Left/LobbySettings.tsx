@@ -20,7 +20,7 @@ export default function LobbySettings() {
   const [networkCondition, setNetworkCondition] = useState("100");
   const ctx = useContext(RoomContext);
   const localCtx = useContext(LocalContext);
-  const myId: string | null = localCtx.get(LocalField.Id)?.val;
+  const myId: string | null = localCtx.getVal(LocalField.Id);
   if (myId === null) {
     return <p>Need to reload</p>;
   }

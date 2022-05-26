@@ -96,7 +96,7 @@ export default function DataLoader(props: IProps) {
 
   ///////////////END LISTENER--////////////////////////
   function onDisconnectCleanUp(id: string) {
-    localCtx.get(LocalField.Id)?.set(id);
+    localCtx.setVal(LocalField.Id, id);
     const rootRef = db.ref(`${DB_PLAYERS}/${id}`);
     rootRef.onDisconnect().remove();
   }
@@ -146,7 +146,7 @@ export default function DataLoader(props: IProps) {
     }
   }, [isLoaded]);
 
-  const myId = localCtx.get(LocalField.Id)?.val;
+  const myId = localCtx.getVal(LocalField.Id);
   useEffect(() => {
     if (myId === null) return;
     if (context.room.game.currentTurn < 0) {
@@ -163,7 +163,7 @@ export default function DataLoader(props: IProps) {
   useEffect(() => {
     const playerMap = context.room.playerMap;
     const sortedList = getSortedListFromMap(playerMap);
-    localCtx.get(LocalField.SortedList)?.set(sortedList);
+    localCtx.setVal(LocalField.SortedList, sortedList);
     console.log("New sorted list: ");
     console.log(sortedList);
   }, [context.room.playerMap]);

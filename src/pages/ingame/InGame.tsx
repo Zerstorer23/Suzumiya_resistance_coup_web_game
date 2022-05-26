@@ -19,7 +19,7 @@ export default function InGame() {
   const context = useContext(RoomContext);
   const localCtx = useContext(LocalContext);
   const history = useHistory();
-  if (localCtx.get(LocalField.Id)?.val === null) {
+  if (localCtx.getVal(LocalField.Id) === null) {
     history.replace("/");
   }
   return (

@@ -1,6 +1,6 @@
 import VerticalLayout from "pages/components/ui/VerticalLayout";
 import TableItem from "pages/ingame/Center/MainTableBoard/TableItem/TableItem";
-import gc from "../../../../global.module.css";
+import gc from "global.module.css";
 import classes from "./MainTableBoard.module.css";
 
 export default function MainTableBoard(): JSX.Element {

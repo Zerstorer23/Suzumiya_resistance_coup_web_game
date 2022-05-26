@@ -8,7 +8,7 @@ import classes from "./BaseBoard.module.css";
 
 export default function BaseBoard(): JSX.Element {
   //TODO change by board state
-  const actions = getActionsFromState(BoardState.MyTurn);
+  const actions = getActionsFromState(BoardState.ChoosingBaseAction);
 
   return (
     <div className={classes.container}>

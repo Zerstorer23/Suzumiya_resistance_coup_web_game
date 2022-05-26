@@ -36,7 +36,7 @@ export default function PlayersPanel(props: IProps) {
     //just distribute 2 starting from 0 ~ last player
 
     // 2. Set each field
-    setStartingRoom(room, localCtx.get(LocalField.SortedList)?.val);
+    setStartingRoom(room, localCtx.getVal(LocalField.SortedList));
     //NOTE replace By listening
 
     //    history.replace("/game");
