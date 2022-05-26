@@ -15,8 +15,8 @@ import {
   DB_GAME_currentTurn,
   DB_GAME_deck,
   DB_HEADER_seed,
-  setRefField,
-  updatePlayer,
+  updatePlayerReference,
+  updateReference,
 } from "system/Database/RoomDatabase";
 export function getDefaultAction(): GameAction {
   return {
@@ -58,6 +58,7 @@ export function getSortedListFromMap(map: PlayerMap): PlayerEntry[] {
     };
     arr.push(e);
   });
+  //TODO how does string comparison wwork?
   const sortedArr = arr.sort((e1: PlayerEntry, e2: PlayerEntry) => {
     if (e1.id > e2.id) {
       return 1;
@@ -89,17 +90,17 @@ function getStartingGame(deck: string): Game {
 export function setStartingRoom(room: Room, playerList: PlayerEntry[]) {
   const numPlayer = room.playerMap.size;
   //Set Header
-  setRefField(DB_HEADER_seed, getRandomSeed());
+  updateReference(DB_HEADER_seed, getRandomSeed());
   //Set Player Cards
   playerList.forEach((playerEntry, index) => {
     const player = playerEntry.player;
     player.coins = 2;
     player.icard = index * 2;
     player.isSpectating = false;
-    updatePlayer(playerEntry.id, player);
+    updatePlayerReference(playerEntry.id, player);
   });
   //Set Room
   const deck: string = generateStartingDeck(numPlayer);
-  setRefField(DB_GAME_deck, deck);
-  setRefField(DB_GAME_currentTurn, 0);
+  updateReference(DB_GAME_deck, deck);
+  updateReference(DB_GAME_currentTurn, 0);
 }

@@ -15,12 +15,12 @@ export const DB_HEADER = `/header`;
 export const DB_HEADER_hostId = `${DB_HEADER}/hostId`;
 export const DB_HEADER_seed = `${DB_HEADER}/seed`;
 
-export function setRefField(field: string, value: any) {
+export function updateReference(field: string, value: any) {
   const ref = getRef(field);
   ref.set(value);
   console.log(`set ${field} to ${value}`);
 }
-export function updatePlayer(playerId: string, player: Player) {
+export function updatePlayerReference(playerId: string, player: Player) {
   const ref = getPlayerRef(playerId);
   ref.set(player);
 }
