@@ -2,14 +2,22 @@ import {
   Game,
   GameAction,
   Player,
+  PlayerEntry,
   PlayerMap,
   Room,
   RoomHeader,
 } from "system/GameStates/GameTypes";
 import firebase from "firebase/compat/app";
 import "firebase/compat/database";
-import { randomInt } from "system/GameConstants";
+import { getRandomSeed, randomInt } from "system/GameConstants";
 import { ActionType } from "system/GameStates/States";
+import {
+  DB_GAME_currentTurn,
+  DB_GAME_deck,
+  DB_HEADER_seed,
+  setRefField,
+  updatePlayer,
+} from "system/Database/RoomDatabase";
 export function getDefaultAction(): GameAction {
   return {
     srcId: "", //NOTE set when press action button
@@ -29,7 +37,7 @@ export function getDefaultGame(): Game {
 export function getDefaultHeader(): RoomHeader {
   return {
     hostId: "",
-    seed: randomInt(0, 100),
+    seed: getRandomSeed(),
   };
 }
 export function getDefaultRoom(): Room {
@@ -41,16 +49,28 @@ export function getDefaultRoom(): Room {
 }
 
 //TODO make a sorted list by ID
-export function getSortedListFromMap(map: PlayerMap): Player[] {
-  return [];
-}
+export function getSortedListFromMap(map: PlayerMap): PlayerEntry[] {
+  const arr: PlayerEntry[] = [];
+  map.forEach((player, key) => {
+    const e: PlayerEntry = {
+      id: key,
+      player,
+    };
+    arr.push(e);
+  });
+  const sortedArr = arr.sort((e1: PlayerEntry, e2: PlayerEntry) => {
+    if (e1.id > e2.id) {
+      return 1;
+    }
 
-function setStartingPlayerMap(map: PlayerMap, deck: string): string {
-  //TODO
-  //set coints 2
-  //distribute cards
+    if (e1.id < e2.id) {
+      return -1;
+    }
 
-  return "";
+    return 0;
+  });
+
+  return sortedArr;
 }
 
 //TODO generate deck
@@ -66,12 +86,20 @@ function getStartingGame(deck: string): Game {
   };
 }
 
-export function setStartingRoom(prevRoom: Room) {
-  const numPlayer = prevRoom.playerMap.size;
-  let deck: string = generateStartingDeck(numPlayer);
-  deck = setStartingPlayerMap(prevRoom.playerMap, deck);
-  prevRoom.game = getStartingGame(deck);
-  prevRoom.header.seed = randomInt(0, 100);
-  console.log("New map");
-  console.log(prevRoom);
+export function setStartingRoom(room: Room, playerList: PlayerEntry[]) {
+  const numPlayer = room.playerMap.size;
+  //Set Header
+  setRefField(DB_HEADER_seed, getRandomSeed());
+  //Set Player Cards
+  playerList.forEach((playerEntry, index) => {
+    const player = playerEntry.player;
+    player.coins = 2;
+    player.icard = index * 2;
+    player.isSpectating = false;
+    updatePlayer(playerEntry.id, player);
+  });
+  //Set Room
+  const deck: string = generateStartingDeck(numPlayer);
+  setRefField(DB_GAME_deck, deck);
+  setRefField(DB_GAME_currentTurn, 0);
 }

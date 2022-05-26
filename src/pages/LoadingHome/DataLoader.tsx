@@ -66,14 +66,10 @@ export default function DataLoader(props: IProps) {
     context.onUpdatePlayer({ id: snapshot.key!, player }, UpdateType.Delete);
   }
   function onUpdateClient(snapshot: Snapshot) {
-    const [valid, action] = checkNull<GameAction>(snapshot);
-    if (!valid) return;
-    context.onUpdateGameAction(action, ActionPerformer.Client);
+    updateField<GameAction>(ListenerTypes.Client, snapshot);
   }
   function onUpdatePier(snapshot: Snapshot) {
-    const [valid, action] = checkNull<GameAction>(snapshot);
-    if (!valid) return;
-    context.onUpdateGameAction(action, ActionPerformer.Pier);
+    updateField<GameAction>(ListenerTypes.Pier, snapshot);
   }
   function onUpdateDeck(snapshot: Snapshot) {
     updateField<string>(ListenerTypes.Deck, snapshot);

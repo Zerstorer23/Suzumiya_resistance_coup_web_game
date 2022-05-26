@@ -10,7 +10,7 @@ import { IProps, ListenerTypes } from "system/types/CommonTypes";
 enum RoomContextAction {
   RoomLoaded,
   PlayerUpdated,
-  GameActionUpdated,
+  // GameActionUpdated,
   FieldUpdated,
 }
 type RoomActionType = {
@@ -42,8 +42,35 @@ function handlePlayerUpdate(newRoom: Room, action: RoomActionType) {
       break;
   }
 }
-function handleGameActionUpdate(newRoom: Room, action: RoomActionType) {}
-function handleFieldUpdate(newRoom: Room, action: RoomActionType) {}
+function handleFieldUpdate(newRoom: Room, action: RoomActionType) {
+  const fieldType: ListenerTypes = action.mainParam;
+  switch (fieldType) {
+    case ListenerTypes.Client:
+      newRoom.game.clientAction = action.sideParam;
+      console.log(
+        `Game Action Updated by  ${action.sideParam.srcId} to ${action.sideParam}`
+      );
+      break;
+    case ListenerTypes.Pier:
+      newRoom.game.pierAction = action.sideParam;
+      console.log(
+        `Game Action Updated by  ${action.sideParam.srcId} to ${action.sideParam}`
+      );
+      break;
+    case ListenerTypes.Deck:
+      newRoom.game.deck = action.sideParam;
+      break;
+    case ListenerTypes.Header:
+      newRoom.header = action.sideParam;
+      break;
+    case ListenerTypes.PlayerList:
+      newRoom.playerMap = action.sideParam;
+      break;
+    case ListenerTypes.Turn:
+      newRoom.game.currentTurn = action.sideParam;
+      break;
+  }
+}
 
 function roomReducer(prevRoom: Room, action: RoomActionType): Room {
   let newRoom: Room = {
@@ -58,9 +85,9 @@ function roomReducer(prevRoom: Room, action: RoomActionType): Room {
     case RoomContextAction.PlayerUpdated:
       handlePlayerUpdate(newRoom, action);
       break;
-    case RoomContextAction.GameActionUpdated:
-      handleGameActionUpdate(newRoom, action);
-      break;
+    // case RoomContextAction.GameActionUpdated:
+    //   handleGameActionUpdate(newRoom, action);
+    //   break;
     case RoomContextAction.FieldUpdated:
       handleFieldUpdate(newRoom, action);
       break;
@@ -96,22 +123,15 @@ export default function RoomProvider(props: IProps) {
     );
     dispatchRoomState(param);
   }
-  function onUpdateGameAction(action: GameAction, performer: ActionPerformer) {
-    const param: RoomActionType = {
-      type: RoomContextAction.GameActionUpdated,
-      mainParam: action,
-      sideParam: performer,
-    };
-    console.log(
-      "Game Action Updated by " +
-        action.srcId +
-        " to " +
-        action.dstId +
-        " / " +
-        performer
-    );
-    dispatchRoomState(param);
-  }
+  // function onUpdateGameAction(action: GameAction, performer: ActionPerformer) {
+  //   const param: RoomActionType = {
+  //     type: RoomContextAction.GameActionUpdated,
+  //     mainParam: action,
+  //     sideParam: performer,
+  //   };
+
+  //   dispatchRoomState(param);
+  // }
 
   function onUpdateField(field: ListenerTypes, data: any) {
     const param: RoomActionType = {
@@ -128,7 +148,7 @@ export default function RoomProvider(props: IProps) {
     room: roomState,
     onRoomLoaded,
     onUpdatePlayer,
-    onUpdateGameAction,
+    // onUpdateGameAction,
     onUpdateField,
   };
 

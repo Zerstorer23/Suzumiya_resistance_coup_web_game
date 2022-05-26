@@ -8,6 +8,9 @@ import { useContext } from "react";
 import RoomContext from "system/context/room-context";
 import { setStartingRoom } from "system/GameStates/RoomGenerator";
 import { getRoomRef } from "system/Database/RoomDatabase";
+import LocalContext, {
+  LocalField,
+} from "system/context/localInfo/local-context";
 
 // type Props = IProps & {
 //   playerMap: PlayerMap;
@@ -15,12 +18,12 @@ import { getRoomRef } from "system/Database/RoomDatabase";
 export default function PlayersPanel(props: IProps) {
   const history = useHistory();
   const ctx = useContext(RoomContext);
+  const localCtx = useContext(LocalContext);
   console.log("Panel loaded");
   console.log(ctx.room);
   const onClickStart = () => {
     //return if playerId is not the same as hostId
     const room = ctx.room;
-    const numPlayer = room.playerMap.size; //CHANGE
     // if (numPlayer <= 1) return;
     //return if player num == 1
     ///1. SHuffle deck
@@ -31,14 +34,9 @@ export default function PlayersPanel(props: IProps) {
     //while(remaining <= 2) add 5.
     //  5 call sshuffle
     //just distribute 2 starting from 0 ~ last player
-    console.log("PRev map");
-    console.log(ctx.room);
-    // 2. Set each field
-    setStartingRoom(room);
 
-    // 3.
-    const rootRef = getRoomRef();
-    rootRef.set(room);
+    // 2. Set each field
+    setStartingRoom(room, localCtx.get(LocalField.SortedList)?.val);
     //NOTE replace By listening
 
     //    history.replace("/game");

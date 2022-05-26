@@ -1,5 +1,5 @@
 import { db } from "system/Database/Firebase";
-import { joinLocalPlayer } from "system/Database/PlayerDatabase";
+import { getPlayerRef, joinLocalPlayer } from "system/Database/PlayerDatabase";
 import { Player, PlayerMap, Room } from "system/GameStates/GameTypes";
 import { getDefaultRoom } from "system/GameStates/RoomGenerator";
 import { DbRef, Listeners, ListenerTypes } from "system/types/CommonTypes";
@@ -14,6 +14,16 @@ export const DB_PLAYERS = `/playerMap`;
 export const DB_HEADER = `/header`;
 export const DB_HEADER_hostId = `${DB_HEADER}/hostId`;
 export const DB_HEADER_seed = `${DB_HEADER}/seed`;
+
+export function setRefField(field: string, value: any) {
+  const ref = getRef(field);
+  ref.set(value);
+  console.log(`set ${field} to ${value}`);
+}
+export function updatePlayer(playerId: string, player: Player) {
+  const ref = getPlayerRef(playerId);
+  ref.set(player);
+}
 
 export function getRoomRef(): DbRef {
   return getRef(DB_ROOM);

@@ -2,11 +2,9 @@ import { ActionType } from "system/GameStates/States";
 
 export type Player = {
   isSpectating: boolean; //may not need it
-  isConnected: boolean;
   lastActive: Object;
   name: string;
-  fcard: string; //TODO chance to icard : number
-  scard: string; //TODO remove
+  icard: number;
   coins: number;
 };
 export type PlayerEntry = {
