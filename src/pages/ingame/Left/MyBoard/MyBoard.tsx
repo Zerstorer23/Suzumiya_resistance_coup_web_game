@@ -7,6 +7,11 @@ import { Card, CardRole } from "system/cards/Card";
 import CoinDisplayComponent from "pages/ingame/Left/MyBoard/CoinDisplayComponent/CoinDisplayComponent";
 
 export default function MyBoard(): JSX.Element {
+  //useContext Room context
+  //localContext
+  //get myId from local
+  //get myPlyaer from room
+  //put data below
   const card1 = new Card(CardRole.Duke, true);
   const card2 = new Card(CardRole.Captain, true);
 

@@ -1,11 +1,12 @@
 import { ActionType } from "system/GameStates/States";
 
 export type Player = {
-  isSpectating: boolean;
+  isSpectating: boolean; //may not need it
   isConnected: boolean;
   lastActive: Object;
   name: string;
-  cards: number;
+  fcard: string; //TODO chance to icard : number
+  scard: string; //TODO remove
   coins: number;
 };
 export type PlayerEntry = {
@@ -14,7 +15,8 @@ export type PlayerEntry = {
 };
 
 export type GameAction = {
-  id: string;
+  srcId: string;
+  dstId: string;
   action: ActionType;
   time: Object;
 };

@@ -4,9 +4,14 @@ import firebase from "firebase/compat/app";
 import { DB_HEADER_hostId, DB_PLAYERS } from "system/Database/RoomDatabase";
 import { randomInt } from "system/GameConstants";
 import { DbRef } from "system/types/CommonTypes";
+import { CardRole } from "system/cards/Card";
 
 export function getMyRef(myId: string): DbRef {
   return db.ref(`${DB_PLAYERS}/${myId}`);
+}
+
+export function getPlayerRef(playerId: string): DbRef {
+  return getMyRef(playerId);
 }
 
 export function getDefaultPlayer() {
@@ -15,7 +20,8 @@ export function getDefaultPlayer() {
     isConnected: true,
     lastActive: firebase.database.ServerValue.TIMESTAMP,
     name: `ㅇㅇ (${randomInt(1, 255)}.${randomInt(1, 255)})`,
-    cards: 0,
+    fcard: CardRole.None,
+    scard: CardRole.None,
     coins: 0,
   };
   return newPlayer;

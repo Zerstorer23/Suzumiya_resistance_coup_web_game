@@ -11,6 +11,7 @@ export default function RevealedDeckItem(props: Prop): JSX.Element {
   const total = 3;
   var count = 1;
   var imgRes = Images.Asakura;
+  //TODO do the iteration here
 
   return (
     <HorizontalLayout className={classes.itemContainer}>

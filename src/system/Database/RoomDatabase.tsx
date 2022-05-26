@@ -4,6 +4,7 @@ import { Player, PlayerMap, Room } from "system/GameStates/GameTypes";
 import { getDefaultRoom } from "system/GameStates/RoomGenerator";
 import { DbRef, Listeners, ListenerTypes } from "system/types/CommonTypes";
 
+export const DB_ROOM = "/";
 export const DB_GAME = "/game";
 export const DB_GAME_deck = `${DB_GAME}/deck`;
 export const DB_GAME_currentTurn = `${DB_GAME}/currentTurn`;
@@ -14,8 +15,16 @@ export const DB_HEADER = `/header`;
 export const DB_HEADER_hostId = `${DB_HEADER}/hostId`;
 export const DB_HEADER_seed = `${DB_HEADER}/seed`;
 
+export function getRoomRef(): DbRef {
+  return getRef(DB_ROOM);
+}
+export function getRef(refName: string): DbRef {
+  //NOTE USE DB TAGS
+  return db.ref(refName);
+}
+
 export async function initialiseRoom() {
-  const roomRef = db.ref("/");
+  const roomRef = getRoomRef();
   const defaultRoom = getDefaultRoom();
   await roomRef.set(defaultRoom);
   const myId = await joinLocalPlayer(true);
@@ -27,7 +36,7 @@ export async function joinLobby(): Promise<string> {
 }
 
 export async function loadRoom(): Promise<Room> {
-  const roomRef = db.ref("/");
+  const roomRef = getRoomRef();
   const snapshot = await roomRef.get();
   if (!snapshot.exists()) {
     console.log("no data");

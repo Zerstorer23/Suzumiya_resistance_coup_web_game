@@ -25,6 +25,7 @@ export enum ActionType {
   DefendWithAmbassador,
   Accept,
 }
+//https://docs.google.com/spreadsheets/d/1pXbooNl6BwfQAUUKAWGwR-WAyPyP9LX71ek3_Odfvlw/edit#gid=0
 
 export function getActionsFromState(state: BoardState): ActionType[] {
   switch (state) {

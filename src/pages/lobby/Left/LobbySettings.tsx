@@ -5,7 +5,9 @@ import Dropdown from "pages/components/ui/Dropdown";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import classes from "./LobbySettings.module.css";
 import RoomContext from "system/context/room-context";
-import LocalContext from "system/context/localInfo/local-context";
+import LocalContext, {
+  LocalField,
+} from "system/context/localInfo/local-context";
 import { Player } from "system/GameStates/GameTypes";
 import { getMyRef } from "system/Database/PlayerDatabase";
 
@@ -18,7 +20,7 @@ export default function LobbySettings() {
   const [networkCondition, setNetworkCondition] = useState("100");
   const ctx = useContext(RoomContext);
   const localCtx = useContext(LocalContext);
-  const myId: string | null = localCtx.myId;
+  const myId: string | null = localCtx.get(LocalField.Id)?.val;
   if (myId === null) {
     return <p>Need to reload</p>;
   }

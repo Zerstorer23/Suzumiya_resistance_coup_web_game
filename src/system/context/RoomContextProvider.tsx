@@ -102,7 +102,14 @@ export default function RoomProvider(props: IProps) {
       mainParam: action,
       sideParam: performer,
     };
-    console.log("Game Action Updated " + action.id + " / " + performer);
+    console.log(
+      "Game Action Updated by " +
+        action.srcId +
+        " to " +
+        action.dstId +
+        " / " +
+        performer
+    );
     dispatchRoomState(param);
   }
 

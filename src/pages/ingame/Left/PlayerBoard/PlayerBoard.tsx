@@ -4,6 +4,10 @@ import classes from "./PlayerBoard.module.css";
 import PlayerItem from "./PlayerItem/PlayerItem";
 
 export default function PlayerBoard(): JSX.Element {
+  //TODO
+  //localContext
+  //get list
+  //put list
   return (
     <Fragment>
       <div className={`${gc.round_border} ${classes.container}`}>

@@ -26,12 +26,16 @@ import {
   RoomHeader,
 } from "system/GameStates/GameTypes";
 import RoomContext from "system/context/room-context";
-import LocalContext from "system/context/localInfo/local-context";
+import LocalContext, {
+  LocalField,
+} from "system/context/localInfo/local-context";
 import { db } from "system/Database/Firebase";
+import { getSortedListFromMap } from "system/GameStates/RoomGenerator";
 
 export default function DataLoader(props: IProps) {
   const [isLoaded, setStatus] = useState(LoadStatus.init);
   const context = useContext(RoomContext);
+  const localCtx = useContext(LocalContext);
   const history = useHistory();
   console.log("Loading Status = " + isLoaded);
   ///====LOAD AND LISTEN DB===///
@@ -95,9 +99,8 @@ export default function DataLoader(props: IProps) {
   }
 
   ///////////////END LISTENER--////////////////////////
-  const localCtx = useContext(LocalContext);
   function onDisconnectCleanUp(id: string) {
-    localCtx.setMyId(id);
+    localCtx.get(LocalField.Id)?.set(id);
     const rootRef = db.ref(`${DB_PLAYERS}/${id}`);
     rootRef.onDisconnect().remove();
   }
@@ -147,8 +150,9 @@ export default function DataLoader(props: IProps) {
     }
   }, [isLoaded]);
 
+  const myId = localCtx.get(LocalField.Id)?.val;
   useEffect(() => {
-    if (localCtx.myId == null) return;
+    if (myId === null) return;
     if (context.room.game.currentTurn < 0) {
       console.log("is joined, redirect lobby");
       history.replace("/lobby");
@@ -158,6 +162,14 @@ export default function DataLoader(props: IProps) {
       // return <Redirect push to="/game" />;
     }
     setStatus(LoadStatus.outerSpace);
-  }, [localCtx.myId]);
+  }, [myId]);
+
+  useEffect(() => {
+    const playerMap = context.room.playerMap;
+    const sortedList = getSortedListFromMap(playerMap);
+    localCtx.get(LocalField.SortedList)?.set(sortedList);
+    console.log("New sorted list: ");
+    console.log(sortedList);
+  }, [context.room.playerMap]);
   return <Fragment>{props.children}</Fragment>;
 }

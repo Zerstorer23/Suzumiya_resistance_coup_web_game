@@ -1,11 +1,17 @@
 import get, { Images } from "resources/Resources";
 
 export enum CardRole {
-  Duke,
-  Captain,
-  Assassin,
-  Contessa,
-  Ambassador,
+  None = "N",
+  Duke = "D",
+  Captain = "C",
+  Assassin = "A",
+  Contessa = "T",
+  Ambassador = "S",
+  DEAD_Duke = "d",
+  DEAD_Captain = "c",
+  DEAD_Assassin = "a",
+  DEAD_Contessa = "t",
+  DEAD_Ambassador = "s",
 }
 
 export class Card {
