@@ -19,7 +19,7 @@ export default function ActionBoards(): JSX.Element {
   //ENUM
   const ctx = useContext(RoomContext);
   const localCtx = useContext(LocalContext);
-  const [boardElem, setBoardElem] = useState(<Fragment />);
+  const [boardElem, setBoardElem] = useState(<BaseBoard />);
   const boardState: BoardState = readStateFromRoom(
     ctx.room.game.pierAction.action,
     ctx.room.game.clientAction.action
@@ -35,7 +35,7 @@ export default function ActionBoards(): JSX.Element {
       currentTurnId,
       myId
     );
-    setBoardElem(elem);
+    // setBoardElem(elem);
   }, [boardState]);
 
   return (

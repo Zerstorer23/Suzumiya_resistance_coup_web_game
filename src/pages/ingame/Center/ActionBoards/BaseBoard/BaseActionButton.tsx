@@ -4,6 +4,7 @@ import classes from "./BaseBoard.module.css";
 import { ActionInfo } from "system/GameStates/ActionInfo";
 import { Fragment } from "react";
 import { Card } from "system/cards/Card";
+import IMG_NAGATO from "resources/images/nagato2.png";
 
 type Prop = IProps & {
   actionInfo?: ActionInfo;
@@ -24,7 +25,9 @@ export default function BaseActionButton(props: Prop) {
       className={`${classes.cell} ${props.className}`}
       onClick={props.onClickButton}
     >
-      {name}
+      <div>{/* <img src={IMG_NAGATO} alt="d" /> */}</div>
+      <p>{name}</p>
+      <p>{/* [Lie] */}</p>
     </button>
   );
 }
