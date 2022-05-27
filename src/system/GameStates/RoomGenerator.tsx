@@ -2,7 +2,6 @@ import {
   Game,
   GameAction,
   Player,
-  PlayerEntry,
   PlayerMap,
   Room,
   RoomHeader,
@@ -49,26 +48,22 @@ export function getDefaultRoom(): Room {
 }
 
 //TODO make a sorted list by ID
-export function getSortedListFromMap(map: PlayerMap): PlayerEntry[] {
-  const arr: PlayerEntry[] = [];
-  map.forEach((player, key) => {
-    const e: PlayerEntry = {
-      id: key,
-      player,
-    };
-    arr.push(e);
+export function getSortedListFromMap(map: PlayerMap): string[] {
+  const arr: string[] = [];
+  map.forEach((_player, id) => {
+    arr.push(id);
   });
+
   //TODO how does string comparison wwork?
-  const sortedArr = arr.sort((e1: PlayerEntry, e2: PlayerEntry) => {
-    if (e1.id > e2.id) {
-      return 1;
-    }
-
-    if (e1.id < e2.id) {
-      return -1;
-    }
-
-    return 0;
+  const sortedArr = arr.sort((e1: string, e2: string) => {
+    return e1 > e2 ? 1 : e1 < e2 ? -1 : 0;
+    // if (e1 > e2) {
+    //   return 1;
+    // }
+    // if (e1 < e2) {
+    //   return -1;
+    // }
+    // return 0;
   });
   return sortedArr;
 }
@@ -86,17 +81,17 @@ function getStartingGame(deck: string): Game {
   };
 }
 
-export function setStartingRoom(room: Room, playerList: PlayerEntry[]) {
+export function setStartingRoom(room: Room, playerList: string[]) {
   const numPlayer = room.playerMap.size;
   //Set Header
   updateReference(DB_HEADER_seed, getRandomSeed());
   //Set Player Cards
-  playerList.forEach((playerEntry, index) => {
-    const player = playerEntry.player;
+  playerList.forEach((playerId, index) => {
+    const player = room.playerMap.get(playerId)!;
     player.coins = 2;
     player.icard = index * 2;
     player.isSpectating = false;
-    updatePlayerReference(playerEntry.id, player);
+    updatePlayerReference(playerId, player);
   });
   //Set Room
   const deck: string = generateStartingDeck(numPlayer);

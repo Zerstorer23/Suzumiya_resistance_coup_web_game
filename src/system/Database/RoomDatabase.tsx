@@ -36,6 +36,8 @@ export function getRef(refName: string): DbRef {
 export async function initialiseRoom() {
   const roomRef = getRoomRef();
   const defaultRoom = getDefaultRoom();
+  console.log("Init room");
+  console.log(defaultRoom);
   await roomRef.set(defaultRoom);
   const myId = await joinLocalPlayer(true);
   return myId;

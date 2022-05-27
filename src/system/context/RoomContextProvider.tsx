@@ -1,10 +1,9 @@
 import { useReducer } from "react";
 import RoomContext, {
-  ActionPerformer,
   RoomContextType,
   UpdateType,
 } from "system/context/room-context";
-import { GameAction, PlayerEntry, Room } from "system/GameStates/GameTypes";
+import { PlayerEntry, Room } from "system/GameStates/GameTypes";
 import { getDefaultRoom } from "system/GameStates/RoomGenerator";
 import { IProps, ListenerTypes } from "system/types/CommonTypes";
 enum RoomContextAction {
