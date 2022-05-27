@@ -10,7 +10,6 @@ import LocalContext, {
   LocalField,
 } from "system/context/localInfo/local-context";
 import RoomContext from "system/context/room-context";
-import { PlayerEntry } from "system/GameStates/GameTypes";
 import { BoardState, readStateFromRoom } from "system/GameStates/States";
 import classes from "./ActionBoards.module.css";
 import { Game } from "system/GameStates/GameTypes";
@@ -25,9 +24,9 @@ export default function ActionBoards(): JSX.Element {
     ctx.room.game.clientAction.action
   );
   useEffect(() => {
-    const playerList: PlayerEntry[] = localCtx.getVal(LocalField.SortedList);
+    const playerList: string[] = localCtx.getVal(LocalField.SortedList);
     const currentTurn = ctx.room.game.currentTurn;
-    const currentTurnId = playerList[currentTurn].id;
+    const currentTurnId = playerList[currentTurn];
     const myId = localCtx.getVal(LocalField.Id);
     const elem = getBoardElemFromRoom(
       boardState,
@@ -35,7 +34,7 @@ export default function ActionBoards(): JSX.Element {
       currentTurnId,
       myId
     );
-    // setBoardElem(elem);
+    setBoardElem(elem);
   }, [boardState]);
 
   return (

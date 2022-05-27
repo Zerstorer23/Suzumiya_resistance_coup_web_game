@@ -9,7 +9,7 @@ import LocalContext, {
   LocalField,
 } from "system/context/localInfo/local-context";
 import { Player } from "system/GameStates/GameTypes";
-import { getMyRef } from "system/Database/PlayerDatabase";
+import { ReferenceManager } from "system/Database/RoomDatabase";
 
 export const networkOptions: ItemPair[] = [
   { key: "1", label: "Normal", value: "100" },
@@ -25,7 +25,7 @@ export default function LobbySettings() {
     return <p>Need to reload</p>;
   }
   const myPlayer: Player = ctx.room.playerMap.get(myId)!;
-  const myRef = getMyRef(myId);
+  const myRef = ReferenceManager.getPlayerReference(myId);
 
   const onChangeNetworkCondition = (event: any) => {
     console.log(event.target.value);

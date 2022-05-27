@@ -7,7 +7,7 @@ type Props = IProps & { card: Card };
 
 export default function MyCardComponent(props: Props): JSX.Element {
   const card = props.card;
-  const isAlive = true;
+  const isAlive = card.isDead;
   return (
     <HorizontalLayout className={classes.container}>
       <img

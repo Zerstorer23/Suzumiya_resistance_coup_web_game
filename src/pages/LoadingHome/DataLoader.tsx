@@ -2,10 +2,10 @@ import { Redirect, useHistory } from "react-router-dom";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { ActionPerformer, UpdateType } from "system/context/room-context";
 import {
-  DB_PLAYERS,
   initialiseRoom,
   joinLobby,
   loadRoom,
+  ReferenceManager,
   registerListeners,
 } from "system/Database/RoomDatabase";
 import {
@@ -97,8 +97,8 @@ export default function DataLoader(props: IProps) {
   ///////////////END LISTENER--////////////////////////
   function onDisconnectCleanUp(id: string) {
     localCtx.setVal(LocalField.Id, id);
-    const rootRef = db.ref(`${DB_PLAYERS}/${id}`);
-    rootRef.onDisconnect().remove();
+    const myRef = ReferenceManager.getPlayerReference(id);
+    myRef.onDisconnect().remove();
   }
   async function setUpRoom() {
     const myId = await initialiseRoom();

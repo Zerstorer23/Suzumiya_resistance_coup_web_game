@@ -53,7 +53,7 @@ export default function PlayersPanel(props: IProps) {
     <VerticalLayout className={`${classes.container} `}>
       <div className={classes.headerContainer}>
         <p className={classes.headerTitle}>Hamang No.6</p>
-        <p className={classes.headerPlayerNum}>{`${currPlayer}/20`}</p>
+        <p className={classes.headerPlayerNum}>{`${currPlayer} connected`}</p>
       </div>
       <VerticalLayout className={classes.list}>{elemList}</VerticalLayout>
       <button className={classes.buttonStart} onClick={onClickStart}>

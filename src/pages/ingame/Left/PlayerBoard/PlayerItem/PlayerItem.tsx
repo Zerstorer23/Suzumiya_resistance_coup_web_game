@@ -7,13 +7,12 @@ import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import gc from "global.module.css";
 import classes from "./PlayerItem.module.css";
 import { IProps } from "system/types/CommonTypes";
-import { Player, PlayerEntry } from "system/GameStates/GameTypes";
+import { Player } from "system/GameStates/GameTypes";
 
 type Props = IProps & {
   player: Player;
 };
 export default function PlayerItem(props: Props): JSX.Element {
-  //const player = props.player;
   return (
     <HorizontalLayout className={`${classes.container} ${classes.selectable}`}>
       <img

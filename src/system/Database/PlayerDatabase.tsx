@@ -1,17 +1,7 @@
-import { db } from "system/Database/Firebase";
 import { Player } from "system/GameStates/GameTypes";
 import firebase from "firebase/compat/app";
-import { DB_HEADER_hostId, DB_PLAYERS } from "system/Database/RoomDatabase";
 import { randomInt } from "system/GameConstants";
-import { DbRef } from "system/types/CommonTypes";
-
-export function getMyRef(myId: string): DbRef {
-  return db.ref(`${DB_PLAYERS}/${myId}`);
-}
-
-export function getPlayerRef(playerId: string): DbRef {
-  return getMyRef(playerId);
-}
+import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
 
 export function getDefaultPlayer() {
   const newPlayer: Player = {
@@ -25,13 +15,13 @@ export function getDefaultPlayer() {
 }
 
 export async function joinLocalPlayer(asHost: boolean): Promise<string> {
-  const playersRef = db.ref(DB_PLAYERS);
+  const playersRef = ReferenceManager.getRef(DbReferences.PLAYERS);
   const player = getDefaultPlayer();
   const myRef = playersRef.push();
   myRef.set(player);
   const myId = await myRef.key;
   if (asHost) {
-    db.ref(DB_HEADER_hostId).set(myId); //.setValue().update();
+    ReferenceManager.updateReference(DbReferences.HEADER_hostId, myId);
   }
   return myId!;
 }

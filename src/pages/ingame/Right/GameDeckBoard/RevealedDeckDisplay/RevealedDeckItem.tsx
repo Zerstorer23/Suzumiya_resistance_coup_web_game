@@ -3,10 +3,9 @@ import gc from "global.module.css";
 import classes from "./RevealedDeckDisplay.module.css";
 import getImage, { Images } from "resources/Resources";
 import { CardRole } from "system/cards/Card";
-import { Deck } from "system/cards/Deck";
 import { IProps } from "system/types/CommonTypes";
 
-type Prop = IProps & { card: CardRole; deck: Deck };
+type Prop = IProps & { card: CardRole };
 export default function RevealedDeckItem(props: Prop): JSX.Element {
   const total = 3;
   var count = 1;

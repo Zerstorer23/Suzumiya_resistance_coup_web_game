@@ -1,40 +1,57 @@
 import { db } from "system/Database/Firebase";
-import { getPlayerRef, joinLocalPlayer } from "system/Database/PlayerDatabase";
+import { joinLocalPlayer } from "system/Database/PlayerDatabase";
 import { Player, PlayerMap, Room } from "system/GameStates/GameTypes";
 import { getDefaultRoom } from "system/GameStates/RoomGenerator";
 import { DbRef, Listeners, ListenerTypes } from "system/types/CommonTypes";
 
-export const DB_ROOM = "/";
-export const DB_GAME = "/game";
-export const DB_GAME_deck = `${DB_GAME}/deck`;
-export const DB_GAME_currentTurn = `${DB_GAME}/currentTurn`;
-export const DB_GAME_pierAction = `${DB_GAME}/pierAction`;
-export const DB_GAME_clientAction = `${DB_GAME}/clientAction`;
-export const DB_PLAYERS = `/playerMap`;
-export const DB_HEADER = `/header`;
-export const DB_HEADER_hostId = `${DB_HEADER}/hostId`;
-export const DB_HEADER_seed = `${DB_HEADER}/seed`;
+// export const DB_ROOM = "/";
+// export const DB_GAME = "/game";
+// export const DB_GAME_deck = `${DB_GAME}/deck`;
+// export const DB_GAME_currentTurn = `${DB_GAME}/currentTurn`;
+// export const DB_GAME_pierAction = `${DB_GAME}/pierAction`;
+// export const DB_GAME_clientAction = `${DB_GAME}/clientAction`;
+// export const DB_PLAYERS = `/playerMap`;
+// export const DB_HEADER = `/header`;
+// export const DB_HEADER_hostId = `${DB_HEADER}/hostId`;
+// export const DB_HEADER_seed = `${DB_HEADER}/seed`;
 
-export function updateReference(field: string, value: any) {
-  const ref = getRef(field);
-  ref.set(value);
-  console.log(`set ${field} to ${value}`);
-}
-export function updatePlayerReference(playerId: string, player: Player) {
-  const ref = getPlayerRef(playerId);
-  ref.set(player);
+export enum DbReferences {
+  ROOM = "/",
+  GAME = "/game",
+  GAME_deck = `/game/deck`,
+  GAME_currentTurn = `/game/currentTurn`,
+  GAME_pierAction = `/game/pierAction`,
+  GAME_clientAction = `/game/clientAction`,
+  PLAYERS = `/playerMap`,
+  HEADER = `/header`,
+  HEADER_hostId = `/header/hostId`,
+  HEADER_seed = `/header/seed`,
 }
 
-export function getRoomRef(): DbRef {
-  return getRef(DB_ROOM);
-}
-export function getRef(refName: string): DbRef {
-  //NOTE USE DB TAGS
-  return db.ref(refName);
-}
+export const ReferenceManager = {
+  updateReference(field: DbReferences, value: any) {
+    const ref = this.getRef(field);
+    ref.set(value);
+    // console.log(`set ${field} to ${value}`);
+  },
+  updatePlayerReference(playerId: string, player: Player) {
+    const ref = ReferenceManager.getPlayerReference(playerId);
+    ref.set(player);
+  },
+  getRoomRef(): DbRef {
+    return this.getRef(DbReferences.ROOM);
+  },
+  getRef(refName: DbReferences): DbRef {
+    //NOTE USE DB TAGS
+    return db.ref(refName);
+  },
+  getPlayerReference(playerId: string): DbRef {
+    return db.ref(`${DbReferences.PLAYERS}/${playerId}`);
+  },
+};
 
 export async function initialiseRoom() {
-  const roomRef = getRoomRef();
+  const roomRef = ReferenceManager.getRoomRef();
   const defaultRoom = getDefaultRoom();
   await roomRef.set(defaultRoom);
   const myId = await joinLocalPlayer(true);
@@ -46,7 +63,7 @@ export async function joinLobby(): Promise<string> {
 }
 
 export async function loadRoom(): Promise<Room> {
-  const roomRef = getRoomRef();
+  const roomRef = ReferenceManager.getRoomRef();
   const snapshot = await roomRef.get();
   if (!snapshot.exists()) {
     console.log("no data");
@@ -65,10 +82,10 @@ export async function loadRoom(): Promise<Room> {
 }
 
 function parseGame(listeners: Listeners) {
-  const deckRef = db.ref(DB_GAME_deck);
-  const turnRef = db.ref(DB_GAME_currentTurn);
-  const pierRef = db.ref(DB_GAME_pierAction);
-  const clientRef = db.ref(DB_GAME_clientAction);
+  const deckRef = ReferenceManager.getRef(DbReferences.GAME_deck);
+  const turnRef = ReferenceManager.getRef(DbReferences.GAME_currentTurn); //db.r
+  const pierRef = ReferenceManager.getRef(DbReferences.GAME_pierAction); // db.
+  const clientRef = ReferenceManager.getRef(DbReferences.GAME_clientAction);
 
   listeners.set(ListenerTypes.Deck, deckRef);
   listeners.set(ListenerTypes.Turn, turnRef);
@@ -76,10 +93,10 @@ function parseGame(listeners: Listeners) {
   listeners.set(ListenerTypes.Client, clientRef);
 }
 function parseHeader(listeners: Listeners) {
-  const headerRef = db.ref(DB_HEADER);
+  const headerRef = ReferenceManager.getRef(DbReferences.HEADER);
   listeners.set(ListenerTypes.Header, headerRef);
 
-  const playersRef = db.ref(DB_PLAYERS);
+  const playersRef = ReferenceManager.getRef(DbReferences.PLAYERS);
   listeners.set(ListenerTypes.PlayerList, playersRef);
 }
 
@@ -97,23 +114,6 @@ function parsePlayerMap(roomMap: PlayerMap): PlayerMap {
   });
   return playerMap;
 }
-// export async function loadAndListenLobby(): Promise<RoomStateType | null> {
-//   //TODO DONT EVEN LOAD>
-//   //JUST LISTEN
-//   const roomRef = db.ref("/");
-//   const snapshot = await roomRef.get();
-//   if (!snapshot.exists()) {
-//     console.log("no data");
-//     return null;
-//   } else {
-//     const room: Room = snapshot.val();
-//     room.playerMap = parsePlayerMap(room.playerMap);
-//     const listeners = parseListeners();
-//     console.log("Loaded Room: ");
-//     console.log(room);
-//     return { room, listeners };
-//   }
-// }
 
 export function registerListeners(): Listeners {
   const listeners = parseListeners();

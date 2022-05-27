@@ -3,27 +3,28 @@ import { useContext } from "react";
 import gc from "global.module.css";
 import classes from "./PlayerBoard.module.css";
 import PlayerItem from "./PlayerItem/PlayerItem";
-import LocalContext from "system/context/localInfo/local-context";
 import { getSortedListFromMap } from "system/GameStates/RoomGenerator";
 import RoomContext from "system/context/room-context";
-import { PlayerEntry } from "system/GameStates/GameTypes";
-import { IProps } from "system/types/CommonTypes";
-import { Player } from "system/GameStates/GameTypes";
-
+//https://www.npmjs.com/package/react-youtube-background
 export default function PlayerBoard(): JSX.Element {
   //TODO
   //localContext
   //get list
   //put list
   const ctx = useContext(RoomContext);
+<<<<<<< HEAD
   const sortedList: PlayerEntry[] = getSortedListFromMap(ctx.room.playerMap);
 
+=======
+  const playerMap = ctx.room.playerMap;
+  const sortedList: string[] = getSortedListFromMap(playerMap);
+>>>>>>> 93a4ba4b94445ac31edd5f1e5ee9eaa8675e7fbb
   return (
     <Fragment>
       <div className={`${gc.round_border} ${classes.container}`}>
         <p className={classes.header}>Players</p>
-        {sortedList.map((entry) => (
-          <PlayerItem player={ctx.room.playerMap.get(entry.id)!} />
+        {sortedList.map((playerId) => (
+          <PlayerItem key={playerId} player={playerMap.get(playerId)!} />
         ))}
       </div>
     </Fragment>
