@@ -3,23 +3,11 @@ import { joinLocalPlayer } from "system/Database/PlayerDatabase";
 import { Player, PlayerMap, Room } from "system/GameStates/GameTypes";
 import { getDefaultRoom } from "system/GameStates/RoomGenerator";
 import { DbRef, Listeners, ListenerTypes } from "system/types/CommonTypes";
-
-// export const DB_ROOM = "/";
-// export const DB_GAME = "/game";
-// export const DB_GAME_deck = `${DB_GAME}/deck`;
-// export const DB_GAME_currentTurn = `${DB_GAME}/currentTurn`;
-// export const DB_GAME_pierAction = `${DB_GAME}/pierAction`;
-// export const DB_GAME_clientAction = `${DB_GAME}/clientAction`;
-// export const DB_PLAYERS = `/playerMap`;
-// export const DB_HEADER = `/header`;
-// export const DB_HEADER_hostId = `${DB_HEADER}/hostId`;
-// export const DB_HEADER_seed = `${DB_HEADER}/seed`;
-
 export enum DbReferences {
   ROOM = "/",
   GAME = "/game",
   GAME_deck = `/game/deck`,
-  GAME_currentTurn = `/game/currentTurn`,
+  GAME_state = `/game/state`,
   GAME_pierAction = `/game/pierAction`,
   GAME_clientAction = `/game/clientAction`,
   PLAYERS = `/playerMap`,

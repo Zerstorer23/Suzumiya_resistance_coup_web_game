@@ -5,58 +5,32 @@ export const PAGE_LOBBY = "lobby";
 
 //Determined from pier and client action combination
 export enum BoardState {
-  ChoosingBaseAction, //None
-  AcceptedState,
-  /*
-  Either one Accepts
-  GetOne 
-
-  */
-  CalledForeignAid, //+2 None
-  CalledCoup, //coup None
-  CalledDuke, //duke None
-  CalledCaptain, //captain None
-  CalledAssassin, //assassin None
-  CalledAmbassador, //amba None
-  ContessaBlockedAssassin, //assassin contessa
-  CaptainBlockedCaptain, //Cap Cap
-  AmbassadorBlockedCaptain, //Cap Amba
-  ClientIsALie, //lie any
-  PierIsALie, //Any Lie
-  Exception,
+  ChoosingBaseAction,
+  GetOneAccepted,
+  CalledGetTwo,
+  AidBlocked,
+  DukeBlocksAccepted,
+  DukeBlocksChallenged,
+  CalledCoup,
+  CoupAccepted,
+  CalledGetThree,
+  GetThreeChallenged,
+  CalledChangeCards,
+  AmbassadorAccepted,
+  AmbassadorChallenged,
+  CalledSteal,
+  StealAccepted,
+  StealChallenged,
+  StealBlocked,
+  StealBlockAccepted,
+  StealBlockChallenged,
+  CalledAssassinate,
+  AssissinateAccepted,
+  AssassinateChallenged,
+  AssassinBlocked,
+  ContessaChallenged,
+  ContessaAccepted,
 }
-/*
-    switch (boardState) {
-      case BoardState.ChoosingBaseAction:
-        break;
-      case BoardState.SolveActions:
-        break;
-      case BoardState.CalledForeignAid:
-        break;
-      case BoardState.CalledCoup:
-        break;
-      case BoardState.CalledDuke:
-        break;
-      case BoardState.CalledCaptain:
-        break;
-      case BoardState.CalledAssassin:
-        break;
-      case BoardState.CalledAmbassador:
-        break;
-      case BoardState.ContessaBlockedAssassin:
-        break;
-      case BoardState.ClientIsALie:
-        break;
-      case BoardState.CaptainBlockedCaptain:
-        break;
-      case BoardState.AmbassadorBlockedCaptain:
-        break;
-      case BoardState.PierIsALie:
-        break;
-      case BoardState.Exception:
-        break;
-    }
-*/
 //These are actions that each player can make
 export enum ActionType {
   None,
@@ -67,6 +41,7 @@ export enum ActionType {
   GetThree,
   Assassinate,
   ContessaBlocksAssassination,
+  DukeBlocksForeignAid,
   ChangeCards,
   IsALie,
   DefendWithCaptain,
@@ -74,53 +49,39 @@ export enum ActionType {
   Accept,
 }
 //https://docs.google.com/spreadsheets/d/1pXbooNl6BwfQAUUKAWGwR-WAyPyP9LX71ek3_Odfvlw/edit#gid=0
+/*
+State Table
+?PierAction-> [next state]
+/Client Action->[next state]
 
-export function readStateFromRoom(
-  pierAction: ActionType,
-  clientAction: ActionType
-) {
-  if (clientAction === ActionType.IsALie) {
-    return BoardState.ClientIsALie;
-  }
-  if (pierAction === ActionType.IsALie) {
-    return BoardState.PierIsALie;
-  }
-  if (clientAction === ActionType.Accept || pierAction === ActionType.Accept) {
-    return BoardState.AcceptedState;
-  }
-
-  switch (pierAction) {
-    case ActionType.None:
-      return BoardState.ChoosingBaseAction;
-    case ActionType.GetOne:
-      return BoardState.AcceptedState;
-    case ActionType.Coup:
-      return BoardState.CalledCoup;
-    case ActionType.GetForeignAid:
-      return BoardState.CalledForeignAid;
-    case ActionType.GetThree:
-      return BoardState.CalledDuke;
-    case ActionType.Steal:
-      switch (clientAction) {
-        case ActionType.DefendWithAmbassador:
-          return BoardState.AmbassadorBlockedCaptain;
-        case ActionType.DefendWithCaptain:
-          return BoardState.CaptainBlockedCaptain;
-        case ActionType.None:
-          return BoardState.CalledCaptain;
-      }
-      return BoardState.Exception;
-    case ActionType.Assassinate:
-      switch (clientAction) {
-        case ActionType.ContessaBlocksAssassination:
-          return BoardState.ContessaBlockedAssassin;
-        case ActionType.None:
-          return BoardState.CalledAssassin;
-      }
-      return BoardState.Exception;
-    case ActionType.ChangeCards:
-      return BoardState.CalledAmbassador;
-    default:
-      return BoardState.Exception;
-  }
-}
+[ChoosingBaseAction]
+//None challengable
+Get 1 : ?GetOne-> [CalledGetOne : Solve Wait NextTurn]
+Get 2 : ?GetTwo-> [CalledGetTwo: Wait] 
+                  Unchanged-> Solve NextTurn
+                  /Duke-> [DukeBlocks: Wait]
+                          ?Accept->[DukeBlocksAccepted:Solve Wait NextTurn]
+                          ?Lie->   [DukeBlocksChallenged: Solve Wait NextTurn]
+Coup  : ?Coup-> [CalledCoup: Wait]
+                /Accept->[CoupAccepted :param, Solve Wait NextTurn]
+//==Anyone can challenge
+Duke  : ?GetThree->[CalledGetThree: Wait]
+                   Unchanged->  Solve NextTurn
+                  /Lie-> [GetThreeChallenged:Solve Wait NextTurn]
+Ambassador: ?ChangeCards->[CalledChangeCards : Wait]
+                          Unchallenged->[AmbassadorAccepted: Solve Wait NextTurn]
+                          /Lie->        [AmbassadorChallenged: Solve Wait NextTurn]
+//==Only targetted can challenge
+Captain: ?Steal-> [CalledSteal:Wait]
+                  /Accept->     [StealAccepted: Solve NextTurn]
+                  /Lie->        [StealChallenged:Solve Wait NextTurn]
+                  /Block;param->[StealBlocked: Wait]
+                                ?Accept;param->[StealBlockedAccepted: Solve Wait NextTurn]
+                                ?Lie;param->[StealBlockedChallenged: Solve Wait NextTurn]
+Assassin: ?Assassin->[CalledAssassinate: Wait]
+                      /Accept-> [AssissinateAccepted :Solve Wait NextTurn]
+                      /Lie->    [AssassinateChallenged:Solve Wait NextTurn]
+                      /Block->  [AssassinateChallengedWithContessa : Wait]
+                                        ?Lie->[ContessaChallenged:Solve Wait NextTurn]
+                                        ?Accept->[ContessaAccepted:Solve Wait NextTurn]
+*/

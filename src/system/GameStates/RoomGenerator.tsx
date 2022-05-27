@@ -5,26 +5,28 @@ import {
   PlayerMap,
   Room,
   RoomHeader,
+  TurnState,
 } from "system/GameStates/GameTypes";
 import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 import { getRandomSeed } from "system/GameConstants";
-import { ActionType } from "system/GameStates/States";
+import { BoardState } from "system/GameStates/States";
 import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
-import { Card, CardRole } from "system/cards/Card";
 
 export function getDefaultAction(): GameAction {
   return {
     srcId: "", //NOTE set when press action button
     dstId: "",
-    action: ActionType.None,
     time: firebase.database.ServerValue.TIMESTAMP,
   };
 }
 export function getDefaultGame(): Game {
   return {
-    currentTurn: -1,
     deck: "",
+    state: {
+      turn: -1,
+      board: BoardState.ChoosingBaseAction,
+    },
     pierAction: getDefaultAction(),
     clientAction: getDefaultAction(),
   };
@@ -51,16 +53,9 @@ export function getSortedListFromMap(map: PlayerMap): string[] {
   });
 
   //TODO how does string comparison wwork?
-  const sortedArr = arr.sort((e1: string, e2: string) => {
-    return e1 > e2 ? 1 : e1 < e2 ? -1 : 0;
-    // if (e1 > e2) {
-    //   return 1;
-    // }
-    // if (e1 < e2) {
-    //   return -1;
-    // }
-    // return 0;
-  });
+  const sortedArr = arr.sort((e1: string, e2: string) =>
+    e1 > e2 ? 1 : e1 < e2 ? -1 : 0
+  );
   return sortedArr;
 }
 
@@ -70,14 +65,6 @@ function generateStartingDeck(numPlayers: number): string {
   if (numPlayers > 6) numCards = (numPlayers - 6) * 5 + 15;
 
   return "DCATS";
-}
-function getStartingGame(deck: string): Game {
-  return {
-    currentTurn: 0,
-    deck: deck,
-    pierAction: getDefaultAction(),
-    clientAction: getDefaultAction(),
-  };
 }
 
 export function setStartingRoom(room: Room, playerList: string[]) {
@@ -94,6 +81,7 @@ export function setStartingRoom(room: Room, playerList: string[]) {
   });
   //Set Room
   const deck: string = generateStartingDeck(numPlayer);
+  const state: TurnState = { turn: 0, board: BoardState.ChoosingBaseAction };
   ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
-  ReferenceManager.updateReference(DbReferences.GAME_currentTurn, 0);
+  ReferenceManager.updateReference(DbReferences.GAME_state, state);
 }

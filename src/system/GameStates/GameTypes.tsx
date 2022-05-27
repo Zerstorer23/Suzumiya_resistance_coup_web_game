@@ -1,8 +1,8 @@
-import { ActionType } from "system/GameStates/States";
+import { ActionType, BoardState } from "system/GameStates/States";
 
 export type Player = {
   isSpectating: boolean; //may not need it
-  lastActive: Object;
+  lastActive: Object | number;
   name: string;
   icard: number;
   coins: number;
@@ -15,14 +15,19 @@ export type PlayerEntry = {
 export type GameAction = {
   srcId: string;
   dstId: string;
-  action: ActionType;
-  time: Object;
+  param?: any | undefined;
+  // action: ActionType;
+  time: Object | number;
+};
+export type TurnState = {
+  turn: number;
+  board: BoardState;
 };
 export type Game = {
   deck: string;
-  currentTurn: number;
   pierAction: GameAction;
   clientAction: GameAction;
+  state: TurnState;
 };
 export type RoomHeader = {
   seed: number;

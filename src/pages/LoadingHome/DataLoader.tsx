@@ -1,6 +1,6 @@
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Fragment, useContext, useEffect, useState } from "react";
-import { ActionPerformer, UpdateType } from "system/context/room-context";
+import { UpdateType } from "system/context/room-context";
 import {
   initialiseRoom,
   joinLobby,
@@ -29,7 +29,6 @@ import RoomContext from "system/context/room-context";
 import LocalContext, {
   LocalField,
 } from "system/context/localInfo/local-context";
-import { db } from "system/Database/Firebase";
 import { getSortedListFromMap } from "system/GameStates/RoomGenerator";
 
 export default function DataLoader(props: IProps) {
@@ -149,7 +148,7 @@ export default function DataLoader(props: IProps) {
   const myId = localCtx.getVal(LocalField.Id);
   useEffect(() => {
     if (myId === null) return;
-    if (context.room.game.currentTurn < 0) {
+    if (context.room.game.state.turn < 0) {
       console.log("is joined, redirect lobby");
       history.replace("/lobby");
       // return <Redirect push to="/lobby" />;

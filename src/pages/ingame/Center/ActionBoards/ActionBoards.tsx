@@ -2,30 +2,27 @@ import gc from "global.module.css";
 import ActionCounteredBoard from "pages/ingame/Center/ActionBoards/BaseBoard/ActionCounteredBoard";
 import AmbassadorBoard from "pages/ingame/Center/ActionBoards/BaseBoard/AmbassadorBoard";
 import BaseBoard from "pages/ingame/Center/ActionBoards/BaseBoard/BaseBoard";
-import ContessaReactBoard from "pages/ingame/Center/ActionBoards/BaseBoard/ContessaReactBoard";
 import CounterBoard from "pages/ingame/Center/ActionBoards/BaseBoard/CounterBoard";
 import WaitingBoard from "pages/ingame/Center/ActionBoards/BaseBoard/WaitingBoard";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import LocalContext, {
   LocalField,
 } from "system/context/localInfo/local-context";
 import RoomContext from "system/context/room-context";
-import { BoardState, readStateFromRoom } from "system/GameStates/States";
+import { BoardState } from "system/GameStates/States";
 import classes from "./ActionBoards.module.css";
 import { Game } from "system/GameStates/GameTypes";
+import SolverBoard from "pages/ingame/Center/ActionBoards/BaseBoard/SolverBoard";
 export default function ActionBoards(): JSX.Element {
   //TODO decode
   //ENUM
   const ctx = useContext(RoomContext);
   const localCtx = useContext(LocalContext);
   const [boardElem, setBoardElem] = useState(<BaseBoard />);
-  const boardState: BoardState = readStateFromRoom(
-    ctx.room.game.pierAction.action,
-    ctx.room.game.clientAction.action
-  );
+  const boardState: BoardState = ctx.room.game.state.board;
   useEffect(() => {
     const playerList: string[] = localCtx.getVal(LocalField.SortedList);
-    const currentTurn = ctx.room.game.currentTurn;
+    const currentTurn = ctx.room.game.state.turn;
     const currentTurnId = playerList[currentTurn];
     const myId = localCtx.getVal(LocalField.Id);
     const elem = getBoardElemFromRoom(
@@ -44,46 +41,7 @@ export default function ActionBoards(): JSX.Element {
     </div>
   );
 }
-/*
-State Table
-begin at ?None/None
-?PierAction
-/Client Action
-Always wait after action prompt is made.
 
-Get 1 : ?GetOne -> Solve Wait NextTurn
-Get 2 : ?GetTwo -> Wait ->  /Accept -> Solve NextTurn
-                            /Duke   -> Wait -> ?Accept  -> Solve Wait NextTurn
-                                            -> ?Lie     -> Solve Wait NextTurn
-Coup  : ?Coup     -> Wait -> /Choose card -> Solve Wait NextTurn
-Duke  : ?GetThree -> Wait ->  /Accept     -> Solve NextTurn
-                              /Lie        -> Solve Wait NextTurn
-Captain: ?Steal   -> Wait ->  /Accept     -> Solve NextTurn
-                              /Lie        -> Solve Wait NextTurn
-Assassin: ?Assassin -> Wait ->/Accept     -> Solve Wait NextTurn
-                              /Lie        -> Solve Wait NextTurn
-                              /Contessa   -> ?Lie    ->Solve Wait NextTurn
-                                          -> ?Accept ->Solve Wait NextTurn
-Ambassador: Wait  ->/Accept   -> Solve Wait NextTurn
-                  ->/Lie      -> Solve Wait NextTurn
-export enum BoardState {
-  TurnStarts, //None
-  AcceptedState,
-  CalledForeignAid, //+2 None
-  CalledCoup, //coup None
-  CalledDuke, //duke None
-  CalledCaptain, //captain None
-  CalledAssassin, //assassin None
-  CalledAmbassador, //amba None
-  ContessaBlockedAssassin, //assassin contessa
-  CaptainBlockedCaptain, //Cap Cap
-  AmbassadorBlockedCaptain, //Cap Amba
-  ClientIsALie, //lie any
-  PierIsALie, //Any Lie
-  Exception,
-}
-
-*/
 function getBoardElemFromRoom(
   boardState: BoardState,
   game: Game,
@@ -97,59 +55,67 @@ function getBoardElemFromRoom(
   console.log(
     `Turn: ${currentTurnId} / isme?${isMyTurn} / isTarget? ${isTargetted} / state:${boardState}`
   );
-  if (boardState === BoardState.Exception) {
-    return (
-      <p>{`Exception : Turn: ${currentTurnId} / isme?${isMyTurn} / isTarget? ${isTargetted} / state:${boardState}`}</p>
-    );
-  }
-
   if (isMyTurn) {
+    /*
+    Called = Wait
+    Challenged or Accepted = Solver
+    Blocked = Counter
+    Amba = Amba
+    */
     switch (boardState) {
       case BoardState.ChoosingBaseAction:
         return <BaseBoard />;
-      case BoardState.CalledAmbassador:
-        return <AmbassadorBoard />;
-      case BoardState.ContessaBlockedAssassin:
-      case BoardState.CaptainBlockedCaptain:
-      case BoardState.AmbassadorBlockedCaptain:
-        return <ActionCounteredBoard />;
-      default:
+      case BoardState.GetOneAccepted:
+      case BoardState.DukeBlocksAccepted:
+      case BoardState.CoupAccepted:
+      case BoardState.DukeBlocksChallenged:
+      case BoardState.GetThreeChallenged:
+      case BoardState.AmbassadorChallenged:
+      case BoardState.StealAccepted:
+      case BoardState.StealChallenged:
+      case BoardState.StealBlockAccepted:
+      case BoardState.StealBlockChallenged:
+      case BoardState.AssissinateAccepted:
+      case BoardState.AssassinateChallenged:
+      case BoardState.ContessaChallenged:
+      case BoardState.ContessaAccepted:
+        return <SolverBoard />;
+      case BoardState.CalledGetTwo:
+      case BoardState.CalledCoup:
+      case BoardState.CalledGetThree:
+      case BoardState.CalledChangeCards:
+      case BoardState.CalledSteal:
+      case BoardState.CalledAssassinate:
         return <WaitingBoard />;
-      // case BoardState.SolveActions:
-      // case BoardState.CalledForeignAid:
-      // case BoardState.CalledCoup:
-      // case BoardState.CalledDuke:
-      // case BoardState.CalledCaptain:
-      // case BoardState.CalledAssassin:
-      // case BoardState.ClientIsALie:
-      // case BoardState.PierIsALie:
+      case BoardState.AidBlocked:
+      case BoardState.StealBlocked:
+      case BoardState.AssassinBlocked:
+        return <CounterBoard />;
+      case BoardState.AmbassadorAccepted:
+        return <AmbassadorBoard />;
     }
   } else if (isTargetted) {
-    //All the pier actions that has a target
+    //Coup Steal Assassin has targets
     switch (boardState) {
       case BoardState.CalledCoup:
-      case BoardState.CalledCaptain:
-      case BoardState.CalledAssassin:
-      case BoardState.ClientIsALie:
-        return <AmbassadorBoard />;
-      //Others cannot have targets set.
+      case BoardState.CalledSteal:
+      case BoardState.CalledAssassinate:
+        return <SolverBoard />;
     }
   } else if (isCounterable) {
-    //All others, either lie or wait
+    //Called and blocked are counterable.
+    //Else wait
     switch (boardState) {
-      //Countable Actions
-      case BoardState.CalledForeignAid:
-      case BoardState.CalledDuke:
-      case BoardState.CalledAmbassador:
+      case BoardState.CalledGetTwo:
+      case BoardState.CalledCoup:
+      case BoardState.CalledGetThree:
+      case BoardState.CalledChangeCards:
+      case BoardState.CalledSteal:
+      case BoardState.CalledAssassinate:
+      case BoardState.AidBlocked:
+      case BoardState.StealBlocked:
+      case BoardState.AssassinBlocked:
         return <CounterBoard />;
-      //None Countable actions
-      // case BoardState.ChoosingBaseAction:
-      // case BoardState.SolveActions:
-      // case BoardState.CalledCoup:
-      // case BoardState.CalledCaptain:
-      // case BoardState.CalledAssassin:
-      // case BoardState.ClientIsALie:
-      // case BoardState.PierIsALie:
       default:
         return <WaitingBoard />;
     }
