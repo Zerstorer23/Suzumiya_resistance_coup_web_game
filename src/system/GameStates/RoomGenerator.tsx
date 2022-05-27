@@ -8,15 +8,9 @@ import {
 } from "system/GameStates/GameTypes";
 import firebase from "firebase/compat/app";
 import "firebase/compat/database";
-import { getRandomSeed, randomInt } from "system/GameConstants";
+import { getRandomSeed } from "system/GameConstants";
 import { ActionType } from "system/GameStates/States";
-import {
-  DB_GAME_currentTurn,
-  DB_GAME_deck,
-  DB_HEADER_seed,
-  updatePlayerReference,
-  updateReference,
-} from "system/Database/RoomDatabase";
+import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
 export function getDefaultAction(): GameAction {
   return {
     srcId: "", //NOTE set when press action button
@@ -84,17 +78,17 @@ function getStartingGame(deck: string): Game {
 export function setStartingRoom(room: Room, playerList: string[]) {
   const numPlayer = room.playerMap.size;
   //Set Header
-  updateReference(DB_HEADER_seed, getRandomSeed());
+  ReferenceManager.updateReference(DbReferences.HEADER_seed, getRandomSeed());
   //Set Player Cards
   playerList.forEach((playerId, index) => {
     const player = room.playerMap.get(playerId)!;
     player.coins = 2;
     player.icard = index * 2;
     player.isSpectating = false;
-    updatePlayerReference(playerId, player);
+    ReferenceManager.updatePlayerReference(playerId, player);
   });
   //Set Room
   const deck: string = generateStartingDeck(numPlayer);
-  updateReference(DB_GAME_deck, deck);
-  updateReference(DB_GAME_currentTurn, 0);
+  ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
+  ReferenceManager.updateReference(DbReferences.GAME_currentTurn, 0);
 }

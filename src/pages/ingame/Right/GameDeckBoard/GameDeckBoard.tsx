@@ -12,7 +12,7 @@ export default function GameDeckBoard(): JSX.Element {
       {/* <p>Game Deck</p> */}
       <HorizontalLayout>
         <RemainingDeckDisplay />
-        <RevealedDeckDisplay deck="TODO" />
+        <RevealedDeckDisplay />
       </HorizontalLayout>
     </div>
   );

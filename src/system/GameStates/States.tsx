@@ -87,7 +87,7 @@ export function readStateFromRoom(
       return BoardState.Exception;
   }
 }
-
+/*
 export function getActionsFromState(state: BoardState): ActionType[] {
   switch (state) {
     case BoardState.ChoosingBaseAction:
@@ -119,3 +119,4 @@ export function getActionsFromState(state: BoardState): ActionType[] {
       return [ActionType.Accept, ActionType.IsALie];
   }
 }
+*/
