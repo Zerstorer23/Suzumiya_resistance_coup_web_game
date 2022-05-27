@@ -5,6 +5,12 @@ import MyCardComponent from "pages/ingame/Left/MyBoard/MyCardComponent/MyCardCom
 import { Card, CardRole } from "system/cards/Card";
 import CoinDisplayComponent from "pages/ingame/Left/MyBoard/CoinDisplayComponent/CoinDisplayComponent";
 import { Fragment } from "react";
+import { useContext } from "react";
+import LocalContext, {
+  LocalField,
+} from "system/context/localInfo/local-context";
+import { Player } from "system/GameStates/GameTypes";
+import RoomContext from "system/context/room-context";
 
 export default function MyBoard(): JSX.Element {
   //useContext Room context
@@ -12,6 +18,12 @@ export default function MyBoard(): JSX.Element {
   //get myId from local
   //get myPlyaer from room
   //put data below
+
+  const ctx = useContext(RoomContext);
+  const localCtx = useContext(LocalContext);
+  const myId: string = localCtx.getVal(LocalField.Id);
+  const myPlayer: Player = ctx.room.playerMap.get(myId)!;
+
   const card1 = new Card(CardRole.Duke, true);
   const card2 = new Card(CardRole.Captain, true);
   const showCards = true;

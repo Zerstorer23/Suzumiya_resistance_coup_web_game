@@ -17,7 +17,6 @@ export default function PlayerBoard(): JSX.Element {
   //put list
   const ctx = useContext(RoomContext);
   const sortedList: PlayerEntry[] = getSortedListFromMap(ctx.room.playerMap);
-  console.log(sortedList[0]);
 
   return (
     <Fragment>
