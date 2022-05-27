@@ -3,5 +3,5 @@ For /f "tokens=1-2 delims=/:" %%a in ('time /t') do (set mytime=%%a%%b)
 SET time = "%mydate%_%mytime%"
 git pull
 git add .
-git commit -m %TIME%
+git commit -m %time%
 git push
