@@ -1,5 +1,11 @@
 import get, { Images } from "resources/Resources";
 
+/*
+Card role corresponding to database
+make sure each enum is 1 char long
+CAPITAL = alive
+small = dead card
+*/
 export enum CardRole {
   None = "N",
   Duke = "D",
@@ -13,7 +19,10 @@ export enum CardRole {
   DEAD_Contessa = "t",
   DEAD_Ambassador = "s",
 }
-
+/*
+This class is intended to be used as UI purposed
+does not go into database
+*/
 export class Card {
   cardRole: CardRole;
   isDead: boolean;

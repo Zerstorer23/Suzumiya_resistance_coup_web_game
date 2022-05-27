@@ -4,7 +4,9 @@ import LocalContext, {
   LocalField,
 } from "system/context/localInfo/local-context";
 import { IProps } from "system/types/CommonTypes";
-
+/*
+Local context holds local data that does not go into database
+*/
 export default function LocalProvider(props: IProps) {
   const [myId, setMyId] = useState(null);
   const [sortedPlayerList, setSortedPlayerList] = useState([]);
@@ -18,11 +20,13 @@ export default function LocalProvider(props: IProps) {
     val: sortedPlayerList,
     set: setSortedPlayerList,
   });
+
+  /*
+  Map is not supposed to be used by other classes
+  use get and set 
+  */
   const context: LocalContextType = {
     map,
-    // get: (field: LocalField) => {
-    //   return map.get(field)!;
-    // },
     getVal: (field: LocalField) => {
       return map.get(field).val!;
     },

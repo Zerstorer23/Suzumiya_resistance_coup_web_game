@@ -34,7 +34,7 @@ export default function ActionBoards(): JSX.Element {
       currentTurnId,
       myId
     );
-    // setBoardElem(elem);
+    setBoardElem(elem);
   }, [boardState]);
 
   return (

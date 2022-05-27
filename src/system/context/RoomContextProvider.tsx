@@ -6,10 +6,15 @@ import RoomContext, {
 import { PlayerEntry, Room } from "system/GameStates/GameTypes";
 import { getDefaultRoom } from "system/GameStates/RoomGenerator";
 import { IProps, ListenerTypes } from "system/types/CommonTypes";
+
+/* Room Context
+Holds data 1 to 1 match to DB.
+DataLoader loads Data into local, this broadcasts that data to all other components
+Use ReferenceManager to uploadData
+*/
 enum RoomContextAction {
   RoomLoaded,
   PlayerUpdated,
-  // GameActionUpdated,
   FieldUpdated,
 }
 type RoomActionType = {
@@ -19,14 +24,6 @@ type RoomActionType = {
   mainParam?: any;
   sideParam?: any;
 };
-
-// export type RoomStateType = {
-//   room: Room;
-// };
-
-// export const defaultRoomState: RoomStateType = {
-//   room: getDefaultRoom(),
-// };
 
 function handlePlayerUpdate(newRoom: Room, action: RoomActionType) {
   const updateType = action.sideParam;
@@ -84,9 +81,6 @@ function roomReducer(prevRoom: Room, action: RoomActionType): Room {
     case RoomContextAction.PlayerUpdated:
       handlePlayerUpdate(newRoom, action);
       break;
-    // case RoomContextAction.GameActionUpdated:
-    //   handleGameActionUpdate(newRoom, action);
-    //   break;
     case RoomContextAction.FieldUpdated:
       handleFieldUpdate(newRoom, action);
       break;
