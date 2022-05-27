@@ -48,6 +48,65 @@ export enum ActionType {
   DefendWithAmbassador,
   Accept,
 }
+export const StateManager = {
+  isCounterable(state: BoardState): boolean {
+    switch (state) {
+      case BoardState.CalledGetTwo:
+      case BoardState.CalledCoup:
+      case BoardState.CalledGetThree:
+      case BoardState.CalledChangeCards:
+      case BoardState.CalledSteal:
+      case BoardState.CalledAssassinate:
+      case BoardState.AidBlocked:
+      case BoardState.StealBlocked:
+      case BoardState.AssassinBlocked:
+        return true;
+      default:
+        return false;
+    }
+  },
+  isFinal(state: BoardState): boolean {
+    switch (state) {
+      case BoardState.GetOneAccepted:
+      case BoardState.DukeBlocksAccepted:
+      case BoardState.CoupAccepted:
+      case BoardState.DukeBlocksChallenged:
+      case BoardState.GetThreeChallenged:
+      case BoardState.AmbassadorChallenged:
+      case BoardState.StealAccepted:
+      case BoardState.StealChallenged:
+      case BoardState.StealBlockAccepted:
+      case BoardState.StealBlockChallenged:
+      case BoardState.AssissinateAccepted:
+      case BoardState.AssassinateChallenged:
+      case BoardState.ContessaChallenged:
+      case BoardState.ContessaAccepted:
+        return true;
+      default:
+        return false;
+    }
+  },
+  isTargetableState(state: BoardState): boolean {
+    switch (state) {
+      case BoardState.CalledCoup:
+      case BoardState.CalledSteal:
+      case BoardState.CalledAssassinate:
+        return true;
+      default:
+        return false;
+    }
+  },
+  isTargetableAction(action: ActionType): boolean {
+    switch (action) {
+      case ActionType.Coup:
+      case ActionType.Steal:
+      case ActionType.Assassinate:
+        return true;
+      default:
+        return false;
+    }
+  },
+};
 //https://docs.google.com/spreadsheets/d/1pXbooNl6BwfQAUUKAWGwR-WAyPyP9LX71ek3_Odfvlw/edit#gid=0
 /*
 State Table

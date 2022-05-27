@@ -73,8 +73,8 @@ export default function DataLoader(props: IProps) {
   function onUpdateDeck(snapshot: Snapshot) {
     updateField<string>(ListenerTypes.Deck, snapshot);
   }
-  function onUpdateTurn(snapshot: Snapshot) {
-    updateField<number>(ListenerTypes.Turn, snapshot);
+  function onUpdateState(snapshot: Snapshot) {
+    updateField<number>(ListenerTypes.State, snapshot);
   }
   function onUpdateHeader(snapshot: Snapshot) {
     updateField<RoomHeader>(ListenerTypes.Header, snapshot);
@@ -88,7 +88,7 @@ export default function DataLoader(props: IProps) {
     listeners.get(ListenerTypes.Deck)!.on(LISTEN_VALUE, onUpdateDeck);
     listeners.get(ListenerTypes.Client)!.on(LISTEN_VALUE, onUpdateClient);
     listeners.get(ListenerTypes.Pier)!.on(LISTEN_VALUE, onUpdatePier);
-    listeners.get(ListenerTypes.Turn)!.on(LISTEN_VALUE, onUpdateTurn);
+    listeners.get(ListenerTypes.State)!.on(LISTEN_VALUE, onUpdateState);
     //Add Header listener
     listeners.get(ListenerTypes.Header)!.on(LISTEN_VALUE, onUpdateHeader);
   }

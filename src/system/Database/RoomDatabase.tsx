@@ -70,15 +70,22 @@ export async function loadRoom(): Promise<Room> {
 }
 
 function parseGame(listeners: Listeners) {
-  const deckRef = ReferenceManager.getRef(DbReferences.GAME_deck);
-  const turnRef = ReferenceManager.getRef(DbReferences.GAME_currentTurn); //db.r
-  const pierRef = ReferenceManager.getRef(DbReferences.GAME_pierAction); // db.
-  const clientRef = ReferenceManager.getRef(DbReferences.GAME_clientAction);
-
-  listeners.set(ListenerTypes.Deck, deckRef);
-  listeners.set(ListenerTypes.Turn, turnRef);
-  listeners.set(ListenerTypes.Pier, pierRef);
-  listeners.set(ListenerTypes.Client, clientRef);
+  listeners.set(
+    ListenerTypes.Deck,
+    ReferenceManager.getRef(DbReferences.GAME_deck)
+  );
+  listeners.set(
+    ListenerTypes.State,
+    ReferenceManager.getRef(DbReferences.GAME_state)
+  );
+  listeners.set(
+    ListenerTypes.Pier,
+    ReferenceManager.getRef(DbReferences.GAME_pierAction)
+  );
+  listeners.set(
+    ListenerTypes.Client,
+    ReferenceManager.getRef(DbReferences.GAME_clientAction)
+  );
 }
 function parseHeader(listeners: Listeners) {
   const headerRef = ReferenceManager.getRef(DbReferences.HEADER);

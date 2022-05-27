@@ -8,7 +8,8 @@ import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
 
 import { ActionInfo } from "system/GameStates/ActionInfo";
 import { GameManager } from "system/GameStates/GameManager";
-import { ActionType } from "system/GameStates/States";
+import { TurnState } from "system/GameStates/GameTypes";
+import { ActionType, BoardState, StateManager } from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
 
 export default function BaseBoard(): JSX.Element {
@@ -29,12 +30,38 @@ export default function BaseBoard(): JSX.Element {
   ];
 
   function onMakeAction(action: ActionType) {
-    if (action === ActionType.None) return;
     //What to do when button is clicked
-    const pierAction = GameManager.createGameAction(action, myId);
-    ReferenceManager.updateReference(DbReferences.GAME_pierAction, pierAction);
     console.log(`Clicked ${action}`);
+    const pierAction = GameManager.createGameAction(myId);
+    let newBoard = BoardState.GetOneAccepted;
+    if (StateManager.isTargetableAction(action)) {
+      //TODO
+      return;
+    }
+    switch (action) {
+      case ActionType.GetOne:
+        newBoard = BoardState.GetOneAccepted;
+        break;
+      case ActionType.GetForeignAid:
+        newBoard = BoardState.CalledGetTwo;
+        break;
+      case ActionType.GetThree:
+        newBoard = BoardState.CalledGetThree;
+        break;
+      case ActionType.ChangeCards:
+        newBoard = BoardState.CalledChangeCards;
+        break;
+      default:
+        return;
+    }
+    const newState: TurnState = {
+      turn: ctx.room.game.state.turn,
+      board: newBoard,
+    };
+    ReferenceManager.updateReference(DbReferences.GAME_pierAction, pierAction);
+    ReferenceManager.updateReference(DbReferences.GAME_state, newState);
   }
+
   return (
     <div className={classes.container}>
       {actions.map((action: ActionType, index: number) => {

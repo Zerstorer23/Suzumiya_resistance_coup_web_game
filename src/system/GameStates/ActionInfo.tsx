@@ -35,6 +35,8 @@ export class ActionInfo {
         return "none";
       case ActionType.Steal:
         return "Steal";
+      case ActionType.DukeBlocksForeignAid:
+        return "Block aid";
     }
   }
   getImage() {}

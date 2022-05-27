@@ -1,5 +1,4 @@
 import gc from "global.module.css";
-import ActionCounteredBoard from "pages/ingame/Center/ActionBoards/BaseBoard/ActionCounteredBoard";
 import AmbassadorBoard from "pages/ingame/Center/ActionBoards/BaseBoard/AmbassadorBoard";
 import BaseBoard from "pages/ingame/Center/ActionBoards/BaseBoard/BaseBoard";
 import CounterBoard from "pages/ingame/Center/ActionBoards/BaseBoard/CounterBoard";
@@ -9,7 +8,7 @@ import LocalContext, {
   LocalField,
 } from "system/context/localInfo/local-context";
 import RoomContext from "system/context/room-context";
-import { BoardState } from "system/GameStates/States";
+import { BoardState, StateManager } from "system/GameStates/States";
 import classes from "./ActionBoards.module.css";
 import { Game } from "system/GameStates/GameTypes";
 import SolverBoard from "pages/ingame/Center/ActionBoards/BaseBoard/SolverBoard";
@@ -62,62 +61,30 @@ function getBoardElemFromRoom(
     Blocked = Counter
     Amba = Amba
     */
-    switch (boardState) {
-      case BoardState.ChoosingBaseAction:
-        return <BaseBoard />;
-      case BoardState.GetOneAccepted:
-      case BoardState.DukeBlocksAccepted:
-      case BoardState.CoupAccepted:
-      case BoardState.DukeBlocksChallenged:
-      case BoardState.GetThreeChallenged:
-      case BoardState.AmbassadorChallenged:
-      case BoardState.StealAccepted:
-      case BoardState.StealChallenged:
-      case BoardState.StealBlockAccepted:
-      case BoardState.StealBlockChallenged:
-      case BoardState.AssissinateAccepted:
-      case BoardState.AssassinateChallenged:
-      case BoardState.ContessaChallenged:
-      case BoardState.ContessaAccepted:
-        return <SolverBoard />;
-      case BoardState.CalledGetTwo:
-      case BoardState.CalledCoup:
-      case BoardState.CalledGetThree:
-      case BoardState.CalledChangeCards:
-      case BoardState.CalledSteal:
-      case BoardState.CalledAssassinate:
-        return <WaitingBoard />;
-      case BoardState.AidBlocked:
-      case BoardState.StealBlocked:
-      case BoardState.AssassinBlocked:
-        return <CounterBoard />;
-      case BoardState.AmbassadorAccepted:
-        return <AmbassadorBoard />;
+    if (StateManager.isFinal(boardState)) {
+      return <SolverBoard />;
+    } else {
+      switch (boardState) {
+        case BoardState.ChoosingBaseAction:
+          return <BaseBoard />;
+        case BoardState.AidBlocked:
+        case BoardState.StealBlocked:
+        case BoardState.AssassinBlocked:
+          return <CounterBoard />;
+        case BoardState.AmbassadorAccepted:
+          return <AmbassadorBoard />;
+      }
     }
   } else if (isTargetted) {
     //Coup Steal Assassin has targets
-    switch (boardState) {
-      case BoardState.CalledCoup:
-      case BoardState.CalledSteal:
-      case BoardState.CalledAssassinate:
-        return <SolverBoard />;
-    }
+    return <SolverBoard />;
   } else if (isCounterable) {
     //Called and blocked are counterable.
     //Else wait
-    switch (boardState) {
-      case BoardState.CalledGetTwo:
-      case BoardState.CalledCoup:
-      case BoardState.CalledGetThree:
-      case BoardState.CalledChangeCards:
-      case BoardState.CalledSteal:
-      case BoardState.CalledAssassinate:
-      case BoardState.AidBlocked:
-      case BoardState.StealBlocked:
-      case BoardState.AssassinBlocked:
-        return <CounterBoard />;
-      default:
-        return <WaitingBoard />;
+    if (StateManager.isCounterable(boardState)) {
+      return <CounterBoard />;
+    } else {
+      return <WaitingBoard />;
     }
   } else {
     //I am not being targetted but someone is acting

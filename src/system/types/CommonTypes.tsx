@@ -32,7 +32,7 @@ export enum ListenerTypes {
   Deck,
   Pier,
   Client,
-  Turn,
+  State,
   PlayerList,
   Header,
 }

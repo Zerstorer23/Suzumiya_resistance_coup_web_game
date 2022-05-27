@@ -62,8 +62,8 @@ function handleFieldUpdate(newRoom: Room, action: RoomActionType) {
     case ListenerTypes.PlayerList:
       newRoom.playerMap = action.sideParam;
       break;
-    case ListenerTypes.Turn:
-      newRoom.game.currentTurn = action.sideParam;
+    case ListenerTypes.State:
+      newRoom.game.state = action.sideParam;
       break;
   }
 }
