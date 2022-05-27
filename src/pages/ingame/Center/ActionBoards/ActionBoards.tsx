@@ -44,7 +44,46 @@ export default function ActionBoards(): JSX.Element {
     </div>
   );
 }
+/*
+State Table
+begin at ?None/None
+?PierAction
+/Client Action
+Always wait after action prompt is made.
 
+Get 1 : ?GetOne -> Solve Wait NextTurn
+Get 2 : ?GetTwo -> Wait ->  /Accept -> Solve NextTurn
+                            /Duke   -> Wait -> ?Accept  -> Solve Wait NextTurn
+                                            -> ?Lie     -> Solve Wait NextTurn
+Coup  : ?Coup     -> Wait -> /Choose card -> Solve Wait NextTurn
+Duke  : ?GetThree -> Wait ->  /Accept     -> Solve NextTurn
+                              /Lie        -> Solve Wait NextTurn
+Captain: ?Steal   -> Wait ->  /Accept     -> Solve NextTurn
+                              /Lie        -> Solve Wait NextTurn
+Assassin: ?Assassin -> Wait ->/Accept     -> Solve Wait NextTurn
+                              /Lie        -> Solve Wait NextTurn
+                              /Contessa   -> ?Lie    ->Solve Wait NextTurn
+                                          -> ?Accept ->Solve Wait NextTurn
+Ambassador: Wait  ->/Accept   -> Solve Wait NextTurn
+                  ->/Lie      -> Solve Wait NextTurn
+export enum BoardState {
+  TurnStarts, //None
+  AcceptedState,
+  CalledForeignAid, //+2 None
+  CalledCoup, //coup None
+  CalledDuke, //duke None
+  CalledCaptain, //captain None
+  CalledAssassin, //assassin None
+  CalledAmbassador, //amba None
+  ContessaBlockedAssassin, //assassin contessa
+  CaptainBlockedCaptain, //Cap Cap
+  AmbassadorBlockedCaptain, //Cap Amba
+  ClientIsALie, //lie any
+  PierIsALie, //Any Lie
+  Exception,
+}
+
+*/
 function getBoardElemFromRoom(
   boardState: BoardState,
   game: Game,
