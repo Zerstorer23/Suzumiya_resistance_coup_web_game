@@ -12,13 +12,8 @@ export default function PlayerBoard(): JSX.Element {
   //get list
   //put list
   const ctx = useContext(RoomContext);
-<<<<<<< HEAD
-  const sortedList: PlayerEntry[] = getSortedListFromMap(ctx.room.playerMap);
-
-=======
   const playerMap = ctx.room.playerMap;
   const sortedList: string[] = getSortedListFromMap(playerMap);
->>>>>>> 93a4ba4b94445ac31edd5f1e5ee9eaa8675e7fbb
   return (
     <Fragment>
       <div className={`${gc.round_border} ${classes.container}`}>

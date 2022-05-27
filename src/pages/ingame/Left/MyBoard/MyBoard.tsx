@@ -23,10 +23,22 @@ export default function MyBoard(): JSX.Element {
   const localCtx = useContext(LocalContext);
   const myId: string = localCtx.getVal(LocalField.Id);
   const myPlayer: Player = ctx.room.playerMap.get(myId)!;
+  const cardIndex = myPlayer.icard;
+  const deck = ctx.room.game.deck;
 
-  const card1 = new Card(CardRole.Duke, true);
-  const card2 = new Card(CardRole.Captain, true);
-  const showCards = true; // useState or localCtx
+  let arr = deck.split("");
+  let firstChar = arr[cardIndex];
+  let secondChar = arr[cardIndex + 1];
+
+  let test = firstChar as keyof typeof CardRole;
+  let firstCard = CardRole[test];
+
+  let test2 = secondChar as keyof typeof CardRole;
+  let secondCard = CardRole[test2];
+
+  const card1 = new Card(firstCard, true);
+  const card2 = new Card(secondCard, true);
+  const showCards = true;
   return (
     <div className={`${gc.round_border} ${classes.container}`}>
       <VerticalLayout>

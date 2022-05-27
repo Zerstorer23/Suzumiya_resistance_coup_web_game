@@ -25,9 +25,9 @@ export default function PlayersPanel(props: IProps) {
     //return if player num == 1
     ///1. SHuffle deck
     // 1- 1. 3* roles(5) = 15
-    // 1-2 wwe want deck to have at elast 3 ccards
-    // -3 supports up to 6 players
-    //  more than 6,   than +5
+    // 1-2 wwe want deck to have at least 3 cards
+    // 1-3 supports up to 6 players
+    //  more than 6,   then +5
     //while(remaining <= 2) add 5.
     //  5 call sshuffle
     //just distribute 2 starting from 0 ~ last player

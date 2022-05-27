@@ -11,6 +11,8 @@ import "firebase/compat/database";
 import { getRandomSeed } from "system/GameConstants";
 import { ActionType } from "system/GameStates/States";
 import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
+import { Card, CardRole } from "system/cards/Card";
+
 export function getDefaultAction(): GameAction {
   return {
     srcId: "", //NOTE set when press action button
@@ -64,7 +66,10 @@ export function getSortedListFromMap(map: PlayerMap): string[] {
 
 //TODO generate deck
 function generateStartingDeck(numPlayers: number): string {
-  return "?";
+  let numCards = 15;
+  if (numPlayers > 6) numCards = (numPlayers - 6) * 5 + 15;
+
+  return "DCATS";
 }
 function getStartingGame(deck: string): Game {
   return {
