@@ -30,6 +30,9 @@ export default function MyBoard(): JSX.Element {
   let firstChar = arr[cardIndex];
   let secondChar = arr[cardIndex + 1];
 
+  console.log(firstChar);
+  console.log(secondChar);
+
   let test = firstChar as keyof typeof CardRole;
   let firstCard = CardRole[test];
 

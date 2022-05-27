@@ -14,8 +14,8 @@ root.render(
   <BrowserRouter>
     <RoomProvider>
       <LocalProvider>
-        <MyTimer />
-        {/* <App /> */}
+        {/*<MyTimer />*/}
+        <App />
       </LocalProvider>
     </RoomProvider>
   </BrowserRouter>
