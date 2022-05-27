@@ -39,4 +39,7 @@ export class Card {
         return "";
     }
   }
+
+  //TODO
+  //getDescription
 }

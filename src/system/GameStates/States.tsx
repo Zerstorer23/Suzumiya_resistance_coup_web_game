@@ -3,6 +3,7 @@ import { GameAction } from "system/GameStates/GameTypes";
 export const PAGE_INGAME = "game";
 export const PAGE_LOBBY = "lobby";
 
+//Determined from pier and client action combination
 export enum BoardState {
   ChoosingBaseAction,
   SolveActions, //+1 / None
@@ -20,6 +21,7 @@ export enum BoardState {
   Exception,
 }
 
+//These are actions that each player can make
 export enum ActionType {
   None,
   GetOne,

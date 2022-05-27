@@ -14,7 +14,7 @@ export default function MyBoard(): JSX.Element {
   //put data below
   const card1 = new Card(CardRole.Duke, true);
   const card2 = new Card(CardRole.Captain, true);
-  const showCards = true;
+  const showCards = true; // useState or localCtx
   return (
     <div className={`${gc.round_border} ${classes.container}`}>
       <VerticalLayout>

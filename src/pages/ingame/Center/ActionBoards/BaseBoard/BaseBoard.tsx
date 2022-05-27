@@ -4,6 +4,8 @@ import { ActionType } from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
 
 export default function BaseBoard(): JSX.Element {
+  //useState(isAssassinating)
+
   //TODO change by board state
   const actions = [
     ActionType.GetOne,
@@ -15,9 +17,25 @@ export default function BaseBoard(): JSX.Element {
     ActionType.None,
     ActionType.ChangeCards,
   ];
+
   function onMakeAction(action: ActionType) {
+    //What to do when button is clicked
     switch (action) {
+      case ActionType.GetOne:
+        //+1 is clicked
+        // add coin +1
+        // currentturn++
+        //set
+        //header
+        //My player Info
+        break;
+      case ActionType.Assassinate:
+        //Prompt who to kill
+        //fill dst, src, action, pieraction
+        break;
     }
+    //probably wait 3 seconds
+    //clear game action
     console.log(`Clicked ${action}`);
   }
   return (
