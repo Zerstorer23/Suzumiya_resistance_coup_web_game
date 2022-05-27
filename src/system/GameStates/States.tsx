@@ -5,8 +5,13 @@ export const PAGE_LOBBY = "lobby";
 
 //Determined from pier and client action combination
 export enum BoardState {
-  ChoosingBaseAction,
-  SolveActions, //+1 / None
+  ChoosingBaseAction, //None
+  SolveActions,
+  /*
+  Either one Accepts
+  GetOne 
+
+  */
   CalledForeignAid, //+2 None
   CalledCoup, //coup None
   CalledDuke, //duke None
@@ -20,7 +25,38 @@ export enum BoardState {
   PierIsALie, //Any Lie
   Exception,
 }
-
+/*
+    switch (boardState) {
+      case BoardState.ChoosingBaseAction:
+        break;
+      case BoardState.SolveActions:
+        break;
+      case BoardState.CalledForeignAid:
+        break;
+      case BoardState.CalledCoup:
+        break;
+      case BoardState.CalledDuke:
+        break;
+      case BoardState.CalledCaptain:
+        break;
+      case BoardState.CalledAssassin:
+        break;
+      case BoardState.CalledAmbassador:
+        break;
+      case BoardState.ContessaBlockedAssassin:
+        break;
+      case BoardState.ClientIsALie:
+        break;
+      case BoardState.CaptainBlockedCaptain:
+        break;
+      case BoardState.AmbassadorBlockedCaptain:
+        break;
+      case BoardState.PierIsALie:
+        break;
+      case BoardState.Exception:
+        break;
+    }
+*/
 //These are actions that each player can make
 export enum ActionType {
   None,
@@ -87,36 +123,3 @@ export function readStateFromRoom(
       return BoardState.Exception;
   }
 }
-/*
-export function getActionsFromState(state: BoardState): ActionType[] {
-  switch (state) {
-    case BoardState.ChoosingBaseAction:
-      return [
-        ActionType.GetOne,
-        ActionType.GetThree,
-        ActionType.GetForeignAid,
-        ActionType.Steal,
-        ActionType.Coup,
-        ActionType.Assassinate,
-        ActionType.ChangeCards,
-      ];
-    case BoardState.ChoosingBaseAction:
-      return [
-        ActionType.Accept,
-        ActionType.IsALie,
-        ActionType.ContessaBlocksAssassination,
-      ];
-    case BoardState.ChoosingBaseAction:
-      return [
-        ActionType.Accept,
-        ActionType.IsALie,
-        ActionType.DefendWithCaptain,
-        ActionType.DefendWithAmbassador,
-      ];
-    case BoardState.ChoosingBaseAction:
-      return [ActionType.Accept, ActionType.IsALie];
-    default:
-      return [ActionType.Accept, ActionType.IsALie];
-  }
-}
-*/
