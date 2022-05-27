@@ -20,7 +20,7 @@ export default function WaitingBoard(): JSX.Element {
   useEffect(() => {
     if (isMyTurn) {
       switch (boardState) {
-        case BoardState.SolveActions:
+        case BoardState.AcceptedState:
           //Wait 2 sec
           //Solve the status
           //Clear and End Turn
@@ -51,20 +51,20 @@ export default function WaitingBoard(): JSX.Element {
         case BoardState.ContessaBlockedAssassin:
           //I Resolve for 3 sec
           break;
-        case BoardState.ClientIsALie:
-          //Open results for 3 sec
-          //Loser removes card and Loser resolves
-          break;
+        // case BoardState.ClientIsALie:
+        //Open results for 3 sec
+        //Loser removes card and Loser resolves
+        // break;
         case BoardState.CaptainBlockedCaptain:
           //I Resolve for 3 sec
           break;
         case BoardState.AmbassadorBlockedCaptain:
           //I Resolve for 3 sec
           break;
-        case BoardState.PierIsALie:
-          //Open results for 3 sec
-          //Loser removes card and Loser resolves
-          break;
+        // case BoardState.PierIsALie:
+        //Open results for 3 sec
+        //Loser removes card and Loser resolves
+        // break;
       }
     } else {
       //Show waiting panel that infers situation

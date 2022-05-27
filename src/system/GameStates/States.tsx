@@ -6,7 +6,7 @@ export const PAGE_LOBBY = "lobby";
 //Determined from pier and client action combination
 export enum BoardState {
   ChoosingBaseAction, //None
-  SolveActions,
+  AcceptedState,
   /*
   Either one Accepts
   GetOne 
@@ -19,9 +19,9 @@ export enum BoardState {
   CalledAssassin, //assassin None
   CalledAmbassador, //amba None
   ContessaBlockedAssassin, //assassin contessa
-  ClientIsALie, //lie any
   CaptainBlockedCaptain, //Cap Cap
   AmbassadorBlockedCaptain, //Cap Amba
+  ClientIsALie, //lie any
   PierIsALie, //Any Lie
   Exception,
 }
@@ -80,17 +80,20 @@ export function readStateFromRoom(
   clientAction: ActionType
 ) {
   if (clientAction === ActionType.IsALie) {
+    return BoardState.ClientIsALie;
+  }
+  if (pierAction === ActionType.IsALie) {
     return BoardState.PierIsALie;
   }
   if (clientAction === ActionType.Accept || pierAction === ActionType.Accept) {
-    return BoardState.SolveActions;
+    return BoardState.AcceptedState;
   }
 
   switch (pierAction) {
     case ActionType.None:
       return BoardState.ChoosingBaseAction;
     case ActionType.GetOne:
-      return BoardState.SolveActions;
+      return BoardState.AcceptedState;
     case ActionType.Coup:
       return BoardState.CalledCoup;
     case ActionType.GetForeignAid:
@@ -117,8 +120,6 @@ export function readStateFromRoom(
       return BoardState.Exception;
     case ActionType.ChangeCards:
       return BoardState.CalledAmbassador;
-    case ActionType.IsALie:
-      return BoardState.ClientIsALie;
     default:
       return BoardState.Exception;
   }
