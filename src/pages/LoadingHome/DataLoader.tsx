@@ -64,12 +64,10 @@ export default function DataLoader(props: IProps) {
     if (!valid) return;
     context.onUpdatePlayer({ id: snapshot.key!, player }, UpdateType.Delete);
   }
-  function onUpdateClient(snapshot: Snapshot) {
-    updateField<GameAction>(ListenerTypes.Client, snapshot);
+  function onUpdateGameAction(snapshot: Snapshot) {
+    updateField<GameAction>(ListenerTypes.gameAction, snapshot);
   }
-  function onUpdatePier(snapshot: Snapshot) {
-    updateField<GameAction>(ListenerTypes.Pier, snapshot);
-  }
+
   function onUpdateDeck(snapshot: Snapshot) {
     updateField<string>(ListenerTypes.Deck, snapshot);
   }
@@ -86,8 +84,9 @@ export default function DataLoader(props: IProps) {
     playerListRef.on(LISTEN_CHILD_REMOVED, onRemovePlayer);
     //Add game listener
     listeners.get(ListenerTypes.Deck)!.on(LISTEN_VALUE, onUpdateDeck);
-    listeners.get(ListenerTypes.Client)!.on(LISTEN_VALUE, onUpdateClient);
-    listeners.get(ListenerTypes.Pier)!.on(LISTEN_VALUE, onUpdatePier);
+    listeners
+      .get(ListenerTypes.gameAction)!
+      .on(LISTEN_VALUE, onUpdateGameAction);
     listeners.get(ListenerTypes.State)!.on(LISTEN_VALUE, onUpdateState);
     //Add Header listener
     listeners.get(ListenerTypes.Header)!.on(LISTEN_VALUE, onUpdateHeader);

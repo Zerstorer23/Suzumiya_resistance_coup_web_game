@@ -41,14 +41,8 @@ function handlePlayerUpdate(newRoom: Room, action: RoomActionType) {
 function handleFieldUpdate(newRoom: Room, action: RoomActionType) {
   const fieldType: ListenerTypes = action.mainParam;
   switch (fieldType) {
-    case ListenerTypes.Client:
-      newRoom.game.clientAction = action.sideParam;
-      console.log(
-        `Game Action Updated by  ${action.sideParam.srcId} to ${action.sideParam}`
-      );
-      break;
-    case ListenerTypes.Pier:
-      newRoom.game.pierAction = action.sideParam;
+    case ListenerTypes.gameAction:
+      newRoom.game.action = action.sideParam;
       console.log(
         `Game Action Updated by  ${action.sideParam.srcId} to ${action.sideParam}`
       );
@@ -116,15 +110,6 @@ export default function RoomProvider(props: IProps) {
     );
     dispatchRoomState(param);
   }
-  // function onUpdateGameAction(action: GameAction, performer: ActionPerformer) {
-  //   const param: RoomActionType = {
-  //     type: RoomContextAction.GameActionUpdated,
-  //     mainParam: action,
-  //     sideParam: performer,
-  //   };
-
-  //   dispatchRoomState(param);
-  // }
 
   function onUpdateField(field: ListenerTypes, data: any) {
     const param: RoomActionType = {

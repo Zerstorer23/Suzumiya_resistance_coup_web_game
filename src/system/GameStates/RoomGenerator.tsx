@@ -15,8 +15,9 @@ import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
 
 export function getDefaultAction(): GameAction {
   return {
-    srcId: "", //NOTE set when press action button
-    dstId: "",
+    hostId: "",
+    targetId: "",
+    challengerId: "",
     time: firebase.database.ServerValue.TIMESTAMP,
   };
 }
@@ -27,8 +28,7 @@ export function getDefaultGame(): Game {
       turn: -1,
       board: BoardState.ChoosingBaseAction,
     },
-    pierAction: getDefaultAction(),
-    clientAction: getDefaultAction(),
+    action: getDefaultAction(),
   };
 }
 export function getDefaultHeader(): RoomHeader {

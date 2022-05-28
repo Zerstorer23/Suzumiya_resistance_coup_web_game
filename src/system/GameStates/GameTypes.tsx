@@ -13,8 +13,9 @@ export type PlayerEntry = {
 };
 
 export type GameAction = {
-  srcId: string;
-  dstId: string;
+  hostId: string;
+  targetId: string;
+  challengerId: string;
   param?: any | undefined;
   // action: ActionType;
   time: Object | number;
@@ -25,8 +26,7 @@ export type TurnState = {
 };
 export type Game = {
   deck: string;
-  pierAction: GameAction;
-  clientAction: GameAction;
+  action: GameAction;
   state: TurnState;
 };
 export type RoomHeader = {

@@ -2,14 +2,9 @@ import BaseActionButton from "pages/ingame/Center/ActionBoards/BaseBoard/BaseAct
 import classes from "pages/ingame/Center/ActionBoards/BaseBoard/BaseBoard.module.css";
 import { ActionInfo } from "system/GameStates/ActionInfo";
 import { ActionType } from "system/GameStates/States";
-export default function AmbassadorBoard(): JSX.Element {
-  //TODO Show cards and accept two
-  const actions = [
-    ActionType.Accept,
-    ActionType.Accept,
-    ActionType.Accept,
-    ActionType.Accept,
-  ];
+export default function ForeignAidReactBoard(): JSX.Element {
+  //TODO change by board state
+  const actions = [ActionType.Accept, ActionType.DukeBlocksForeignAid];
 
   function onMakeAction(action: ActionType) {}
 

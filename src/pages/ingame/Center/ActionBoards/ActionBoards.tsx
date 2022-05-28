@@ -12,6 +12,8 @@ import { BoardState, StateManager } from "system/GameStates/States";
 import classes from "./ActionBoards.module.css";
 import { Game } from "system/GameStates/GameTypes";
 import SolverBoard from "pages/ingame/Center/ActionBoards/BaseBoard/SolverBoard";
+import { TurnManager } from "system/GameStates/TurnManager";
+import ForeignAidReactBoard from "pages/ingame/Center/ActionBoards/BaseBoard/ForeignAidReactBoard";
 export default function ActionBoards(): JSX.Element {
   //TODO decode
   //ENUM
@@ -20,9 +22,7 @@ export default function ActionBoards(): JSX.Element {
   const [boardElem, setBoardElem] = useState(<BaseBoard />);
   const boardState: BoardState = ctx.room.game.state.board;
   useEffect(() => {
-    const playerList: string[] = localCtx.getVal(LocalField.SortedList);
-    const currentTurn = ctx.room.game.state.turn;
-    const currentTurnId = playerList[currentTurn];
+    const currentTurnId = TurnManager.getCurrentPlayerId(ctx, localCtx);
     const myId = localCtx.getVal(LocalField.Id);
     const elem = getBoardElemFromRoom(
       boardState,
@@ -48,12 +48,11 @@ function getBoardElemFromRoom(
   myId: string
 ): JSX.Element {
   const isMyTurn: boolean = currentTurnId === myId;
-  const isTargetted: boolean = game.pierAction.dstId === myId;
+  const isTargetted: boolean = game.action.targetId === myId;
   //Counterable only if no one is countering.
-  const isCounterable: boolean = game.pierAction.srcId.length === 0;
-  console.log(
-    `Turn: ${currentTurnId} / isme?${isMyTurn} / isTarget? ${isTargetted} / state:${boardState}`
-  );
+  const noReaction: boolean = game.action.challengerId.length === 0;
+  const debugstr = `Turn: ${currentTurnId} / isme?${isMyTurn} / isTarget? ${isTargetted} / state:${boardState}`;
+  console.log(debugstr);
   if (isMyTurn) {
     /*
     Called = Wait
@@ -73,15 +72,19 @@ function getBoardElemFromRoom(
           return <CounterBoard />;
         case BoardState.AmbassadorAccepted:
           return <AmbassadorBoard />;
+        default:
+          return <WaitingBoard />;
       }
     }
   } else if (isTargetted) {
     //Coup Steal Assassin has targets
     return <SolverBoard />;
-  } else if (isCounterable) {
+  } else if (noReaction) {
     //Called and blocked are counterable.
     //Else wait
-    if (StateManager.isCounterable(boardState)) {
+    if (boardState === BoardState.CalledGetTwo) {
+      return <ForeignAidReactBoard />;
+    } else if (StateManager.isCounterable(boardState)) {
       return <CounterBoard />;
     } else {
       return <WaitingBoard />;
@@ -90,5 +93,4 @@ function getBoardElemFromRoom(
     //I am not being targetted but someone is acting
     return <WaitingBoard />;
   }
-  return <p>Exception</p>;
 }

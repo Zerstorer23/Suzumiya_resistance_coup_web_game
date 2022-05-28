@@ -16,7 +16,6 @@ export default function BaseBoard(): JSX.Element {
   const ctx = useContext(RoomContext);
   const localCtx = useContext(LocalContext);
   const myId: string = localCtx.getVal(LocalField.Id)!;
-  const myPlayer = ctx.room.playerMap.get(localCtx.getVal(LocalField.Id))!;
   //TODO change by board state
   const actions = [
     ActionType.GetOne,
@@ -32,7 +31,7 @@ export default function BaseBoard(): JSX.Element {
   function onMakeAction(action: ActionType) {
     //What to do when button is clicked
     console.log(`Clicked ${action}`);
-    const pierAction = GameManager.createGameAction(myId);
+    const gameAction = GameManager.createGameAction(myId);
     let newBoard = BoardState.GetOneAccepted;
     if (StateManager.isTargetableAction(action)) {
       //TODO
@@ -58,7 +57,7 @@ export default function BaseBoard(): JSX.Element {
       turn: ctx.room.game.state.turn,
       board: newBoard,
     };
-    ReferenceManager.updateReference(DbReferences.GAME_pierAction, pierAction);
+    ReferenceManager.updateReference(DbReferences.GAME_gameAction, gameAction);
     ReferenceManager.updateReference(DbReferences.GAME_state, newState);
   }
 

@@ -9,7 +9,7 @@ export default function SolverBoard(): JSX.Element {
 
   return (
     <div className={classes.container}>
-      <h1>Counter this Action?</h1>
+      <h1>Solve this Action?</h1>
     </div>
   );
 }

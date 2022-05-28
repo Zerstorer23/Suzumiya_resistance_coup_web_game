@@ -1,4 +1,4 @@
-import { GameAction } from "system/GameStates/GameTypes";
+import { GameAction, TurnState } from "system/GameStates/GameTypes";
 
 export const PAGE_INGAME = "game";
 export const PAGE_LOBBY = "lobby";
@@ -49,10 +49,24 @@ export enum ActionType {
   Accept,
 }
 export const StateManager = {
-  isCounterable(state: BoardState): boolean {
+  isBlockedState(state: BoardState): boolean {
+    /**
+     * States that require HOST to react LIE or ACCEPT
+     */
     switch (state) {
-      case BoardState.CalledGetTwo:
-      case BoardState.CalledCoup:
+      case BoardState.AidBlocked:
+      case BoardState.StealBlocked:
+      case BoardState.AssassinBlocked:
+        return true;
+      default:
+        return false;
+    }
+  },
+  isCounterable(state: BoardState): boolean {
+    /**
+     * States that can be countered with LIE
+     */
+    switch (state) {
       case BoardState.CalledGetThree:
       case BoardState.CalledChangeCards:
       case BoardState.CalledSteal:
@@ -66,6 +80,10 @@ export const StateManager = {
     }
   },
   isFinal(state: BoardState): boolean {
+    /**
+     * States that no require further actions
+     * Just resolve and end turn
+     */
     switch (state) {
       case BoardState.GetOneAccepted:
       case BoardState.DukeBlocksAccepted:
@@ -87,6 +105,9 @@ export const StateManager = {
     }
   },
   isTargetableState(state: BoardState): boolean {
+    /**
+     * States that require TargetId set
+     */
     switch (state) {
       case BoardState.CalledCoup:
       case BoardState.CalledSteal:
@@ -97,6 +118,9 @@ export const StateManager = {
     }
   },
   isTargetableAction(action: ActionType): boolean {
+    /**
+     * Actions that require TargetId set
+     */
     switch (action) {
       case ActionType.Coup:
       case ActionType.Steal:
@@ -105,6 +129,64 @@ export const StateManager = {
       default:
         return false;
     }
+  },
+  getChallengedState(state: BoardState): BoardState | null {
+    /**
+     * States that are after challenged
+     */
+    switch (state) {
+      case BoardState.CalledGetThree:
+        return BoardState.GetThreeChallenged;
+      case BoardState.CalledChangeCards:
+        return BoardState.AmbassadorChallenged;
+      case BoardState.CalledSteal:
+        return BoardState.StealChallenged;
+      case BoardState.CalledAssassinate:
+        return BoardState.AssassinateChallenged;
+      case BoardState.AidBlocked:
+        return BoardState.DukeBlocksChallenged;
+      case BoardState.StealBlocked:
+        return BoardState.StealBlockChallenged;
+      case BoardState.AssassinBlocked:
+        return BoardState.ContessaChallenged;
+      default: //Exception
+        console.log("Invalid State");
+        return null;
+    }
+  },
+
+  getAcceptedState(state: BoardState): BoardState | null {
+    /**
+     * States that are after Accepted
+     * Targettables, blocks,
+     */
+    switch (state) {
+      //Targettables
+      case BoardState.CalledCoup:
+        return BoardState.CoupAccepted;
+      case BoardState.CalledAssassinate:
+        return BoardState.AssissinateAccepted;
+      case BoardState.CalledSteal:
+        return BoardState.StealAccepted;
+      case BoardState.CalledChangeCards:
+        return BoardState.AmbassadorAccepted;
+      //Block calls
+      case BoardState.AssassinBlocked:
+        return BoardState.ContessaAccepted;
+      case BoardState.AidBlocked:
+        return BoardState.DukeBlocksAccepted;
+      case BoardState.StealBlocked:
+        return BoardState.StealBlockAccepted;
+      default: //Exception
+        console.log("Invalid State");
+        return null;
+    }
+  },
+  createState(prevState: TurnState, board: BoardState): TurnState {
+    return {
+      turn: prevState.turn,
+      board,
+    };
   },
 };
 //https://docs.google.com/spreadsheets/d/1pXbooNl6BwfQAUUKAWGwR-WAyPyP9LX71ek3_Odfvlw/edit#gid=0

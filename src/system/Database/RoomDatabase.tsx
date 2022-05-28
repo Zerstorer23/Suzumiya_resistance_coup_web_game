@@ -8,8 +8,7 @@ export enum DbReferences {
   GAME = "/game",
   GAME_deck = `/game/deck`,
   GAME_state = `/game/state`,
-  GAME_pierAction = `/game/pierAction`,
-  GAME_clientAction = `/game/clientAction`,
+  GAME_gameAction = `/game/gameAction`,
   PLAYERS = `/playerMap`,
   HEADER = `/header`,
   HEADER_hostId = `/header/hostId`,
@@ -79,12 +78,8 @@ function parseGame(listeners: Listeners) {
     ReferenceManager.getRef(DbReferences.GAME_state)
   );
   listeners.set(
-    ListenerTypes.Pier,
-    ReferenceManager.getRef(DbReferences.GAME_pierAction)
-  );
-  listeners.set(
-    ListenerTypes.Client,
-    ReferenceManager.getRef(DbReferences.GAME_clientAction)
+    ListenerTypes.gameAction,
+    ReferenceManager.getRef(DbReferences.GAME_gameAction)
   );
 }
 function parseHeader(listeners: Listeners) {

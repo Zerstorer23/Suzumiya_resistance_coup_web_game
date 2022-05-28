@@ -30,8 +30,7 @@ export type LinearParam = IProps & { elements: FlexPair[] };
 
 export enum ListenerTypes {
   Deck,
-  Pier,
-  Client,
+  gameAction,
   State,
   PlayerList,
   Header,
