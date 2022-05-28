@@ -49,6 +49,20 @@ export class Card {
     }
   }
 
-  //TODO
-  //getDescription
+  getDesc() {
+    switch (this.cardRole) {
+      case CardRole.Duke:
+        return "Description for Duke";
+      case CardRole.Captain:
+        return "Description for Captain";
+      case CardRole.Assassin:
+        return "Description for Assassin";
+      case CardRole.Contessa:
+        return "Description for Contessa";
+      case CardRole.Ambassador:
+        return "Description for Ambassador";
+      default:
+        return "";
+    }
+  }
 }

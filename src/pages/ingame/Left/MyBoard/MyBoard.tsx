@@ -24,23 +24,59 @@ export default function MyBoard(): JSX.Element {
   const myId: string = localCtx.getVal(LocalField.Id);
   const myPlayer: Player = ctx.room.playerMap.get(myId)!;
   const cardIndex = myPlayer.icard;
+  const myCoin = myPlayer.coins;
   const deck = ctx.room.game.deck;
 
-  let arr = deck.split("");
+  let arr = deck.split(",");
   let firstChar = arr[cardIndex];
   let secondChar = arr[cardIndex + 1];
+  let card1: Card;
+  let card2: Card;
 
-  console.log(firstChar);
-  console.log(secondChar);
+  switch (firstChar) {
+    case "D":
+      card1 = new Card(CardRole.Duke, true);
+      break;
+    case "C":
+      card1 = new Card(CardRole.Captain, true);
+      break;
+    case "A":
+      card1 = new Card(CardRole.Assassin, true);
+      break;
+    case "T":
+      card1 = new Card(CardRole.Contessa, true);
+      break;
+    case "S":
+      card1 = new Card(CardRole.Ambassador, true);
+      break;
+    default:
+      card1 = new Card(CardRole.None, true);
+      console.log(firstChar);
+      break;
+  }
 
-  let test = firstChar as keyof typeof CardRole;
-  let firstCard = CardRole[test];
+  switch (secondChar) {
+    case "D":
+      card2 = new Card(CardRole.Duke, true);
+      break;
+    case "C":
+      card2 = new Card(CardRole.Captain, true);
+      break;
+    case "A":
+      card2 = new Card(CardRole.Assassin, true);
+      break;
+    case "T":
+      card2 = new Card(CardRole.Contessa, true);
+      break;
+    case "S":
+      card2 = new Card(CardRole.Ambassador, true);
+      break;
+    default:
+      card2 = new Card(CardRole.None, true);
+      console.log(secondChar);
+      break;
+  }
 
-  let test2 = secondChar as keyof typeof CardRole;
-  let secondCard = CardRole[test2];
-
-  const card1 = new Card(firstCard, true);
-  const card2 = new Card(secondCard, true);
   const showCards = true;
   return (
     <div className={`${gc.round_border} ${classes.container}`}>
@@ -57,7 +93,7 @@ export default function MyBoard(): JSX.Element {
             <div className={classes.tutorialContainer}>Tutorial board</div>
           )}
         </div>
-        <CoinDisplayComponent coins={10} />
+        <CoinDisplayComponent coins={myCoin} />
       </VerticalLayout>
     </div>
   );
