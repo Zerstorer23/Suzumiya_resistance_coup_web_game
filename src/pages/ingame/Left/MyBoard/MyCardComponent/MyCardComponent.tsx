@@ -17,10 +17,7 @@ export default function MyCardComponent(props: Props): JSX.Element {
       />
       {isAlive ? (
         <div className={`${classes.descPanel} `}>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil,
-            eaque
-          </p>
+          <p>{card.getDesc()}</p>
         </div>
       ) : (
         <div className={`${classes.deadPanel} `}>
