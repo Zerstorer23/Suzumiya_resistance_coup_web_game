@@ -8,7 +8,7 @@ export function getDefaultPlayer() {
     isSpectating: false,
     lastActive: firebase.database.ServerValue.TIMESTAMP,
     name: `ㅇㅇ (${randomInt(1, 255)}.${randomInt(1, 255)})`,
-    icard: -1,
+    icard: -2,
     coins: 0,
   };
   return newPlayer;

@@ -11,6 +11,7 @@ import LocalContext, {
 } from "system/context/localInfo/local-context";
 import { Player } from "system/GameStates/GameTypes";
 import RoomContext from "system/context/room-context";
+import { DeckManager } from "system/cards/DeckManager";
 
 export default function MyBoard(): JSX.Element {
   //useContext Room context
@@ -30,52 +31,11 @@ export default function MyBoard(): JSX.Element {
   let arr = deck.split(",");
   let firstChar = arr[cardIndex];
   let secondChar = arr[cardIndex + 1];
-  let card1: Card;
-  let card2: Card;
+  let charArr = [firstChar, secondChar];
 
-  switch (firstChar) {
-    case "D":
-      card1 = new Card(CardRole.Duke, true);
-      break;
-    case "C":
-      card1 = new Card(CardRole.Captain, true);
-      break;
-    case "A":
-      card1 = new Card(CardRole.Assassin, true);
-      break;
-    case "T":
-      card1 = new Card(CardRole.Contessa, true);
-      break;
-    case "S":
-      card1 = new Card(CardRole.Ambassador, true);
-      break;
-    default:
-      card1 = new Card(CardRole.None, true);
-      console.log(firstChar);
-      break;
-  }
-
-  switch (secondChar) {
-    case "D":
-      card2 = new Card(CardRole.Duke, true);
-      break;
-    case "C":
-      card2 = new Card(CardRole.Captain, true);
-      break;
-    case "A":
-      card2 = new Card(CardRole.Assassin, true);
-      break;
-    case "T":
-      card2 = new Card(CardRole.Contessa, true);
-      break;
-    case "S":
-      card2 = new Card(CardRole.Ambassador, true);
-      break;
-    default:
-      card2 = new Card(CardRole.None, true);
-      console.log(secondChar);
-      break;
-  }
+  const cardArr: Card[] = charArr.map((val) => {
+    return DeckManager.getCardFromChar(val);
+  });
 
   const showCards = true;
   return (
@@ -85,8 +45,8 @@ export default function MyBoard(): JSX.Element {
           {showCards && (
             <Fragment>
               <p>My Cards</p>
-              <MyCardComponent card={card1} />
-              <MyCardComponent card={card2} />
+              <MyCardComponent card={cardArr[0]} />
+              <MyCardComponent card={cardArr[1]} />
             </Fragment>
           )}
           {!showCards && (
