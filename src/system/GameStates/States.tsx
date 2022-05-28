@@ -189,15 +189,15 @@ export const StateManager = {
     };
   },
 };
-//https://docs.google.com/spreadsheets/d/1pXbooNl6BwfQAUUKAWGwR-WAyPyP9LX71ek3_Odfvlw/edit#gid=0
 /*
 State Table
 ?PierAction-> [next state]
 /Client Action->[next state]
-
+Final - Accepted / Challenged
+Called - 
 [ChoosingBaseAction]
 //None challengable
-Get 1 : ?GetOne-> [CalledGetOne : Solve Wait NextTurn]
+Get 1 : ?GetOne-> [GetOneAccepted : Solve Wait NextTurn]
 Get 2 : ?GetTwo-> [CalledGetTwo: Wait] 
                   Unchanged-> Solve NextTurn
                   /Duke-> [DukeBlocks: Wait]
@@ -212,7 +212,7 @@ Duke  : ?GetThree->[CalledGetThree: Wait]
 Ambassador: ?ChangeCards->[CalledChangeCards : Wait]
                           Unchallenged->[AmbassadorAccepted: Solve Wait NextTurn]
                           /Lie->        [AmbassadorChallenged: Solve Wait NextTurn]
-//==Only targetted can challenge
+
 Captain: ?Steal-> [CalledSteal:Wait]
                   /Accept->     [StealAccepted: Solve NextTurn]
                   /Lie->        [StealChallenged:Solve Wait NextTurn]

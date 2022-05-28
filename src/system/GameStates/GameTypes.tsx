@@ -13,11 +13,10 @@ export type PlayerEntry = {
 };
 
 export type GameAction = {
-  hostId: string;
+  pierId: string;
   targetId: string;
   challengerId: string;
   param?: any | undefined;
-  // action: ActionType;
   time: Object | number;
 };
 export type TurnState = {

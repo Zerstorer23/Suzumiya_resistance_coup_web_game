@@ -3,9 +3,9 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 
 export const GameManager = {
-  createGameAction(hostId: string): GameAction {
+  createGameAction(pierId: string): GameAction {
     const gameAction: GameAction = {
-      hostId,
+      pierId,
       challengerId: "",
       targetId: "",
       time: firebase.database.ServerValue.TIMESTAMP,
@@ -14,8 +14,8 @@ export const GameManager = {
   },
   copyGameAction(action: GameAction): GameAction {
     const gameAction: GameAction = {
-      hostId: action.hostId,
-      challengerId: action.hostId,
+      pierId: action.pierId,
+      challengerId: action.challengerId,
       targetId: action.targetId,
       param: action.param,
       time: firebase.database.ServerValue.TIMESTAMP,

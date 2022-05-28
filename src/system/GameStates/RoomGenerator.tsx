@@ -17,7 +17,7 @@ import { DeckManager } from "system/cards/DeckManager";
 
 export function getDefaultAction(): GameAction {
   return {
-    hostId: "",
+    pierId: "",
     targetId: "",
     challengerId: "",
     time: firebase.database.ServerValue.TIMESTAMP,

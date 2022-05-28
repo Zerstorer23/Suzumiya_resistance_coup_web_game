@@ -29,7 +29,6 @@ export default function InGame() {
   if (myId === null) {
     return <p>Loading...</p>;
   }
-
   return (
     <div className={classes.container}>
       <HorizontalLayout>
