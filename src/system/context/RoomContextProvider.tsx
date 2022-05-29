@@ -6,6 +6,7 @@ import RoomContext, {
 import { PlayerEntry, Room } from "system/GameStates/GameTypes";
 import { getDefaultRoom } from "system/GameStates/RoomGenerator";
 import { IProps, ListenerTypes } from "system/types/CommonTypes";
+import { useImmerReducer } from "use-immer";
 
 /* Room Context
 Holds data 1 to 1 match to DB.
@@ -64,9 +65,10 @@ function handleFieldUpdate(newRoom: Room, action: RoomActionType) {
 
 function roomReducer(prevRoom: Room, action: RoomActionType): Room {
   let newRoom: Room = {
-    game: prevRoom.game,
+    ...prevRoom,
+    /*     game: prevRoom.game,
     header: prevRoom.header,
-    playerMap: prevRoom.playerMap,
+    playerMap: prevRoom.playerMap, */
   };
   switch (action.type) {
     case RoomContextAction.RoomLoaded:
@@ -84,11 +86,29 @@ function roomReducer(prevRoom: Room, action: RoomActionType): Room {
   return newRoom;
 }
 
+//https://immerjs.github.io/immer/example-setstate
+function roomImmerReducer(draft: Room, action: RoomActionType): Room {
+  switch (action.type) {
+    case RoomContextAction.RoomLoaded:
+      draft = action.room!;
+      break;
+    case RoomContextAction.PlayerUpdated:
+      handlePlayerUpdate(draft, action);
+      break;
+    case RoomContextAction.FieldUpdated:
+      handleFieldUpdate(draft, action);
+      break;
+    default:
+      return getDefaultRoom();
+  }
+  return draft;
+}
 export default function RoomProvider(props: IProps) {
   const [roomState, dispatchRoomState] = useReducer(
     roomReducer,
     getDefaultRoom()
   );
+  // useImmerReducer(roomImmerReducer, getDefaultRoom());
 
   function onRoomLoaded(snapshot: Room) {
     const param = {

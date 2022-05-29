@@ -9,6 +9,7 @@ import RoomContext from "system/context/room-context";
 import { ActionInfo } from "system/GameStates/ActionInfo";
 import { GameManager } from "system/GameStates/GameManager";
 import { ActionType, StateManager } from "system/GameStates/States";
+import { TurnManager } from "system/GameStates/TurnManager";
 import classes from "./BaseBoard.module.css";
 
 export default function BaseBoard(): JSX.Element {
@@ -18,7 +19,7 @@ export default function BaseBoard(): JSX.Element {
   const currentTurn = ctx.room.game.state.turn;
   //For target actions, save which button we pressed
   const [savedAction, setSaved] = useState(ActionType.None);
-
+  const isMyTurn = TurnManager.isMyTurn(ctx, localCtx);
   //TODO change by board state
   const actions = [
     ActionType.GetOne,
@@ -56,6 +57,7 @@ export default function BaseBoard(): JSX.Element {
   }, [pSelector, savedAction]);
 
   function onMakeAction(action: ActionType) {
+    if (!isMyTurn) return;
     //What to do when button is clicked
     console.log(`Clicked ${action}`);
     const gameAction = GameManager.createGameAction(myId);
