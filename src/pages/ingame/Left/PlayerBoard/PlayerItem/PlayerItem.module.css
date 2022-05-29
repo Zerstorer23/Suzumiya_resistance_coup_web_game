@@ -1,9 +1,13 @@
 .container {
-  height: 15%;
-  width: 98%;
+  width: 100%;
+  height: 100%;
   margin-bottom: 10px;
   border-bottom: 3px dashed rgb(0, 152, 18);
   border-top: 3px dashed rgb(0, 152, 18);
+}
+.clickContainer {
+  height: 15%;
+  width: 100%;
 }
 .iconPanel {
   position: relative;
@@ -57,17 +61,23 @@
   width: 50%;
 }
 .namePanel {
+  display: block;
+  margin-bottom: 3px;
   text-align: left;
-  font-size: 22px;
+  font-size: 18px;
+  overflow-x: hidden;
   padding: 0 0;
 }
 
 .namePanelWithTitle {
+  display: block;
+  margin-bottom: 3px;
   text-align: left;
-  font-size: 22px;
+  font-size: 18px;
   padding: 0 0;
 }
 .subtitle {
   font-size: 10px;
   font-style: italic;
+  color: bisque;
 }

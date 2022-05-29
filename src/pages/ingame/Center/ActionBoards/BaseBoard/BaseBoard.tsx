@@ -1,5 +1,5 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/BaseBoard/BaseActionButton";
-import { useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import LocalContext, {
   LocalField,
 } from "system/context/localInfo/local-context";
@@ -70,21 +70,24 @@ export default function BaseBoard(): JSX.Element {
   }
 
   return (
-    <div className={classes.container}>
-      {actions.map((action: ActionType, index: number) => {
-        const baseIndex = index + 1;
-        const cssName = classes[`cell${baseIndex}`];
-        return (
-          <BaseActionButton
-            key={index}
-            className={`${cssName}`}
-            actionInfo={new ActionInfo(action)}
-            onClickButton={() => {
-              onMakeAction(action);
-            }}
-          />
-        );
-      })}
-    </div>
+    <Fragment>
+      <div className={classes.header}>Do my action...</div>
+      <div className={classes.container}>
+        {actions.map((action: ActionType, index: number) => {
+          const baseIndex = index + 1;
+          const cssName = classes[`cell${baseIndex}`];
+          return (
+            <BaseActionButton
+              key={index}
+              className={`${cssName}`}
+              actionInfo={new ActionInfo(action)}
+              onClickButton={() => {
+                onMakeAction(action);
+              }}
+            />
+          );
+        })}
+      </div>
+    </Fragment>
   );
 }

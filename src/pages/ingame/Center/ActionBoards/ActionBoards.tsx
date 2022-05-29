@@ -34,10 +34,7 @@ export default function ActionBoards(): JSX.Element {
   }, [boardState]);
 
   return (
-    <div className={`${gc.round_border} ${classes.container}`}>
-      <div className={classes.header}>Do my action...</div>
-      {boardElem}
-    </div>
+    <div className={`${gc.round_border} ${classes.container}`}>{boardElem}</div>
   );
 }
 
