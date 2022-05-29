@@ -3,11 +3,17 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 
 export const GameManager = {
-  createGameAction(pierId: string): GameAction {
+  createGameAction(
+    pierId: string,
+    targetId = "",
+    challengerId = "",
+    param?: string
+  ): GameAction {
     const gameAction: GameAction = {
       pierId,
-      challengerId: "",
-      targetId: "",
+      targetId,
+      challengerId,
+      param,
       time: firebase.database.ServerValue.TIMESTAMP,
     };
     return gameAction;

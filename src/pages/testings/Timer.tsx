@@ -38,7 +38,7 @@ export default function MyTimer() {
     <div style={{ textAlign: "center" }}>
       <h1>react-timer-hook </h1>
       <p>{}</p>
-      <p>{new Date().getUTCSeconds()}</p>
+      <p>{new Date().getUTCMilliseconds()}</p>
       <p>Timer Demo</p>
       <div style={{ fontSize: "100px" }}>
         <span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:

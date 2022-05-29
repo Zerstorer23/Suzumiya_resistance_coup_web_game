@@ -52,9 +52,22 @@
   width: auto;
   display: block;
 }
-.namePanel {
+.nameContainer {
   height: 100%;
   width: 50%;
-  text-align: center;
-  padding: 3% 0;
+}
+.namePanel {
+  text-align: left;
+  font-size: 22px;
+  padding: 0 0;
+}
+
+.namePanelWithTitle {
+  text-align: left;
+  font-size: 22px;
+  padding: 0 0;
+}
+.subtitle {
+  font-size: 10px;
+  font-style: italic;
 }

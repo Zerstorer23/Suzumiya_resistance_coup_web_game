@@ -7,10 +7,21 @@ import { IProps } from "system/types/CommonTypes";
 /*
 Local context holds local data that does not go into database
 */
+
+export enum CursorState {
+  Idle = "Idle",
+  Selecting = "Selecting",
+}
+
 export default function LocalProvider(props: IProps) {
   const [myId, setMyId] = useState(null);
   const [sortedPlayerList, setSortedPlayerList] = useState([]);
-
+  const [playerSelector, setPlayerSelected]: [string, any] = useState(
+    CursorState.Idle
+  );
+  const [tutorialSelector, setTutorialSelected]: [string, any] = useState(
+    CursorState.Idle
+  );
   const map = new Map();
   map.set(LocalField.Id, {
     val: myId,
@@ -19,6 +30,14 @@ export default function LocalProvider(props: IProps) {
   map.set(LocalField.SortedList, {
     val: sortedPlayerList,
     set: setSortedPlayerList,
+  });
+  map.set(LocalField.PlayerSelector, {
+    val: playerSelector,
+    set: setPlayerSelected,
+  });
+  map.set(LocalField.SortedList, {
+    val: tutorialSelector,
+    set: setTutorialSelected,
   });
 
   /*

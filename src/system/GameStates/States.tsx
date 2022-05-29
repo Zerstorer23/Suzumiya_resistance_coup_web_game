@@ -1,3 +1,4 @@
+import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
 import { GameAction, TurnState } from "system/GameStates/GameTypes";
 
 export const PAGE_INGAME = "game";
@@ -182,11 +183,39 @@ export const StateManager = {
         return null;
     }
   },
+  getCalledState(action: ActionType): BoardState | null {
+    switch (action) {
+      case ActionType.GetOne:
+        return BoardState.GetOneAccepted;
+      case ActionType.GetForeignAid:
+        return BoardState.CalledGetTwo;
+      case ActionType.GetThree:
+        return BoardState.CalledGetThree;
+      case ActionType.ChangeCards:
+        return BoardState.CalledChangeCards;
+      case ActionType.Assassinate:
+        return BoardState.GetOneAccepted;
+      case ActionType.Coup:
+        return BoardState.CalledGetTwo;
+      case ActionType.Steal:
+        return BoardState.CalledGetThree;
+      default:
+        return null;
+    }
+  },
   createState(prevState: TurnState, board: BoardState): TurnState {
     return {
       turn: prevState.turn,
       board,
     };
+  },
+  pushBoardState(board: BoardState, gameAction: GameAction, turn: number) {
+    const newState: TurnState = {
+      turn,
+      board,
+    };
+    ReferenceManager.updateReference(DbReferences.GAME_gameAction, gameAction);
+    ReferenceManager.updateReference(DbReferences.GAME_state, newState);
   },
 };
 /*

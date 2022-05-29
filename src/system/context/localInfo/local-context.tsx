@@ -12,6 +12,8 @@ export type LocalContextType = {
 export enum LocalField {
   Id,
   SortedList,
+  PlayerSelector,
+  TutorialSelector,
 }
 const LocalContext = React.createContext<LocalContextType>({
   map: new Map(),
