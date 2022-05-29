@@ -5,7 +5,7 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import RoomProvider from "system/context/RoomContextProvider";
 import LocalProvider from "system/context/localInfo/LocalContextProvider";
-import { enableMapSet } from "immer";
+// import { enableMapSet } from "immer";
 //enableMapSet()
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

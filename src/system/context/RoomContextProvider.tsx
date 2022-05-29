@@ -6,7 +6,7 @@ import RoomContext, {
 import { PlayerEntry, Room } from "system/GameStates/GameTypes";
 import { getDefaultRoom } from "system/GameStates/RoomGenerator";
 import { IProps, ListenerTypes } from "system/types/CommonTypes";
-import { useImmerReducer } from "use-immer";
+// import { useImmerReducer } from "use-immer";
 
 /* Room Context
 Holds data 1 to 1 match to DB.
@@ -87,7 +87,7 @@ function roomReducer(prevRoom: Room, action: RoomActionType): Room {
 }
 
 //https://immerjs.github.io/immer/example-setstate
-function roomImmerReducer(draft: Room, action: RoomActionType): Room {
+/* function roomImmerReducer(draft: Room, action: RoomActionType): Room {
   switch (action.type) {
     case RoomContextAction.RoomLoaded:
       draft = action.room!;
@@ -102,7 +102,7 @@ function roomImmerReducer(draft: Room, action: RoomActionType): Room {
       return getDefaultRoom();
   }
   return draft;
-}
+} */
 export default function RoomProvider(props: IProps) {
   const [roomState, dispatchRoomState] = useReducer(
     roomReducer,
