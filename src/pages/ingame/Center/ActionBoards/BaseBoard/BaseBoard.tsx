@@ -32,7 +32,13 @@ export default function BaseBoard(): JSX.Element {
   ];
 
   const pSelector = localCtx.getVal(LocalField.PlayerSelector);
-
+  function clearSelector() {
+    if (savedAction === ActionType.None) {
+      return;
+    }
+    setSaved(ActionType.None);
+    localCtx.setVal(LocalField.PlayerSelector, CursorState.Idle);
+  }
   useEffect(() => {
     //Only do something whenn selector has name AND we saved Action.
     if (pSelector === CursorState.Selecting || pSelector === CursorState.Idle)
@@ -46,8 +52,7 @@ export default function BaseBoard(): JSX.Element {
     //Push
     StateManager.pushBoardState(newBoard, gameAction, currentTurn);
     //Clear states
-    setSaved(ActionType.None);
-    localCtx.setVal(LocalField.PlayerSelector, CursorState.Idle);
+    clearSelector();
   }, [pSelector, savedAction]);
 
   function onMakeAction(action: ActionType) {
@@ -62,11 +67,12 @@ export default function BaseBoard(): JSX.Element {
           ? CursorState.Idle
           : CursorState.Selecting
       );
-      return;
+    } else {
+      clearSelector();
+      const newBoard = StateManager.getCalledState(action);
+      if (newBoard === null) return;
+      StateManager.pushBoardState(newBoard, gameAction, currentTurn);
     }
-    const newBoard = StateManager.getCalledState(action);
-    if (newBoard === null) return;
-    StateManager.pushBoardState(newBoard, gameAction, currentTurn);
   }
 
   return (

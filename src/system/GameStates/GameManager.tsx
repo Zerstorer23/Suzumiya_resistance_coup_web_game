@@ -6,14 +6,12 @@ export const GameManager = {
   createGameAction(
     pierId: string,
     targetId = "",
-    challengerId = "",
-    param?: string
+    challengerId = ""
   ): GameAction {
     const gameAction: GameAction = {
       pierId,
       targetId,
       challengerId,
-      param,
       time: firebase.database.ServerValue.TIMESTAMP,
     };
     return gameAction;

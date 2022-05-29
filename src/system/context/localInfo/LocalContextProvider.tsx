@@ -22,6 +22,8 @@ export default function LocalProvider(props: IProps) {
   const [tutorialSelector, setTutorialSelected]: [string, any] = useState(
     CursorState.Idle
   );
+  //https://immerjs.github.io/immer/example-setstate
+
   const map = new Map();
   map.set(LocalField.Id, {
     val: myId,
@@ -35,7 +37,7 @@ export default function LocalProvider(props: IProps) {
     val: playerSelector,
     set: setPlayerSelected,
   });
-  map.set(LocalField.SortedList, {
+  map.set(LocalField.TutorialSelector, {
     val: tutorialSelector,
     set: setTutorialSelected,
   });

@@ -12,6 +12,7 @@ import LocalContext, {
 import { Player } from "system/GameStates/GameTypes";
 import RoomContext from "system/context/room-context";
 import { DeckManager } from "system/cards/DeckManager";
+import { CursorState } from "system/context/localInfo/LocalContextProvider";
 
 export default function MyBoard(): JSX.Element {
   //useContext Room context
@@ -36,8 +37,8 @@ export default function MyBoard(): JSX.Element {
   const cardArr: Card[] = charArr.map((val) => {
     return DeckManager.getCardFromChar(val);
   });
-
-  const showCards = true;
+  const showCards =
+    localCtx.getVal(LocalField.TutorialSelector) === CursorState.Idle;
   return (
     <div className={`${gc.round_border} ${classes.container}`}>
       <VerticalLayout>
