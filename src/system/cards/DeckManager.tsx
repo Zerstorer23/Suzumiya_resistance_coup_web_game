@@ -1,9 +1,10 @@
+import { useContext } from "react";
 import { Card, CardRole } from "system/cards/Card";
 import {
   LocalContextType,
   LocalField,
 } from "system/context/localInfo/local-context";
-import { RoomContextType } from "system/context/room-context";
+import RoomContext, { RoomContextType } from "system/context/room-context";
 import { shuffleArray } from "system/GameConstants";
 
 /*
@@ -43,7 +44,10 @@ export const DeckManager = {
     return card;
   },
 
-  //TODO generate deck
+  changeDeck(ctx: RoomContextType, deckArr: string[]) {
+    ctx.room.game.deck = deckArr + "";
+  },
+
   generateStartingDeck(numPlayers: number): string {
     let numCards = 15;
     if (numPlayers > 6) numCards = (numPlayers - 6) * 5 + 15;

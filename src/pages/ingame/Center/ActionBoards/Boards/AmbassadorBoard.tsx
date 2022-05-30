@@ -1,15 +1,15 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/BaseActionButton";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import { ActionInfo } from "system/GameStates/ActionInfo";
-import { ActionType } from "system/GameStates/States";
+import { ActionType, StateManager } from "system/GameStates/States";
 import RoomContext from "system/context/room-context";
 import { useContext } from "react";
 import LocalContext, {
   LocalField,
 } from "system/context/localInfo/local-context";
-import { getSortedListFromMap } from "system/GameStates/RoomGenerator";
 import { DeckManager } from "system/cards/DeckManager";
-import { Card } from "system/cards/Card";
+import { Card, CardRole } from "system/cards/Card";
+import { GameManager } from "system/GameStates/GameManager";
 
 export default function AmbassadorBoard(): JSX.Element {
   const ctx = useContext(RoomContext);
@@ -19,7 +19,6 @@ export default function AmbassadorBoard(): JSX.Element {
   const myId: string = localCtx.getVal(LocalField.Id);
   let arr = deck.split(",");
   const myPlayer = playerMap.get(myId);
-  const sortedList: string[] = getSortedListFromMap(playerMap);
   //get 2 cards from top of the deck
   const topIndex = DeckManager.peekTopIndex(ctx, localCtx);
 
@@ -34,7 +33,35 @@ export default function AmbassadorBoard(): JSX.Element {
     return DeckManager.getCardFromChar(val);
   });
 
-  function onMakeAction(action: Card) {}
+  let thisIsFirstCard: boolean = true;
+
+  function onMakeAction(action: Card) {
+    if (thisIsFirstCard) {
+      thisIsFirstCard = false;
+      if (arr[topIndex] === action.cardRole) {
+        let temp = arr[myPlayer!.icard];
+        arr[myPlayer!.icard] = arr[topIndex];
+        arr[topIndex] = temp;
+      } else {
+        let temp = arr[myPlayer!.icard];
+        arr[myPlayer!.icard] = arr[topIndex + 1];
+        arr[topIndex + 1] = temp;
+      }
+    } else {
+      thisIsFirstCard = true;
+      if (arr[topIndex] === action.cardRole) {
+        let temp = arr[myPlayer!.icard + 1];
+        arr[myPlayer!.icard + 1] = arr[topIndex];
+        arr[topIndex] = temp;
+      } else {
+        let temp = arr[myPlayer!.icard + 1];
+        arr[myPlayer!.icard + 1] = arr[topIndex + 1];
+        arr[topIndex + 1] = temp;
+      }
+    }
+
+    DeckManager.changeDeck(ctx, arr);
+  }
 
   return (
     <div className={classes.container}>
