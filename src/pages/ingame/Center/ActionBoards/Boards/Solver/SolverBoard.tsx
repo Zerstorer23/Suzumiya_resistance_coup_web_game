@@ -32,6 +32,10 @@ export default function SolverBoard(): JSX.Element {
   const expiryTimestamp = new Date();
   expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + REACTION_MAX_SEC); // 10 minutes timer
   const timer: TimerReturnType = useTimer({
+    /**
+     *Behavoir when this element is removed
+     *
+     */
     expiryTimestamp,
     onExpire: () => {
       setSolvingState(SolvingState.Finished);
@@ -49,7 +53,8 @@ export default function SolverBoard(): JSX.Element {
     let jsx = jsxElem;
     switch (board) {
       case BoardState.GetOneAccepted:
-        jsx = Solver.handleGetOne(ctx, localCtx, solvingState, setSolvingState);
+        Solver.handleGetOne(ctx, localCtx, solvingState, setSolvingState);
+        // Solver.handleGetOne()
         break;
       case BoardState.CalledGetTwo:
         break;

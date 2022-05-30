@@ -210,6 +210,8 @@ export const StateManager = {
     ctx: RoomContextType,
     localCtx: LocalContextType
   ): JSX.Element {
+    /**
+  return <p>{`${localPlayer.name} gained 1 coin...`}</p>; */
     return <Fragment />;
   },
   createState(prevState: TurnState, board: BoardState): TurnState {

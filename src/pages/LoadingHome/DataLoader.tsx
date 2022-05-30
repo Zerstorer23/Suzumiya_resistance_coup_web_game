@@ -167,8 +167,6 @@ export default function DataLoader(props: IProps) {
     const playerMap = context.room.playerMap;
     const sortedList = getSortedListFromMap(playerMap);
     localCtx.setVal(LocalField.SortedList, sortedList);
-    console.log("New sorted list: ");
-    console.log(sortedList);
   }, [context.room.playerMap.size]);
   return <Fragment>{props.children}</Fragment>;
 }

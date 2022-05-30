@@ -21,45 +21,31 @@ export default function AmbassadorBoard(): JSX.Element {
   const myPlayer = playerMap.get(myId);
   const sortedList: string[] = getSortedListFromMap(playerMap);
   //get 2 cards from top of the deck
-  let max = 0;
-  for (let id in sortedList) {
-    if (playerMap.get(id)!.icard >= max) {
-      max = playerMap.get(id)!.icard;
-    }
-  }
-  max += 2;
+  const topIndex = DeckManager.peekTopIndex(ctx, localCtx);
 
   let charArr = [
     arr[myPlayer!.icard],
     arr[myPlayer!.icard + 1],
-    arr[max],
-    arr[max + 1],
+    arr[topIndex],
+    arr[topIndex + 1],
   ];
 
   const cardArr: Card[] = charArr.map((val) => {
     return DeckManager.getCardFromChar(val);
   });
 
-  //TODO Show cards and accept two
-  const actions = [
-    ActionType.Accept,
-    ActionType.Accept,
-    ActionType.Accept,
-    ActionType.Accept,
-  ];
-
-  function onMakeAction(action: ActionType) {}
+  function onMakeAction(action: Card) {}
 
   return (
     <div className={classes.container}>
-      {actions.map((action: ActionType, index: number) => {
+      {cardArr.map((action: Card, index: number) => {
         const baseIndex = index + 1;
         const cssName = classes[`cell${baseIndex}`];
         return (
           <BaseActionButton
             key={index}
             className={`${cssName}`}
-            actionInfo={new ActionInfo(action)}
+            param={action}
             onClickButton={() => {
               onMakeAction(action);
             }}

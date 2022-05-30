@@ -14,6 +14,7 @@ export function proceedTurn() {
   const turnState: TurnState = {
     board: BoardState.ChoosingBaseAction,
     turn: TurnManager.getNextTurn(),
+    //
   };
   ReferenceManager.updateReference(DbReferences.GAME_state, turnState);
 }
@@ -48,7 +49,7 @@ export function handleGetOne(
   localCtx: LocalContextType,
   state: SolvingState,
   setState: StateSolverFunc
-): JSX.Element {
+) {
   const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
   switch (state) {
     case SolvingState.Init:
@@ -61,7 +62,6 @@ export function handleGetOne(
       proceedTurn();
       return DEFAULT_NEXT_TURN_TEXT;
   }
-  return <p>{`${localPlayer.name} gained 1 coin...`}</p>;
 }
 
 /*

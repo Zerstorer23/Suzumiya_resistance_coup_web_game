@@ -1,4 +1,9 @@
 import { Card, CardRole } from "system/cards/Card";
+import {
+  LocalContextType,
+  LocalField,
+} from "system/context/localInfo/local-context";
+import { RoomContextType } from "system/context/room-context";
 import { shuffleArray } from "system/GameConstants";
 
 /*
@@ -28,6 +33,8 @@ export const DeckManager = {
       case CardRole.Ambassador:
         card = new Card(CardRole.Ambassador, true);
         break;
+
+      //TODO Add Dead cases
       default:
         card = new Card(CardRole.None, true);
         break;
@@ -52,5 +59,18 @@ export const DeckManager = {
     console.log(arr);
 
     return arr + "";
+  },
+
+  peekTopIndex(ctx: RoomContextType, localCtx: LocalContextType): number {
+    let max = 0;
+    const sortedList = localCtx.getVal(LocalField.SortedList);
+    const playerMap = ctx.room.playerMap;
+    for (let id in sortedList) {
+      if (playerMap.get(id)!.icard >= max) {
+        max = playerMap.get(id)!.icard;
+      }
+    }
+    max += 2;
+    return max;
   },
 };

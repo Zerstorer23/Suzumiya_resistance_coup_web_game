@@ -17,7 +17,7 @@ export default function ForeignAidReactBoard(): JSX.Element {
           <BaseActionButton
             key={index}
             className={`${cssName}`}
-            actionInfo={new ActionInfo(action)}
+            param={new ActionInfo(action)}
             onClickButton={() => {
               onMakeAction(action);
             }}

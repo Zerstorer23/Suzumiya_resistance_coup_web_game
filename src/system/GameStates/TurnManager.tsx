@@ -8,6 +8,15 @@ import { Player } from "system/GameStates/GameTypes";
 export const TurnManager = {
   getFirstTurnId() {},
   getNextTurn(): number {
+    /*
+     * ++
+     * % size
+     * push
+     */
+    /*
+     * %size
+     * use it
+     */
     return 0;
   },
   getCurrentPlayerId(ctx: RoomContextType, localCtx: LocalContextType) {

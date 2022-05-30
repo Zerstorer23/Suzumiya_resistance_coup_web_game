@@ -7,19 +7,23 @@ import { Card } from "system/cards/Card";
 import IMG_NAGATO from "resources/images/nagato2.png";
 
 type Prop = IProps & {
-  actionInfo?: ActionInfo;
-  cardInfo?: Card;
+  param: Card | ActionInfo;
   onClickButton: () => void;
 };
 export default function BaseActionButton(props: Prop) {
-  const action = props.actionInfo;
-  if (action?.actionType === ActionType.None) {
-    return <Fragment />;
+  let name = "";
+  const param = props.param;
+  if (param instanceof Card) {
+    name = param.cardRole;
+    //Card case
+  } else {
+    //ActionInfo Case
+    if (param.actionType === ActionType.None) {
+      return <Fragment />;
+    }
+    name = param.getName();
   }
-  let name = action?.getName();
-  if (action === null) {
-    name = props.cardInfo?.cardRole;
-  }
+
   return (
     <button
       className={`${classes.cell} ${props.className}`}
