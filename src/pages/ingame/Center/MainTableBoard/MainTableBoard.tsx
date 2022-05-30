@@ -7,8 +7,8 @@ export default function MainTableBoard(): JSX.Element {
   return (
     <div className={`${gc.round_border} ${classes.container}`}>
       <VerticalLayout>
-        <TableItem className={classes.topContainer} />
-        <TableItem />
+        <TableItem className={classes.topContainer} isPier={true} />
+        <TableItem isPier={false} />
       </VerticalLayout>
     </div>
   );

@@ -3,7 +3,7 @@ import {
   LocalField,
 } from "system/context/localInfo/local-context";
 import { RoomContextType } from "system/context/room-context";
-import { Player } from "system/GameStates/GameTypes";
+import { GameAction, Player, PlayerMap } from "system/GameStates/GameTypes";
 
 export const TurnManager = {
   getFirstTurnId() {},
@@ -38,5 +38,23 @@ export const TurnManager = {
     const myId = localCtx.getVal(LocalField.Id);
     const localPlayer = ctx.room.playerMap.get(myId)!;
     return [myId, localPlayer];
+  },
+
+  getShareholders(
+    ctx: RoomContextType
+  ): [Player | null, Player | null, Player | null] {
+    const action = ctx.room.game.action;
+    const playerMap = ctx.room.playerMap;
+    const pier: Player | null = playerMap.has(action.pierId)
+      ? playerMap.get(action.pierId)!
+      : null;
+    const target: Player | null = playerMap.has(action.targetId)
+      ? playerMap.get(action.targetId)!
+      : null;
+    const challenger: Player | null = playerMap.has(action.targetId)
+      ? playerMap.get(action.targetId)!
+      : null;
+
+    return [pier, target, challenger];
   },
 };

@@ -1,10 +1,13 @@
-import { SolvingState } from "pages/ingame/Center/ActionBoards/Boards/Solver/SolverBoard";
-import { LocalContextType } from "system/context/localInfo/local-context";
+import {
+  LocalContextType,
+  LocalField,
+} from "system/context/localInfo/local-context";
 import { RoomContextType } from "system/context/room-context";
 import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
 import { TurnState } from "system/GameStates/GameTypes";
 import { BoardState, StateManager } from "system/GameStates/States";
 import { TurnManager } from "system/GameStates/TurnManager";
+import { SolvingState } from "system/types/CommonTypes";
 import { isReturnStatement } from "typescript";
 type StateSolverFunc = (state: SolvingState) => void;
 
@@ -44,23 +47,19 @@ Assassin: ?Assassin->[CalledAssassinate: Wait]
 */
 
 //Get 1 : ?GetOne-> [GetOneAccepted : Solve Wait NextTurn]
-export function handleGetOne(
-  ctx: RoomContextType,
-  localCtx: LocalContextType,
-  state: SolvingState,
-  setState: StateSolverFunc
-) {
+export function handleGetOne(ctx: RoomContextType, localCtx: LocalContextType) {
   const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-  switch (state) {
+  const state = localCtx.map.get(LocalField.Solver)!;
+  switch (state.val as SolvingState) {
     case SolvingState.Init:
       localPlayer.coins++;
       ReferenceManager.updatePlayerReference(myId, localPlayer);
-      setState(SolvingState.TriggerWait);
+      state.set(SolvingState.TriggerWait);
       break;
     case SolvingState.Finished:
-      setState(SolvingState.Init);
+      state.set(SolvingState.Init);
       proceedTurn();
-      return DEFAULT_NEXT_TURN_TEXT;
+      break;
   }
 }
 
