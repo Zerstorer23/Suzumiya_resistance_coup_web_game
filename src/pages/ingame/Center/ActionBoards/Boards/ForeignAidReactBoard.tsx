@@ -1,5 +1,5 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/BaseActionButton";
-import classes from "pages/ingame/Center/ActionBoards/BaseBoard/BaseBoard.module.css";
+import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import { ActionInfo } from "system/GameStates/ActionInfo";
 import { ActionType } from "system/GameStates/States";
 export default function ForeignAidReactBoard(): JSX.Element {

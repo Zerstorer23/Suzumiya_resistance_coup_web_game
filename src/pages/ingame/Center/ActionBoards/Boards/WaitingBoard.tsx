@@ -1,4 +1,4 @@
-import classes from "pages/ingame/Center/ActionBoards/BaseBoard/BaseBoard.module.css";
+import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import { useContext } from "react";
 import LocalContext, {
   LocalField,

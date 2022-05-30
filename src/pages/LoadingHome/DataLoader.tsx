@@ -107,14 +107,19 @@ export default function DataLoader(props: IProps) {
     onDisconnectCleanUp(myId);
   }
   function joinPlayer() {
+    const idField = localCtx.map.get(LocalField.Id);
     if (context.room.playerMap.size === 0) {
       //Join as host
       console.log("Join as host");
       setUpRoom();
     } else {
+      if (idField?.val !== null && context.room.playerMap.has(idField?.val)) {
+        console.log("Already connected");
+      } else {
+        console.log("Join as client");
+        playerJoin();
+      }
       //Join as client
-      console.log("Join as client");
-      playerJoin();
     }
   }
 

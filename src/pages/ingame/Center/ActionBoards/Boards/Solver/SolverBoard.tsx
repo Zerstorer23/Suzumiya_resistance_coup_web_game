@@ -1,4 +1,4 @@
-import classes from "pages/ingame/Center/ActionBoards/BaseBoard/BaseBoard.module.css";
+import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import * as Solver from "pages/ingame/Center/ActionBoards/Boards/Solver/Solver";
 import WaitingBoard from "pages/ingame/Center/ActionBoards/Boards/WaitingBoard";
 import { useContext, useEffect, useState } from "react";
