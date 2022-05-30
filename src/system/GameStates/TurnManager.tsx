@@ -3,6 +3,7 @@ import {
   LocalField,
 } from "system/context/localInfo/local-context";
 import { RoomContextType } from "system/context/room-context";
+import { Player } from "system/GameStates/GameTypes";
 
 export const TurnManager = {
   getFirstTurnId() {},
@@ -20,5 +21,13 @@ export const TurnManager = {
     return (
       localCtx.getVal(LocalField.Id) === this.getCurrentPlayerId(ctx, localCtx)
     );
+  },
+  getMyInfo(
+    ctx: RoomContextType,
+    localCtx: LocalContextType
+  ): [string, Player] {
+    const myId = localCtx.getVal(LocalField.Id);
+    const localPlayer = ctx.room.playerMap.get(myId)!;
+    return [myId, localPlayer];
   },
 };

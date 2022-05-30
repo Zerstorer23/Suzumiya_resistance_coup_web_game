@@ -4,17 +4,6 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
 //https://www.npmjs.com/package/react-timer-hook
-type TimerReturnType = {
-  seconds: number;
-  minutes: number;
-  hours: number;
-  days: number;
-  isRunning: boolean;
-  start: () => void;
-  pause: () => void;
-  resume: () => void;
-  restart: (newTimestamp: Date, autoStart?: boolean | undefined) => void;
-};
 
 export default function MyTimer() {
   const expiryTimestamp = new Date();

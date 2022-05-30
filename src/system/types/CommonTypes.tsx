@@ -36,7 +36,17 @@ export enum ListenerTypes {
   Header,
 }
 export type Listeners = Map<ListenerTypes, DbRef>;
-
+export type TimerReturnType = {
+  seconds: number;
+  minutes: number;
+  hours: number;
+  days: number;
+  isRunning: boolean;
+  start: () => void;
+  pause: () => void;
+  resume: () => void;
+  restart: (newTimestamp: Date, autoStart?: boolean | undefined) => void;
+};
 export const LISTEN_VALUE = "value";
 export const LISTEN_CHILD_ADDED = "child_added";
 export const LISTEN_CHILD_REMOVED = "child_removed";
