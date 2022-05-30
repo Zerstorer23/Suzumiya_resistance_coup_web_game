@@ -1,4 +1,4 @@
-import BaseActionButton from "pages/ingame/Center/ActionBoards/BaseBoard/BaseActionButton";
+import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/BaseActionButton";
 import classes from "pages/ingame/Center/ActionBoards/BaseBoard/BaseBoard.module.css";
 import { useContext } from "react";
 import LocalContext, {

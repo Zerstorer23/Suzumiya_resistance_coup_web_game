@@ -1,4 +1,4 @@
-import BaseActionButton from "pages/ingame/Center/ActionBoards/BaseBoard/BaseActionButton";
+import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/BaseActionButton";
 import { Fragment, useContext, useEffect, useState } from "react";
 import LocalContext, {
   LocalField,

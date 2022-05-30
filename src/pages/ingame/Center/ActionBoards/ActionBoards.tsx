@@ -1,8 +1,8 @@
 import gc from "global.module.css";
-import AmbassadorBoard from "pages/ingame/Center/ActionBoards/BaseBoard/AmbassadorBoard";
-import BaseBoard from "pages/ingame/Center/ActionBoards/BaseBoard/BaseBoard";
-import CounterBoard from "pages/ingame/Center/ActionBoards/BaseBoard/CounterBoard";
-import WaitingBoard from "pages/ingame/Center/ActionBoards/BaseBoard/WaitingBoard";
+import AmbassadorBoard from "pages/ingame/Center/ActionBoards/Boards/AmbassadorBoard";
+import BaseBoard from "pages/ingame/Center/ActionBoards/Boards/BaseBoard";
+import CounterBoard from "pages/ingame/Center/ActionBoards/Boards/CounterBoard";
+import WaitingBoard from "pages/ingame/Center/ActionBoards/Boards/WaitingBoard";
 import { useContext, useEffect, useState } from "react";
 import LocalContext, {
   LocalField,
@@ -11,9 +11,9 @@ import RoomContext from "system/context/room-context";
 import { BoardState, StateManager } from "system/GameStates/States";
 import classes from "./ActionBoards.module.css";
 import { Game } from "system/GameStates/GameTypes";
-import SolverBoard from "pages/ingame/Center/ActionBoards/BaseBoard/SolverBoard";
+import SolverBoard from "pages/ingame/Center/ActionBoards/Boards/Solver/SolverBoard";
 import { TurnManager } from "system/GameStates/TurnManager";
-import ForeignAidReactBoard from "pages/ingame/Center/ActionBoards/BaseBoard/ForeignAidReactBoard";
+import ForeignAidReactBoard from "pages/ingame/Center/ActionBoards/Boards/ForeignAidReactBoard";
 export default function ActionBoards(): JSX.Element {
   //TODO decode
   //ENUM
