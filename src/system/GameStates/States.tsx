@@ -3,6 +3,7 @@ import { LocalContextType } from "system/context/localInfo/local-context";
 import { RoomContextType } from "system/context/room-context";
 import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
 import { GameAction, TurnState } from "system/GameStates/GameTypes";
+import { TurnManager } from "system/GameStates/TurnManager";
 
 export const PAGE_INGAME = "game";
 export const PAGE_LOBBY = "lobby";
@@ -208,11 +209,85 @@ export const StateManager = {
   },
   inferStateInfo(
     ctx: RoomContextType,
-    localCtx: LocalContextType
-  ): JSX.Element {
+    localCtx: LocalContextType,
+    isPier: boolean
+  ): string {
+    const board = ctx.room.game.state.board;
+    const [pier, target, challenger] = TurnManager.getShareholders(ctx);
+    if (pier === null) return "";
+    switch (board) {
+      case BoardState.ChoosingBaseAction:
+        return `${pier.name} is choosing action ...`;
+      case BoardState.GetOneAccepted:
+        return `${pier.name} claimed ${(
+          <strong>income</strong>
+        )}. \n receives 1 coin ...`;
+      case BoardState.CalledGetTwo:
+        return `${pier.name} claimed ${(
+          <strong>foriegn aid</strong>
+        )}. \n Any rejections?...`;
+      case BoardState.AidBlocked:
+        return isPier
+          ? `${pier.name} is deciding if he wants to challenge it...`
+          : `${challenger?.name} claimed ${(
+              <strong>Duke</strong>
+            )} to block the foreign aid!`;
+      case BoardState.DukeBlocksAccepted:
+        return isPier
+          ? `${pier.name} accepted Duke and receives nothing...`
+          : `${challenger?.name} claimed ${(
+              <strong>Duke</strong>
+            )} to block the foreign aid!`;
+      case BoardState.DukeBlocksChallenged:
+        return isPier
+          ? `${pier.name} does not think ${challenger?.name} has Duke! \n Cards will be revealed...`
+          : `${challenger?.name} claimed ${(
+              <strong>Duke</strong>
+            )} to block the foreign aid!`;
+      case BoardState.CalledCoup:
+        return isPier
+          ? `${pier.name}${(<strong>Coup</strong>)}  ${target?.name}!`
+          : `${target?.name} is choosing a card to discard...`;
+      case BoardState.CoupAccepted:
+        break;
+      case BoardState.CalledGetThree:
+        break;
+      case BoardState.GetThreeChallenged:
+        break;
+      case BoardState.CalledChangeCards:
+        break;
+      case BoardState.AmbassadorAccepted:
+        break;
+      case BoardState.AmbassadorChallenged:
+        break;
+      case BoardState.CalledSteal:
+        break;
+      case BoardState.StealAccepted:
+        break;
+      case BoardState.StealChallenged:
+        break;
+      case BoardState.StealBlocked:
+        break;
+      case BoardState.StealBlockAccepted:
+        break;
+      case BoardState.StealBlockChallenged:
+        break;
+      case BoardState.CalledAssassinate:
+        break;
+      case BoardState.AssissinateAccepted:
+        break;
+      case BoardState.AssassinateChallenged:
+        break;
+      case BoardState.AssassinBlocked:
+        break;
+      case BoardState.ContessaChallenged:
+        break;
+      case BoardState.ContessaAccepted:
+        break;
+    }
     /**
   return <p>{`${localPlayer.name} gained 1 coin...`}</p>; */
-    return <Fragment />;
+    return "";
   },
   createState(prevState: TurnState, board: BoardState): TurnState {
     return {

@@ -3,7 +3,8 @@ import LocalContext, {
   LocalContextType,
   LocalField,
 } from "system/context/localInfo/local-context";
-import { IProps } from "system/types/CommonTypes";
+import { Player } from "system/GameStates/GameTypes";
+import { IProps, SolvingState } from "system/types/CommonTypes";
 /*
 Local context holds local data that does not go into database
 */
@@ -14,13 +15,14 @@ export enum CursorState {
 }
 
 export default function LocalProvider(props: IProps) {
-  const [myId, setMyId] = useState(null);
-  const [sortedPlayerList, setSortedPlayerList] = useState([]);
-  const [playerSelector, setPlayerSelected]: [string, any] = useState(
-    CursorState.Idle
-  );
-  const [tutorialSelector, setTutorialSelected]: [string, any] = useState(
-    CursorState.Idle
+  const [myId, setMyId] = useState<string | null>(null);
+  const [sortedPlayerList, setSortedPlayerList] = useState<Player[]>([]);
+  const [playerSelector, setPlayerSelected]: [string, any] =
+    useState<CursorState>(CursorState.Idle);
+  const [tutorialSelector, setTutorialSelected]: [string, any] =
+    useState<CursorState>(CursorState.Idle);
+  const [solvingState, setSolvingState] = useState<SolvingState>(
+    SolvingState.Init
   );
   //https://immerjs.github.io/immer/example-setstate
 
@@ -40,6 +42,10 @@ export default function LocalProvider(props: IProps) {
   map.set(LocalField.TutorialSelector, {
     val: tutorialSelector,
     set: setTutorialSelected,
+  });
+  map.set(LocalField.Solver, {
+    val: solvingState,
+    set: setSolvingState,
   });
 
   /*

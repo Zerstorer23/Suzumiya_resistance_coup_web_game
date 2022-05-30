@@ -6,7 +6,7 @@ import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
 import { TimerReturnType } from "system/types/CommonTypes";
 //https://www.npmjs.com/package/react-timer-hook
 
-export default function MyTimer() {
+export default function TestTimer() {
   const expiryTimestamp = new Date();
   expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 600); // 10 minutes timer
   const {
