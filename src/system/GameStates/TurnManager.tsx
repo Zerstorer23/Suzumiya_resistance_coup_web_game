@@ -6,7 +6,9 @@ import { RoomContextType } from "system/context/room-context";
 import { GameAction, Player, PlayerMap } from "system/GameStates/GameTypes";
 
 export const TurnManager = {
-  getFirstTurnId() {},
+  getFirstTurn(): number {
+    return 0;
+  },
   getNextTurn(): number {
     /*
      * ++
@@ -42,12 +44,11 @@ export const TurnManager = {
 
   getShareholders(
     ctx: RoomContextType
-  ): [Player | null, Player | null, Player | null] {
+  ): [Player, Player | null, Player | null] {
     const action = ctx.room.game.action;
     const playerMap = ctx.room.playerMap;
-    const pier: Player | null = playerMap.has(action.pierId)
-      ? playerMap.get(action.pierId)!
-      : null;
+    const pier: Player = playerMap.get(action.pierId)!;
+
     const target: Player | null = playerMap.has(action.targetId)
       ? playerMap.get(action.targetId)!
       : null;

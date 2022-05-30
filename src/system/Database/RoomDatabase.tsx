@@ -16,7 +16,7 @@ export enum DbReferences {
 }
 
 export const ReferenceManager = {
-  updateReference(field: DbReferences, value: any) {
+  updateReference<T>(field: DbReferences, value: T) {
     const ref = this.getRef(field);
     ref.set(value);
     // console.log(`set ${field} to ${value}`);

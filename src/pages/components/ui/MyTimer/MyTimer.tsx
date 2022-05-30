@@ -22,7 +22,7 @@ export function MyTimer(props: Props): JSX.Element {
    *
    */
   expiryTimestamp.setSeconds(
-    expiryTimestamp.getSeconds() + props.durationInSec
+    expiryTimestamp.getSeconds() + props.durationInSec - 1
   ); // 10 minutes timer
   const timer: TimerReturnType = useTimer({
     expiryTimestamp,
@@ -31,12 +31,14 @@ export function MyTimer(props: Props): JSX.Element {
     },
   });
   const state = localCtx.getVal(LocalField.Solver);
+  console.log("Timer loaded " + state);
   useEffect(() => {
+    console.log("New timer state " + state + "time " + props.durationInSec);
     if (state === SolvingState.TriggerWait) {
       localCtx.setVal(LocalField.Solver, SolvingState.Waiting);
       timer.restart(expiryTimestamp, true);
     }
   }, [state]);
 
-  return <Fragment>{timer.seconds}</Fragment>;
+  return <Fragment>{timer.seconds + 1}</Fragment>;
 }

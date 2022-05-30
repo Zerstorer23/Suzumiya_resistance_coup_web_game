@@ -2,12 +2,71 @@ import { Fragment } from "react";
 import { LocalContextType } from "system/context/localInfo/local-context";
 import { RoomContextType } from "system/context/room-context";
 import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
+import {
+  CONFIRM_MAX_SEC,
+  DECISION_MAX_SEC,
+  REACTION_MAX_SEC,
+} from "system/GameConstants";
 import { GameAction, TurnState } from "system/GameStates/GameTypes";
 import { TurnManager } from "system/GameStates/TurnManager";
 
 export const PAGE_INGAME = "game";
 export const PAGE_LOBBY = "lobby";
-
+/**
+ * 
+ *    switch (board) {
+      case BoardState.ChoosingBaseAction:
+        break;
+      case BoardState.GetOneAccepted:
+        break;
+      case BoardState.CalledGetTwo:
+        break;
+      case BoardState.AidBlocked:
+        break;
+      case BoardState.DukeBlocksAccepted:
+        break;
+      case BoardState.DukeBlocksChallenged:
+        break;
+      case BoardState.CalledCoup:
+        break;
+      case BoardState.CoupAccepted:
+        break;
+      case BoardState.CalledGetThree:
+        break;
+      case BoardState.GetThreeChallenged:
+        break;
+      case BoardState.CalledChangeCards:
+        break;
+      case BoardState.AmbassadorAccepted:
+        break;
+      case BoardState.AmbassadorChallenged:
+        break;
+      case BoardState.CalledSteal:
+        break;
+      case BoardState.StealAccepted:
+        break;
+      case BoardState.StealChallenged:
+        break;
+      case BoardState.StealBlocked:
+        break;
+      case BoardState.StealBlockAccepted:
+        break;
+      case BoardState.StealBlockChallenged:
+        break;
+      case BoardState.CalledAssassinate:
+        break;
+      case BoardState.AssissinateAccepted:
+        break;
+      case BoardState.AssassinateChallenged:
+        break;
+      case BoardState.AssassinBlocked:
+        break;
+      case BoardState.ContessaChallenged:
+        break;
+      case BoardState.ContessaAccepted:
+        break;
+    }
+ */
 //Determined from pier and client action combination
 export enum BoardState {
   ChoosingBaseAction,
@@ -207,47 +266,110 @@ export const StateManager = {
         return null;
     }
   },
+  inferWaitTime(board: BoardState): number {
+    switch (board) {
+      case BoardState.ChoosingBaseAction:
+      case BoardState.DukeBlocksChallenged:
+      case BoardState.CalledCoup:
+      case BoardState.GetThreeChallenged:
+      case BoardState.AmbassadorAccepted:
+      case BoardState.AmbassadorChallenged:
+      case BoardState.StealChallenged:
+      case BoardState.StealBlocked:
+      case BoardState.AidBlocked:
+      case BoardState.StealBlockChallenged:
+      case BoardState.CalledAssassinate:
+      case BoardState.AssassinateChallenged:
+      case BoardState.AssassinBlocked:
+        return DECISION_MAX_SEC;
+      case BoardState.CalledGetTwo:
+      case BoardState.CalledGetThree:
+      case BoardState.CalledChangeCards:
+      case BoardState.CalledSteal:
+        return REACTION_MAX_SEC;
+      case BoardState.CoupAccepted:
+      case BoardState.GetOneAccepted:
+      case BoardState.DukeBlocksAccepted:
+      case BoardState.StealAccepted:
+      case BoardState.StealBlockAccepted:
+      case BoardState.AssissinateAccepted:
+      case BoardState.ContessaChallenged:
+      case BoardState.ContessaAccepted:
+        return CONFIRM_MAX_SEC;
+    }
+  },
   inferStateInfo(
     ctx: RoomContextType,
     localCtx: LocalContextType,
     isPier: boolean
-  ): string {
+  ): JSX.Element {
     const board = ctx.room.game.state.board;
     const [pier, target, challenger] = TurnManager.getShareholders(ctx);
-    if (pier === null) return "";
+    if (pier === null) return <Fragment />;
     switch (board) {
       case BoardState.ChoosingBaseAction:
-        return `${pier.name} is choosing action ...`;
+        return <Fragment>{`${pier.name} is choosing action ...`}</Fragment>;
       case BoardState.GetOneAccepted:
-        return `${pier.name} claimed ${(
-          <strong>income</strong>
-        )}. \n receives 1 coin ...`;
+        return (
+          <Fragment>
+            {`${pier.name} claimed `}
+            <strong>income</strong>
+            {` \n receives 1 coin ...`}
+          </Fragment>
+        );
       case BoardState.CalledGetTwo:
-        return `${pier.name} claimed ${(
-          <strong>foriegn aid</strong>
-        )}. \n Any rejections?...`;
+        return (
+          <Fragment>
+            {`${pier.name} claimed `}
+            <strong>foriegn aid</strong>
+            <br />
+            {`\n Any rejections?...`}
+          </Fragment>
+        );
       case BoardState.AidBlocked:
-        return isPier
-          ? `${pier.name} is deciding if he wants to challenge it...`
-          : `${challenger?.name} claimed ${(
-              <strong>Duke</strong>
-            )} to block the foreign aid!`;
+        return isPier ? (
+          <Fragment>
+            {`${pier.name} is deciding if he wants to challenge it...`}
+          </Fragment>
+        ) : (
+          <Fragment>
+            {`${challenger?.name} claimed `}
+            <strong>Duke</strong>
+            {`to block the foreign aid!`}
+          </Fragment>
+        );
+
       case BoardState.DukeBlocksAccepted:
-        return isPier
-          ? `${pier.name} accepted Duke and receives nothing...`
-          : `${challenger?.name} claimed ${(
-              <strong>Duke</strong>
-            )} to block the foreign aid!`;
+        return isPier ? (
+          <Fragment>
+            {`${pier.name} accepted Duke and receives nothing...`}
+          </Fragment>
+        ) : (
+          <Fragment>
+            {`${challenger?.name} claimed `}
+            <strong>Duke</strong>{" "}
+            {`to block the
+           foreign aid!`}
+          </Fragment>
+        );
       case BoardState.DukeBlocksChallenged:
-        return isPier
-          ? `${pier.name} does not think ${challenger?.name} has Duke! \n Cards will be revealed...`
-          : `${challenger?.name} claimed ${(
-              <strong>Duke</strong>
-            )} to block the foreign aid!`;
+        return (
+          <Fragment>
+            {isPier
+              ? `${pier.name} does not think ${challenger?.name} has Duke! \n Cards will be revealed...`
+              : `${challenger?.name} claimed ${(
+                  <strong>Duke</strong>
+                )} to block the foreign aid!`}
+          </Fragment>
+        );
       case BoardState.CalledCoup:
-        return isPier
-          ? `${pier.name}${(<strong>Coup</strong>)}  ${target?.name}!`
-          : `${target?.name} is choosing a card to discard...`;
+        return (
+          <Fragment>
+            {isPier
+              ? `${pier.name}${(<strong>Coup</strong>)}  ${target?.name}!`
+              : `${target?.name} is choosing a card to discard...`}
+          </Fragment>
+        );
       case BoardState.CoupAccepted:
         break;
       case BoardState.CalledGetThree:
@@ -287,7 +409,7 @@ export const StateManager = {
     }
     /**
   return <p>{`${localPlayer.name} gained 1 coin...`}</p>; */
-    return "";
+    return <Fragment />;
   },
   createState(prevState: TurnState, board: BoardState): TurnState {
     return {

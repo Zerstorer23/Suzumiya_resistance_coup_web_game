@@ -1,6 +1,7 @@
 export var PING = 100;
-export var COUNTDOWN_MAX_MILLS = 5 * 1000;
-export var REACTION_MAX_SEC = 3;
+export var DECISION_MAX_SEC = 10;
+export var REACTION_MAX_SEC = 4;
+export var CONFIRM_MAX_SEC = 3;
 
 export function randomInt(min: number, max: number): number {
   // min and max included
