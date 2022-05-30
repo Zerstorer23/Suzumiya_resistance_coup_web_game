@@ -1,3 +1,6 @@
+import { Fragment } from "react";
+import { LocalContextType } from "system/context/localInfo/local-context";
+import { RoomContextType } from "system/context/room-context";
 import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
 import { GameAction, TurnState } from "system/GameStates/GameTypes";
 
@@ -202,6 +205,12 @@ export const StateManager = {
       default:
         return null;
     }
+  },
+  inferStateInfo(
+    ctx: RoomContextType,
+    localCtx: LocalContextType
+  ): JSX.Element {
+    return <Fragment />;
   },
   createState(prevState: TurnState, board: BoardState): TurnState {
     return {
