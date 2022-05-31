@@ -14,13 +14,26 @@ export enum DbReferences {
   HEADER_hostId = `/header/hostId`,
   HEADER_seed = `/header/seed`,
 }
-
+/**
+ * Reference Manager is responsible for
+ * uploading data to Firebase.
+ */
 export const ReferenceManager = {
+  /**
+   * @param field
+   * @param value
+   * UPdates a single value
+   */
   updateReference<T>(field: DbReferences, value: T) {
     const ref = this.getRef(field);
     ref.set(value);
-    // console.log(`set ${field} to ${value}`);
   },
+  /**
+   *
+   * @param playerId
+   * @param player
+   * UPdates a player
+   */
   updatePlayerReference(playerId: string, player: Player) {
     const ref = ReferenceManager.getPlayerReference(playerId);
     ref.set(player);

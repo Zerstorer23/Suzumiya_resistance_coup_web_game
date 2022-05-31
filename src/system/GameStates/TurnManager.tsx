@@ -7,9 +7,17 @@ import { getNullable } from "system/GameConstants";
 import { Player } from "system/GameStates/GameTypes";
 
 export const TurnManager = {
+  /**
+   *
+   * @returns TODO: use room hash to get first player
+   */
   getFirstTurn(): number {
     return 0;
   },
+  /**
+   *
+   * @returns Get next safe turn
+   */
   getNextTurn(): number {
     /*
      * ++
@@ -22,18 +30,41 @@ export const TurnManager = {
      */
     return 0;
   },
+  /**
+   *
+   * @param ctx
+   * @param localCtx
+   * @returns this turn player's id
+   */
   getCurrentPlayerId(ctx: RoomContextType, localCtx: LocalContextType) {
     return localCtx.getVal(LocalField.SortedList)[ctx.room.game.state.turn];
   },
+  /**
+   *
+   * @param localCtx
+   * @returns next turn player's id
+   */
   getNextPlayerId(localCtx: LocalContextType) {
     const nextTurn = this.getNextTurn();
     return localCtx.getVal(LocalField.SortedList)[nextTurn];
   },
+  /**
+   *
+   * @param ctx
+   * @param localCtx
+   * @returns is this turn MY turn?
+   */
   isMyTurn(ctx: RoomContextType, localCtx: LocalContextType) {
     return (
       localCtx.getVal(LocalField.Id) === this.getCurrentPlayerId(ctx, localCtx)
     );
   },
+  /**
+   *
+   * @param ctx
+   * @param localCtx
+   * @returns My player Id , my Player
+   */
   getMyInfo(
     ctx: RoomContextType,
     localCtx: LocalContextType
@@ -42,7 +73,12 @@ export const TurnManager = {
     const localPlayer = ctx.room.playerMap.get(myId)!;
     return [myId, localPlayer];
   },
-
+  /**
+   *
+   * @param ctx
+   * @returns Players who are related to this game,
+   * Pier, Target, Challenger
+   */
   getShareholders(
     ctx: RoomContextType
   ): [Player | null, Player | null, Player | null] {

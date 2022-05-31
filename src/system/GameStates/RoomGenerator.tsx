@@ -12,9 +12,7 @@ import "firebase/compat/database";
 import { getRandomSeed } from "system/GameConstants";
 import { BoardState } from "system/GameStates/States";
 import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
-import { Card, CardRole } from "system/cards/Card";
 import { DeckManager } from "system/cards/DeckManager";
-import { TurnManager } from "system/GameStates/TurnManager";
 
 export function getDefaultAction(): GameAction {
   return {
@@ -48,20 +46,27 @@ export function getDefaultRoom(): Room {
   };
 }
 
-//TODO make a sorted list by ID
+/**
+ *
+ * @param map
+ * @returns Sorted list that is used for determining turns
+ */
 export function getSortedListFromMap(map: PlayerMap): string[] {
   const arr: string[] = [];
   map.forEach((_player, id) => {
     arr.push(id);
   });
-
-  //TODO how does string comparison wwork?
   const sortedArr = arr.sort((e1: string, e2: string) =>
     e1 > e2 ? 1 : e1 < e2 ? -1 : 0
   );
   return sortedArr;
 }
-
+/**
+ *
+ * Called by Player Panel to initialise the game start state
+ * @param room
+ * @param playerList
+ */
 export function setStartingRoom(room: Room, playerList: string[]) {
   const numPlayer = room.playerMap.size;
   //Set Header
@@ -77,13 +82,6 @@ export function setStartingRoom(room: Room, playerList: string[]) {
   //Set Room
   const deck: string = DeckManager.generateStartingDeck(numPlayer);
   const state: TurnState = { turn: 0, board: BoardState.ChoosingBaseAction };
-  // const action = getDefaultAction();
-  // action.pierId = playerList[TurnManager.getFirstTurn()];
-  // ReferenceManager.updateReference<GameAction>(
-  //   DbReferences.GAME_gameAction,
-  //   action
-  // );
-
   ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
   ReferenceManager.updateReference(DbReferences.GAME_state, state);
 }

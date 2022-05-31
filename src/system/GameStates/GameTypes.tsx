@@ -1,4 +1,4 @@
-import { ActionType, BoardState } from "system/GameStates/States";
+import { BoardState } from "system/GameStates/States";
 
 export type Player = {
   isSpectating: boolean; //may not need it
