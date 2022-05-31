@@ -10,6 +10,7 @@ import LocalContext, {
 import { DeckManager } from "system/cards/DeckManager";
 import { Card, CardRole } from "system/cards/Card";
 import { GameManager } from "system/GameStates/GameManager";
+import { proceedTurn } from "./Solver/Solver";
 
 export default function AmbassadorBoard(): JSX.Element {
   const ctx = useContext(RoomContext);
@@ -36,28 +37,33 @@ export default function AmbassadorBoard(): JSX.Element {
   let thisIsFirstCard: boolean = true;
 
   function onMakeAction(action: Card) {
-    if (thisIsFirstCard) {
+    if (thisIsFirstCard && arr[myPlayer!.icard] !== action.cardRole) {
       thisIsFirstCard = false;
-      if (arr[topIndex] === action.cardRole) {
-        let temp = arr[myPlayer!.icard];
-        arr[myPlayer!.icard] = arr[topIndex];
-        arr[topIndex] = temp;
-      } else {
-        let temp = arr[myPlayer!.icard];
-        arr[myPlayer!.icard] = arr[topIndex + 1];
-        arr[topIndex + 1] = temp;
+      switch (action.cardRole) {
+        case arr[myPlayer!.icard + 1]:
+          DeckManager.swap(myPlayer!.icard + 1, myPlayer!.icard, arr);
+          break;
+        case arr[topIndex]:
+          DeckManager.swap(topIndex, myPlayer!.icard, arr);
+          break;
+        case arr[topIndex + 1]:
+          DeckManager.swap(topIndex + 1, myPlayer!.icard, arr);
+          break;
       }
-    } else {
+    } else if (
+      !thisIsFirstCard &&
+      arr[myPlayer!.icard + 1] !== action.cardRole
+    ) {
       thisIsFirstCard = true;
-      if (arr[topIndex] === action.cardRole) {
-        let temp = arr[myPlayer!.icard + 1];
-        arr[myPlayer!.icard + 1] = arr[topIndex];
-        arr[topIndex] = temp;
-      } else {
-        let temp = arr[myPlayer!.icard + 1];
-        arr[myPlayer!.icard + 1] = arr[topIndex + 1];
-        arr[topIndex + 1] = temp;
+      switch (action.cardRole) {
+        case arr[topIndex]:
+          DeckManager.swap(topIndex, myPlayer!.icard + 1, arr);
+          break;
+        case arr[topIndex + 1]:
+          DeckManager.swap(topIndex + 1, myPlayer!.icard + 1, arr);
+          break;
       }
+      proceedTurn();
     }
 
     DeckManager.changeDeck(ctx, arr);

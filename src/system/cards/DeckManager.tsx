@@ -58,6 +58,12 @@ export const DeckManager = {
     ctx.room.game.deck = deckArr + "";
   },
 
+  swap(index1: number, index2: number, deckArr: string[]) {
+    let temp = deckArr[index1];
+    deckArr[index1] = deckArr[index2];
+    deckArr[index2] = temp;
+  },
+
   generateStartingDeck(numPlayers: number): string {
     let numCards = 15;
     if (numPlayers > 6) numCards = (numPlayers - 6) * 5 + 15;
