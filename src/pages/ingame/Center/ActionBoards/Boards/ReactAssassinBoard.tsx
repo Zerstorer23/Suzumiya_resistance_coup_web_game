@@ -7,7 +7,7 @@ import LocalContext, {
 import RoomContext from "system/context/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/Boards/ActionManager";
+import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/ActionManager";
 
 const actions = [
     ActionType.Accept,

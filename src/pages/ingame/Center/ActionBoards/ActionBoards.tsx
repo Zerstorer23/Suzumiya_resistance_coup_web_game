@@ -8,7 +8,7 @@ import RoomContext from "system/context/room-context";
 import {BoardState} from "system/GameStates/States";
 import classes from "./ActionBoards.module.css";
 import {TurnManager} from "system/GameStates/TurnManager";
-import {getBoardElemFromRoom} from "pages/ingame/Center/ActionBoards/ActionBoardManager";
+import {getBoardElemFromRoom} from "pages/ingame/Center/ActionBoards/StateManagers/ActionBoardManager";
 
 export default function ActionBoards(): JSX.Element {
     //TODO decode

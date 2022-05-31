@@ -7,7 +7,7 @@ import {ActionInfo} from "system/GameStates/ActionInfo";
 import {GameManager} from "system/GameStates/GameManager";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import {CardRole} from "system/cards/Card";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/Boards/ActionManager";
+import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/ActionManager";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {GameAction} from "system/GameStates/GameTypes";
 

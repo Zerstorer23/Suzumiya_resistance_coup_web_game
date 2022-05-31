@@ -6,7 +6,7 @@ import RoomContext from "system/context/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
 import {ActionType, StateManager} from "system/GameStates/States";
 import {TurnManager} from "system/GameStates/TurnManager";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/Boards/ActionManager";
+import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/ActionManager";
 /*
     case BoardState.CalledGetThree:
     case BoardState.CalledChangeCards:
