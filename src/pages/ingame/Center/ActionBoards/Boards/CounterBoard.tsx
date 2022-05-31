@@ -1,45 +1,34 @@
-import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/BaseActionButton";
+import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import {useContext} from "react";
-import LocalContext, {
-    LocalField,
-} from "system/context/localInfo/local-context";
+import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 import RoomContext from "system/context/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
 import {ActionType, StateManager} from "system/GameStates/States";
 import {TurnManager} from "system/GameStates/TurnManager";
-import {pushIsALieState} from "pages/ingame/Center/ActionBoards/Boards/Solver/IsALieSolver";
+import * as ActionManager from "pages/ingame/Center/ActionBoards/Boards/ActionManager";
+/*
+    case BoardState.CalledGetThree:
+    case BoardState.CalledChangeCards:
+    case BoardState.CalledSteal:
+    case BoardState.CalledAssassinate:
+    case BoardState.AidBlocked:
+    case BoardState.StealBlocked:
+    case BoardState.AssassinBlocked:
 
+    This is a board when someone called and see if we want to challenge it or not.
+    So only intersted in challenge state.
+*/
+const actions = [ActionType.Accept, ActionType.IsALie];
 export default function CounterBoard(): JSX.Element {
-    //TODO change by board state
-    const actions = [ActionType.Accept, ActionType.IsALie];
-    /*
-        case BoardState.CalledGetThree:
-        case BoardState.CalledChangeCards:
-        case BoardState.CalledSteal:
-        case BoardState.CalledAssassinate:
-        case BoardState.AidBlocked:
-        case BoardState.StealBlocked:
-        case BoardState.AssassinBlocked:
-  */
+
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const myId = localCtx.getVal(LocalField.Id);
 
     function onMakeAction(action: ActionType) {
-        const board = ctx.room.game.state.board;
-        let newBoard = null;
-        if (action === ActionType.IsALie) {
-            pushIsALieState(ctx, myId);
-            return;
-        }
-        const isMyTurn = TurnManager.isMyTurn(ctx, localCtx);
-        if (!isMyTurn) return;
-        if (!StateManager.isBlockedState(board)) return;
-        newBoard = StateManager.getAcceptedState(board);
-
-        if (newBoard === null) return;
-        StateManager.createState(ctx.room.game.state, newBoard);
+        if (action !== ActionType.IsALie) return;
+        ActionManager.pushIsALieState(ctx, myId);
     }
 
     return (

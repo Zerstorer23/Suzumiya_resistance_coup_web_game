@@ -433,14 +433,7 @@ export const StateManager = {
             board,
         };
     },
-    pushBoardState(board: BoardState, gameAction: GameAction, turn: number) {
-        const newState: TurnState = {
-            turn,
-            board,
-        };
-        ReferenceManager.updateReference(DbReferences.GAME_gameAction, gameAction);
-        ReferenceManager.updateReference(DbReferences.GAME_state, newState);
-    },
+
 };
 /*
 State Table
