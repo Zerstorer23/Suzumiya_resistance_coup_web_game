@@ -8,12 +8,13 @@ import RoomContext from "system/context/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
 import {GameManager} from "system/GameStates/GameManager";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
+import {TurnManager} from "system/GameStates/TurnManager";
 
 export default function ReactCaptainBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const myId = localCtx.getVal(LocalField.Id);
-
+    TurnManager
     const actions = [
         ActionType.Accept,
         ActionType.IsALie,
