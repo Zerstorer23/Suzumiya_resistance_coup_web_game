@@ -44,7 +44,7 @@ export default function AmbassadorBoard(): JSX.Element {
         arr[myPlayer!.icard] = arr[topIndex + 1];
         arr[topIndex + 1] = temp;
       }
-    } else {
+    } else if (arr[topIndex + 1] === action.cardRole) {
       thisIsFirstCard = true;
       if (arr[topIndex] === action.cardRole) {
         let temp = arr[myPlayer!.icard + 1];
