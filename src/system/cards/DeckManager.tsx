@@ -15,7 +15,11 @@ export const DeckManager = {
   readCard(deck: string, playerIndex: number): CardRole[] {
     return [CardRole.None];
   },
-
+  /**
+   *
+   * @param val character form of card
+   * @returns Card UI form
+   */
   getCardFromChar(val: string) {
     let card: Card;
     switch (val) {

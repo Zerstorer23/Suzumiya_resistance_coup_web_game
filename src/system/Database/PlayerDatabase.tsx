@@ -3,11 +3,14 @@ import firebase from "firebase/compat/app";
 import { randomInt } from "system/GameConstants";
 import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
 
+export function getDefaultName(): string {
+  return `ㅇㅇ (${randomInt(1, 255)}.${randomInt(1, 255)})`;
+}
 export function getDefaultPlayer() {
   const newPlayer: Player = {
     isSpectating: false,
     lastActive: firebase.database.ServerValue.TIMESTAMP,
-    name: `ㅇㅇ (${randomInt(1, 255)}.${randomInt(1, 255)})`,
+    name: getDefaultName(),
     icard: -2,
     coins: 0,
   };
