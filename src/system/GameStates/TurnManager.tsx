@@ -3,7 +3,8 @@ import {
   LocalField,
 } from "system/context/localInfo/local-context";
 import { RoomContextType } from "system/context/room-context";
-import { GameAction, Player, PlayerMap } from "system/GameStates/GameTypes";
+import { getNullable } from "system/GameConstants";
+import { Player } from "system/GameStates/GameTypes";
 
 export const TurnManager = {
   getFirstTurn(): number {
@@ -44,18 +45,12 @@ export const TurnManager = {
 
   getShareholders(
     ctx: RoomContextType
-  ): [Player, Player | null, Player | null] {
+  ): [Player | null, Player | null, Player | null] {
     const action = ctx.room.game.action;
     const playerMap = ctx.room.playerMap;
-    const pier: Player = playerMap.get(action.pierId)!;
-
-    const target: Player | null = playerMap.has(action.targetId)
-      ? playerMap.get(action.targetId)!
-      : null;
-    const challenger: Player | null = playerMap.has(action.targetId)
-      ? playerMap.get(action.targetId)!
-      : null;
-
+    const pier = getNullable<Player>(playerMap, action.pierId);
+    const target = getNullable<Player>(playerMap, action.targetId);
+    const challenger = getNullable<Player>(playerMap, action.challengerId);
     return [pier, target, challenger];
   },
 };

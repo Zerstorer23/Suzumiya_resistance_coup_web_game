@@ -1,15 +1,12 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/BaseActionButton";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
-import { ActionInfo } from "system/GameStates/ActionInfo";
-import { ActionType, StateManager } from "system/GameStates/States";
 import RoomContext from "system/context/room-context";
 import { useContext } from "react";
 import LocalContext, {
   LocalField,
 } from "system/context/localInfo/local-context";
 import { DeckManager } from "system/cards/DeckManager";
-import { Card, CardRole } from "system/cards/Card";
-import { GameManager } from "system/GameStates/GameManager";
+import { Card } from "system/cards/Card";
 
 export default function AmbassadorBoard(): JSX.Element {
   const ctx = useContext(RoomContext);

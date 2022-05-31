@@ -2,11 +2,8 @@ import { Fragment } from "react";
 import { LocalContextType } from "system/context/localInfo/local-context";
 import { RoomContextType } from "system/context/room-context";
 import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
-import {
-  CONFIRM_MAX_SEC,
-  DECISION_MAX_SEC,
-  REACTION_MAX_SEC,
-} from "system/GameConstants";
+import { WaitTime } from "system/GameConstants";
+
 import { GameAction, TurnState } from "system/GameStates/GameTypes";
 import { TurnManager } from "system/GameStates/TurnManager";
 
@@ -281,12 +278,12 @@ export const StateManager = {
       case BoardState.CalledAssassinate:
       case BoardState.AssassinateChallenged:
       case BoardState.AssassinBlocked:
-        return DECISION_MAX_SEC;
+        return WaitTime.MakingDecision;
       case BoardState.CalledGetTwo:
       case BoardState.CalledGetThree:
       case BoardState.CalledChangeCards:
       case BoardState.CalledSteal:
-        return REACTION_MAX_SEC;
+        return WaitTime.WaitReactions;
       case BoardState.CoupAccepted:
       case BoardState.GetOneAccepted:
       case BoardState.DukeBlocksAccepted:
@@ -295,7 +292,7 @@ export const StateManager = {
       case BoardState.AssissinateAccepted:
       case BoardState.ContessaChallenged:
       case BoardState.ContessaAccepted:
-        return CONFIRM_MAX_SEC;
+        return WaitTime.WaitConfirms;
     }
   },
   inferStateInfo(

@@ -1,3 +1,4 @@
+import { setMyTimer } from "pages/components/ui/MyTimer/MyTimer";
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/BaseActionButton";
 import { Fragment, useContext, useEffect, useState } from "react";
 import LocalContext, {
@@ -5,6 +6,7 @@ import LocalContext, {
 } from "system/context/localInfo/local-context";
 import { CursorState } from "system/context/localInfo/LocalContextProvider";
 import RoomContext from "system/context/room-context";
+import { WaitTime } from "system/GameConstants";
 
 import { ActionInfo } from "system/GameStates/ActionInfo";
 import { GameManager } from "system/GameStates/GameManager";
@@ -40,6 +42,10 @@ export default function BaseBoard(): JSX.Element {
     setSaved(ActionType.None);
     localCtx.setVal(LocalField.PlayerSelector, CursorState.Idle);
   }
+  useEffect(() => {
+    setMyTimer(localCtx, WaitTime.MakingDecision, () => {});
+  }, []);
+
   useEffect(() => {
     //Only do something whenn selector has name AND we saved Action.
     if (pSelector === CursorState.Selecting || pSelector === CursorState.Idle)

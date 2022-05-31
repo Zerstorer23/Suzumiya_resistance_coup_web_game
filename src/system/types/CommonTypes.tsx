@@ -48,10 +48,10 @@ export type TimerReturnType = {
   restart: (newTimestamp: Date, autoStart?: boolean | undefined) => void;
 };
 export enum SolvingState {
-  Init,
-  TriggerWait,
-  Waiting,
-  Finished,
+  Init, //Prepare solving state
+  TriggerWait, //TImer
+  Waiting, //Timer
+  Finished, //End solving state
 }
 export const LISTEN_VALUE = "value";
 export const LISTEN_CHILD_ADDED = "child_added";

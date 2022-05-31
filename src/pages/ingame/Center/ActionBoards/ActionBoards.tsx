@@ -2,7 +2,7 @@ import gc from "global.module.css";
 import AmbassadorBoard from "pages/ingame/Center/ActionBoards/Boards/AmbassadorBoard";
 import BaseBoard from "pages/ingame/Center/ActionBoards/Boards/BaseBoard";
 import CounterBoard from "pages/ingame/Center/ActionBoards/Boards/CounterBoard";
-import WaitingBoard from "pages/ingame/Center/ActionBoards/Boards/WaitingBoard";
+import WaitingBoard from "pages/ingame/Center/ActionBoards/Boards/Waiter/WaitingBoard";
 import { useContext, useEffect, useState } from "react";
 import LocalContext, {
   LocalField,

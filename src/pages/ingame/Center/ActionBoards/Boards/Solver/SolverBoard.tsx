@@ -1,10 +1,8 @@
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import * as Solver from "pages/ingame/Center/ActionBoards/Boards/Solver/Solver";
-import WaitingBoard from "pages/ingame/Center/ActionBoards/Boards/WaitingBoard";
+import WaitingBoard from "pages/ingame/Center/ActionBoards/Boards/Waiter/WaitingBoard";
 import { useContext, useEffect } from "react";
-import LocalContext, {
-  LocalField,
-} from "system/context/localInfo/local-context";
+import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/room-context";
 import { BoardState } from "system/GameStates/States";
 import { TurnManager } from "system/GameStates/TurnManager";
@@ -16,14 +14,12 @@ export default function SolverBoard(): JSX.Element {
   const ctx = useContext(RoomContext);
   const localCtx = useContext(LocalContext);
   const isMyTurn = TurnManager.isMyTurn(ctx, localCtx);
-  const solvingState = localCtx.getVal(LocalField.Solver);
+
   useEffect(() => {
     const board = ctx.room.game.state.board;
-
     switch (board) {
       case BoardState.GetOneAccepted:
         Solver.handleGetOne(ctx, localCtx);
-        // Solver.handleGetOne()
         break;
       case BoardState.CalledGetTwo:
         break;
@@ -66,7 +62,7 @@ export default function SolverBoard(): JSX.Element {
       case BoardState.ContessaAccepted:
         break;
     }
-  }, [solvingState]);
+  }, []);
 
   if (!isMyTurn) return <WaitingBoard />;
   return (

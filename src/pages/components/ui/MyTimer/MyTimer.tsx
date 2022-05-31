@@ -2,43 +2,49 @@ import { useContext } from "react";
 import { Fragment, useEffect } from "react";
 import { useTimer } from "react-timer-hook";
 import LocalContext, {
+  LocalContextType,
   LocalField,
+  TimerOptionType,
 } from "system/context/localInfo/local-context";
-import {
-  IProps,
-  SolvingState,
-  TimerReturnType,
-} from "system/types/CommonTypes";
+import { IProps, TimerReturnType } from "system/types/CommonTypes";
 
-type Props = IProps & {
-  durationInSec: number;
-};
-export function MyTimer(props: Props): JSX.Element {
+export function MyTimer(props: IProps): JSX.Element {
   const expiryTimestamp = new Date();
   const localCtx = useContext(LocalContext);
+  const option: TimerOptionType = localCtx.getVal(LocalField.Timer);
   // REACTION_MAX_SEC
   /**
    *Behavoir when this element is removed
    *
    */
-  expiryTimestamp.setSeconds(
-    expiryTimestamp.getSeconds() + props.durationInSec - 1
-  ); // 10 minutes timer
+  expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + option.duration); // 10 minutes timer
   const timer: TimerReturnType = useTimer({
     expiryTimestamp,
     onExpire: () => {
-      localCtx.setVal(LocalField.Solver, SolvingState.Finished);
+      option.onExpire();
     },
   });
-  const state = localCtx.getVal(LocalField.Solver);
-  console.log("Timer loaded " + state);
+  console.log("Timer loaded / " + timer.seconds);
   useEffect(() => {
-    console.log("New timer state " + state + "time " + props.durationInSec);
-    if (state === SolvingState.TriggerWait) {
-      localCtx.setVal(LocalField.Solver, SolvingState.Waiting);
-      timer.restart(expiryTimestamp, true);
-    }
-  }, [state]);
+    timer.restart(expiryTimestamp, true);
+  }, [option]);
 
-  return <Fragment>{timer.seconds + 1}</Fragment>;
+  return <Fragment>{timer.seconds}</Fragment>;
+}
+export function setMyTimer(
+  localCtx: LocalContextType,
+  duration: number,
+  onExpire: () => void
+) {
+  const option = createTimeOption(duration, onExpire);
+  localCtx.setVal(LocalField.Timer, option);
+}
+function createTimeOption(
+  duration: number,
+  onExpire: () => void
+): TimerOptionType {
+  return {
+    duration,
+    onExpire,
+  };
 }

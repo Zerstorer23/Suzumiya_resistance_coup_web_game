@@ -1,17 +1,13 @@
-import {
-  LocalContextType,
-  LocalField,
-} from "system/context/localInfo/local-context";
+import { setMyTimer } from "pages/components/ui/MyTimer/MyTimer";
+import { LocalContextType } from "system/context/localInfo/local-context";
 import { RoomContextType } from "system/context/room-context";
 import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
+import { WaitTime } from "system/GameConstants";
 import { TurnState } from "system/GameStates/GameTypes";
-import { BoardState, StateManager } from "system/GameStates/States";
+import { BoardState } from "system/GameStates/States";
 import { TurnManager } from "system/GameStates/TurnManager";
 import { SolvingState } from "system/types/CommonTypes";
-import { isReturnStatement } from "typescript";
-type StateSolverFunc = (state: SolvingState) => void;
 
-const DEFAULT_NEXT_TURN_TEXT = <p>`Go to next turn...`</p>;
 export function proceedTurn() {
   //Clear board and go to next turn
   const turnState: TurnState = {
@@ -49,51 +45,8 @@ Assassin: ?Assassin->[CalledAssassinate: Wait]
 //Get 1 : ?GetOne-> [GetOneAccepted : Solve Wait NextTurn]
 export function handleGetOne(ctx: RoomContextType, localCtx: LocalContextType) {
   const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-  const state = localCtx.map.get(LocalField.Solver)!;
-  switch (state.val as SolvingState) {
-    case SolvingState.Init:
-      localPlayer.coins++;
-      ReferenceManager.updatePlayerReference(myId, localPlayer);
-      state.set(SolvingState.TriggerWait);
-      break;
-    case SolvingState.Finished:
-      state.set(SolvingState.Init);
-      proceedTurn();
-      break;
-  }
-}
-
-/*
-Get 2 : ?GetTwo-> [CalledGetTwo: Wait] 
-                  Unchanged-> Solve NextTurn
-                  /Duke-> [DukeBlocks: Wait]
-                          ?Accept->[DukeBlocksAccepted:Solve Wait NextTurn]
-                          ?Lie->   [DukeBlocksChallenged: Solve Wait NextTurn]
-*/
-export function handleGetTwo(
-  ctx: RoomContextType,
-  localCtx: LocalContextType,
-  state: SolvingState,
-  setState: StateSolverFunc
-) {
-  const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-  switch (state) {
-    case SolvingState.Init:
-      setState(SolvingState.TriggerWait);
-      return (
-        <p>{`${localPlayer.name} claimed Duke and will gain 2 coins... \n`}</p>
-      );
-    case SolvingState.Finished:
-      //If unchanged.. proceed
-      console.log("Finished Called");
-      if (ctx.room.game.state.board === BoardState.CalledGetTwo) {
-        console.log("Solve get two");
-        localPlayer.coins += 2;
-        ReferenceManager.updatePlayerReference(myId, localPlayer);
-        setState(SolvingState.Init);
-        proceedTurn();
-      }
-      return DEFAULT_NEXT_TURN_TEXT;
-  }
-  return <p>{`${localPlayer.name} gained 1 coin...`}</p>;
+  localPlayer.coins++;
+  ReferenceManager.updatePlayerReference(myId, localPlayer);
+  console.log("Get one triggers wait");
+  setMyTimer(localCtx, WaitTime.WaitConfirms, proceedTurn);
 }

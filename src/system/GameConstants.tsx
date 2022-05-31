@@ -1,8 +1,10 @@
 export var PING = 100;
-export var DECISION_MAX_SEC = 10;
-export var REACTION_MAX_SEC = 4;
-export var CONFIRM_MAX_SEC = 3;
 
+export enum WaitTime {
+  MakingDecision = 10,
+  WaitReactions = 4,
+  WaitConfirms = 3,
+}
 export function randomInt(min: number, max: number): number {
   // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -25,4 +27,11 @@ export function shuffleArray(array: any) {
     array[randId] = tmp;
   }
   return array;
+}
+
+export function getNullable<T>(map: Map<any, T>, key: any): T | null {
+  if (map.has(key)) {
+    return map.get(key)!;
+  }
+  return null;
 }

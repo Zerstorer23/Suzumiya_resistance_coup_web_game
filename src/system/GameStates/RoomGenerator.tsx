@@ -77,13 +77,13 @@ export function setStartingRoom(room: Room, playerList: string[]) {
   //Set Room
   const deck: string = DeckManager.generateStartingDeck(numPlayer);
   const state: TurnState = { turn: 0, board: BoardState.ChoosingBaseAction };
-  const action = getDefaultAction();
-  action.pierId = playerList[TurnManager.getFirstTurn()];
+  // const action = getDefaultAction();
+  // action.pierId = playerList[TurnManager.getFirstTurn()];
+  // ReferenceManager.updateReference<GameAction>(
+  //   DbReferences.GAME_gameAction,
+  //   action
+  // );
 
   ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
-  ReferenceManager.updateReference<GameAction>(
-    DbReferences.GAME_gameAction,
-    action
-  );
   ReferenceManager.updateReference(DbReferences.GAME_state, state);
 }

@@ -2,7 +2,9 @@ import { useState } from "react";
 import LocalContext, {
   LocalContextType,
   LocalField,
+  TimerOptionType,
 } from "system/context/localInfo/local-context";
+import { WaitTime } from "system/GameConstants";
 import { Player } from "system/GameStates/GameTypes";
 import { IProps, SolvingState } from "system/types/CommonTypes";
 /*
@@ -21,9 +23,10 @@ export default function LocalProvider(props: IProps) {
     useState<CursorState>(CursorState.Idle);
   const [tutorialSelector, setTutorialSelected]: [string, any] =
     useState<CursorState>(CursorState.Idle);
-  const [solvingState, setSolvingState] = useState<SolvingState>(
-    SolvingState.Init
-  );
+  const [timerOption, setTimerOption] = useState<TimerOptionType>({
+    duration: WaitTime.MakingDecision,
+    onExpire: () => {},
+  });
 
   //https://immerjs.github.io/immer/example-setstate
 
@@ -44,9 +47,9 @@ export default function LocalProvider(props: IProps) {
     val: tutorialSelector,
     set: setTutorialSelected,
   });
-  map.set(LocalField.Solver, {
-    val: solvingState,
-    set: setSolvingState,
+  map.set(LocalField.Timer, {
+    val: timerOption,
+    set: setTimerOption,
   });
 
   /*

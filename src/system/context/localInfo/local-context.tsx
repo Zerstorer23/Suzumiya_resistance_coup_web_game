@@ -14,8 +14,12 @@ export enum LocalField {
   SortedList,
   PlayerSelector,
   TutorialSelector,
-  Solver,
+  Timer,
 }
+export type TimerOptionType = {
+  duration: number;
+  onExpire: any;
+};
 const LocalContext = React.createContext<LocalContextType>({
   map: new Map<LocalField, any>(),
   getVal: (field: LocalField) => {},
