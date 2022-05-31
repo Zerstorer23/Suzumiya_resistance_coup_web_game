@@ -73,21 +73,23 @@ function getBoardElemFromRoom(
           return <WaitingBoard />;
       }
     }
-  } else if (isTargetted) {
-    //Coup Steal Assassin has targets
-    return <SolverBoard />;
-  } else if (noReaction) {
-    //Called and blocked are counterable.
-    //Else wait
-    if (boardState === BoardState.CalledGetTwo) {
-      return <ForeignAidReactBoard />;
-    } else if (StateManager.isCounterable(boardState)) {
-      return <CounterBoard />;
+  } else {
+    if (isTargetted) {
+      //Coup Steal Assassin has targets
+      return <SolverBoard />;
+    } else if (noReaction) {
+      //Called and blocked are counterable.
+      //Else wait
+      if (boardState === BoardState.CalledGetTwo) {
+        return <ForeignAidReactBoard />;
+      } else if (StateManager.isCounterable(boardState)) {
+        return <CounterBoard />;
+      } else {
+        return <WaitingBoard />;
+      }
     } else {
+      //I am not being targetted but someone is acting
       return <WaitingBoard />;
     }
-  } else {
-    //I am not being targetted but someone is acting
-    return <WaitingBoard />;
   }
 }

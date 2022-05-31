@@ -19,3 +19,17 @@ export function handleGetTwo(ctx: RoomContextType, localCtx: LocalContextType) {
   ReferenceManager.updatePlayerReference(myId, localPlayer);
   proceedTurn();
 }
+
+export function handleGetThree(
+  ctx: RoomContextType,
+  localCtx: LocalContextType
+) {}
+export function handleSteal(ctx: RoomContextType, localCtx: LocalContextType) {}
+export function handleAssassinate(
+  ctx: RoomContextType,
+  localCtx: LocalContextType
+) {}
+export function handleContessa(
+  ctx: RoomContextType,
+  localCtx: LocalContextType
+) {}

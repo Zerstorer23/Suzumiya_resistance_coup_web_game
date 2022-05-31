@@ -6,7 +6,7 @@ import LocalContext, {
 } from "system/context/localInfo/local-context";
 import { WaitTime } from "system/GameConstants";
 import { Player } from "system/GameStates/GameTypes";
-import { IProps, SolvingState } from "system/types/CommonTypes";
+import { IProps } from "system/types/CommonTypes";
 /*
 Local context holds local data that does not go into database
 */

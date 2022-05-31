@@ -6,6 +6,7 @@ import {
 } from "system/context/localInfo/local-context";
 import RoomContext, { RoomContextType } from "system/context/room-context";
 import { shuffleArray } from "system/GameConstants";
+import { Player } from "system/GameStates/GameTypes";
 
 /*
 Manager file that helps decoding deck string into cards
@@ -14,6 +15,11 @@ Manager file that helps decoding deck string into cards
 export const DeckManager = {
   readCard(deck: string, playerIndex: number): CardRole[] {
     return [CardRole.None];
+  },
+
+  playerHasCard(card: CardRole, player: Player): boolean {
+    //TODO return if player has the card
+    return true;
   },
   /**
    *

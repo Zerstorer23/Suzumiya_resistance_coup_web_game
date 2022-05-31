@@ -19,6 +19,7 @@ export function getDefaultAction(): GameAction {
     pierId: "",
     targetId: "",
     challengerId: "",
+    param: null,
     time: firebase.database.ServerValue.TIMESTAMP,
   };
 }

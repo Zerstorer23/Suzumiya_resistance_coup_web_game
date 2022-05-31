@@ -47,12 +47,12 @@ export type TimerReturnType = {
   resume: () => void;
   restart: (newTimestamp: Date, autoStart?: boolean | undefined) => void;
 };
-export enum SolvingState {
-  Init, //Prepare solving state
-  TriggerWait, //TImer
-  Waiting, //Timer
-  Finished, //End solving state
+export enum ChallengeSolvingState {
+  Notify,
+  Reveal,
+  Solved,
 }
+
 export const LISTEN_VALUE = "value";
 export const LISTEN_CHILD_ADDED = "child_added";
 export const LISTEN_CHILD_REMOVED = "child_removed";

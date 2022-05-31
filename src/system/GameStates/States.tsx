@@ -149,22 +149,37 @@ export const StateManager = {
       case BoardState.GetOneAccepted:
       case BoardState.DukeBlocksAccepted:
       case BoardState.CoupAccepted:
+      case BoardState.StealAccepted:
+      case BoardState.StealBlockAccepted:
+      case BoardState.AssissinateAccepted:
+      case BoardState.ContessaAccepted:
       case BoardState.DukeBlocksChallenged:
       case BoardState.GetThreeChallenged:
       case BoardState.AmbassadorChallenged:
-      case BoardState.StealAccepted:
       case BoardState.StealChallenged:
-      case BoardState.StealBlockAccepted:
       case BoardState.StealBlockChallenged:
-      case BoardState.AssissinateAccepted:
       case BoardState.AssassinateChallenged:
       case BoardState.ContessaChallenged:
-      case BoardState.ContessaAccepted:
         return true;
       default:
         return false;
     }
   },
+  isChallenged(state: BoardState): boolean {
+    switch (state) {
+      case BoardState.DukeBlocksChallenged:
+      case BoardState.GetThreeChallenged:
+      case BoardState.StealBlockChallenged:
+      case BoardState.AssassinateChallenged:
+      case BoardState.ContessaChallenged:
+      case BoardState.AmbassadorChallenged:
+      case BoardState.StealChallenged:
+        return true;
+      default:
+        return false;
+    }
+  },
+  needToPromptCardLoss(state: BoardState, action: GameAction) {},
   isTargetableState(state: BoardState): boolean {
     /**
      * States that require TargetId set
@@ -460,3 +475,42 @@ Assassin: ?Assassin->[CalledAssassinate: Wait]
                                         ?Lie->[ContessaChallenged:Solve Wait NextTurn]
                                         ?Accept->[ContessaAccepted:Solve Wait NextTurn]
 */
+/**
+ * State responsibilities for Pier
+ * Base
+ *   ChoosingBaseAction,
+ * 
+ * Solver
+ GetOneAccepted,
+ DukeBlocksAccepted,
+ * 
+ * Waiter
+  CalledGetTwo,
+*
+ReactForeign Aid
+
+Counter
+AidBlocked,
+ReactAssassin
+  DukeBlocksChallenged,
+  CalledCoup,
+  CoupAccepted,
+  CalledGetThree,
+  GetThreeChallenged,
+  CalledChangeCards,
+  AmbassadorAccepted,
+  AmbassadorChallenged,
+  CalledSteal,
+  StealAccepted,
+  StealChallenged,
+  StealBlocked,
+  StealBlockAccepted,
+  StealBlockChallenged,
+  CalledAssassinate,
+  AssissinateAccepted,
+  AssassinateChallenged,
+  AssassinBlocked,
+  ContessaChallenged,
+  ContessaAccepted,
+ * 
+ */
