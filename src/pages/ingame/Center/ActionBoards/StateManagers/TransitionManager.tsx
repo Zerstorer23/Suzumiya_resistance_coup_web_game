@@ -1,9 +1,10 @@
-import {RoomContextType} from "system/context/room-context";
+import {RoomContextType} from "system/context/roomInfo/room-context";
 import {GameAction, TurnState} from "system/GameStates/GameTypes";
 import {GameManager} from "system/GameStates/GameManager";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import {TurnManager} from "system/GameStates/TurnManager";
+import {CardRole} from "system/cards/Card";
 
 /**
  *
@@ -24,9 +25,13 @@ export enum TransitionAction {
 export function prepareAndPushState(ctx: RoomContextType, changer: (newAction: GameAction, newState: TurnState) => TransitionAction) {
     const [newAction, newState] = prepareActionState(ctx);
     const result = changer(newAction, newState);
-    if (result === TransitionAction.Abort) return;
+    if (result === TransitionAction.Abort) {
+        console.warn("Abort");
+        console.trace("Aborted state");
+        return;
+    }
     if (result === TransitionAction.EndTurn) {
-        setEndTurn(newState);
+        setEndTurn(ctx, newState);
     }
     pushActionState(newAction, newState);
 }
@@ -36,13 +41,13 @@ export function prepareAndPushState(ctx: RoomContextType, changer: (newAction: G
  */
 export function pushJustEndTurn(ctx: RoomContextType) {
     const [newAction, newState] = prepareActionState(ctx);
-    setEndTurn(newState);
+    setEndTurn(ctx, newState);
     pushActionState(newAction, newState);
 }
 
-function setEndTurn(newState: TurnState) {
+function setEndTurn(ctx: RoomContextType, newState: TurnState) {
     newState.board = BoardState.ChoosingBaseAction;
-    newState.turn = TurnManager.getNextTurn();
+    newState.turn = TurnManager.getNextTurn(newState.turn, ctx.room.playerMap.size);
 }
 
 /**
@@ -80,10 +85,30 @@ export function pushIsALieState(ctx: RoomContextType, challengerId: string) {
         if (board === null) return TransitionAction.Abort;
         newState.board = board;
         newAction.challengerId = challengerId;
+        const susCard = inferLieCard(ctx.room.game.state.board);
+        if (susCard === CardRole.None) return TransitionAction.Abort;
+        GameManager.setChallengeInfo(newAction, susCard);
         return TransitionAction.Success;
     });
 }
 
+function inferLieCard(board: BoardState): CardRole {
+    //TODO
+    switch (board) {
+        case BoardState.CalledGetTwoBlocked:
+        case BoardState.CalledGetThree:
+            return CardRole.Duke;
+        case BoardState.CalledChangeCards:
+            return CardRole.Ambassador;
+        case BoardState.CalledSteal:
+            return CardRole.Captain;
+        case BoardState.CalledAssassinate:
+            return CardRole.Assassin;
+        case BoardState.AssassinBlocked:
+            return CardRole.Contessa;
+    }
+    return CardRole.None;
+}
 
 /**
  * Only use for ACTUAL ACCEPTED state
@@ -99,6 +124,7 @@ export function pushAcceptedState(ctx: RoomContextType) {
     });
 }
 
+
 export function pushCalledState(ctx: RoomContextType, action: ActionType, myId: string, targetId = "") {
     prepareAndPushState(ctx, (newAction, newState) => {
         const newBoard = StateManager.getCalledState(action);
@@ -110,3 +136,10 @@ export function pushCalledState(ctx: RoomContextType, action: ActionType, myId: 
     });
 }
 
+export function pushPrepareDiscarding(ctx: RoomContextType, myId: string) {
+    prepareAndPushState(ctx, (newAction, newState) => {
+        newState.board = BoardState.DiscardingCard;
+        newAction.param = GameManager.createRemovedCard(-1, myId);
+        return TransitionAction.Success;
+    });
+}

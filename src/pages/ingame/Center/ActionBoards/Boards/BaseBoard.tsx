@@ -3,12 +3,13 @@ import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButt
 import {Fragment, useContext, useEffect, useState} from "react";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 import {CursorState} from "system/context/localInfo/LocalContextProvider";
-import RoomContext from "system/context/room-context";
+import RoomContext from "system/context/roomInfo/room-context";
 import {WaitTime} from "system/GameConstants";
 import {ActionInfo} from "system/GameStates/ActionInfo";
 import {ActionType, StateManager} from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import {DS} from "system/Debugger/DS";
 
 const actions = [
     ActionType.GetOne,
@@ -50,7 +51,9 @@ export default function BaseBoard(): JSX.Element {
 
     useEffect(() => {
         setMyTimer(localCtx, WaitTime.MakingDecision, () => {
-            onMakeAction(actions[0]);
+            if (DS.AutoEnd) {
+                onMakeAction(actions[0]);
+            }
         });
     }, []);
 

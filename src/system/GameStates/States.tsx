@@ -1,11 +1,11 @@
 import {Fragment} from "react";
 import {LocalContextType} from "system/context/localInfo/local-context";
-import {RoomContextType} from "system/context/room-context";
-import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
+import {RoomContextType} from "system/context/roomInfo/room-context";
 import {WaitTime} from "system/GameConstants";
 
-import {GameAction, TurnState} from "system/GameStates/GameTypes";
+import {ChallengeInfo, GameAction, RemovedCard, TurnState} from "system/GameStates/GameTypes";
 import {TurnManager} from "system/GameStates/TurnManager";
+import {ChallengeState} from "system/types/CommonTypes";
 
 export const PAGE_INGAME = "game";
 export const PAGE_LOBBY = "lobby";
@@ -70,11 +70,10 @@ export enum BoardState {
     ChoosingBaseAction,
     GetOneAccepted,
     CalledGetTwo,
-    AidBlocked,
+    CalledGetTwoBlocked,
     DukeBlocksAccepted,
     DukeBlocksChallenged,
     CalledCoup,
-    CoupAccepted,
     CalledGetThree,
     GetThreeChallenged,
     CalledChangeCards,
@@ -87,11 +86,11 @@ export enum BoardState {
     StealBlockAccepted,
     StealBlockChallenged,
     CalledAssassinate,
-    AssissinateAccepted,
     AssassinateChallenged,
     AssassinBlocked,
     ContessaChallenged,
     ContessaAccepted,
+    DiscardingCard,
 }
 
 //These are actions that each player can make
@@ -118,7 +117,7 @@ export const StateManager = {
          * States that require HOST to react LIE or ACCEPT
          */
         switch (state) {
-            case BoardState.AidBlocked:
+            case BoardState.CalledGetTwoBlocked:
             case BoardState.StealBlocked:
             case BoardState.AssassinBlocked:
                 return true;
@@ -135,7 +134,7 @@ export const StateManager = {
             case BoardState.CalledChangeCards:
             case BoardState.CalledSteal:
             case BoardState.CalledAssassinate:
-            case BoardState.AidBlocked:
+            case BoardState.CalledGetTwoBlocked:
             case BoardState.StealBlocked:
             case BoardState.AssassinBlocked:
                 return true;
@@ -151,10 +150,8 @@ export const StateManager = {
         switch (state) {
             case BoardState.GetOneAccepted:
             case BoardState.DukeBlocksAccepted:
-            case BoardState.CoupAccepted:
             case BoardState.StealAccepted:
             case BoardState.StealBlockAccepted:
-            case BoardState.AssissinateAccepted:
             case BoardState.ContessaAccepted:
             case BoardState.DukeBlocksChallenged:
             case BoardState.GetThreeChallenged:
@@ -163,6 +160,7 @@ export const StateManager = {
             case BoardState.StealBlockChallenged:
             case BoardState.AssassinateChallenged:
             case BoardState.ContessaChallenged:
+            case BoardState.DiscardingCard:
                 return true;
             default:
                 return false;
@@ -223,7 +221,7 @@ export const StateManager = {
                 return BoardState.StealChallenged;
             case BoardState.CalledAssassinate:
                 return BoardState.AssassinateChallenged;
-            case BoardState.AidBlocked:
+            case BoardState.CalledGetTwoBlocked:
                 return BoardState.DukeBlocksChallenged;
             case BoardState.StealBlocked:
                 return BoardState.StealBlockChallenged;
@@ -243,9 +241,8 @@ export const StateManager = {
         switch (state) {
             //Targettables
             case BoardState.CalledCoup:
-                return BoardState.CoupAccepted;
             case BoardState.CalledAssassinate:
-                return BoardState.AssissinateAccepted;
+                return BoardState.DiscardingCard;
             case BoardState.CalledSteal:
                 return BoardState.StealAccepted;
             case BoardState.CalledChangeCards:
@@ -253,7 +250,7 @@ export const StateManager = {
             //Block calls
             case BoardState.AssassinBlocked:
                 return BoardState.ContessaAccepted;
-            case BoardState.AidBlocked:
+            case BoardState.CalledGetTwoBlocked:
                 return BoardState.DukeBlocksAccepted;
             case BoardState.StealBlocked:
                 return BoardState.StealBlockAccepted;
@@ -282,20 +279,40 @@ export const StateManager = {
                 return null;
         }
     },
-    inferWaitTime(board: BoardState): number {
+    inferWaitTime(board: BoardState, action: GameAction): number {
+        function inferChallengeTime(action: GameAction): WaitTime {
+            const challInfo = action.param as ChallengeInfo;
+            switch (challInfo.state) {
+                case ChallengeState.Notify:
+                    return WaitTime.WaitConfirms;
+                case ChallengeState.Reveal:
+                    return WaitTime.MakingDecision;
+            }
+
+        }
+
+        function inferDiscardingTime(action: GameAction) {
+            const removedInfo = action.param as RemovedCard;
+            if (removedInfo.idx < 0) return WaitTime.MakingDecision;
+            return WaitTime.WaitConfirms;
+        }
+
         switch (board) {
-            case BoardState.ChoosingBaseAction:
-            case BoardState.DukeBlocksChallenged:
-            case BoardState.CalledCoup:
-            case BoardState.GetThreeChallenged:
-            case BoardState.AmbassadorAccepted:
+            case BoardState.DiscardingCard:
+                return inferDiscardingTime(action);
             case BoardState.AmbassadorChallenged:
+            case BoardState.DukeBlocksChallenged:
+            case BoardState.GetThreeChallenged:
+            case BoardState.StealBlockChallenged:
+            case BoardState.AssassinateChallenged:
+                return inferChallengeTime(action);
+            case BoardState.ChoosingBaseAction:
+            case BoardState.CalledCoup:
+            case BoardState.AmbassadorAccepted:
             case BoardState.StealChallenged:
             case BoardState.StealBlocked:
-            case BoardState.AidBlocked:
-            case BoardState.StealBlockChallenged:
+            case BoardState.CalledGetTwoBlocked:
             case BoardState.CalledAssassinate:
-            case BoardState.AssassinateChallenged:
             case BoardState.AssassinBlocked:
                 return WaitTime.MakingDecision;
             case BoardState.CalledGetTwo:
@@ -303,12 +320,10 @@ export const StateManager = {
             case BoardState.CalledChangeCards:
             case BoardState.CalledSteal:
                 return WaitTime.WaitReactions;
-            case BoardState.CoupAccepted:
             case BoardState.GetOneAccepted:
             case BoardState.DukeBlocksAccepted:
             case BoardState.StealAccepted:
             case BoardState.StealBlockAccepted:
-            case BoardState.AssissinateAccepted:
             case BoardState.ContessaChallenged:
             case BoardState.ContessaAccepted:
                 return WaitTime.WaitConfirms;
@@ -342,14 +357,14 @@ export const StateManager = {
                         {`\n Any rejections?...`}
                     </Fragment>
                 );
-            case BoardState.AidBlocked:
+            case BoardState.CalledGetTwoBlocked:
                 return isPier ? (
                     <Fragment>
                         {`${pier.name} is deciding if he wants to challenge it...`}
                     </Fragment>
                 ) : (
                     <Fragment>
-                        {`${challenger?.name} claimed `}
+                        {`${target?.name} claimed `}
                         <strong>Duke</strong>
                         {`to block the foreign aid!`}
                     </Fragment>
@@ -386,8 +401,7 @@ export const StateManager = {
                             : `${target?.name} is choosing a card to discard...`}
                     </Fragment>
                 );
-            case BoardState.CoupAccepted:
-                break;
+
             case BoardState.CalledGetThree:
                 break;
             case BoardState.GetThreeChallenged:
@@ -412,8 +426,6 @@ export const StateManager = {
                 break;
             case BoardState.CalledAssassinate:
                 break;
-            case BoardState.AssissinateAccepted:
-                break;
             case BoardState.AssassinateChallenged:
                 break;
             case BoardState.AssassinBlocked:
@@ -421,6 +433,8 @@ export const StateManager = {
             case BoardState.ContessaChallenged:
                 break;
             case BoardState.ContessaAccepted:
+                break;
+            case BoardState.DiscardingCard:
                 break;
         }
         /**

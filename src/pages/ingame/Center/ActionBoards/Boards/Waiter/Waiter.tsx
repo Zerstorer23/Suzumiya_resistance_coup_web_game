@@ -1,5 +1,4 @@
-import {LocalContextType} from "system/context/localInfo/local-context";
-import {RoomContextType} from "system/context/room-context";
+import {RoomContextType} from "system/context/roomInfo/room-context";
 import {ReferenceManager} from "system/Database/RoomDatabase";
 import {PlayerType, TurnManager} from "system/GameStates/TurnManager";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";

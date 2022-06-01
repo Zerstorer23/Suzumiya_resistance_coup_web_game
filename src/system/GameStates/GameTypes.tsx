@@ -1,6 +1,6 @@
 import {CardRole} from "system/cards/Card";
 import {BoardState} from "system/GameStates/States";
-import {ChallengeSolvingState} from "system/types/CommonTypes";
+import {ChallengeState} from "system/types/CommonTypes";
 
 export type Player = {
     isSpectating: boolean; //may not need it
@@ -13,17 +13,19 @@ export type PlayerEntry = {
     id: string;
     player: Player;
 };
-
-export type ChallengedStateInfo = {
-    state: ChallengeSolvingState;
-    with: CardRole | null;
-    selected: CardRole | null;
+export type RemovedCard = {
+    idx: number;//-1 if unchosen yet.
+    playerId: string;
+}
+export type ChallengeInfo = {
+    state: ChallengeState;
+    susCard: CardRole;
 };
 export type GameAction = {
     pierId: string;
     targetId: string;
     challengerId: string;
-    param: any;
+    param: string | RemovedCard | ChallengeInfo;
     time: Object | number;
 };
 export type TurnState = {

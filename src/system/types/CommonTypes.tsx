@@ -1,56 +1,59 @@
 import firebase from "firebase/compat/app";
-import { Room } from "system/GameStates/GameTypes";
+
 export type IProps = {
-  className?: string;
-  children?: JSX.Element[] | JSX.Element;
+    className?: string;
+    children?: JSX.Element[] | JSX.Element;
 };
 
 export type ItemPair = {
-  key: string;
-  label: string;
-  value: string;
+    key: string;
+    label: string;
+    value: string;
 };
 export type FlexPair = {
-  element: JSX.Element;
-  flex: number;
+    element: JSX.Element;
+    flex: number;
 };
 export type Snapshot = firebase.database.DataSnapshot;
 
 export enum LoadStatus {
-  init = "Initialising",
-  isLoading = "Loading room",
-  loaded = "Room loadd",
-  listening = "Listening changes",
-  joined = "Joined room",
-  outerSpace = "A outer space",
+    init = "Initialising",
+    isLoading = "Loading room",
+    loaded = "Room loadd",
+    listening = "Listening changes",
+    joined = "Joined room",
+    outerSpace = "A outer space",
 }
+
 export type voidReturn = () => void;
 export type DbRef = firebase.database.Reference;
 export type LinearParam = IProps & { elements: FlexPair[] };
 
 export enum ListenerTypes {
-  Deck,
-  gameAction,
-  State,
-  PlayerList,
-  Header,
+    Deck,
+    gameAction,
+    State,
+    PlayerList,
+    Header,
 }
+
 export type Listeners = Map<ListenerTypes, DbRef>;
 export type TimerReturnType = {
-  seconds: number;
-  minutes: number;
-  hours: number;
-  days: number;
-  isRunning: boolean;
-  start: () => void;
-  pause: () => void;
-  resume: () => void;
-  restart: (newTimestamp: Date, autoStart?: boolean | undefined) => void;
+    seconds: number;
+    minutes: number;
+    hours: number;
+    days: number;
+    isRunning: boolean;
+    start: () => void;
+    pause: () => void;
+    resume: () => void;
+    restart: (newTimestamp: Date, autoStart?: boolean | undefined) => void;
 };
-export enum ChallengeSolvingState {
-  Notify,
-  Reveal,
-  Solved,
+
+export enum ChallengeState {
+    Notify,
+    Reveal,
+    // Solved,
 }
 
 export const LISTEN_VALUE = "value";

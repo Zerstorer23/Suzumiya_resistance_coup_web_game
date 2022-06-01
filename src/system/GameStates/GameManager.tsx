@@ -1,7 +1,15 @@
-import {ChallengedStateInfo, GameAction} from "system/GameStates/GameTypes";
+import {ChallengeInfo, GameAction, RemovedCard} from "system/GameStates/GameTypes";
 import firebase from "firebase/compat/app";
 import "firebase/compat/database";
-import {ChallengeSolvingState} from "system/types/CommonTypes";
+import {ChallengeState} from "system/types/CommonTypes";
+import {CardRole} from "system/cards/Card";
+
+function createChallengeInfo(): ChallengeInfo {
+    return {
+        state: ChallengeState.Notify,
+        susCard: CardRole.None
+    };
+}
 
 export const GameManager = {
     createGameAction(
@@ -9,14 +17,13 @@ export const GameManager = {
         targetId = "",
         challengerId = ""
     ): GameAction {
-        const gameAction: GameAction = {
+        return {
             pierId,
             targetId,
             challengerId,
-            param: null,
+            param: "",
             time: firebase.database.ServerValue.TIMESTAMP,
         };
-        return gameAction;
     },
     copyGameAction(action: GameAction): GameAction {
         const gameAction: GameAction = {
@@ -28,12 +35,15 @@ export const GameManager = {
         };
         return gameAction;
     },
-    createChallengeInfo(): ChallengedStateInfo {
-        const ci: ChallengedStateInfo = {
-            selected: null,
-            state: ChallengeSolvingState.Notify,
-            with: null
-        }
-        return ci;
+    setChallengeInfo(action: GameAction, susCard: CardRole) {
+        const ci = createChallengeInfo();
+        ci.susCard = susCard;
+        action.param = ci;
+    },
+    createRemovedCard(index: number, ownerId: string): RemovedCard {
+        return {
+            idx: index,
+            playerId: ownerId
+        };
     }
 };

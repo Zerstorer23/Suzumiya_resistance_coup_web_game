@@ -2,14 +2,13 @@ import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButt
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import {useContext} from "react";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
-import RoomContext from "system/context/room-context";
+import RoomContext from "system/context/roomInfo/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
 import {GameManager} from "system/GameStates/GameManager";
 import {ActionType, BoardState} from "system/GameStates/States";
 import {CardRole} from "system/cards/Card";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {GameAction} from "system/GameStates/GameTypes";
 
 const actions = [
     ActionType.Accept,
@@ -22,12 +21,6 @@ export default function ReactCaptainBoard(): JSX.Element {
     const localCtx = useContext(LocalContext);
     const myId = localCtx.getVal(LocalField.Id);
 
-
-    function setDefendAction(gameAction: GameAction, cardRole: CardRole) {
-        gameAction.param = GameManager.createChallengeInfo();
-        gameAction.param.with = cardRole;
-    }
-
     function onMakeAction(action: ActionType) {
         //Accept or Lie
         const handled = ActionManager.handleAcceptOrLie(ctx, action, myId);
@@ -37,11 +30,11 @@ export default function ReactCaptainBoard(): JSX.Element {
             switch (action) {
                 case ActionType.DefendWithAmbassador:
                     newState.board = BoardState.StealBlocked;
-                    setDefendAction(newAction, CardRole.Ambassador);
+                    GameManager.setChallengeInfo(newAction, CardRole.Ambassador);
                     break;
                 case ActionType.DefendWithCaptain:
                     newState.board = BoardState.StealBlocked;
-                    setDefendAction(newAction, CardRole.Captain);
+                    GameManager.setChallengeInfo(newAction, CardRole.Captain);
                     break;
                 default:
                     return TransitionAction.Abort;

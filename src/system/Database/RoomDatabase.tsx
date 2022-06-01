@@ -68,13 +68,10 @@ export async function loadRoom(): Promise<Room> {
     const roomRef = ReferenceManager.getRoomRef();
     const snapshot = await roomRef.get();
     if (!snapshot.exists()) {
-        console.log("no data");
         return getDefaultRoom();
     } else {
         // const val: any = snapshot.val();
         const room: Room = snapshot.val();
-        console.log("Room val = ");
-        console.log(room);
         if (room["playerMap"] === undefined) {
             room.playerMap = new Map<string, Player>();
         }

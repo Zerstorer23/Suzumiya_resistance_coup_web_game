@@ -1,5 +1,5 @@
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
-import RoomContext from "system/context/room-context";
+import RoomContext from "system/context/roomInfo/room-context";
 import { Fragment, useContext, useState } from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import { DeckManager } from "system/cards/DeckManager";

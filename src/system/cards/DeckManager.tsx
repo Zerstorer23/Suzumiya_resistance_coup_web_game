@@ -1,5 +1,5 @@
 import {Card, CardRole} from "system/cards/Card";
-import {RoomContextType} from "system/context/room-context";
+import {RoomContextType} from "system/context/roomInfo/room-context";
 import {shuffleArray} from "system/GameConstants";
 import {Player} from "system/GameStates/GameTypes";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
@@ -22,6 +22,9 @@ export const DeckManager = {
             default:
                 return false;
         }
+    },
+    playerIsDead(deck: CardRole[], id: string): boolean {
+        return false;
     },
     playerHasCard(card: CardRole, player: Player): boolean {
         //TODO return if player has the card

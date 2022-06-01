@@ -1,11 +1,7 @@
-import {
-    LocalContextType,
-    LocalField,
-} from "system/context/localInfo/local-context";
-import {RoomContextType} from "system/context/room-context";
+import {LocalContextType, LocalField,} from "system/context/localInfo/local-context";
+import {RoomContextType} from "system/context/roomInfo/room-context";
 import {getNullable} from "system/GameConstants";
-import {Player, TurnState} from "system/GameStates/GameTypes";
-import {BoardState} from "system/GameStates/States";
+import {Player} from "system/GameStates/GameTypes";
 
 export enum PlayerType {
     Pier,
@@ -14,34 +10,20 @@ export enum PlayerType {
 }
 
 export const TurnManager = {
-    endTurn(): TurnState {
-        return {
-            board: BoardState.ChoosingBaseAction,
-            turn: TurnManager.getNextTurn(),
-        };
-    },
     /**
      *
      * @returns TODO: use room hash to get first player
      */
-    getFirstTurn(): number {
-        return 0;
+    getFirstTurn(seed: number, playerSize: number): number {
+        return seed % playerSize;
     },
     /**
      *
      * @returns Get next safe turn
      */
-    getNextTurn(): number {
-        /*
-         * ++
-         * % size
-         * push
-         */
-        /*
-         * %size
-         * use it
-         */
-        return 0;
+    getNextTurn(curr: number, playerSize: number): number {
+
+        return (curr + 1) % playerSize;
     },
     /**
      *
@@ -57,8 +39,8 @@ export const TurnManager = {
      * @param localCtx
      * @returns next turn player's id
      */
-    getNextPlayerId(localCtx: LocalContextType) {
-        const nextTurn = this.getNextTurn();
+    getNextPlayerId(ctx: RoomContextType, localCtx: LocalContextType) {
+        const nextTurn = this.getNextTurn(ctx.room.game.state.turn, ctx.room.playerMap.size);
         return localCtx.getVal(LocalField.SortedList)[nextTurn];
     },
     /**

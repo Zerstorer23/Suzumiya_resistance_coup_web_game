@@ -2,8 +2,8 @@ import {Player} from "system/GameStates/GameTypes";
 import firebase from "firebase/compat/app";
 import {randomInt} from "system/GameConstants";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
-import {PlayerType, TurnManager} from "system/GameStates/TurnManager";
-import {RoomContextType} from "system/context/room-context";
+import {TurnManager} from "system/GameStates/TurnManager";
+import {RoomContextType} from "system/context/roomInfo/room-context";
 
 export function getDefaultName(): string {
     return `ㅇㅇ (${randomInt(1, 255)}.${randomInt(1, 255)})`;

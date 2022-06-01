@@ -2,15 +2,12 @@ import classes from "./MyBoard.module.css";
 import gc from "global.module.css";
 import VerticalLayout from "pages/components/ui/VerticalLayout";
 import MyCardComponent from "pages/ingame/Left/MyBoard/MyCardComponent/MyCardComponent";
-import {Card, CardRole} from "system/cards/Card";
+import {Card} from "system/cards/Card";
 import CoinDisplayComponent from "pages/ingame/Left/MyBoard/CoinDisplayComponent/CoinDisplayComponent";
-import {Fragment} from "react";
-import {useContext} from "react";
-import LocalContext, {
-    LocalField,
-} from "system/context/localInfo/local-context";
+import {Fragment, useContext} from "react";
+import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 import {Player} from "system/GameStates/GameTypes";
-import RoomContext from "system/context/room-context";
+import RoomContext from "system/context/roomInfo/room-context";
 import {DeckManager} from "system/cards/DeckManager";
 import {CursorState} from "system/context/localInfo/LocalContextProvider";
 
