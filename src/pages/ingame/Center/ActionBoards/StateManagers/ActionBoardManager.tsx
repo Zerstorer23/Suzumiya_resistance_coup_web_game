@@ -7,7 +7,7 @@ import WaitingBoard from "pages/ingame/Center/ActionBoards/Boards/Waiter/Waiting
 import {Game} from "system/GameStates/GameTypes";
 import {BoardState, StateManager} from "system/GameStates/States";
 import {Fragment} from "react";
-import DiscardCardBoard from "pages/ingame/Center/ActionBoards/Boards/DiscardCardBoard";
+import DiscardCardPanel from "pages/ingame/Center/ActionBoards/Boards/Solver/DiscardCardPanel";
 import ReactAssassinBoard from "pages/ingame/Center/ActionBoards/Boards/ReactAssassinBoard";
 import ReactCaptainBoard from "pages/ingame/Center/ActionBoards/Boards/ReactCaptainBoard";
 
@@ -61,7 +61,7 @@ function handleNotMyTurn(boardState: BoardState, hasChallenger: boolean): JSX.El
 function handleTargettedState(boardState: BoardState): [JSX.Element, boolean] {
     switch (boardState) {
         case BoardState.CalledCoup:
-            return [<DiscardCardBoard/>, true];
+            return [<DiscardCardPanel/>, true];
         case BoardState.CalledAssassinate:
             return [<ReactAssassinBoard/>, true];
         case BoardState.CalledSteal:

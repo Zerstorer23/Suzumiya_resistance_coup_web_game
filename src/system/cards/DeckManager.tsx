@@ -45,8 +45,29 @@ export const DeckManager = {
             default:
                 return CardRole.None;
         }
-    }
-    ,
+    },
+    killCardAt(deck: CardRole[], index: number) {
+        const role = deck[index];
+        switch (role) {
+            case CardRole.Duke:
+                deck[index] = CardRole.DEAD_Duke;
+                break;
+            case CardRole.Captain:
+                deck[index] = CardRole.DEAD_Captain;
+                break;
+            case CardRole.Assassin:
+                deck[index] = CardRole.DEAD_Assassin;
+                break;
+            case CardRole.Ambassador:
+                deck[index] = CardRole.DEAD_Ambassador;
+                break;
+            case CardRole.Contessa:
+                deck[index] = CardRole.DEAD_Contessa;
+                break;
+            default:
+                break;
+        }
+    },
     /**
      *
      * @param val character form of card
@@ -82,7 +103,7 @@ export const DeckManager = {
         console.log(arr);
         return arr;
     },
-    
+
     peekTopIndex(ctx: RoomContextType): number {
         let max = 0;
         const playerMap = ctx.room.playerMap;

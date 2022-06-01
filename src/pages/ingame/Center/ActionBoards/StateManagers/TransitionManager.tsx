@@ -16,6 +16,11 @@ export enum TransitionAction {
     EndTurn
 }
 
+/**
+ * Do something and END
+ * DO chanes in CHanger.
+ * Return results TransitionAction
+ */
 export function prepareAndPushState(ctx: RoomContextType, changer: (newAction: GameAction, newState: TurnState) => TransitionAction) {
     const [newAction, newState] = prepareActionState(ctx);
     const result = changer(newAction, newState);
@@ -23,6 +28,15 @@ export function prepareAndPushState(ctx: RoomContextType, changer: (newAction: G
     if (result === TransitionAction.EndTurn) {
         setEndTurn(newState);
     }
+    pushActionState(newAction, newState);
+}
+
+/**
+ * Do nothing and End
+ */
+export function pushJustEndTurn(ctx: RoomContextType) {
+    const [newAction, newState] = prepareActionState(ctx);
+    setEndTurn(newState);
     pushActionState(newAction, newState);
 }
 

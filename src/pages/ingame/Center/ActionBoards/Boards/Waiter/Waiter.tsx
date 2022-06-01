@@ -23,8 +23,7 @@ export function handleGetTwo(ctx: RoomContextType) {
 }
 
 export function handleGetThree(
-    ctx: RoomContextType,
-    localCtx: LocalContextType
+    ctx: RoomContextType
 ) {
     const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
     ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
@@ -34,51 +33,6 @@ export function handleGetThree(
     });
 }
 
-/**
- * max +2
- * add to pier
- * take from target
- */
-export function handleSteal(ctx: RoomContextType, localCtx: LocalContextType) {
-    const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
-    const [targetId, target] = TurnManager.getPlayerInfo(ctx, PlayerType.Target);
-    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
-        const stealAmount = Math.min(target.coins, 2);
-        pier.coins += stealAmount;
-        target.coins -= stealAmount;
-        ReferenceManager.updatePlayerReference(pierId, pier);
-        ReferenceManager.updatePlayerReference(targetId, target);
-        return TransitionAction.EndTurn;
-    });
-}
-
-/**
- * Move to Accepted State
- * @param ctx
- */
-export function handleAmbassador(ctx: RoomContextType) {
-    ActionManager.pushAcceptedState(ctx);
-}
-
-/**
- *Move to Accepted State
- * @param ctx
- */
-export function handleAssassinate(
-    ctx: RoomContextType
-) {
-    ActionManager.pushAcceptedState(ctx);
-}
-
-/**
- *Move to Accepted State
- * @param ctx
- */
-export function handleContessa(
-    ctx: RoomContextType
-) {
-    ActionManager.pushAcceptedState(ctx);
-}
 
 export function acceptState(
     ctx: RoomContextType

@@ -3,20 +3,17 @@ import {LocalContextType} from "system/context/localInfo/local-context";
 import {RoomContextType} from "system/context/room-context";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {WaitTime} from "system/GameConstants";
-import {GameAction, TurnState} from "system/GameStates/GameTypes";
-import {ActionType, BoardState, StateManager} from "system/GameStates/States";
-import {TurnManager} from "system/GameStates/TurnManager";
-import {GameManager} from "system/GameStates/GameManager";
+import {BoardState} from "system/GameStates/States";
+import {PlayerType, TurnManager} from "system/GameStates/TurnManager";
+import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import * as PlayerDatabase from "system/Database/PlayerDatabase";
+import {DeckManager} from "system/cards/DeckManager";
 
-export function proceedTurn() {
-    //Clear board and go to next turn
-    const turnState: TurnState = TurnManager.endTurn();
-    ReferenceManager.updateReference(DbReferences.GAME_state, turnState);
-}
-
-
-export function doNothingAndEnd(localCtx: LocalContextType) {
-    setMyTimer(localCtx, WaitTime.WaitConfirms, proceedTurn);
+export function waitAndEnd(ctx: RoomContextType, localCtx: LocalContextType) {
+    setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
+        ActionManager.pushJustEndTurn(ctx);
+    });
 }
 
 export function solveState(ctx: RoomContextType, localCtx: LocalContextType) {
@@ -30,13 +27,13 @@ export function solveState(ctx: RoomContextType, localCtx: LocalContextType) {
             handlePlayerKill(ctx, localCtx);
             break;
         case BoardState.StealAccepted:
-            handleCaptain(ctx, localCtx);
+            handleSteal(ctx);
             break;
         case BoardState.StealBlockAccepted:
         case BoardState.DukeBlocksAccepted:
         case BoardState.ContessaAccepted:
         default:
-            doNothingAndEnd(localCtx);
+            waitAndEnd(ctx, localCtx);
             break;
     }
 }
@@ -57,11 +54,10 @@ Assassin: ?Assassin->[CalledAssassinate: Wait]
 
 //Get 1 : ?GetOne-> [GetOneAccepted : Solve Wait NextTurn]
 function handleGetOne(ctx: RoomContextType, localCtx: LocalContextType) {
-    const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    localPlayer.coins++;
-    ReferenceManager.updatePlayerReference(myId, localPlayer);
-    console.log("Get one triggers wait");
-    setMyTimer(localCtx, WaitTime.WaitConfirms, proceedTurn);
+    const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
+    pier.coins++;
+    ReferenceManager.updatePlayerReference(pierId, pier);
+    waitAndEnd(ctx, localCtx);
 }
 
 /**
@@ -71,20 +67,16 @@ function handleGetOne(ctx: RoomContextType, localCtx: LocalContextType) {
  * @param localCtx
  */
 function handlePlayerKill(ctx: RoomContextType, localCtx: LocalContextType) {
-}
-
-/**
- * ==Anyone can challenge
- Duke  : ?GetThree->[CalledGetThree: Wait]
- Unchanged->  Solve NextTurn
- /Lie-> [GetThreeChallenged:Solve Wait NextTurn]
- */
-function handleDuke(ctx: RoomContextType, localCtx: LocalContextType) {
-    const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    localPlayer.coins++;
-    ReferenceManager.updatePlayerReference(myId, localPlayer);
-    console.log("Get one triggers wait");
-    setMyTimer(localCtx, WaitTime.WaitConfirms, proceedTurn);
+    //Mark the card in param dead
+    setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
+        ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+            const removeIndex: number = ctx.room.game.action.param;
+            const deck = ctx.room.game.deck;
+            DeckManager.killCardAt(deck, removeIndex);
+            ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
+            return TransitionAction.EndTurn;
+        });
+    });
 }
 
 /**
@@ -97,5 +89,20 @@ function handleDuke(ctx: RoomContextType, localCtx: LocalContextType) {
  * @param ctx
  * @param localCtx
  */
-function handleCaptain(ctx: RoomContextType, localCtx: LocalContextType) {
+/**
+ * max +2
+ * add to pier
+ * take from target
+ */
+export function handleSteal(ctx: RoomContextType) {
+    const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
+    const [targetId, target] = TurnManager.getPlayerInfo(ctx, PlayerType.Target);
+    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+        const stealAmount = Math.min(target.coins, 2);
+        pier.coins += stealAmount;
+        target.coins -= stealAmount;
+        ReferenceManager.updatePlayerReference(pierId, pier);
+        ReferenceManager.updatePlayerReference(targetId, target);
+        return TransitionAction.EndTurn;
+    });
 }

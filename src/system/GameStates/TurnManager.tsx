@@ -82,9 +82,7 @@ export const TurnManager = {
         ctx: RoomContextType,
         localCtx: LocalContextType
     ): [string, Player] {
-        const myId = localCtx.getVal(LocalField.Id);
-        const localPlayer = ctx.room.playerMap.get(myId)!;
-        return [myId, localPlayer];
+        return this.getPlayerInfoById(ctx, localCtx.getVal(LocalField.Id));
     },
     getPlayerInfo(
         ctx: RoomContextType,
@@ -102,6 +100,12 @@ export const TurnManager = {
                 playerId = ctx.room.game.action.challengerId;
                 break;
         }
+        return this.getPlayerInfoById(ctx, playerId);
+    },
+    getPlayerInfoById(
+        ctx: RoomContextType,
+        playerId: string
+    ): [string, Player] {
         const player = ctx.room.playerMap.get(playerId)!;
         return [playerId, player];
     },

@@ -1,5 +1,5 @@
 import {setMyTimer} from "pages/components/ui/MyTimer/MyTimer";
-import {doNothingAndEnd} from "pages/ingame/Center/ActionBoards/Boards/Solver/Solver";
+import {waitAndEnd} from "pages/ingame/Center/ActionBoards/Boards/Solver/Solver";
 import {CardRole} from "system/cards/Card";
 import {DeckManager} from "system/cards/DeckManager";
 import {LocalContextType} from "system/context/localInfo/local-context";
@@ -83,6 +83,6 @@ export function revealChallenge(
     return [hasIt, needToPayPenalty];
 }
 
-export function showResults(localCtx: LocalContextType) {
-    doNothingAndEnd(localCtx);
+export function showResults(ctx: RoomContextType, localCtx: LocalContextType) {
+    waitAndEnd(ctx, localCtx);
 }
