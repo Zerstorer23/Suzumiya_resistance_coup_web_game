@@ -54,18 +54,18 @@ export function handleAcceptOrLie(ctx: RoomContextType, action: ActionType, myId
         return true;
     }
     if (action === ActionType.Accept) {
-        pushAcceptedState(ctx, myId);
+        pushAcceptedState(ctx);
         return true;
     }
     return false;
 }
 
-export function pushIsALieState(ctx: RoomContextType, myId: string) {
+export function pushIsALieState(ctx: RoomContextType, challengerId: string) {
     prepareAndPushState(ctx, (newAction, newState) => {
         const board = StateManager.getChallengedState(ctx.room.game.state.board);
         if (board === null) return TransitionAction.Abort;
         newState.board = board;
-        newAction.challengerId = myId;
+        newAction.challengerId = challengerId;
         return TransitionAction.Success;
     });
 }
@@ -74,10 +74,9 @@ export function pushIsALieState(ctx: RoomContextType, myId: string) {
 /**
  * Only use for ACTUAL ACCEPTED state
  * @param ctx
- * @param myId
  */
 
-export function pushAcceptedState(ctx: RoomContextType, myId: string) {
+export function pushAcceptedState(ctx: RoomContextType) {
     prepareAndPushState(ctx, (newAction, newState) => {
         const board = StateManager.getAcceptedState(ctx.room.game.state.board);
         if (board === null) return TransitionAction.Abort;

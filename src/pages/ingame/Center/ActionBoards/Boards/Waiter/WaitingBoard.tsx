@@ -36,10 +36,10 @@ export default function WaitingBoard(): JSX.Element {
                         Waiter.handleSteal(ctx, localCtx);
                         break;
                     case BoardState.CalledChangeCards:
-                        Waiter.handleAmbassador(ctx, localCtx, myId);
+                        Waiter.handleAmbassador(ctx, myId);
                         break;
                     case BoardState.CalledAssassinate:
-                        Waiter.handleAssassinate(ctx, localCtx);
+                        Waiter.handleAssassinate(ctx, myId);
                         break;
                     case BoardState.AssassinBlocked:
                         Waiter.handleContessa(ctx, localCtx);

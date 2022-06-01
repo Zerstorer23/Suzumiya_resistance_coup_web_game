@@ -1,10 +1,9 @@
 import {LocalContextType} from "system/context/localInfo/local-context";
 import {RoomContextType} from "system/context/room-context";
 import {ReferenceManager} from "system/Database/RoomDatabase";
-import {TurnManager} from "system/GameStates/TurnManager";
+import {PlayerType, TurnManager} from "system/GameStates/TurnManager";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {BoardState} from "system/GameStates/States";
 
 /*
 Get 2 : ?GetTwo-> [CalledGetTwo: Wait] 
@@ -14,11 +13,11 @@ Get 2 : ?GetTwo-> [CalledGetTwo: Wait]
                           ?Lie->   [DukeBlocksChallenged: Solve Wait NextTurn]
 */
 
-export function handleGetTwo(ctx: RoomContextType, localCtx: LocalContextType) {
-    const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
+export function handleGetTwo(ctx: RoomContextType) {
+    const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
     ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
-        localPlayer.coins += 2;
-        ReferenceManager.updatePlayerReference(myId, localPlayer);
+        pier.coins += 2;
+        ReferenceManager.updatePlayerReference(pierId, pier);
         return TransitionAction.EndTurn;
     });
 }
@@ -27,29 +26,62 @@ export function handleGetThree(
     ctx: RoomContextType,
     localCtx: LocalContextType
 ) {
-    const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
+    const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
     ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
-        localPlayer.coins += 3;
-        ReferenceManager.updatePlayerReference(myId, localPlayer);
+        pier.coins += 3;
+        ReferenceManager.updatePlayerReference(pierId, pier);
         return TransitionAction.EndTurn;
     });
 }
 
+/**
+ * max +2
+ * add to pier
+ * take from target
+ */
 export function handleSteal(ctx: RoomContextType, localCtx: LocalContextType) {
+    const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
+    const [targetId, target] = TurnManager.getPlayerInfo(ctx, PlayerType.Target);
+    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+        const stealAmount = Math.min(target.coins, 2);
+        pier.coins += stealAmount;
+        target.coins -= stealAmount;
+        ReferenceManager.updatePlayerReference(pierId, pier);
+        ReferenceManager.updatePlayerReference(targetId, target);
+        return TransitionAction.EndTurn;
+    });
 }
 
-export function handleAmbassador(ctx: RoomContextType, localCtx: LocalContextType, myId: string) {
-    ActionManager.pushAcceptedState(ctx, myId);
+/**
+ * Move to Accepted State
+ * @param ctx
+ */
+export function handleAmbassador(ctx: RoomContextType) {
+    ActionManager.pushAcceptedState(ctx);
 }
 
+/**
+ *Move to Accepted State
+ * @param ctx
+ */
 export function handleAssassinate(
-    ctx: RoomContextType,
-    localCtx: LocalContextType
+    ctx: RoomContextType
 ) {
+    ActionManager.pushAcceptedState(ctx);
 }
 
+/**
+ *Move to Accepted State
+ * @param ctx
+ */
 export function handleContessa(
-    ctx: RoomContextType,
-    localCtx: LocalContextType
+    ctx: RoomContextType
 ) {
+    ActionManager.pushAcceptedState(ctx);
+}
+
+export function acceptState(
+    ctx: RoomContextType
+) {
+    ActionManager.pushAcceptedState(ctx);
 }

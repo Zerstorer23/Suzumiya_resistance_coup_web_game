@@ -7,6 +7,12 @@ import {getNullable} from "system/GameConstants";
 import {Player, TurnState} from "system/GameStates/GameTypes";
 import {BoardState} from "system/GameStates/States";
 
+export enum PlayerType {
+    Pier,
+    Target,
+    Challenger,
+}
+
 export const TurnManager = {
     endTurn(): TurnState {
         return {
@@ -79,6 +85,25 @@ export const TurnManager = {
         const myId = localCtx.getVal(LocalField.Id);
         const localPlayer = ctx.room.playerMap.get(myId)!;
         return [myId, localPlayer];
+    },
+    getPlayerInfo(
+        ctx: RoomContextType,
+        playerType: PlayerType
+    ): [string, Player] {
+        let playerId = "";
+        switch (playerType) {
+            case PlayerType.Pier:
+                playerId = ctx.room.game.action.pierId;
+                break;
+            case PlayerType.Target:
+                playerId = ctx.room.game.action.targetId;
+                break;
+            case PlayerType.Challenger:
+                playerId = ctx.room.game.action.challengerId;
+                break;
+        }
+        const player = ctx.room.playerMap.get(playerId)!;
+        return [playerId, player];
     },
     /**
      *
