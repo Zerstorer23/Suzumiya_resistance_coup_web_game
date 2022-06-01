@@ -8,7 +8,7 @@ import {WaitTime} from "system/GameConstants";
 import {ActionInfo} from "system/GameStates/ActionInfo";
 import {ActionType, StateManager} from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/ActionManager";
+import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 
 const actions = [
     ActionType.GetOne,

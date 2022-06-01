@@ -1,11 +1,9 @@
-import {proceedTurn} from "pages/ingame/Center/ActionBoards/Boards/Solver/Solver";
 import {LocalContextType} from "system/context/localInfo/local-context";
 import {RoomContextType} from "system/context/room-context";
 import {ReferenceManager} from "system/Database/RoomDatabase";
 import {TurnManager} from "system/GameStates/TurnManager";
-import {setMyTimer} from "pages/components/ui/MyTimer/MyTimer";
-import {StateManager} from "system/GameStates/States";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/ActionManager";
+import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 
 /*
 Get 2 : ?GetTwo-> [CalledGetTwo: Wait] 
@@ -17,10 +15,11 @@ Get 2 : ?GetTwo-> [CalledGetTwo: Wait]
 
 export function handleGetTwo(ctx: RoomContextType, localCtx: LocalContextType) {
     const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    console.log("Solve get two");
-    localPlayer.coins += 2;
-    ReferenceManager.updatePlayerReference(myId, localPlayer);
-    proceedTurn();
+    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+        localPlayer.coins += 2;
+        ReferenceManager.updatePlayerReference(myId, localPlayer);
+        return TransitionAction.EndTurn;
+    });
 }
 
 export function handleGetThree(

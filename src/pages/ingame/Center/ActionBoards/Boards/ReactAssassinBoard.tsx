@@ -1,13 +1,12 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import {useContext} from "react";
-import LocalContext, {
-    LocalField,
-} from "system/context/localInfo/local-context";
+import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 import RoomContext from "system/context/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
-import {ActionType, BoardState, StateManager} from "system/GameStates/States";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/ActionManager";
+import {ActionType, BoardState} from "system/GameStates/States";
+import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 
 const actions = [
     ActionType.Accept,
@@ -25,9 +24,11 @@ export default function ReactAssassinBoard(): JSX.Element {
         const handled = ActionManager.handleAcceptOrLie(ctx, action, myId);
         if (handled) return;
         //Contessa Action
-        const [newAction, newState] = ActionManager.prepareActionState(ctx);
-        newState.board = BoardState.AssassinBlocked;
-        ActionManager.pushActionState(newAction, newState);
+        ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+            newState.board = BoardState.AssassinBlocked;
+            return TransitionAction.Success;
+        });
+
     }
 
     return (

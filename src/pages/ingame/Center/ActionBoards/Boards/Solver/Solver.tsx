@@ -10,11 +10,7 @@ import {GameManager} from "system/GameStates/GameManager";
 
 export function proceedTurn() {
     //Clear board and go to next turn
-    const turnState: TurnState = {
-        board: BoardState.ChoosingBaseAction,
-        turn: TurnManager.getNextTurn(),
-        //
-    };
+    const turnState: TurnState = TurnManager.endTurn();
     ReferenceManager.updateReference(DbReferences.GAME_state, turnState);
 }
 

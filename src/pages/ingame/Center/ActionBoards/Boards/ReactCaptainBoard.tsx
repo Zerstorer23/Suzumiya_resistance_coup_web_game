@@ -5,9 +5,10 @@ import LocalContext, {LocalField,} from "system/context/localInfo/local-context"
 import RoomContext from "system/context/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
 import {GameManager} from "system/GameStates/GameManager";
-import {ActionType, BoardState, StateManager} from "system/GameStates/States";
+import {ActionType, BoardState} from "system/GameStates/States";
 import {CardRole} from "system/cards/Card";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/ActionManager";
+import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {GameAction} from "system/GameStates/GameTypes";
 
 const actions = [
@@ -32,20 +33,21 @@ export default function ReactCaptainBoard(): JSX.Element {
         const handled = ActionManager.handleAcceptOrLie(ctx, action, myId);
         if (handled) return;
         //Defending Action
-        const [newAction, newState] = ActionManager.prepareActionState(ctx);
-        switch (action) {
-            case ActionType.DefendWithAmbassador:
-                newState.board = BoardState.StealBlocked;
-                setDefendAction(newAction, CardRole.Ambassador);
-                break;
-            case ActionType.DefendWithCaptain:
-                newState.board = BoardState.StealBlocked;
-                setDefendAction(newAction, CardRole.Captain);
-                break;
-            default:
-                return;
-        }
-        ActionManager.pushActionState(newAction, newState);
+        ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+            switch (action) {
+                case ActionType.DefendWithAmbassador:
+                    newState.board = BoardState.StealBlocked;
+                    setDefendAction(newAction, CardRole.Ambassador);
+                    break;
+                case ActionType.DefendWithCaptain:
+                    newState.board = BoardState.StealBlocked;
+                    setDefendAction(newAction, CardRole.Captain);
+                    break;
+                default:
+                    return TransitionAction.Abort;
+            }
+            return TransitionAction.Success;
+        });
     }
 
     return (
