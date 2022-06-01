@@ -35,11 +35,17 @@ export default function WaitingBoard(): JSX.Element {
                     case BoardState.CalledSteal:
                         Waiter.handleSteal(ctx, localCtx);
                         break;
+                    case BoardState.CalledChangeCards:
+                        Waiter.handleAmbassador(ctx, localCtx, myId);
+                        break;
                     case BoardState.CalledAssassinate:
                         Waiter.handleAssassinate(ctx, localCtx);
                         break;
                     case BoardState.AssassinBlocked:
                         Waiter.handleContessa(ctx, localCtx);
+                        break;
+                    default:
+                        console.warn("Wtf are we waiting?");
                         break;
                 }
             });
