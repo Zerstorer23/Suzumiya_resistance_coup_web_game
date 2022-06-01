@@ -2,89 +2,104 @@ import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.cs
 import {ActionInfo} from "system/GameStates/ActionInfo";
 import {ActionType, StateManager} from "system/GameStates/States";
 import RoomContext from "system/context/room-context";
-import {useContext} from "react";
+import {Fragment, useContext, useState} from "react";
 import LocalContext, {
     LocalField,
 } from "system/context/localInfo/local-context";
 import {DeckManager} from "system/cards/DeckManager";
 import {Card, CardRole} from "system/cards/Card";
-import {GameManager} from "system/GameStates/GameManager";
-import {proceedTurn} from "./Solver/Solver";
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
+import {TurnManager} from "system/GameStates/TurnManager";
 
 export default function AmbassadorBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const playerMap = ctx.room.playerMap;
-    const deck = ctx.room.game.deck;
+    const deck: CardRole[] = ctx.room.game.deck;
     const localCtx = useContext(LocalContext);
-    const myId: string = localCtx.getVal(LocalField.Id);
-    let arr = deck.split(",");
-    const myPlayer = playerMap.get(myId);
+    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     //get 2 cards from top of the deck
-    const topIndex = DeckManager.peekTopIndex(ctx, localCtx);
+    const topIndex = DeckManager.peekTopIndex(ctx);
 
+    /**************************************************************
+     * Handle the case where deck only has 0 ~ 2 cards available  *
+     **************************************************************/
     let charArr = [
-        arr[myPlayer!.icard],
-        arr[myPlayer!.icard + 1],
-        arr[topIndex],
-        arr[topIndex + 1],
+        ...DeckManager.peekCards(deck, myPlayer.icard, 2),
+        ...DeckManager.peekCards(deck, topIndex, 2),
     ];
 
     const cardArr: Card[] = charArr.map((val) => {
         return DeckManager.getCardFromChar(val);
     });
 
-    let thisIsFirstCard: boolean = true;
+    const [firstCardPicked, setFirstCardPicked] = useState<boolean>(false);
 
+    /***
+     * How the swap works
+     * prompt max 4 choices
+     * user can pick max 2
+     * First click
+     *      -Put the selected card in icard 0
+     *          -Original icard goes to selected.
+     *       Second Click
+     *         -    Same thing
+     *        END STATE. END TURN.
+     *        (push the deck)
+     * @param action
+     */
     function onMakeAction(action: Card) {
-        if (thisIsFirstCard && arr[myPlayer!.icard] !== action.cardRole) {
-            thisIsFirstCard = false;
+        if (firstCardPicked && deck[myPlayer!.icard] !== action.cardRole) {
+            setFirstCardPicked(false);
             switch (action.cardRole) {
-                case arr[myPlayer!.icard + 1]:
-                    DeckManager.swap(myPlayer!.icard + 1, myPlayer!.icard, arr);
+                case deck[myPlayer!.icard + 1]:
+                    DeckManager.swap(myPlayer!.icard + 1, myPlayer!.icard, deck);
                     break;
-                case arr[topIndex]:
-                    DeckManager.swap(topIndex, myPlayer!.icard, arr);
+                case deck[topIndex]:
+                    DeckManager.swap(topIndex, myPlayer!.icard, deck);
                     break;
-                case arr[topIndex + 1]:
-                    DeckManager.swap(topIndex + 1, myPlayer!.icard, arr);
+                case deck[topIndex + 1]:
+                    DeckManager.swap(topIndex + 1, myPlayer!.icard, deck);
                     break;
             }
         } else if (
-            !thisIsFirstCard &&
-            arr[myPlayer!.icard + 1] !== action.cardRole
+            !firstCardPicked &&
+            deck[myPlayer!.icard + 1] !== action.cardRole
         ) {
-            thisIsFirstCard = true;
+            setFirstCardPicked(true);
             switch (action.cardRole) {
-                case arr[topIndex]:
-                    DeckManager.swap(topIndex, myPlayer!.icard + 1, arr);
+                case deck[topIndex]:
+                    DeckManager.swap(topIndex, myPlayer!.icard + 1, deck);
                     break;
-                case arr[topIndex + 1]:
-                    DeckManager.swap(topIndex + 1, myPlayer!.icard + 1, arr);
+                case deck[topIndex + 1]:
+                    DeckManager.swap(topIndex + 1, myPlayer!.icard + 1, deck);
                     break;
             }
-            proceedTurn();
+            // proceedTurn();
         }
 
-        DeckManager.changeDeck(ctx, arr);
+        DeckManager.pushDeck(ctx, deck);
     }
 
+//ADD SELCETED CSS STYLE
     return (
-        <div className={classes.container}>
-            {cardArr.map((action: Card, index: number) => {
-                const baseIndex = index + 1;
-                const cssName = classes[`cell${baseIndex}`];
-                return (
-                    <BaseActionButton
-                        key={index}
-                        className={`${cssName}`}
-                        param={action}
-                        onClickButton={() => {
-                            onMakeAction(action);
-                        }}
-                    />
-                );
-            })}
-        </div>
+        <Fragment>
+            <div className={classes.header}>Choose 2 cards that you want to keep...</div>
+            <div className={classes.container}>
+                {cardArr.map((action: Card, index: number) => {
+                    const baseIndex = index + 1;
+                    const cssName = classes[`cell${baseIndex}`];
+                    return (
+                        <BaseActionButton
+                            key={index}
+                            className={`${cssName}`}
+                            param={action}
+                            onClickButton={() => {
+                                onMakeAction(action);
+                            }}
+                        />
+                    );
+                })}
+            </div>
+        </Fragment>
     );
 }

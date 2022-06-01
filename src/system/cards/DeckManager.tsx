@@ -1,21 +1,15 @@
-import {useContext} from "react";
 import {Card, CardRole} from "system/cards/Card";
-import {
-    LocalContextType,
-    LocalField,
-} from "system/context/localInfo/local-context";
-import RoomContext, {RoomContextType} from "system/context/room-context";
+import {RoomContextType} from "system/context/room-context";
 import {shuffleArray} from "system/GameConstants";
 import {Player} from "system/GameStates/GameTypes";
+import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
+
 
 /*
 Manager file that helps decoding deck string into cards
 */
 //TODO read card from player
 export const DeckManager = {
-    readCard(deck: string, playerIndex: number): CardRole[] {
-        return [CardRole.None];
-    },
     isDead(role: CardRole): boolean {
         switch (role) {
             case CardRole.DEAD_Duke:
@@ -63,8 +57,8 @@ export const DeckManager = {
         return new Card(role);
     },
 
-    changeDeck(ctx: RoomContextType, deckArr: string[]) {
-        ctx.room.game.deck = deckArr + "";
+    pushDeck(ctx: RoomContextType, deckArr: CardRole[]) {
+        ReferenceManager.updateReference(DbReferences.GAME_deck, deckArr);
     },
 
     swap(index1: number, index2: number, deckArr: string[]) {
@@ -73,7 +67,7 @@ export const DeckManager = {
         deckArr[index2] = temp;
     },
 
-    generateStartingDeck(numPlayers: number): string {
+    generateStartingDeck(numPlayers: number): CardRole[] {
         let numCards = 15;
         if (numPlayers > 6) numCards = (numPlayers - 6) * 5 + 15;
         let arr: CardRole[] = [];////
@@ -86,49 +80,26 @@ export const DeckManager = {
         }
         arr = shuffleArray(arr);
         console.log(arr);
-        return arr + "";
+        return arr;
     },
-
-    generateStartingDeck2(numPlayers: number): string {
-        let numCards = 15;
-        if (numPlayers > 6) numCards = (numPlayers - 6) * 5 + 15;
-        let arr: CardRole[] = [];////
-        for (let i = 0; i < numCards / 5; i++) {
-            arr.push(CardRole.Duke);
-            arr.push(CardRole.Captain);
-            arr.push(CardRole.Assassin);
-            arr.push(CardRole.Contessa);
-            arr.push(CardRole.Ambassador);
-        }
-        arr = shuffleArray(arr);
-        console.log(arr);
-        let deckString = "";////
-        arr.forEach((role) => {
-            deckString = deckString.concat(role);
-        });
-        return deckString;
-    },
-
-    peekTopIndex(ctx: RoomContextType, localCtx: LocalContextType): number {
+    
+    peekTopIndex(ctx: RoomContextType): number {
         let max = 0;
-        const sortedList = localCtx.getVal(LocalField.SortedList);
         const playerMap = ctx.room.playerMap;
-        for (let id in sortedList) {
-            if (playerMap.get(id)!.icard >= max) {
-                max = playerMap.get(id)!.icard;
-            }
-        }
+        playerMap.forEach((player, key, map) => {
+            max = Math.max(player.icard);
+        });
         max += 2;
         return max;
     },
-    peekCards(deck: string, startIndex: number, maxNumber: number): CardRole[] {
+    peekCards(deck: CardRole[], startIndex: number, maxNumber: number): CardRole[] {
         const maxIndex = Math.min(deck.length, startIndex + maxNumber);
         const roles: CardRole[] = [];
         for (let i = startIndex; i < maxIndex; i++) {
-            const character = deck.at(i);
-            if (character === undefined) continue;
-            roles.push(this.getRoleFromChar(character));
+            roles.push(deck[i]);
         }
+        console.log("My cards");
+        console.log(roles);
         return roles;
     }
 };

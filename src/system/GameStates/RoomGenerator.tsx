@@ -13,6 +13,7 @@ import {getRandomSeed} from "system/GameConstants";
 import {BoardState} from "system/GameStates/States";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {DeckManager} from "system/cards/DeckManager";
+import {CardRole} from "system/cards/Card";
 
 export function getDefaultAction(): GameAction {
     return {
@@ -26,7 +27,7 @@ export function getDefaultAction(): GameAction {
 
 export function getDefaultGame(): Game {
     return {
-        deck: "",
+        deck: [],
         state: {
             turn: -1,
             board: BoardState.ChoosingBaseAction,
@@ -85,7 +86,7 @@ export function setStartingRoom(room: Room, playerList: string[]) {
         ReferenceManager.updatePlayerReference(playerId, player);
     });
     //Set Room
-    const deck: string = DeckManager.generateStartingDeck(numPlayer);
+    const deck: CardRole[] = DeckManager.generateStartingDeck(numPlayer);
     const state: TurnState = {turn: 0, board: BoardState.ChoosingBaseAction};
     ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
     ReferenceManager.updateReference(DbReferences.GAME_action, getDefaultAction());
