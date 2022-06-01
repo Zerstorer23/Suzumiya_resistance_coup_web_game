@@ -46,8 +46,8 @@ export default function AmbassadorBoard(): JSX.Element {
    * @param action
    */
   function onMakeAction(action: Card) {
-    if (firstCardPicked && deck[myPlayer!.icard] !== action.cardRole) {
-      setFirstCardPicked(false);
+    if (!firstCardPicked && deck[myPlayer!.icard] !== action.cardRole) {
+      setFirstCardPicked(true);
       switch (action.cardRole) {
         case deck[myPlayer!.icard + 1]:
           DeckManager.swap(myPlayer!.icard + 1, myPlayer!.icard, deck);
@@ -61,10 +61,10 @@ export default function AmbassadorBoard(): JSX.Element {
       }
       DeckManager.pushDeck(ctx, deck);
     } else if (
-      !firstCardPicked &&
+      firstCardPicked &&
       deck[myPlayer!.icard + 1] !== action.cardRole
     ) {
-      setFirstCardPicked(true);
+      setFirstCardPicked(false);
       switch (action.cardRole) {
         case deck[topIndex]:
           DeckManager.swap(topIndex, myPlayer!.icard + 1, deck);
