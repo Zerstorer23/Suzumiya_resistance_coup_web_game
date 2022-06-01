@@ -4,6 +4,7 @@ import {ReferenceManager} from "system/Database/RoomDatabase";
 import {TurnManager} from "system/GameStates/TurnManager";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import {BoardState} from "system/GameStates/States";
 
 /*
 Get 2 : ?GetTwo-> [CalledGetTwo: Wait] 
@@ -26,6 +27,12 @@ export function handleGetThree(
     ctx: RoomContextType,
     localCtx: LocalContextType
 ) {
+    const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
+    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+        localPlayer.coins += 3;
+        ReferenceManager.updatePlayerReference(myId, localPlayer);
+        return TransitionAction.EndTurn;
+    });
 }
 
 export function handleSteal(ctx: RoomContextType, localCtx: LocalContextType) {
