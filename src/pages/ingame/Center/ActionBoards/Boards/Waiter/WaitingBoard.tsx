@@ -27,7 +27,7 @@ export default function WaitingBoard(): JSX.Element {
             setMyTimer(localCtx, WaitTime.WaitReactions, () => {
                 switch (ctx.room.game.state.board) {
                     case BoardState.CalledGetTwo:
-                        Waiter.handleGetTwo(ctx, localCtx);
+                        Waiter.handleGetTwo(ctx);
                         break;
                     case BoardState.CalledGetThree:
                         Waiter.handleGetThree(ctx, localCtx);
@@ -36,13 +36,13 @@ export default function WaitingBoard(): JSX.Element {
                         Waiter.handleSteal(ctx, localCtx);
                         break;
                     case BoardState.CalledChangeCards:
-                        Waiter.handleAmbassador(ctx, myId);
+                        Waiter.handleAmbassador(ctx);
                         break;
                     case BoardState.CalledAssassinate:
-                        Waiter.handleAssassinate(ctx, myId);
+                        Waiter.handleAssassinate(ctx);
                         break;
                     case BoardState.AssassinBlocked:
-                        Waiter.handleContessa(ctx, localCtx);
+                        Waiter.handleContessa(ctx);
                         break;
                     default:
                         console.warn("Wtf are we waiting?");
