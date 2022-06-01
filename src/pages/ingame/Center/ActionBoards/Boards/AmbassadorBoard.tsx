@@ -1,15 +1,13 @@
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
-import {ActionInfo} from "system/GameStates/ActionInfo";
-import {ActionType, StateManager} from "system/GameStates/States";
 import RoomContext from "system/context/room-context";
 import {Fragment, useContext, useState} from "react";
-import LocalContext, {
-    LocalField,
-} from "system/context/localInfo/local-context";
+import LocalContext from "system/context/localInfo/local-context";
 import {DeckManager} from "system/cards/DeckManager";
 import {Card, CardRole} from "system/cards/Card";
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import {TurnManager} from "system/GameStates/TurnManager";
+import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 
 export default function AmbassadorBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
@@ -61,6 +59,7 @@ export default function AmbassadorBoard(): JSX.Element {
                     DeckManager.swap(topIndex + 1, myPlayer!.icard, deck);
                     break;
             }
+            DeckManager.pushDeck(ctx, deck);
         } else if (
             !firstCardPicked &&
             deck[myPlayer!.icard + 1] !== action.cardRole
@@ -74,10 +73,13 @@ export default function AmbassadorBoard(): JSX.Element {
                     DeckManager.swap(topIndex + 1, myPlayer!.icard + 1, deck);
                     break;
             }
-            // proceedTurn();
+            DeckManager.pushDeck(ctx, deck);
+            ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+                return TransitionAction.EndTurn;
+            });
+
         }
 
-        DeckManager.pushDeck(ctx, deck);
     }
 
 //ADD SELCETED CSS STYLE
