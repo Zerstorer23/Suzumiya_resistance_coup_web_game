@@ -20,7 +20,7 @@ export function prepareActionState(ctx: RoomContextType): [GameAction, TurnState
  * Call this to apply action to DB
  */
 export function pushActionState(gameAction: GameAction, newState: TurnState) {
-    ReferenceManager.updateReference(DbReferences.GAME_gameAction, gameAction);
+    ReferenceManager.updateReference(DbReferences.GAME_action, gameAction);
     ReferenceManager.updateReference(DbReferences.GAME_state, newState);
 }
 
