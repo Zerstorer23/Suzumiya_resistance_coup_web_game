@@ -53,6 +53,23 @@ export class Card {
     }
   }
 
+  getName() {
+    switch (this.cardRole) {
+      case CardRole.Duke:
+        return "Duke";
+      case CardRole.Captain:
+        return "Captain";
+      case CardRole.Assassin:
+        return "Assassin";
+      case CardRole.Contessa:
+        return "Contessa";
+      case CardRole.Ambassador:
+        return "Ambassdor";
+      default:
+        return "";
+    }
+  }
+
   getDesc() {
     switch (this.cardRole) {
       case CardRole.Duke:
