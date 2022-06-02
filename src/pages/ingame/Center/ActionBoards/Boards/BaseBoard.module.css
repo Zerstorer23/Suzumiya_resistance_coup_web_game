@@ -46,6 +46,31 @@
     text-align: center;
 }
 
+.characterIcon {
+    height: 30px;
+    margin-left: 10px;
+}
+
+.nameText {
+    height: 100%;
+    display: block;
+    flex: 8;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+}
+
+.lieText {
+    color: crimson;
+    height: 100%;
+    display: block;
+    flex: 1;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+    margin-right: 10px;
+}
+
 .cell:hover {
     background-color: bisque;
 }

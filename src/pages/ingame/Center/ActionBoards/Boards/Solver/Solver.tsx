@@ -20,6 +20,12 @@ export function solveState(ctx: RoomContextType, localCtx: LocalContextType) {
         case BoardState.GetOneAccepted:
             handleGetOne(ctx, localCtx);
             break;
+        case BoardState.ForeignAidAccepted:
+            handleGetTwo(ctx);
+            break;
+        case BoardState.GetThreeAccepted:
+            handleGetThree(ctx);
+            break;
         case BoardState.StealAccepted:
             handleSteal(ctx);
             break;
@@ -56,6 +62,25 @@ function handleGetOne(ctx: RoomContextType, localCtx: LocalContextType) {
     waitAndEnd(ctx, localCtx);
 }
 
+export function handleGetTwo(ctx: RoomContextType) {
+    const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
+    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+        pier.coins += 2;
+        ReferenceManager.updatePlayerReference(pierId, pier);
+        return TransitionAction.EndTurn;
+    });
+}
+
+export function handleGetThree(
+    ctx: RoomContextType
+) {
+    const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
+    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+        pier.coins += 3;
+        ReferenceManager.updatePlayerReference(pierId, pier);
+        return TransitionAction.EndTurn;
+    });
+}
 
 /**
  * Captain: ?Steal-> [CalledSteal:Wait]

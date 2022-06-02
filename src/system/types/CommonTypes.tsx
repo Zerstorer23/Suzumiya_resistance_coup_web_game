@@ -50,12 +50,6 @@ export type TimerReturnType = {
     restart: (newTimestamp: Date, autoStart?: boolean | undefined) => void;
 };
 
-export enum ChallengeState {
-    Notify,
-    Reveal,
-    // Solved,
-}
-
 export const LISTEN_VALUE = "value";
 export const LISTEN_CHILD_ADDED = "child_added";
 export const LISTEN_CHILD_REMOVED = "child_removed";

@@ -1,6 +1,5 @@
 import {CardRole} from "system/cards/Card";
-import {BoardState} from "system/GameStates/States";
-import {ChallengeState} from "system/types/CommonTypes";
+import {ActionType, BoardState} from "system/GameStates/States";
 
 export type Player = {
     isSpectating: boolean; //may not need it
@@ -13,19 +12,36 @@ export type PlayerEntry = {
     id: string;
     player: Player;
 };
-export type RemovedCard = {
-    idx: number;//-1 if unchosen yet.
-    playerId: string;
+
+export enum ChallengeState {
+    Notify,
+    Reveal,
+    // Solved,
 }
-export type ChallengeInfo = {
-    state: ChallengeState;
-    susCard: CardRole;
+
+export type KillActionTypes =
+    ActionType.IsALie
+    // | ActionType.DefendWithAmbassador
+    // | ActionType.DefendWithCaptain
+    | ActionType.Assassinate
+    | ActionType.Coup;
+export type KillInfo = {
+    cause: KillActionTypes; //What caused this kill
+    card: CardRole; //If lie, what was expected?
+    ownerId: string; //id of player whos killed
+    removed: number; //card index in deck that is removed. -1 when none chosne
+    nextState: BoardState | ChallengeState; //
 };
+/*
+* Coup = Coup / None / target / -1 / choose
+* Assassin = Assassin / None/  target / -1  / choose
+* Challengers = IsALie / susCard / target=sus / next = accepted if success / -1
+* */
 export type GameAction = {
     pierId: string;
     targetId: string;
     challengerId: string;
-    param: string | RemovedCard | ChallengeInfo;
+    param: CardRole | KillInfo | string;
     time: Object | number;
 };
 export type TurnState = {

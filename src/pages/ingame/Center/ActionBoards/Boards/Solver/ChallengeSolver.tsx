@@ -6,30 +6,27 @@ import {LocalContextType, LocalField} from "system/context/localInfo/local-conte
 import {RoomContextType} from "system/context/roomInfo/room-context";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {WaitTime} from "system/GameConstants";
-import {ChallengeInfo, GameAction, Player,} from "system/GameStates/GameTypes";
+import {ChallengeState, GameAction, KillInfo, Player,} from "system/GameStates/GameTypes";
 import {BoardState} from "system/GameStates/States";
-import {ChallengeState} from "system/types/CommonTypes";
-import {Fragment} from "react";
-import DiscardCardPanel from "pages/ingame/Center/ActionBoards/Boards/Solver/DiscardCardPanel";
-import {
-    ChallengeResultBoard,
-    preChallengeBoard
-} from "pages/ingame/Center/ActionBoards/Boards/Solver/ChallengeHelperPanels";
+import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import {preChallengeBoard} from "pages/ingame/Center/ActionBoards/Boards/Solver/ChallengeHelperPanels";
 
 
 export function solveChallenges(ctx: RoomContextType, localCtx: LocalContextType): JSX.Element {
     const action = ctx.room.game.action;
-    const challengeInfo: ChallengeInfo = action.param as ChallengeInfo;
-    switch (challengeInfo.state) {
+    const killInfo: KillInfo = action.param as KillInfo;
+    switch (killInfo.nextState) {
         case ChallengeState.Notify:
             warnChallenge(action, localCtx);
             console.log("Return waiting");
             return preChallengeBoard;
         case ChallengeState.Reveal:
             console.log("Revealing...");
-            const e = handleReveal(ctx, localCtx, challengeInfo);
-            console.log(e);
-            return e;
+            handleReveal(ctx, localCtx, killInfo);
+            return preChallengeBoard;
+        //TODO ERROR
+        default:
+            return preChallengeBoard;
     }
 }
 
@@ -38,37 +35,52 @@ function warnChallenge(
     localCtx: LocalContextType
 ) {
     setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
-        (action.param as ChallengeInfo).state = ChallengeState.Reveal;
+        (action.param as KillInfo).nextState = ChallengeState.Reveal;
         ReferenceManager.updateReference(DbReferences.GAME_action, action);
     });
 }
 
-export function handleReveal(ctx: RoomContextType, localCtx: LocalContextType, challengeInfo: ChallengeInfo): JSX.Element {
+function inferNextStateFromChallenge(doPierAction: boolean, board: BoardState): BoardState {
+    if (!doPierAction) return BoardState.ChoosingBaseAction;
+    switch (board) {
+        case BoardState.GetThreeChallenged:
+            return BoardState.GetThreeAccepted;
+        case BoardState.AssassinateChallenged:
+            return BoardState.CalledAssassinate;
+        case BoardState.AmbassadorChallenged:
+            return BoardState.AmbassadorAccepted;
+        case BoardState.StealChallenged:
+            return BoardState.StealAccepted;
+        case BoardState.DukeBlocksChallenged:
+        case BoardState.StealBlockChallenged:
+        case BoardState.ContessaChallenged:
+        default:
+            console.trace("WTF");
+            return BoardState.ChoosingBaseAction;
+    }
+}
+
+export function handleReveal(ctx: RoomContextType, localCtx: LocalContextType, killInfo: KillInfo) {
     console.log("Challenge Game status");
     console.log(ctx.room.game);
-    const [susId, susCard] = prepareChallenge(ctx.room.game.action, ctx.room.game.state.board);
+    const board = ctx.room.game.state.board;
+    const susId = prepareChallenge(ctx.room.game.action, board);
     if (susId.length <= 0) return <p>Critical Error... wrong board at challenge state</p>;
     const susPlayer = ctx.room.playerMap.get(susId)!;
-    const [loserId, hasTheCard] = determineLoser(ctx, susId, susPlayer, susCard);
-    const loser = ctx.room.playerMap.get(loserId)!;
+    const loserId = determineLoser(ctx, susId, susPlayer, killInfo.card);
+    const pierWon = loserId !== ctx.room.game.action.pierId;
     const myId = localCtx.getVal(LocalField.Id);
-    console.log(`Pay penalty?  loser: ${loserId} / me ${myId} / lost? ${loserId === myId}`);
-    if (loserId === myId) {
-        return (
-            <Fragment>
-                <p>YOU Lost a card...</p>
-                <DiscardCardPanel/>
-            </Fragment>
-        );
-    } else {
-        return <ChallengeResultBoard loser={loser} susCard={susCard} susPlayer={susPlayer} hasTheCard={hasTheCard}/>;
-    }
+    console.log(`Pay penalty?  loser: ${loserId}  / lost? ${loserId === myId}`);
+    killInfo.ownerId = loserId;
+    //TODO if equals pier, or challenger
+    killInfo.nextState = inferNextStateFromChallenge(pierWon, board);//TODO infer this
+    ActionManager.pushPrepareDiscarding(ctx, killInfo);
 }
 
 function prepareChallenge(
     action: GameAction,
     board: BoardState
-): [string, CardRole] {
+): string {
     let susId = action.pierId;
     switch (board) {
         case BoardState.DukeBlocksChallenged:
@@ -89,9 +101,9 @@ function prepareChallenge(
         default:
             console.error("WTF");
             console.trace();
-            return ["", CardRole.None];
+            return "";
     }
-    return [susId, (action.param as ChallengeInfo).susCard];
+    return susId;
 }
 
 function determineLoser(
@@ -99,7 +111,7 @@ function determineLoser(
     susId: string,
     susPlayer: Player,
     susCard: CardRole,
-): [string, boolean] {
+): string {
     const hasTheCard = DeckManager.playerHasCard(susCard, susPlayer);
     console.log(`Check if ${susId} has ${susPlayer} ? has = ${hasTheCard}`);
     let loserId;
@@ -108,7 +120,7 @@ function determineLoser(
     } else {
         loserId = susId;
     }
-    return [loserId, hasTheCard];
+    return loserId;
 }
 
 function showResults(ctx: RoomContextType, localCtx: LocalContextType) {

@@ -10,6 +10,7 @@ import {ActionType, StateManager} from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {DS} from "system/Debugger/DS";
+import {GameManager} from "system/GameStates/GameManager";
 
 const actions = [
     ActionType.GetOne,
@@ -51,9 +52,8 @@ export default function BaseBoard(): JSX.Element {
 
     useEffect(() => {
         setMyTimer(localCtx, WaitTime.MakingDecision, () => {
-            if (DS.AutoEnd) {
-                onMakeAction(actions[0]);
-            }
+            if (!DS.AutoEnd) return;
+            onMakeAction(actions[0]);
         });
     }, []);
 
@@ -62,6 +62,12 @@ export default function BaseBoard(): JSX.Element {
         if (pSelector === CursorState.Selecting || pSelector === CursorState.Idle)
             return;
         if (!StateManager.isTargetableAction(savedAction)) return;
+        if (savedAction === ActionType.Coup) {
+            //Coup is special
+            const killInfo = GameManager.createKillInfo(ActionType.Coup, pSelector);
+            ActionManager.pushPrepareDiscarding(ctx, killInfo);
+            return;
+        }
         //You selected something
         ActionManager.pushCalledState(ctx, savedAction, myId, pSelector);
         //Clear states

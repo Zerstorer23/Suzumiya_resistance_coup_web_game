@@ -4,8 +4,7 @@ import WaitingPanel from "pages/ingame/Center/ActionBoards/Boards/Waiter/Waiting
 import {useContext, useEffect, useState} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
-import {BoardState, StateManager} from "system/GameStates/States";
-import DiscardCardPanel from "pages/ingame/Center/ActionBoards/Boards/Solver/DiscardCardPanel";
+import {StateManager} from "system/GameStates/States";
 
 export default function SolverBoard(): JSX.Element {
     /**
@@ -37,10 +36,10 @@ export default function SolverBoard(): JSX.Element {
      */
     useEffect(() => {
         if (StateManager.isChallenged(board)) return;
-        if (board === BoardState.DiscardingCard) {
-            setJSX(<DiscardCardPanel/>);
-            return;
-        }
+        /*        if (board === BoardState.DiscardingCard) {
+                    setJSX(<DiscardBoard/>);
+                    return;
+                }*/
         Solver.solveState(ctx, localCtx);
     }, []);
 

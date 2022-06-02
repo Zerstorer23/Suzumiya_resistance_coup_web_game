@@ -1,10 +1,11 @@
 import {RoomContextType} from "system/context/roomInfo/room-context";
-import {GameAction, TurnState} from "system/GameStates/GameTypes";
+import {ChallengeState, GameAction, KillInfo, TurnState} from "system/GameStates/GameTypes";
 import {GameManager} from "system/GameStates/GameManager";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {CardRole} from "system/cards/Card";
+import {DS} from "system/Debugger/DS";
 
 /**
  *
@@ -30,6 +31,7 @@ export function prepareAndPushState(ctx: RoomContextType, changer: (newAction: G
         console.trace("Aborted state");
         return;
     }
+    DS.logTransition("Next state " + newState.board);
     if (result === TransitionAction.EndTurn) {
         setEndTurn(ctx, newState);
     }
@@ -41,6 +43,7 @@ export function prepareAndPushState(ctx: RoomContextType, changer: (newAction: G
  */
 export function pushJustEndTurn(ctx: RoomContextType) {
     const [newAction, newState] = prepareActionState(ctx);
+    DS.logTransition("End turn");
     setEndTurn(ctx, newState);
     pushActionState(newAction, newState);
 }
@@ -87,13 +90,18 @@ export function pushIsALieState(ctx: RoomContextType, challengerId: string) {
         newAction.challengerId = challengerId;
         const susCard = inferLieCard(ctx.room.game.state.board);
         if (susCard === CardRole.None) return TransitionAction.Abort;
-        GameManager.setChallengeInfo(newAction, susCard);
+        const killInfo = GameManager.createKillInfo(ActionType.IsALie, "");
+        killInfo.card = susCard;
+        killInfo.nextState = ChallengeState.Notify;
+        //We dont know who target is yet.
+        newAction.param = killInfo;
+        DS.logTransition("Move to challenged state " + board);
+        DS.logTransition(newAction);
         return TransitionAction.Success;
     });
 }
 
 function inferLieCard(board: BoardState): CardRole {
-    //TODO
     switch (board) {
         case BoardState.CalledGetTwoBlocked:
         case BoardState.CalledGetThree:
@@ -120,6 +128,7 @@ export function pushAcceptedState(ctx: RoomContextType) {
         const board = StateManager.getAcceptedState(ctx.room.game.state.board);
         if (board === null) return TransitionAction.Abort;
         newState.board = board;
+        DS.logTransition("Move to Accepted " + board);
         return TransitionAction.Success;
     });
 }
@@ -132,14 +141,17 @@ export function pushCalledState(ctx: RoomContextType, action: ActionType, myId: 
         newState.board = newBoard;
         newAction.pierId = myId;
         newAction.targetId = targetId;
+        DS.logTransition("Move to Called " + newBoard);
         return TransitionAction.Success;
     });
 }
 
-export function pushPrepareDiscarding(ctx: RoomContextType, myId: string) {
+export function pushPrepareDiscarding(ctx: RoomContextType, killInfo: KillInfo) {
     prepareAndPushState(ctx, (newAction, newState) => {
         newState.board = BoardState.DiscardingCard;
-        newAction.param = GameManager.createRemovedCard(-1, myId);
+        newAction.param = killInfo;
+        DS.logTransition("Move to Discarding ");
+        console.log(newAction);
         return TransitionAction.Success;
     });
 }

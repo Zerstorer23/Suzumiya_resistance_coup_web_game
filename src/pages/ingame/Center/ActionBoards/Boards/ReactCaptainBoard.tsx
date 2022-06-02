@@ -4,7 +4,6 @@ import {useContext} from "react";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
-import {GameManager} from "system/GameStates/GameManager";
 import {ActionType, BoardState} from "system/GameStates/States";
 import {CardRole} from "system/cards/Card";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
@@ -30,11 +29,11 @@ export default function ReactCaptainBoard(): JSX.Element {
             switch (action) {
                 case ActionType.DefendWithAmbassador:
                     newState.board = BoardState.StealBlocked;
-                    GameManager.setChallengeInfo(newAction, CardRole.Ambassador);
+                    newAction.param = CardRole.Ambassador;
                     break;
                 case ActionType.DefendWithCaptain:
                     newState.board = BoardState.StealBlocked;
-                    GameManager.setChallengeInfo(newAction, CardRole.Captain);
+                    newAction.param = CardRole.Captain;
                     break;
                 default:
                     return TransitionAction.Abort;

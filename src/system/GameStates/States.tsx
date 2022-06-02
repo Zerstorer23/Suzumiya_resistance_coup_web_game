@@ -3,79 +3,26 @@ import {LocalContextType} from "system/context/localInfo/local-context";
 import {RoomContextType} from "system/context/roomInfo/room-context";
 import {WaitTime} from "system/GameConstants";
 
-import {ChallengeInfo, GameAction, RemovedCard, TurnState} from "system/GameStates/GameTypes";
+import {ChallengeState, GameAction, KillInfo, TurnState} from "system/GameStates/GameTypes";
 import {TurnManager} from "system/GameStates/TurnManager";
-import {ChallengeState} from "system/types/CommonTypes";
 
 export const PAGE_INGAME = "game";
 export const PAGE_LOBBY = "lobby";
 
-/**
- *
- *    switch (board) {
-      case BoardState.ChoosingBaseAction:
-        break;
-      case BoardState.GetOneAccepted:
-        break;
-      case BoardState.CalledGetTwo:
-        break;
-      case BoardState.AidBlocked:
-        break;
-      case BoardState.DukeBlocksAccepted:
-        break;
-      case BoardState.DukeBlocksChallenged:
-        break;
-      case BoardState.CalledCoup:
-        break;
-      case BoardState.CoupAccepted:
-        break;
-      case BoardState.CalledGetThree:
-        break;
-      case BoardState.GetThreeChallenged:
-        break;
-      case BoardState.CalledChangeCards:
-        break;
-      case BoardState.AmbassadorAccepted:
-        break;
-      case BoardState.AmbassadorChallenged:
-        break;
-      case BoardState.CalledSteal:
-        break;
-      case BoardState.StealAccepted:
-        break;
-      case BoardState.StealChallenged:
-        break;
-      case BoardState.StealBlocked:
-        break;
-      case BoardState.StealBlockAccepted:
-        break;
-      case BoardState.StealBlockChallenged:
-        break;
-      case BoardState.CalledAssassinate:
-        break;
-      case BoardState.AssissinateAccepted:
-        break;
-      case BoardState.AssassinateChallenged:
-        break;
-      case BoardState.AssassinBlocked:
-        break;
-      case BoardState.ContessaChallenged:
-        break;
-      case BoardState.ContessaAccepted:
-        break;
-    }
- */
+
 //Determined from pier and client action combination
 export enum BoardState {
     ChoosingBaseAction,
     GetOneAccepted,
     CalledGetTwo,
+    ForeignAidAccepted,
     CalledGetTwoBlocked,
     DukeBlocksAccepted,
     DukeBlocksChallenged,
     CalledCoup,
     CalledGetThree,
     GetThreeChallenged,
+    GetThreeAccepted,
     CalledChangeCards,
     AmbassadorAccepted,
     AmbassadorChallenged,
@@ -149,6 +96,8 @@ export const StateManager = {
          */
         switch (state) {
             case BoardState.GetOneAccepted:
+            case BoardState.ForeignAidAccepted:
+            case BoardState.GetThreeAccepted:
             case BoardState.DukeBlocksAccepted:
             case BoardState.StealAccepted:
             case BoardState.StealBlockAccepted:
@@ -245,8 +194,12 @@ export const StateManager = {
                 return BoardState.DiscardingCard;
             case BoardState.CalledSteal:
                 return BoardState.StealAccepted;
+            case BoardState.CalledGetTwo:
+                return BoardState.ForeignAidAccepted;
             case BoardState.CalledChangeCards:
                 return BoardState.AmbassadorAccepted;
+            case BoardState.CalledGetThree:
+                return BoardState.GetThreeAccepted;
             //Block calls
             case BoardState.AssassinBlocked:
                 return BoardState.ContessaAccepted;
@@ -274,26 +227,27 @@ export const StateManager = {
             case ActionType.Coup:
                 return BoardState.CalledGetTwo;
             case ActionType.Steal:
-                return BoardState.CalledGetThree;
+                return BoardState.CalledSteal;
             default:
                 return null;
         }
     },
     inferWaitTime(board: BoardState, action: GameAction): number {
         function inferChallengeTime(action: GameAction): WaitTime {
-            const challInfo = action.param as ChallengeInfo;
-            switch (challInfo.state) {
+            const challInfo = action.param as KillInfo;
+            switch (challInfo.nextState) {
                 case ChallengeState.Notify:
                     return WaitTime.WaitConfirms;
                 case ChallengeState.Reveal:
                     return WaitTime.MakingDecision;
+                default:
+                    return WaitTime.WaitConfirms;
             }
-
         }
 
         function inferDiscardingTime(action: GameAction) {
-            const removedInfo = action.param as RemovedCard;
-            if (removedInfo.idx < 0) return WaitTime.MakingDecision;
+            const killInfo = action.param as KillInfo;
+            if (killInfo.removed < 0) return WaitTime.MakingDecision;
             return WaitTime.WaitConfirms;
         }
 
@@ -326,6 +280,8 @@ export const StateManager = {
             case BoardState.StealBlockAccepted:
             case BoardState.ContessaChallenged:
             case BoardState.ContessaAccepted:
+            case BoardState.ForeignAidAccepted:
+            case BoardState.GetThreeAccepted:
                 return WaitTime.WaitConfirms;
         }
     },
@@ -454,12 +410,12 @@ State Table
 ?PierAction-> [next state]
 /Client Action->[next state]
 Final - Accepted / Challenged
-Called - 
+Called -
 [ChoosingBaseAction]
 //None challengable
 Get 1 : ?GetOne-> [GetOneAccepted : Solve Wait NextTurn]
-Get 2 : ?GetTwo-> [CalledGetTwo: Wait] 
-                  Unchanged-> Solve NextTurn
+Get 2 : ?GetTwo-> [CalledGetTwo: Wait]
+                  Unchanged-> [*CalledGetTwoAccepted : Solve NextTurn]
                   /Duke-> [DukeBlocks: Wait]
                           ?Accept->[DukeBlocksAccepted:Solve Wait NextTurn]
                           ?Lie->   [DukeBlocksChallenged: Solve Wait NextTurn]
@@ -468,11 +424,11 @@ Get 2 : ?GetTwo-> [CalledGetTwo: Wait]
                                                           [Lost = He has to choose which to, show a new action]
                                                           [Reveal result , which card is discard]
 Coup  : ?Coup-> [CalledCoup: Wait]
-                /Accept->[CoupAccepted :param, Solve Wait NextTurn]
+                /Accept->[Discard :param, Solve Wait NextTurn]
 //==Anyone can challenge
 Duke  : ?GetThree->[CalledGetThree: Wait]
-                   Unchanged->  Solve NextTurn
-                  /Lie-> [GetThreeChallenged:Solve Wait NextTurn]
+                   Unchanged->  [CalledGetThreeAccepted : Solve NextTurn]
+                  /Lie-> [GetThreeChallenged:-> *Discard Solve Wait NextTurn]
 Ambassador: ?ChangeCards->[CalledChangeCards : Wait]
                           Unchallenged->[AmbassadorAccepted: Solve Wait NextTurn]
                           /Lie->        [AmbassadorChallenged: Solve Wait NextTurn]
@@ -484,48 +440,10 @@ Captain: ?Steal-> [CalledSteal:Wait]
                                 ?Accept;param->[StealBlockedAccepted: Solve Wait NextTurn]
                                 ?Lie;param->[StealBlockedChallenged: Solve Wait NextTurn]
 Assassin: ?Assassin->[CalledAssassinate: Wait]
-                      /Accept-> [AssissinateAccepted :Solve Wait NextTurn]
+                      /Accept-> [*Discard :Solve Wait NextTurn]
                       /Lie->    [AssassinateChallenged:Solve Wait NextTurn]
                       /Block->  [AssassinateChallengedWithContessa : Wait]
                                         ?Lie->[ContessaChallenged:Solve Wait NextTurn]
                                         ?Accept->[ContessaAccepted:Solve Wait NextTurn]
 */
-/**
- * State responsibilities for Pier
- * Base
- *   ChoosingBaseAction,
- *
- * Solver
- GetOneAccepted,
- DukeBlocksAccepted,
- *
- * Waiter
- CalledGetTwo,
- *
- ReactForeign Aid
 
- Counter
- AidBlocked,
- ReactAssassin
- DukeBlocksChallenged,
- CalledCoup,
- CoupAccepted,
- CalledGetThree,
- GetThreeChallenged,
- CalledChangeCards,
- AmbassadorAccepted,
- AmbassadorChallenged,
- CalledSteal,
- StealAccepted,
- StealChallenged,
- StealBlocked,
- StealBlockAccepted,
- StealBlockChallenged,
- CalledAssassinate,
- AssissinateAccepted,
- AssassinateChallenged,
- AssassinBlocked,
- ContessaChallenged,
- ContessaAccepted,
- *
- */

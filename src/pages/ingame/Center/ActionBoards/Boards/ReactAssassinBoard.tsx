@@ -9,6 +9,7 @@ import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {DeckManager} from "system/cards/DeckManager";
 import {TurnManager} from "system/GameStates/TurnManager";
+import {GameManager} from "system/GameStates/GameManager";
 
 const baseActions = [
     ActionType.Accept,
@@ -37,7 +38,8 @@ export default function ReactAssassinBoard(): JSX.Element {
     function onMakeAction(action: ActionType) {
         switch (action) {
             case ActionType.Accept:
-                ActionManager.pushPrepareDiscarding(ctx, myId);
+                const killInfo = GameManager.createKillInfo(ActionType.Assassinate, myId);
+                ActionManager.pushPrepareDiscarding(ctx, killInfo);
                 break;
             case ActionType.IsALie:
                 ActionManager.pushIsALieState(ctx, myId);

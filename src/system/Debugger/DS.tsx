@@ -1,3 +1,7 @@
 export const DS = {
-    AutoEnd: false
+    AutoEnd: false,
+    logTransition(msg: any) {
+        console.warn(msg);
+    }
+
 };

@@ -1,15 +1,9 @@
-import {ChallengeInfo, GameAction, RemovedCard} from "system/GameStates/GameTypes";
+import {GameAction, KillActionTypes, KillInfo} from "system/GameStates/GameTypes";
 import firebase from "firebase/compat/app";
 import "firebase/compat/database";
-import {ChallengeState} from "system/types/CommonTypes";
 import {CardRole} from "system/cards/Card";
+import {BoardState} from "system/GameStates/States";
 
-function createChallengeInfo(): ChallengeInfo {
-    return {
-        state: ChallengeState.Notify,
-        susCard: CardRole.None
-    };
-}
 
 export const GameManager = {
     createGameAction(
@@ -35,15 +29,13 @@ export const GameManager = {
         };
         return gameAction;
     },
-    setChallengeInfo(action: GameAction, susCard: CardRole) {
-        const ci = createChallengeInfo();
-        ci.susCard = susCard;
-        action.param = ci;
-    },
-    createRemovedCard(index: number, ownerId: string): RemovedCard {
+    createKillInfo(cause: KillActionTypes, ownerId: string): KillInfo {
         return {
-            idx: index,
-            playerId: ownerId
+            cause,
+            card: CardRole.None,
+            ownerId,
+            removed: -1,
+            nextState: BoardState.ChoosingBaseAction
         };
     }
 };

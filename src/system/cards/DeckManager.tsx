@@ -8,7 +8,6 @@ import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 /*
 Manager file that helps decoding deck string into cards
 */
-//TODO read card from player
 export const DeckManager = {
     isDead(role: CardRole): boolean {
         switch (role) {
@@ -122,8 +121,8 @@ export const DeckManager = {
         for (let i = startIndex; i < maxIndex; i++) {
             roles.push(deck[i]);
         }
-        console.log("My cards");
-        console.log(roles);
+        /*        console.log("My cards");
+                console.log(roles);*/
         return roles;
     }
 };
