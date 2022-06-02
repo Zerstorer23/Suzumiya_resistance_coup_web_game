@@ -1,10 +1,10 @@
 import {Fragment} from "react";
 import {LocalContextType} from "system/context/localInfo/local-context";
-import {RoomContextType} from "system/context/roomInfo/room-context";
 import {WaitTime} from "system/GameConstants";
 
 import {ChallengeState, GameAction, KillInfo, TurnState} from "system/GameStates/GameTypes";
 import {TurnManager} from "system/GameStates/TurnManager";
+import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 export const PAGE_INGAME = "game";
 export const PAGE_LOBBY = "lobby";
@@ -223,7 +223,7 @@ export const StateManager = {
             case ActionType.ChangeCards:
                 return BoardState.CalledChangeCards;
             case ActionType.Assassinate:
-                return BoardState.GetOneAccepted;
+                return BoardState.CalledAssassinate;
             case ActionType.Coup:
                 return BoardState.CalledGetTwo;
             case ActionType.Steal:

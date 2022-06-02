@@ -21,8 +21,8 @@ export default function PlayerItem(props: Props): JSX.Element {
     const ctx = useContext(RoomContext);
     const pSelector = localCtx.getVal(LocalField.PlayerSelector);
     let panelColor = "";
-    const currentTurnId = TurnManager.getCurrentPlayerId(ctx, localCtx);
-    const nextTurnId = TurnManager.getNextPlayerId(ctx, localCtx);
+    const currentTurnId = TurnManager.getCurrentPlayerId(ctx);
+    const nextTurnId = TurnManager.getNextPlayerId(ctx);
     const isMe = props.playerId === localCtx.getVal(LocalField.Id);
     let subtitle = "";
     if (isMe) {

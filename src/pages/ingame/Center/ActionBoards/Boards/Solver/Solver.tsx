@@ -1,12 +1,12 @@
 import {setMyTimer} from "pages/components/ui/MyTimer/MyTimer";
 import {LocalContextType} from "system/context/localInfo/local-context";
-import {RoomContextType} from "system/context/roomInfo/room-context";
 import {ReferenceManager} from "system/Database/RoomDatabase";
 import {WaitTime} from "system/GameConstants";
 import {BoardState} from "system/GameStates/States";
 import {PlayerType, TurnManager} from "system/GameStates/TurnManager";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 export function waitAndEnd(ctx: RoomContextType, localCtx: LocalContextType) {
     setMyTimer(localCtx, WaitTime.WaitConfirms, () => {

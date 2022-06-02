@@ -55,11 +55,12 @@ export type Game = {
 };
 export type RoomHeader = {
     seed: number;
-    hostId: string | null;
+    hostId: string;
 };
 export type PlayerMap = Map<string, Player>;
 export type Room = {
     playerMap: PlayerMap;
+    playerList: string[];
     game: Game;
     header: RoomHeader;
 };

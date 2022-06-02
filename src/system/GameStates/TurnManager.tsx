@@ -1,7 +1,7 @@
 import {LocalContextType, LocalField,} from "system/context/localInfo/local-context";
-import {RoomContextType} from "system/context/roomInfo/room-context";
 import {getNullable} from "system/GameConstants";
 import {Player} from "system/GameStates/GameTypes";
+import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 export enum PlayerType {
     Pier,
@@ -12,7 +12,7 @@ export enum PlayerType {
 export const TurnManager = {
     /**
      *
-     * @returns TODO: use room hash to get first player
+     * @returns  use room hash to get first player
      */
     getFirstTurn(seed: number, playerSize: number): number {
         return seed % playerSize;
@@ -31,17 +31,17 @@ export const TurnManager = {
      * @param localCtx
      * @returns this turn player's id
      */
-    getCurrentPlayerId(ctx: RoomContextType, localCtx: LocalContextType) {
-        return localCtx.getVal(LocalField.SortedList)[ctx.room.game.state.turn];
+    getCurrentPlayerId(ctx: RoomContextType) {
+        return ctx.room.playerList[ctx.room.game.state.turn];
     },
     /**
      *
-     * @param localCtx
+     * @param ctx
      * @returns next turn player's id
      */
-    getNextPlayerId(ctx: RoomContextType, localCtx: LocalContextType) {
+    getNextPlayerId(ctx: RoomContextType,) {
         const nextTurn = this.getNextTurn(ctx.room.game.state.turn, ctx.room.playerMap.size);
-        return localCtx.getVal(LocalField.SortedList)[nextTurn];
+        return ctx.room.playerList[nextTurn];
     },
     /**
      *
@@ -51,7 +51,7 @@ export const TurnManager = {
      */
     isMyTurn(ctx: RoomContextType, localCtx: LocalContextType) {
         return (
-            localCtx.getVal(LocalField.Id) === this.getCurrentPlayerId(ctx, localCtx)
+            localCtx.getVal(LocalField.Id) === this.getCurrentPlayerId(ctx)
         );
     },
     /**

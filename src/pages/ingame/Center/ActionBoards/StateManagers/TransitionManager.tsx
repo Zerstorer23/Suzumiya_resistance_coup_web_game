@@ -1,4 +1,3 @@
-import {RoomContextType} from "system/context/roomInfo/room-context";
 import {ChallengeState, GameAction, KillInfo, TurnState} from "system/GameStates/GameTypes";
 import {GameManager} from "system/GameStates/GameManager";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
@@ -6,6 +5,7 @@ import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {CardRole} from "system/cards/Card";
 import {DS} from "system/Debugger/DS";
+import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 /**
  *
@@ -152,6 +152,17 @@ export function pushPrepareDiscarding(ctx: RoomContextType, killInfo: KillInfo) 
         newAction.param = killInfo;
         DS.logTransition("Move to Discarding ");
         console.log(newAction);
+        return TransitionAction.Success;
+    });
+}
+
+export function pushResetTurn(ctx: RoomContextType) {
+    prepareAndPushState(ctx, (newAction, newState) => {
+        newAction.param = "";
+        newAction.pierId = "";
+        newAction.challengerId = "";
+        newAction.targetId = "";
+        newState.board = BoardState.ChoosingBaseAction;
         return TransitionAction.Success;
     });
 }

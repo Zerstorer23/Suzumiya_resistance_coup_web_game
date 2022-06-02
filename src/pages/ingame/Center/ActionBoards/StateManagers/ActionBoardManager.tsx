@@ -10,8 +10,8 @@ import ReactAssassinBoard from "pages/ingame/Center/ActionBoards/Boards/ReactAss
 import ReactCaptainBoard from "pages/ingame/Center/ActionBoards/Boards/ReactCaptainBoard";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {LocalContextType, LocalField} from "system/context/localInfo/local-context";
-import {RoomContextType} from "system/context/roomInfo/room-context";
 import ReactForeignAidBoard from "pages/ingame/Center/ActionBoards/Boards/ReactForeignAidBoard";
+import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 export function getBoardElemFromRoom(ctx: RoomContextType, localCtx: LocalContextType): JSX.Element {
     const myId = localCtx.getVal(LocalField.Id);

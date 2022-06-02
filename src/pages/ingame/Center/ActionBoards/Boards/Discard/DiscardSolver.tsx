@@ -1,4 +1,3 @@
-import {RoomContextType} from "system/context/roomInfo/room-context";
 import {LocalContextType} from "system/context/localInfo/local-context";
 import {KillInfo} from "system/GameStates/GameTypes";
 import {TurnManager} from "system/GameStates/TurnManager";
@@ -15,6 +14,7 @@ import {
 import {DeckManager} from "system/cards/DeckManager";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {DS} from "system/Debugger/DS";
+import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 
 export function handleDiscardState(ctx: RoomContextType, localCtx: LocalContextType, killInfo: KillInfo): JSX.Element {
@@ -46,6 +46,10 @@ function handleMyTurn(ctx: RoomContextType, localCtx: LocalContextType, killInfo
                 case BoardState.CalledAssassinate:
                     //TODO this person is dead.
                     //Kill both card and set spectating true
+                    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+                        newState.board = BoardState.DiscardingCard;
+                        return TransitionAction.Success;
+                    });
                     break;
                 default:
                     ActionManager.pushJustEndTurn(ctx);

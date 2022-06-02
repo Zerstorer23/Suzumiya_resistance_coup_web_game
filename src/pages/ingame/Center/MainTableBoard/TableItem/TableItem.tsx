@@ -2,7 +2,7 @@ import {IProps} from "system/types/CommonTypes";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import getImage, {Images} from "resources/Resources";
 import classes from "./TableItem.module.css";
-import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
+import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {Fragment, useContext} from "react";
 import {Player} from "system/GameStates/GameTypes";
@@ -18,9 +18,14 @@ export default function TableItem(props: Props) {
     const localCtx = useContext(LocalContext);
     const lastChar = getImage(Images.Haruhi);
     const [pier, target, challenger] = TurnManager.getShareholders(ctx);
-    let player: Player = ctx.room.playerMap.get(
-        localCtx.getVal(LocalField.SortedList)[ctx.room.game.state.turn]
-    )!;
+    console.log("Load table item");
+    const sortedList = ctx.room.playerList;
+    console.log(sortedList);
+    console.log("turn " + ctx.room.game.state.turn);
+    console.log(ctx.room.playerMap);
+    let player: Player = ctx.room.playerMap.get(sortedList[ctx.room.game.state.turn])!;
+    console.log("Player found ? ");
+    console.log(player);
     const hasClient = target !== null || challenger !== null;
     if (!props.isPier && !hasClient) {
         return <Fragment/>;

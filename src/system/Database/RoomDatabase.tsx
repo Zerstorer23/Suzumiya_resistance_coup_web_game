@@ -1,7 +1,7 @@
 import {db} from "system/Database/Firebase";
 import {joinLocalPlayer} from "system/Database/PlayerDatabase";
 import {Player, PlayerMap, Room} from "system/GameStates/GameTypes";
-import {getDefaultRoom} from "system/GameStates/RoomGenerator";
+import {getDefaultRoom, getSortedListFromMap} from "system/GameStates/RoomGenerator";
 import {DbRef, Listeners, ListenerTypes} from "system/types/CommonTypes";
 
 export enum DbReferences {
@@ -70,12 +70,14 @@ export async function loadRoom(): Promise<Room> {
     if (!snapshot.exists()) {
         return getDefaultRoom();
     } else {
-        // const val: any = snapshot.val();
         const room: Room = snapshot.val();
         if (room["playerMap"] === undefined) {
             room.playerMap = new Map<string, Player>();
         }
         room.playerMap = parsePlayerMap(room.playerMap);
+        room.playerList = getSortedListFromMap(room.playerMap);
+        console.log("LOaded room");
+        console.log(room);
         return room;
     }
 }

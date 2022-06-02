@@ -1,12 +1,4 @@
-import {
-    Game,
-    GameAction,
-    Player,
-    PlayerMap,
-    Room,
-    RoomHeader,
-    TurnState,
-} from "system/GameStates/GameTypes";
+import {Game, GameAction, Player, PlayerMap, Room, RoomHeader, TurnState,} from "system/GameStates/GameTypes";
 import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 import {getRandomSeed} from "system/GameConstants";
@@ -46,6 +38,7 @@ export function getDefaultHeader(): RoomHeader {
 export function getDefaultRoom(): Room {
     return {
         playerMap: new Map<string, Player>(),
+        playerList: [],
         game: getDefaultGame(),
         header: getDefaultHeader(),
     };
@@ -73,12 +66,12 @@ export function getSortedListFromMap(map: PlayerMap): string[] {
  * @param room
  * @param playerList
  */
-export function setStartingRoom(room: Room, playerList: string[]) {
+export function setStartingRoom(room: Room) {
     const numPlayer = room.playerMap.size;
     //Set Header
     ReferenceManager.updateReference(DbReferences.HEADER_seed, getRandomSeed());
     //Set Player Cards
-    playerList.forEach((playerId, index) => {
+    room.playerList.forEach((playerId, index) => {
         const player = room.playerMap.get(playerId)!;
         player.coins = 2;
         player.icard = index * 2;

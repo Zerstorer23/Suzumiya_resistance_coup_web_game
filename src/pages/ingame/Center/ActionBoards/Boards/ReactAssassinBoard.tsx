@@ -73,22 +73,6 @@ export default function ReactAssassinBoard(): JSX.Element {
                     );
                 })}
             </div>
-            {/*            <h1>Yarikomi</h1>
-            <div className={classes.halfContainer}>
-                {myCards.map((role: CardRole, index: number) => {
-                    const baseIndex = index + 1;
-                    const cssName = classes[`cell${baseIndex}`];
-                    return (
-                        <BaseActionButton
-                            key={index}
-                            className={`${cssName}`}
-                            param={new Card(role)}
-                            onClickButton={() => {
-                                onSelectedCard(myPlayer.icard + index);
-                            }}/>
-                    );
-                })}
-            </div>*/}
         </Fragment>
     );
 }

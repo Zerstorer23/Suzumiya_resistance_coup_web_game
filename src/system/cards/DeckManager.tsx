@@ -1,8 +1,9 @@
-import {Card, CardRole} from "system/cards/Card";
-import {RoomContextType} from "system/context/roomInfo/room-context";
+import {CardRole} from "system/cards/Card";
 import {shuffleArray} from "system/GameConstants";
 import {Player} from "system/GameStates/GameTypes";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
+import {CardPool} from "system/cards/CardPool";
+import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 
 /*
@@ -76,8 +77,7 @@ export const DeckManager = {
      * @returns Card UI form
      */
     getCardFromChar(val: string) {
-        const role = this.getRoleFromChar(val);
-        return new Card(role);
+        return CardPool.getCard(this.getRoleFromChar(val));
     },
 
     pushDeck(ctx: RoomContextType, deckArr: CardRole[]) {

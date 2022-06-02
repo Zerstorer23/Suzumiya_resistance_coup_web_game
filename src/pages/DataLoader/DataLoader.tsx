@@ -15,7 +15,6 @@ import {
 } from "system/types/CommonTypes";
 import {GameAction, Player, Room, RoomHeader,} from "system/GameStates/GameTypes";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
-import {getSortedListFromMap} from "system/GameStates/RoomGenerator";
 
 export default function DataLoader(props: IProps) {
     const [isLoaded, setStatus] = useState(LoadStatus.init);
@@ -158,8 +157,8 @@ export default function DataLoader(props: IProps) {
 
     useEffect(() => {
         const playerMap = context.room.playerMap;
-        const sortedList = getSortedListFromMap(playerMap);
-        localCtx.setVal(LocalField.SortedList, sortedList);
+        console.log("Room size changed " + playerMap.size);
+        console.log(context.room);
     }, [context.room.playerMap.size]);
     return <Fragment>{props.children}</Fragment>;
 }

@@ -1,3 +1,5 @@
+import {PlayerMap} from "system/GameStates/GameTypes";
+
 export var PING = 100;
 
 /**
@@ -55,4 +57,10 @@ export function getNullable<T>(map: Map<any, T>, key: any): T | null {
         return map.get(key)!;
     }
     return null;
+}
+
+
+export function isSafe(id: string, map: PlayerMap): boolean {
+    if (id.length === 0) return true;
+    return map.has(id);
 }

@@ -9,6 +9,7 @@ import LocalContext from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {DeckManager} from "system/cards/DeckManager";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
+import {CardPool} from "system/cards/CardPool";
 
 type Prop = IProps & {
     param: Card | ActionInfo;
@@ -27,6 +28,7 @@ export default function BaseActionButton(props: Prop) {
     let relatedRole = CardRole.None;
     if (param instanceof Card) {
         hasCard = true;
+        relatedRole = param.cardRole;
         name = param.getName();
         //Card case
     } else {
@@ -64,7 +66,7 @@ export default function BaseActionButton(props: Prop) {
     const iconElem = isCard ? (
         <img
             className={`${classes.characterIcon}`}
-            src={`${(new Card(relatedRole)).getImage()}`}
+            src={`${(CardPool.getCard(relatedRole)).getImage()}`}
             alt="card"
         />
     ) : <Fragment/>;

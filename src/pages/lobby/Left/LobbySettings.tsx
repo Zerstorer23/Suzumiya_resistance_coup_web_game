@@ -29,9 +29,7 @@ export default function LobbySettings() {
         console.log(event.target.value);
         setNetworkCondition(event.target.value.value);
     };
-
-    //TODO useEffect to listen to change.
-
+    
     async function onFinishEditName(event: any) {
         let newName: string = event.target.value;
         if (newName.length <= 1) return;

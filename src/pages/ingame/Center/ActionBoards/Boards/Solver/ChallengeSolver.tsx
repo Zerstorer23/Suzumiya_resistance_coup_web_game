@@ -3,13 +3,13 @@ import {waitAndEnd} from "pages/ingame/Center/ActionBoards/Boards/Solver/Solver"
 import {CardRole} from "system/cards/Card";
 import {DeckManager} from "system/cards/DeckManager";
 import {LocalContextType, LocalField} from "system/context/localInfo/local-context";
-import {RoomContextType} from "system/context/roomInfo/room-context";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {WaitTime} from "system/GameConstants";
 import {ChallengeState, GameAction, KillInfo, Player,} from "system/GameStates/GameTypes";
 import {BoardState} from "system/GameStates/States";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {preChallengeBoard} from "pages/ingame/Center/ActionBoards/Boards/Solver/ChallengeHelperPanels";
+import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 
 export function solveChallenges(ctx: RoomContextType, localCtx: LocalContextType): JSX.Element {

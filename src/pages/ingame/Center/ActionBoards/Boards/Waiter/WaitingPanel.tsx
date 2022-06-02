@@ -9,7 +9,7 @@ import {TurnManager} from "system/GameStates/TurnManager";
 export default function WaitingPanel() {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
-    const currId = TurnManager.getCurrentPlayerId(ctx, localCtx);
+    const currId = TurnManager.getCurrentPlayerId(ctx);
     const isMyTurn: boolean = TurnManager.isMyTurn(ctx, localCtx);
     console.log("LOad waiting panel");
     if (isMyTurn) {

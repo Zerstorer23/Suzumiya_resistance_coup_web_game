@@ -6,16 +6,13 @@ import {IProps} from "system/types/CommonTypes";
 import {useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import {setStartingRoom} from "system/GameStates/RoomGenerator";
-import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 
 
 export default function PlayersPanel(props: IProps) {
     const ctx = useContext(RoomContext);
-    const localCtx = useContext(LocalContext);
     const onClickStart = () => {
         const room = ctx.room;
-        setStartingRoom(room, localCtx.getVal(LocalField.SortedList));
-
+        setStartingRoom(room);
     };
     const elemList: JSX.Element[] = [];
     const playerMap: PlayerMap = ctx.room.playerMap;

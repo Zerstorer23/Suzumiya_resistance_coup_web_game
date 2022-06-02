@@ -2,12 +2,13 @@ import {Fragment, useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import LocalContext from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
-import {Card, CardRole} from "system/cards/Card";
+import {CardRole} from "system/cards/Card";
 import {DeckManager} from "system/cards/DeckManager";
 import {KillInfo, Player} from "system/GameStates/GameTypes";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import {handlePlayerKill} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardSolver";
+import {CardPool} from "system/cards/CardPool";
 
 export function MyCardsPanel(): JSX.Element {
     const ctx = useContext(RoomContext);
@@ -15,9 +16,9 @@ export function MyCardsPanel(): JSX.Element {
     const deck = ctx.room.game.deck;
     const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const myCards: CardRole[] = DeckManager.peekCards(deck, localPlayer.icard, 2);
-    
+
     return (<Fragment>
-        <div className={classes.header}>Choose 2 cards that you want to keep...</div>
+        <div className={classes.header}>Choose a card to discard...</div>
         <div className={classes.container}>
             {myCards.map((role: CardRole, index: number) => {
                 const baseIndex = index + 1;
@@ -26,7 +27,7 @@ export function MyCardsPanel(): JSX.Element {
                     <BaseActionButton
                         key={index}
                         className={`${cssName} `}
-                        param={new Card(role)}
+                        param={CardPool.getCard(role)}
                         onClickButton={() => {
                             handlePlayerKill(ctx, localPlayer.icard + index);
                         }}
