@@ -79,7 +79,6 @@ export default function BaseActionButton(props: Prop) {
                 {iconElem}
                 <p className={classes.nameText}>{name}</p>
                 <p className={(isCard) ? classes.lieText : ""}>{hasCard ? "" : "[Lie]"}</p>
-
             </HorizontalLayout>
         </button>
     );

@@ -23,7 +23,6 @@ export const TurnManager = {
      * @returns Get next safe turn
      */
     getNextTurn(curr: number, playerSize: number): number {
-
         return (curr + 1) % playerSize;
     },
     /**

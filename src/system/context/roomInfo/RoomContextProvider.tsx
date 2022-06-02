@@ -77,12 +77,14 @@ function handlePlayerUpdate(newRoom: Room, action: RoomActionType) {
                 console.log("Detected host disconnect " + newRoom.header.hostId);
             }
             if (!checkGhostPlayers(newRoom)) {
+                // newRoom.header.hostId = "";
                 //need reset
                 resetState(newRoom);
                 console.log("Detected ghost player ");
                 console.log(newRoom);
             }
             if (newRoom.game.state.turn >= newRoom.playerMap.size) {
+                // newRoom.header.hostId = "";
                 newRoom.game.state.board = BoardState.ChoosingBaseAction;
                 newRoom.game.state.turn = newRoom.game.state.turn % newRoom.playerMap.size;
                 console.log("Detected invalid turn");

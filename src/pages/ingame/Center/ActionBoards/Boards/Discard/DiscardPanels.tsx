@@ -7,7 +7,7 @@ import {DeckManager} from "system/cards/DeckManager";
 import {KillInfo, Player} from "system/GameStates/GameTypes";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
-import {handlePlayerKill} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardSolver";
+import {handleCardKill} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardSolver";
 import {CardPool} from "system/cards/CardPool";
 
 export function MyCardsPanel(): JSX.Element {
@@ -29,7 +29,7 @@ export function MyCardsPanel(): JSX.Element {
                         className={`${cssName} `}
                         param={CardPool.getCard((DeckManager.isDead(role) ? CardRole.None : role))}
                         onClickButton={() => {
-                            handlePlayerKill(ctx, localPlayer.icard + index);
+                            handleCardKill(ctx, localPlayer.icard + index);
                         }}
                     />
                 );

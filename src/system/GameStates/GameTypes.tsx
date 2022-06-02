@@ -41,7 +41,7 @@ export type GameAction = {
     pierId: string;
     targetId: string;
     challengerId: string;
-    param: CardRole | KillInfo | string;
+    param: CardRole | KillInfo | "";
     time: Object | number;
 };
 export type TurnState = {

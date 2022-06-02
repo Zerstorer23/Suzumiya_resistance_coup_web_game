@@ -44,51 +44,13 @@ export default function InGame() {
         return valid;
     }
 
-    /*
-        function checkGhostPlayers(): boolean {
-            const ids = [
-                ctx.room.game.action.pierId,
-                ctx.room.game.action.targetId,
-                ctx.room.game.action.challengerId,
-            ];
-            if (typeof (ctx.room.game.action.param) === 'object') {
-                const info = ctx.room.game.action.param as KillInfo;
-                ids.push(info.ownerId);
-            }
-            let isOkay = true;
-            for (const id of ids) {
-                if (!isSafe(id, ctx.room.playerMap)) {
-                    isOkay = false;
-                    break;
-                }
-            }
-            if (!isOkay && myId === ctx.room.header.hostId) {
-                ActionManager.pushResetTurn(ctx);
-            }
-            if (!isOkay)
-                console.log("Failed ID check");
-            return isOkay;
-        }
-
-
-        function checkValidTurn(): boolean {
-            const valid = ctx.room.game.state.turn < ctx.room.playerMap.size;
-            if (!valid && myId === ctx.room.header.hostId) {
-                const newState = ctx.room.game.state;
-                newState.turn = ctx.room.game.state.turn % ctx.room.playerMap.size;
-                ReferenceManager.updateReference(DbReferences.GAME_state, newState);
-            }
-            if (!valid)
-                console.log("Failed valid turn");
-            return valid;
-        }
-    */
-
     useEffect(() => {
         console.log("Host ID = " + ctx.room.header.hostId);
         const checks = checkHostIsAlive();
         setIsValidState(checks);
     }, [ctx.room.header.hostId]);
+    //TODO but how do we detect if something is wrong?
+    //Just CHange host to null when it is wrong.
 
     useEffect(() => {
         console.log(`In game id ${myId}`);

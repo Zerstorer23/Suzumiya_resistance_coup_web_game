@@ -38,13 +38,16 @@ function handleMyTurn(ctx: RoomContextType, localCtx: LocalContextType, killInfo
                 case BoardState.GetThreeAccepted:
                 case BoardState.AmbassadorAccepted:
                 case BoardState.StealAccepted:
+                case BoardState.ForeignAidAccepted:
+                    //TODO ADD GET TWO ACCEPTED CASE
                     ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
                         newState.board = nextBoard;
                         return TransitionAction.Success;
                     });
                     break;
                 case BoardState.CalledAssassinate:
-                    //Kill both card and set spectating true
+                    //TODO Just kill all cards and set him dead.
+                    // Kill both card and set spectating true
                     ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
                         newState.board = BoardState.DiscardingCard;
                         return TransitionAction.Success;
@@ -68,7 +71,7 @@ function handleOtherTurn(ctx: RoomContextType, localCtx: LocalContextType, killI
     }
 }
 
-export function handlePlayerKill(ctx: RoomContextType, index: number) {
+export function handleCardKill(ctx: RoomContextType, index: number) {
     const deck = ctx.room.game.deck;
     DeckManager.killCardAt(deck, index);
     ActionManager.prepareAndPushState(ctx, (newAction, newState) => {

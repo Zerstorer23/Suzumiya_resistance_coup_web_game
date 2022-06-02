@@ -24,6 +24,8 @@ export const DeckManager = {
         }
     },
     playerIsDead(deck: CardRole[], id: string): boolean {
+        //TODO
+        //Read two cards, they are both dead
         return false;
     },
     playerHasCard(card: CardRole, player: Player): boolean {

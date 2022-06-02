@@ -50,6 +50,7 @@ function inferNextStateFromChallenge(doPierAction: boolean, board: BoardState): 
         case BoardState.StealChallenged:
             return BoardState.StealAccepted;
         case BoardState.DukeBlocksChallenged:
+            return BoardState.ForeignAidAccepted;
         case BoardState.StealBlockChallenged:
         case BoardState.ContessaChallenged:
         default:
