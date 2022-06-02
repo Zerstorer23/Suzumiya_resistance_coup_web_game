@@ -18,10 +18,8 @@ export function solveChallenges(ctx: RoomContextType, localCtx: LocalContextType
     switch (killInfo.nextState) {
         case ChallengeState.Notify:
             warnChallenge(action, localCtx);
-            console.log("Return waiting");
             return preChallengeBoard;
         case ChallengeState.Reveal:
-            console.log("Revealing...");
             handleReveal(ctx, localCtx, killInfo);
             return preChallengeBoard;
         //TODO ERROR

@@ -27,7 +27,7 @@ export function MyCardsPanel(): JSX.Element {
                     <BaseActionButton
                         key={index}
                         className={`${cssName} `}
-                        param={CardPool.getCard(role)}
+                        param={CardPool.getCard((DeckManager.isDead(role) ? CardRole.None : role))}
                         onClickButton={() => {
                             handlePlayerKill(ctx, localPlayer.icard + index);
                         }}

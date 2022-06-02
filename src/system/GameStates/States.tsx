@@ -1,10 +1,6 @@
-import {Fragment} from "react";
-import {LocalContextType} from "system/context/localInfo/local-context";
 import {WaitTime} from "system/GameConstants";
 
-import {ChallengeState, GameAction, KillInfo, TurnState} from "system/GameStates/GameTypes";
-import {TurnManager} from "system/GameStates/TurnManager";
-import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
+import {ChallengeState, GameAction, KillInfo} from "system/GameStates/GameTypes";
 
 export const PAGE_INGAME = "game";
 export const PAGE_LOBBY = "lobby";
@@ -129,7 +125,10 @@ export const StateManager = {
                 return false;
         }
     },
-    needToPromptCardLoss(state: BoardState, action: GameAction) {
+    targetIsChallenged(state: BoardState) {
+        return state === BoardState.DukeBlocksChallenged
+            || state === BoardState.StealBlockChallenged
+            || state === BoardState.ContessaChallenged;
     },
     isTargetableState(state: BoardState): boolean {
         /**
@@ -285,125 +284,6 @@ export const StateManager = {
                 return WaitTime.WaitConfirms;
         }
     },
-    inferStateInfo(
-        ctx: RoomContextType,
-        localCtx: LocalContextType,
-        isPier: boolean
-    ): JSX.Element {
-        const board = ctx.room.game.state.board;
-        const [pier, target, challenger] = TurnManager.getShareholders(ctx);
-        if (pier === null) return <Fragment/>;
-        switch (board) {
-            case BoardState.ChoosingBaseAction:
-                return <Fragment>{`${pier.name} is choosing action ...`}</Fragment>;
-            case BoardState.GetOneAccepted:
-                return (
-                    <Fragment>
-                        {`${pier.name} claimed `}
-                        <strong>income</strong>
-                        {` \n receives 1 coin ...`}
-                    </Fragment>
-                );
-            case BoardState.CalledGetTwo:
-                return (
-                    <Fragment>
-                        {`${pier.name} claimed `}
-                        <strong>foriegn aid</strong>
-                        <br/>
-                        {`\n Any rejections?...`}
-                    </Fragment>
-                );
-            case BoardState.CalledGetTwoBlocked:
-                return isPier ? (
-                    <Fragment>
-                        {`${pier.name} is deciding if he wants to challenge it...`}
-                    </Fragment>
-                ) : (
-                    <Fragment>
-                        {`${target?.name} claimed `}
-                        <strong>Duke</strong>
-                        {`to block the foreign aid!`}
-                    </Fragment>
-                );
-
-            case BoardState.DukeBlocksAccepted:
-                return isPier ? (
-                    <Fragment>
-                        {`${pier.name} accepted Duke and receives nothing...`}
-                    </Fragment>
-                ) : (
-                    <Fragment>
-                        {`${challenger?.name} claimed `}
-                        <strong>Duke</strong>{" "}
-                        {`to block the
-           foreign aid!`}
-                    </Fragment>
-                );
-            case BoardState.DukeBlocksChallenged:
-                return (
-                    <Fragment>
-                        {isPier
-                            ? `${pier.name} does not think ${challenger?.name} has Duke! \n Cards will be revealed...`
-                            : `${challenger?.name} claimed ${(
-                                <strong>Duke</strong>
-                            )} to block the foreign aid!`}
-                    </Fragment>
-                );
-            case BoardState.CalledCoup:
-                return (
-                    <Fragment>
-                        {isPier
-                            ? `${pier.name}${(<strong>Coup</strong>)}  ${target?.name}!`
-                            : `${target?.name} is choosing a card to discard...`}
-                    </Fragment>
-                );
-
-            case BoardState.CalledGetThree:
-                break;
-            case BoardState.GetThreeChallenged:
-                break;
-            case BoardState.CalledChangeCards:
-                break;
-            case BoardState.AmbassadorAccepted:
-                break;
-            case BoardState.AmbassadorChallenged:
-                break;
-            case BoardState.CalledSteal:
-                break;
-            case BoardState.StealAccepted:
-                break;
-            case BoardState.StealChallenged:
-                break;
-            case BoardState.StealBlocked:
-                break;
-            case BoardState.StealBlockAccepted:
-                break;
-            case BoardState.StealBlockChallenged:
-                break;
-            case BoardState.CalledAssassinate:
-                break;
-            case BoardState.AssassinateChallenged:
-                break;
-            case BoardState.AssassinBlocked:
-                break;
-            case BoardState.ContessaChallenged:
-                break;
-            case BoardState.ContessaAccepted:
-                break;
-            case BoardState.DiscardingCard:
-                break;
-        }
-        /**
-         return <p>{`${localPlayer.name} gained 1 coin...`}</p>; */
-        return <Fragment/>;
-    },
-    createState(prevState: TurnState, board: BoardState): TurnState {
-        return {
-            turn: prevState.turn,
-            board,
-        };
-    },
-
 };
 /*
 State Table

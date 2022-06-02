@@ -88,7 +88,7 @@ export function pushIsALieState(ctx: RoomContextType, challengerId: string) {
         if (board === null) return TransitionAction.Abort;
         newState.board = board;
         newAction.challengerId = challengerId;
-        const susCard = inferLieCard(ctx.room.game.state.board);
+        const susCard = inferLieCard(ctx.room.game.state.board, newAction);
         if (susCard === CardRole.None) return TransitionAction.Abort;
         const killInfo = GameManager.createKillInfo(ActionType.IsALie, "");
         killInfo.card = susCard;
@@ -101,7 +101,7 @@ export function pushIsALieState(ctx: RoomContextType, challengerId: string) {
     });
 }
 
-function inferLieCard(board: BoardState): CardRole {
+function inferLieCard(board: BoardState, action: GameAction): CardRole {
     switch (board) {
         case BoardState.CalledGetTwoBlocked:
         case BoardState.CalledGetThree:
@@ -114,6 +114,8 @@ function inferLieCard(board: BoardState): CardRole {
             return CardRole.Assassin;
         case BoardState.AssassinBlocked:
             return CardRole.Contessa;
+        case BoardState.StealBlocked:
+            return action.param as CardRole;
     }
     return CardRole.None;
 }

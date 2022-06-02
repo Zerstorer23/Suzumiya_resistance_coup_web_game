@@ -7,6 +7,7 @@ export enum PlayerType {
     Pier,
     Target,
     Challenger,
+    CurrentTurn,
 }
 
 export const TurnManager = {

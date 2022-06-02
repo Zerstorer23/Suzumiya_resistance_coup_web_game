@@ -44,7 +44,6 @@ function handleMyTurn(ctx: RoomContextType, localCtx: LocalContextType, killInfo
                     });
                     break;
                 case BoardState.CalledAssassinate:
-                    //TODO this person is dead.
                     //Kill both card and set spectating true
                     ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
                         newState.board = BoardState.DiscardingCard;
@@ -78,6 +77,13 @@ export function handlePlayerKill(ctx: RoomContextType, index: number) {
         newAction.param = killedInfo;
         ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
         //TODO check if that was last card.
+        const isDead = DeckManager.playerIsDead(deck, killedInfo.ownerId);
+        if (isDead) {
+            const player = ctx.room.playerMap.get(killedInfo.ownerId)!;
+            player.isSpectating = true;
+            player.coins = 0;
+            ReferenceManager.updatePlayerReference(killedInfo.ownerId, player);
+        }
         //If it was, set spectating on
         DS.logTransition("Removed card at " + index);
         DS.logTransition(newAction);

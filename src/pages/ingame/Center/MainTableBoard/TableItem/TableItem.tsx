@@ -6,12 +6,10 @@ import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {Fragment, useContext} from "react";
 import {Player} from "system/GameStates/GameTypes";
-import {MyTimer} from "pages/components/ui/MyTimer/MyTimer";
-import {StateManager} from "system/GameStates/States";
 import {TurnManager} from "system/GameStates/TurnManager";
 
 type Props = {
-    isPier: boolean;
+    player: Player;
 } & IProps;
 export default function TableItem(props: Props) {
     const ctx = useContext(RoomContext);
@@ -27,16 +25,19 @@ export default function TableItem(props: Props) {
     console.log("Player found ? ");
     console.log(player);
     const hasClient = target !== null || challenger !== null;
-    if (!props.isPier && !hasClient) {
-        return <Fragment/>;
-    }
-    const stateElem: JSX.Element = StateManager.inferStateInfo(
-        ctx,
-        localCtx,
-        props.isPier
-    );
-    if (!props.isPier) {
-    }
+    const stateElem: JSX.Element = <Fragment/>;
+    /*        inferStateInfo(
+            ctx,
+            localCtx
+        );*/
+    /*
+        if (!props.isPier && !hasClient) {
+            return <Fragment/>;
+        }
+
+        if (!props.isPier) {
+        }
+    */
 
     return (
         <HorizontalLayout className={`${props.className} ${classes.container}`}>
@@ -51,11 +52,6 @@ export default function TableItem(props: Props) {
             </div>
             <div className={classes.actionContainer}>
                 <p className={classes.textMainAction}>{stateElem}</p>
-                {props.isPier && (
-                    <p className={classes.textSideAction}>
-                        <MyTimer/> seconds remaining...
-                    </p>
-                )}
             </div>
         </HorizontalLayout>
     );

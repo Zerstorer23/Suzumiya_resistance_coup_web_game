@@ -147,18 +147,16 @@ export default function DataLoader(props: IProps) {
         if (myId === null) return;
         if (context.room.game.state.turn < 0) {
             history.replace("/lobby");
-            // return <Redirect push to="/lobby" />;
         } else {
             history.replace("/lobby");
-            // return <Redirect push to="/game" />;
         }
         setStatus(LoadStatus.outerSpace);
     }, [myId]);
-
-    useEffect(() => {
-        const playerMap = context.room.playerMap;
-        console.log("Room size changed " + playerMap.size);
-        console.log(context.room);
-    }, [context.room.playerMap.size]);
+    /*
+        useEffect(() => {
+            const playerMap = context.room.playerMap;
+            console.log("Room size changed " + playerMap.size);
+            console.log(context.room);
+        }, [context.room.playerMap.size]);*/
     return <Fragment>{props.children}</Fragment>;
 }
