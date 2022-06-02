@@ -27,6 +27,15 @@ export default function InGame() {
     if (myId === null) {
         return <p>Loading...</p>;
     }
+    //TODO
+    /**
+     * If any id field is not length 0 but not in player Map,
+     * show some other board.
+     * and host should clean up to new turnstate and clean action board
+     * send message that turn is reset
+     *
+     */
+
     return (
         <div className={classes.container}>
             <HorizontalLayout>
