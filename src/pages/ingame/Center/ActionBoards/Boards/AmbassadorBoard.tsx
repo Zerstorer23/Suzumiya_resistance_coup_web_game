@@ -32,6 +32,7 @@ export default function AmbassadorBoard(): JSX.Element {
 
   const [firstCardPicked, setFirstCardPicked] = useState<boolean>(false);
 
+  //TODO: Player with 1 card can only coose 1 card
   /***
    * How the swap works
    * prompt max 4 choices
@@ -60,6 +61,12 @@ export default function AmbassadorBoard(): JSX.Element {
           break;
       }
       DeckManager.pushDeck(ctx, deck);
+      console.log(DeckManager.playerCardNum(deck, myPlayer.icard));
+      if (DeckManager.playerCardNum(deck, myPlayer.icard) === 1) {
+        ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+          return TransitionAction.EndTurn;
+        });
+      }
     } else if (firstCardPicked) {
       setFirstCardPicked(false);
       switch (action.cardRole) {
