@@ -4,9 +4,17 @@
 }
 
 .topContainer {
+    width: 100%;
+    height: 40%;
     border-bottom: 3px dashed navy;
 }
 
-.textSideAction {
+.bottomContainer {
+    width: 100%;
+    height: 40%;
+}
+
+.timer {
     text-align: center;
+    height: 10%;
 }

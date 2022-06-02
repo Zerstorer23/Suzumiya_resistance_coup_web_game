@@ -1,7 +1,3 @@
-import {WaitTime} from "system/GameConstants";
-
-import {ChallengeState, GameAction, KillInfo} from "system/GameStates/GameTypes";
-
 export const PAGE_INGAME = "game";
 export const PAGE_LOBBY = "lobby";
 
@@ -126,9 +122,14 @@ export const StateManager = {
         }
     },
     targetIsChallenged(state: BoardState) {
-        return state === BoardState.DukeBlocksChallenged
-            || state === BoardState.StealBlockChallenged
-            || state === BoardState.ContessaChallenged;
+        switch (state) {
+            case BoardState.DukeBlocksChallenged:
+            case BoardState.StealBlockChallenged:
+            case BoardState.ContessaChallenged:
+                return true;
+            default:
+                return false;
+        }
     },
     isTargetableState(state: BoardState): boolean {
         /**
@@ -229,59 +230,6 @@ export const StateManager = {
                 return BoardState.CalledSteal;
             default:
                 return null;
-        }
-    },
-    inferWaitTime(board: BoardState, action: GameAction): number {
-        function inferChallengeTime(action: GameAction): WaitTime {
-            const challInfo = action.param as KillInfo;
-            switch (challInfo.nextState) {
-                case ChallengeState.Notify:
-                    return WaitTime.WaitConfirms;
-                case ChallengeState.Reveal:
-                    return WaitTime.MakingDecision;
-                default:
-                    return WaitTime.WaitConfirms;
-            }
-        }
-
-        function inferDiscardingTime(action: GameAction) {
-            const killInfo = action.param as KillInfo;
-            if (killInfo.removed < 0) return WaitTime.MakingDecision;
-            return WaitTime.WaitConfirms;
-        }
-
-        switch (board) {
-            case BoardState.DiscardingCard:
-                return inferDiscardingTime(action);
-            case BoardState.AmbassadorChallenged:
-            case BoardState.DukeBlocksChallenged:
-            case BoardState.GetThreeChallenged:
-            case BoardState.StealBlockChallenged:
-            case BoardState.AssassinateChallenged:
-                return inferChallengeTime(action);
-            case BoardState.ChoosingBaseAction:
-            case BoardState.CalledCoup:
-            case BoardState.AmbassadorAccepted:
-            case BoardState.StealChallenged:
-            case BoardState.StealBlocked:
-            case BoardState.CalledGetTwoBlocked:
-            case BoardState.CalledAssassinate:
-            case BoardState.AssassinBlocked:
-                return WaitTime.MakingDecision;
-            case BoardState.CalledGetTwo:
-            case BoardState.CalledGetThree:
-            case BoardState.CalledChangeCards:
-            case BoardState.CalledSteal:
-                return WaitTime.WaitReactions;
-            case BoardState.GetOneAccepted:
-            case BoardState.DukeBlocksAccepted:
-            case BoardState.StealAccepted:
-            case BoardState.StealBlockAccepted:
-            case BoardState.ContessaChallenged:
-            case BoardState.ContessaAccepted:
-            case BoardState.ForeignAidAccepted:
-            case BoardState.GetThreeAccepted:
-                return WaitTime.WaitConfirms;
         }
     },
 };

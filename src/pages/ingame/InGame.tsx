@@ -21,6 +21,7 @@ export default function InGame() {
     const history = useHistory();
     const myId = localCtx.getVal(LocalField.Id);
     const [validState, setIsValidState] = useState<boolean>(true);
+    const [roomCode, setRoomCode] = useState<number>(0);
 
     /**
      * If any id field is not length 0 but not in player Map,
@@ -30,25 +31,22 @@ export default function InGame() {
      *
      */
 
-    function checkHostIsAlive(): boolean {
-        const valid = ctx.room.playerMap.has(ctx.room.header.hostId);
-        if (!valid) {
-            if (myId === ctx.room.playerList[0]) {
-                ReferenceManager.updateReference(DbReferences.GAME_action, ctx.room.game.action);
-                ReferenceManager.updateReference(DbReferences.GAME_state, ctx.room.game.state);
-                ReferenceManager.updateReference(DbReferences.HEADER_hostId, myId);
-            }
+    function checkHostIsAlive() {
+        if (myId === ctx.room.header.hostId) {
+            ReferenceManager.updateReference(DbReferences.GAME_action, ctx.room.game.action);
+            ReferenceManager.updateReference(DbReferences.GAME_state, ctx.room.game.state);
+            ReferenceManager.updateReference(DbReferences.HEADER_hostId, myId);
+            //TODO state UI actually changes according to STATE. So it wont trigger change in the first turn
         }
-        if (!valid)
-            console.log("Failed host");
-        return valid;
     }
 
     useEffect(() => {
         console.log("Host ID = " + ctx.room.header.hostId);
-        const checks = checkHostIsAlive();
-        setIsValidState(checks);
-    }, [ctx.room.header.hostId]);
+        checkHostIsAlive();
+        setRoomCode((n) => n++);
+    }, [
+        //ctx.room.header.hostId,
+        ctx.room.playerMap.size]);
     //TODO but how do we detect if something is wrong?
     //Just CHange host to null when it is wrong.
 
@@ -72,7 +70,7 @@ export default function InGame() {
                 </VerticalLayout>
                 <VerticalLayout className={`${gc.flex2}`}>
                     <MainTableBoard/>
-                    <ActionBoards/>
+                    <ActionBoards code={roomCode}/>
                 </VerticalLayout>
                 <VerticalLayout className={`${gc.flex1}`}>
                     <GameDeckBoard/>
@@ -82,6 +80,5 @@ export default function InGame() {
         </div>;
     } else {
         return <p>Someone left the game. Room will be modified...</p>;
-
     }
 }

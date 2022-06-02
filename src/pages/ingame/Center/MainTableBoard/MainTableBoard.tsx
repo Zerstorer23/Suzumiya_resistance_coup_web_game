@@ -3,79 +3,45 @@ import TableItem from "pages/ingame/Center/MainTableBoard/TableItem/TableItem";
 import gc from "global.module.css";
 import classes from "./MainTableBoard.module.css";
 import {MyTimer} from "pages/components/ui/MyTimer/MyTimer";
-import {Player} from "system/GameStates/GameTypes";
 import {useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
-import LocalContext, {LocalContextType} from "system/context/localInfo/local-context";
 import {BoardState, StateManager} from "system/GameStates/States";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {TurnManager} from "system/GameStates/TurnManager";
 
 export default function MainTableBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
-    const localCtx = useContext(LocalContext);
-    const mainPlayer: Player = getMainPlayerFromState(ctx);
-    const subPlayer: Player | null = getMainPlayerFromState(ctx);
+    const mainId: string = getMainPlayerFromState(ctx);
+    const subId: string = getSubPlayerFromState(ctx);
 
     return (
         <div className={`${gc.round_border} ${classes.container}`}>
             <VerticalLayout>
-                <p className={classes.textSideAction}>
+                <p className={classes.timer}>
                     <MyTimer/> seconds remaining...
                 </p>
-                <TableItem className={classes.topContainer} player={mainPlayer}/>
-                <TableItem player={subPlayer}/>
+                <TableItem isMain={true} className={classes.topContainer} playerId={mainId}/>
+                <TableItem isMain={false} className={classes.bottomContainer} playerId={subId}/>
             </VerticalLayout>
         </div>
     );
 }
 
-export function getMainPlayerFromState(ctx: RoomContextType): Player {
+export function getMainPlayerFromState(ctx: RoomContextType): string {
     const board = ctx.room.game.state.board;
-    const [pier, target, challenger] = TurnManager.getShareholders(ctx);
+    const [pier, target] = TurnManager.getShareholders(ctx);
     if (board === BoardState.ChoosingBaseAction)
-        return pier!;
-    // return TurnManager.getCurrentPlayerId(ctx);
+        return ctx.room.playerList[ctx.room.game.state.turn];
     if (StateManager.targetIsChallenged(board))
-        return target!;
-    return pier!;
+        return ctx.room.game.action.targetId;
+    return ctx.room.game.action.pierId;
 }
 
-export function getSubPlayerFromState(ctx: RoomContextType, localCtx: LocalContextType,) {
+export function getSubPlayerFromState(ctx: RoomContextType): string {
     const board = ctx.room.game.state.board;
-    const [pier, target, challenger] = TurnManager.getShareholders(ctx);
-    switch (board) {
-        case BoardState.ChoosingBaseAction:
-            return pier!;
-        //  return TurnManager.getCurrentPlayerId(ctx);
-        case BoardState.GetOneAccepted:
-        case BoardState.CalledGetTwo:
-        case BoardState.ForeignAidAccepted:
-        case BoardState.CalledGetTwoBlocked:
-        case BoardState.DukeBlocksAccepted:
-        case BoardState.CalledCoup:
-        case BoardState.CalledGetThree:
-        case BoardState.GetThreeAccepted:
-        case BoardState.CalledChangeCards:
-        case BoardState.AmbassadorAccepted:
-        case BoardState.AmbassadorChallenged:
-        case BoardState.GetThreeChallenged:
-        case BoardState.CalledSteal:
-        case BoardState.StealAccepted:
-        case BoardState.StealChallenged:
-        case BoardState.StealBlocked:
-        case BoardState.StealBlockAccepted:
-        case BoardState.CalledAssassinate:
-        case BoardState.AssassinateChallenged:
-        case BoardState.AssassinBlocked:
-        case BoardState.ContessaAccepted:
-        case BoardState.DiscardingCard:
-            return pier;
-            break;
-        case BoardState.DukeBlocksChallenged:
-        case BoardState.StealBlockChallenged:
-        case BoardState.ContessaChallenged:
-            return target!;
-    }
-
+    if (board === BoardState.ChoosingBaseAction)
+        return "";
+    if (StateManager.targetIsChallenged(board))
+        return ctx.room.game.action.challengerId;
+    return ctx.room.game.action.targetId;
 }

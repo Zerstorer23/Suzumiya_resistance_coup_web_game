@@ -3,16 +3,17 @@ import WaitingPanel from "pages/ingame/Center/ActionBoards/Boards/Waiter/Waiting
 import {useContext, useEffect} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
-import {BoardState, StateManager} from "system/GameStates/States";
+import {BoardState} from "system/GameStates/States";
 import {TurnManager} from "system/GameStates/TurnManager";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import {inferWaitTime} from "pages/ingame/Center/MainTableBoard/TimeInferer";
 
 export default function WaitingBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const board = ctx.room.game.state.board;
     useEffect(() => {
-        const waitTime = StateManager.inferWaitTime(board, ctx.room.game.action);
+        const waitTime = inferWaitTime(board, ctx.room.game.action);
         console.log("Wait State " + board + " time " + waitTime);
         setMyTimer(localCtx, waitTime, () => {
             const isMyTurn: boolean = TurnManager.isMyTurn(ctx, localCtx);
