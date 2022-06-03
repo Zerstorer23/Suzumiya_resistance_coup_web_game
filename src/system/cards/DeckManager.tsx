@@ -1,5 +1,5 @@
 import {CardDeck, CardRole} from "system/cards/Card";
-import {shuffleArray} from "system/GameConstants";
+import {randomInt, shuffleArray} from "system/GameConstants";
 import {Player} from "system/GameStates/GameTypes";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {CardPool} from "system/cards/CardPool";
@@ -85,10 +85,15 @@ export const DeckManager = {
         ReferenceManager.updateReference(DbReferences.GAME_deck, deckArr);
     },
 
-    swap(index1: number, index2: number, deckArr: string[]) {
+    swap(index1: number, index2: number, deckArr: CardDeck) {
         let temp = deckArr[index1];
         deckArr[index1] = deckArr[index2];
         deckArr[index2] = temp;
+    },
+    findIndexOfCardIn(deck: CardDeck, player: Player, card: CardRole): number {
+        if (deck[player.icard] === card) return player.icard;
+        if (deck[player.icard + 1] === card) return player.icard + 1;
+        return -1;
     },
 
     generateStartingDeck(numPlayers: number): CardRole[] {
@@ -114,6 +119,10 @@ export const DeckManager = {
         });
         max += 2;
         return max;
+    },
+    getRandomFromDeck(ctx: RoomContextType) {
+        const top = this.peekTopIndex(ctx);
+        return randomInt(top, ctx.room.game.deck.length - 1);
     },
     peekCards(
         deck: CardRole[],

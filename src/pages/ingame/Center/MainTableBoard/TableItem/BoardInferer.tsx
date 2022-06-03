@@ -1,6 +1,6 @@
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {LocalContextType} from "system/context/localInfo/local-context";
-import {TurnManager} from "system/GameStates/TurnManager";
+import {PlayerType, TurnManager} from "system/GameStates/TurnManager";
 import {Fragment} from "react";
 import {CardPool} from "system/cards/CardPool";
 import {CardRole} from "system/cards/Card";
@@ -15,6 +15,10 @@ export function inferStateInfo(
     isMain: boolean
 ): JSX.Element {
     const board = ctx.room.game.state.board;
+    if (board === BoardState.ChoosingBaseAction) {
+        const [id, player] = TurnManager.getPlayerInfo(ctx, PlayerType.CurrentTurn);
+        return <Fragment><p>{`${player!.name} is choosing action ...`}</p></Fragment>;
+    }
     const [pier, target] = TurnManager.getShareholders(ctx);
     if (pier === null) return <Fragment/>;
     if (StateManager.isChallenged(board)) {
@@ -38,8 +42,6 @@ export function inferStateInfo(
                 {claimElem(pier, CardPool.getCard(CardRole.Ambassador).getName(), " will change cards...")}
                 {rejectionElem}
             </Fragment>;
-        case BoardState.ChoosingBaseAction:
-            return <Fragment>{`${pier.name} is choosing action ...`}</Fragment>;
         case BoardState.CalledGetTwo:
             return (
                 <Fragment>
@@ -50,7 +52,9 @@ export function inferStateInfo(
         case BoardState.DukeBlocksAccepted:
             return isMain ? (
                 <Fragment>
-                    {`${pier.name} accepted and receives nothing...`}
+                    <p>
+                        {`${pier.name} accepted and receives nothing...`}
+                    </p>
                 </Fragment>
             ) : (
                 <Fragment>
@@ -98,14 +102,13 @@ export function inferStateInfo(
 
 const rejectionElem = (<Fragment>
     <br/>
-    {`Any rejections?...`}
+    <p>{`Any rejections?...`}</p>
 </Fragment>);
 
 function claimElem(player: Player, role: string, desc: string): JSX.Element {
     return <Fragment>
         <p>{`${player.name} claimed `}</p>
         <strong>{role}</strong>
-        {/*<br/>*/}
         <p>{desc}</p>
     </Fragment>;
 }
@@ -220,7 +223,6 @@ function inferTargeted(
             if (isPier) {
                 return <Fragment>
                     <p>{`${pier.name} claims ${CardPool.getCard(CardRole.Captain).getName()} to steal 2 coins from ${target.name}`}</p>
-                    <br/>
                     {rejectionElem}
                 </Fragment>;
             } else {
@@ -234,12 +236,11 @@ function inferTargeted(
                 return (
                     <Fragment>
                         <p>{`${pier.name} claims ${CardPool.getCard(CardRole.Assassin).getName()} to kill ${target.name}`}</p>
-                        <br/>
                         {rejectionElem}
                     </Fragment>);
             } else {
                 return <Fragment>
-                    <strong>{`${pier.name} is deciding what to do ...`}</strong>
+                    <p>{`${pier.name} is deciding what to do ...`}</p>
                 </Fragment>;
             }
         default:
@@ -255,8 +256,9 @@ function inferBlocked(
     const action = ctx.room.game.action;
     const [pier, target] = TurnManager.getShareholders(ctx);
     if (playerId === action.pierId) {
-        return (<Fragment>
+        return (<Fragment><p>
             {`${pier!.name} is deciding if he wants to challenge it...`}
+        </p>
         </Fragment>);
     }
     switch (board) {

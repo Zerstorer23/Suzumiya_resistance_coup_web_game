@@ -90,6 +90,9 @@ export const TurnManager = {
             case PlayerType.Challenger:
                 playerId = ctx.room.game.action.challengerId;
                 break;
+            case PlayerType.CurrentTurn:
+                playerId = ctx.room.playerList[ctx.room.game.state.turn];
+                break;
         }
         return this.getPlayerInfoById(ctx, playerId);
     },
