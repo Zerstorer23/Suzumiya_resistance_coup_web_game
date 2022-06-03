@@ -1,10 +1,10 @@
 import * as ChallengeSolver from "pages/ingame/Center/ActionBoards/Boards/Solver/ChallengeSolver";
 import * as Solver from "pages/ingame/Center/ActionBoards/Boards/Solver/Solver";
-import WaitingPanel from "pages/ingame/Center/ActionBoards/Boards/Waiter/WaitingPanel";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {StateManager} from "system/GameStates/States";
+import {preChallengeBoard} from "pages/ingame/Center/ActionBoards/Boards/Solver/ChallengeHelperPanels";
 
 export default function SolverBoard(): JSX.Element {
     /**
@@ -14,7 +14,6 @@ export default function SolverBoard(): JSX.Element {
      */
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
-    const [jsxElem, setJSX] = useState<JSX.Element>(<WaitingPanel/>);
     /**
      * Challenged state solver.
      * Separate because this uses param
@@ -25,8 +24,7 @@ export default function SolverBoard(): JSX.Element {
     //Challenge Handler
     useEffect(() => {
         if (!StateManager.isChallenged(board)) return;
-        const elem = ChallengeSolver.solveChallenges(ctx, localCtx);
-        setJSX(elem);
+        ChallengeSolver.solveChallenges(ctx, localCtx);
     }, [action]);
 
 
@@ -35,5 +33,5 @@ export default function SolverBoard(): JSX.Element {
         Solver.solveState(ctx, localCtx);
     }, []);
 
-    return jsxElem;
+    return preChallengeBoard;
 }

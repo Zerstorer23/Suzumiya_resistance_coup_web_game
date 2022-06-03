@@ -5,24 +5,23 @@ import {LocalContextType, LocalField} from "system/context/localInfo/local-conte
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {WaitTime} from "system/GameConstants";
 import {ChallengeState, GameAction, KillInfo, Player,} from "system/GameStates/GameTypes";
-import {BoardState} from "system/GameStates/States";
+import {BoardState, StateManager} from "system/GameStates/States";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {preChallengeBoard} from "pages/ingame/Center/ActionBoards/Boards/Solver/ChallengeHelperPanels";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 
-export function solveChallenges(ctx: RoomContextType, localCtx: LocalContextType): JSX.Element {
+export function solveChallenges(ctx: RoomContextType, localCtx: LocalContextType) {
     const action = ctx.room.game.action;
     const killInfo: KillInfo = action.param as KillInfo;
     switch (killInfo.nextState) {
         case ChallengeState.Notify:
             warnChallenge(action, localCtx);
-            return preChallengeBoard;
+            break;
         case ChallengeState.Reveal:
             handleReveal(ctx, localCtx, killInfo);
-            return preChallengeBoard;
+            break;
         default:
-            return preChallengeBoard;
+            break;
     }
 }
 
@@ -73,50 +72,19 @@ export function handleReveal(ctx: RoomContextType, localCtx: LocalContextType, k
     ActionManager.pushPrepareDiscarding(ctx, killInfo);
 }
 
-function prepareChallenge(
-    action: GameAction,
-    board: BoardState
-): string {
-    let susId = action.pierId;
-    switch (board) {
-        case BoardState.DukeBlocksChallenged:
-            susId = action.targetId;
-            break;
-        case BoardState.StealBlockChallenged:
-            susId = action.targetId;
-            break;
-        case BoardState.ContessaChallenged:
-            susId = action.targetId;
-            break;
-        case BoardState.GetThreeChallenged:
-        case BoardState.AmbassadorChallenged:
-        case BoardState.StealChallenged:
-        case BoardState.AssassinateChallenged:
-            susId = action.pierId;
-            break;
-        default:
-            console.error("WTF");
-            console.trace();
-            return "";
-    }
-    return susId;
+function prepareChallenge(action: GameAction, board: BoardState): string {
+    if (StateManager.targetIsChallenged(board)) return action.targetId;
+    return action.pierId;
 }
 
-function determineLoser(
-    ctx: RoomContextType,
-    susId: string,
-    susPlayer: Player,
-    susCard: CardRole,
-): string {
+function determineLoser(ctx: RoomContextType, susId: string, susPlayer: Player, susCard: CardRole): string {
     const hasTheCard = DeckManager.playerHasCard(ctx.room.game.deck, susCard, susPlayer);
     console.log(`Check if ${susId} has ${susPlayer} ? has = ${hasTheCard}`);
-    let loserId;
     if (hasTheCard) {
-        loserId = ctx.room.game.action.challengerId;
+        return ctx.room.game.action.challengerId;
     } else {
-        loserId = susId;
+        return susId;
     }
-    return loserId;
 }
 
 

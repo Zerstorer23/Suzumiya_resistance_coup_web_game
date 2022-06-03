@@ -68,7 +68,7 @@ function handleMyTurn(
 export function handleCardKill(ctx: RoomContextType, index: number) {
     const deck = ctx.room.game.deck;
     DeckManager.killCardAt(deck, index);
-    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+    ActionManager.prepareAndPushState(ctx, (newAction) => {
         const killedInfo = newAction.param as KillInfo;
         killedInfo.removed = index;
         newAction.param = killedInfo;

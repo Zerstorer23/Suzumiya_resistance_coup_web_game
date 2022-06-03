@@ -26,7 +26,6 @@ export function prepareAndPushState(
     const [newAction, newState] = prepareActionState(ctx);
     const result = changer(newAction, newState);
     if (result === TransitionAction.Abort) {
-        console.warn("Abort");
         console.trace("Aborted state");
         return;
     }
@@ -97,10 +96,10 @@ export function pushIsALieState(ctx: RoomContextType, challengerId: string) {
         newAction.challengerId = challengerId;
         const susCard = inferLieCard(ctx.room.game.state.board, newAction);
         if (susCard === CardRole.None) return TransitionAction.Abort;
+        //We dont know who target is yet.
         const killInfo = GameManager.createKillInfo(ActionType.IsALie, "");
         killInfo.card = susCard;
         killInfo.nextState = ChallengeState.Notify;
-        //We dont know who target is yet.
         newAction.param = killInfo;
         DS.logTransition("Move to challenged state " + board);
         DS.logTransition(newAction);
