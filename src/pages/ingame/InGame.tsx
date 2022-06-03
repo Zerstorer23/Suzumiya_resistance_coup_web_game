@@ -20,7 +20,6 @@ export default function InGame() {
     const localCtx = useContext(LocalContext);
     const history = useHistory();
     const myId = localCtx.getVal(LocalField.Id);
-    const [validState, setIsValidState] = useState<boolean>(true);
     const [roomCode, setRoomCode] = useState<number>(0);
 
     /**
@@ -56,24 +55,21 @@ export default function InGame() {
     }
 
 
-    if (validState) {
-        return <div className={classes.container}>
-            <HorizontalLayout>
-                <VerticalLayout className={`${gc.flex1}`}>
-                    <PlayerBoard/>
-                    <MyBoard/>
-                </VerticalLayout>
-                <VerticalLayout className={`${gc.flex2}`}>
-                    <MainTableBoard/>
-                    <ActionBoards code={roomCode}/>
-                </VerticalLayout>
-                <VerticalLayout className={`${gc.flex1}`}>
-                    <GameDeckBoard/>
-                    <InGameChatBoard/>
-                </VerticalLayout>
-            </HorizontalLayout>
-        </div>;
-    } else {
-        return <p>Someone left the game. Room will be modified...</p>;
-    }
+    return <div className={classes.container}>
+        <HorizontalLayout>
+            <VerticalLayout className={`${gc.flex1}`}>
+                <PlayerBoard/>
+                <MyBoard/>
+            </VerticalLayout>
+            <VerticalLayout className={`${gc.flex2}`}>
+                <MainTableBoard/>
+                <ActionBoards code={roomCode}/>
+            </VerticalLayout>
+            <VerticalLayout className={`${gc.flex1}`}>
+                <GameDeckBoard/>
+                <InGameChatBoard/>
+            </VerticalLayout>
+        </HorizontalLayout>
+    </div>;
+
 }

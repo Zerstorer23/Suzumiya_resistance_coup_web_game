@@ -109,7 +109,7 @@ export const DeckManager = {
     peekTopIndex(ctx: RoomContextType): number {
         let max = 0;
         const playerMap = ctx.room.playerMap;
-        playerMap.forEach((player, key, map) => {
+        playerMap.forEach((player) => {
             max = Math.max(player.icard);
         });
         max += 2;
