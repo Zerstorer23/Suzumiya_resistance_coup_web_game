@@ -1,0 +1,18 @@
+.itemContainer {
+    width: 100%;
+}
+
+.itemImg {
+    width: 30%;
+}
+
+.itemDesc {
+    font-size: 1.2rem;
+    display: block;
+    text-align: left;
+}
+
+.itemDescPanel {
+    width: 70%;
+    align-items: center;
+}

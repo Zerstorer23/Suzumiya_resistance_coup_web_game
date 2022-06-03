@@ -4,9 +4,9 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import {Fragment} from "react";
 import {CardPool} from "system/cards/CardPool";
 import {CardRole} from "system/cards/Card";
-import {ChallengeState, KillInfo, Player} from "system/GameStates/GameTypes";
+import {KillInfo, Player} from "system/GameStates/GameTypes";
 import {BoardState, StateManager} from "system/GameStates/States";
-import {createWaitingBoard, PostKillPanel} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardPanels";
+import {PostKillPanel} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardPanels";
 
 export function inferStateInfo(
     ctx: RoomContextType,
@@ -137,35 +137,36 @@ function notifyChallengedElem(amChallenger: boolean, challenger: Player, sus: Pl
 }
 
 
-function ChallengeResultBoard(ctx: RoomContextType,
-                              playerId: string,
-                              amChallenger: boolean,
-                              killInfo: KillInfo): JSX.Element {
-    if (killInfo.ownerId === playerId) {
-        //I lost
-        if (amChallenger) {
+function ChallengeResultBoard(
+    myPlayer: Player,
+    playerId: string,
+    challengerId: string,
+    killInfo: KillInfo): JSX.Element {
+    const iLost = killInfo.ownerId === playerId;
+    const iChallenged = playerId === challengerId;
+    const susCard = CardPool.getCard(killInfo.card);
+    if (iLost) {
+        if (iChallenged) {//I lost because I challenged wrong
             return (<Fragment>
-                <p>{`${ctx.room.playerMap.get(playerId)!.name} will lose a card...`}</p>
-            </Fragment>);
-        } else {
-            return (<Fragment>
-                <p>{`${ctx.room.playerMap.get(playerId)!.name} does not have `}{CardPool.getCard(killInfo.card).getElemName()}</p>
-                <p>{`${ctx.room.playerMap.get(playerId)!.name} will lose a card...`}</p>
+                <p>{`${myPlayer.name} will lose a card...`}</p>
             </Fragment>);
         }
-    } else {
-        //I won
-        if (amChallenger) {
-            return (<Fragment>
-                <p>{`${ctx.room.playerMap.get(playerId)!.name} caught the lie!`}</p>
-            </Fragment>);
-        } else {
-            return (<Fragment>
-                <p>{`${ctx.room.playerMap.get(playerId)!.name} has `}{CardPool.getCard(killInfo.card).getElemName()}</p>
-            </Fragment>);
-        }
-
+        //I lost because I was challenged and didn't have card.
+        return (<Fragment>
+            <p>{`${myPlayer.name} does not have `}{susCard.getElemName()}</p>
+            <p>{`${myPlayer.name} will lose a card...`}</p>
+        </Fragment>);
     }
+    //I won and I challenged correctly
+    if (iChallenged) {
+        return (<Fragment>
+            <p>{`${myPlayer.name} caught the lie!`}</p>
+        </Fragment>);
+    }
+    //I won and I was challenged and I had card
+    return (<Fragment>
+        <p>{`${myPlayer.name} has `}{susCard.getElemName()}</p>
+    </Fragment>);
 }
 
 function inferChallenged(
@@ -185,11 +186,12 @@ function inferChallenged(
         amChallenger = !isMain;
         susPlayer = target!;
     }
-    if (killInfo.nextState === ChallengeState.Notify) {
-        return notifyChallengedElem(amChallenger, challenger!, susPlayer, susCard);
-    } else {
-        return ChallengeResultBoard(ctx, playerId, amChallenger, killInfo);
-    }
+    return notifyChallengedElem(amChallenger, challenger!, susPlayer, susCard);
+    /*    if (killInfo.nextState === ChallengeState.Notify) {
+            return notifyChallengedElem(amChallenger, challenger!, susPlayer, susCard);
+        } else {
+            return ChallengeResultBoard(ctx, playerId, amChallenger, killInfo);
+        }*/
 
 }
 
@@ -271,24 +273,30 @@ function inferBlocked(
 
 
 export function inferDiscardState(ctx: RoomContextType, playerId: string): JSX.Element {
-    const killInfo: KillInfo = ctx.room.game.action.param as KillInfo;
-    const cardSelected = killInfo.removed < 0;
-    if (playerId === killInfo.ownerId) {
-        if (cardSelected) {
-            return (<Fragment>
-                <p>{`${ctx.room.playerMap.get(playerId)?.name} is choosing a card to discard...`}</p>
-            </Fragment>);
+    const action = ctx.room.game.action;
+    const killInfo: KillInfo = action.param as KillInfo;
+    const cardSelected = killInfo.removed >= 0;
+    if (cardSelected) {
+        if (playerId === killInfo.ownerId) {
+            return (<PostKillPanel/>);
         } else {
-            return (<Fragment/>);
+            return (<p> is satisfied.</p>);
         }
     } else {
-        if (cardSelected) {
-            const targetPlayer = ctx.room.playerMap.get(killInfo.ownerId)!;
-            return (createWaitingBoard(targetPlayer));
+        const myPlayer = ctx.room.playerMap.get(playerId)!;
+        const lostPlayer = ctx.room.playerMap.get(killInfo.ownerId)!;
+        if (killInfo.card.length > 0) {
+            return ChallengeResultBoard(myPlayer, playerId, action.challengerId, killInfo);
         } else {
-            return (<PostKillPanel/>);
+            //Coup or assassin
+            if (playerId === killInfo.ownerId) {
+                return <p>{`${myPlayer.name} is choosing a card to discard...`}</p>;
+            } else {
+                return <p>{`Waiting for ${lostPlayer.name} to remove card.`}</p>;
+            }
         }
     }
+
 }
 
 

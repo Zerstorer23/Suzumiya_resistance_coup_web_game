@@ -1,18 +1,16 @@
-import {ChallengeState, GameAction, KillInfo} from "system/GameStates/GameTypes";
+import {GameAction, KillInfo} from "system/GameStates/GameTypes";
 import {WaitTime} from "system/GameConstants";
 import {BoardState} from "system/GameStates/States";
 
-function inferChallengeTime(action: GameAction): WaitTime {
+/*function inferChallengeTime(action: GameAction): WaitTime {
     const challInfo = action.param as KillInfo;
     switch (challInfo.nextState) {
         case ChallengeState.Notify:
             return WaitTime.WaitConfirms;
-        case ChallengeState.Reveal:
-            return WaitTime.MakingDecision;
         default:
             return WaitTime.WaitConfirms;
     }
-}
+}*/
 
 function inferDiscardingTime(action: GameAction) {
     const killInfo = action.param as KillInfo;
@@ -29,7 +27,7 @@ export function inferWaitTime(board: BoardState, action: GameAction): number {
         case BoardState.GetThreeChallenged:
         case BoardState.StealBlockChallenged:
         case BoardState.AssassinateChallenged:
-            return inferChallengeTime(action);
+            return WaitTime.WaitConfirms;
         case BoardState.ChoosingBaseAction:
         case BoardState.CalledCoup:
         case BoardState.AmbassadorAccepted:

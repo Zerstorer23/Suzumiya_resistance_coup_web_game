@@ -4,6 +4,7 @@ import {ActionType, BoardState} from "system/GameStates/States";
 export type Player = {
     isSpectating: boolean; //may not need it
     lastActive: Object | number;
+    lastClaimed: CardRole;
     name: string;
     icard: number;
     coins: number;
@@ -14,9 +15,7 @@ export type PlayerEntry = {
 };
 
 export enum ChallengeState {
-    Notify,
-    Reveal,
-    // Solved,
+    Notify = "ntc",
 }
 
 export type KillActionTypes =

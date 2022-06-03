@@ -1,0 +1,15 @@
+.container {
+    position: relative;
+    background-color: #73AD21;
+}
+
+.image {
+    position: absolute;
+    width: 5rem;
+    height: 5rem;
+}
+
+.text {
+    align-content: center;
+    justify-self: center;
+}

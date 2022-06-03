@@ -127,7 +127,13 @@ export const DeckManager = {
         }
         return roles;
     },
-
+    countCards(deck: CardDeck, role: CardRole): number {
+        let counts = 0;
+        deck.forEach((value) => {
+            if (value === role) counts++;
+        });
+        return counts;
+    },
     playerCardNum(deck: CardRole[], index: number) {
         let num = 2;
         const myCards = this.peekCards(deck, index, 2);

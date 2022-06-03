@@ -1,35 +1,37 @@
 .container {
-  height: 60%;
-  width: 100%;
-  display: flex;
-  justify-items: center;
-  align-items: flex-start;
-  gap: 15px;
-  flex-direction: column;
+    height: 65%;
+    width: 100%;
+    display: flex;
+    justify-items: center;
+    align-items: flex-start;
+    gap: 15px;
+    flex-direction: column;
 }
 
 .chatbox {
-  flex: 8;
-  height: 100%;
-  width: 100%;
-  overflow-y: scroll;
+    flex: 8;
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
 }
 
 .sendBox {
-  flex: 1;
-  width: 100%;
-  display: flex;
-  justify-items: center;
-  align-items: center;
-  gap: 10px;
+    flex: 1;
+    width: 100%;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    gap: 10px;
 }
+
 .inputField {
-  height: 100%;
-  display: inline-block;
-  flex: 8;
+    height: 100%;
+    display: inline-block;
+    flex: 8;
 }
+
 .buttonSend {
-  height: 100%;
-  display: inline-block;
-  flex: 2;
+    height: 100%;
+    display: inline-block;
+    flex: 2;
 }

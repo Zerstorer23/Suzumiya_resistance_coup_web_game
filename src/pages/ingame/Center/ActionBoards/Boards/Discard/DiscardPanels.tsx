@@ -4,7 +4,7 @@ import LocalContext from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {CardRole} from "system/cards/Card";
 import {DeckManager} from "system/cards/DeckManager";
-import {KillInfo, Player} from "system/GameStates/GameTypes";
+import {KillInfo} from "system/GameStates/GameTypes";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import {handleCardKill} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardSolver";
@@ -57,8 +57,4 @@ export function PostKillPanel(): JSX.Element {
             {isDead && <p>{`${player.name} is removed from game!`}</p>}
         </Fragment>
     );
-}
-
-export function createWaitingBoard(targetPlayer: Player) {
-    return <p>{`Waiting for ${targetPlayer.name} to remove card.`}</p>;
 }
