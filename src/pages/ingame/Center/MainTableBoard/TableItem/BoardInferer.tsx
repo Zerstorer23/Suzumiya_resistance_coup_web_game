@@ -7,11 +7,6 @@ import {CardRole} from "system/cards/Card";
 import {ChallengeState, KillInfo, Player} from "system/GameStates/GameTypes";
 import {BoardState, StateManager} from "system/GameStates/States";
 import {createWaitingBoard, PostKillPanel} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardPanels";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {DeckManager} from "system/cards/DeckManager";
-import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
-import {DS} from "system/Debugger/DS";
 
 const rejectionElem = (<Fragment>
     <br/>
@@ -218,30 +213,6 @@ export function inferDiscardState(ctx: RoomContextType, playerId: string): JSX.E
             return (<PostKillPanel/>);
         }
     }
-}
-
-
-export function handleCardKill(ctx: RoomContextType, index: number) {
-    const deck = ctx.room.game.deck;
-    DeckManager.killCardAt(deck, index);
-    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
-        const killedInfo = newAction.param as KillInfo;
-        killedInfo.removed = index;
-        newAction.param = killedInfo;
-        ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
-        //TODO check if that was last card.
-        const isDead = DeckManager.playerIsDead(deck, killedInfo.ownerId);
-        if (isDead) {
-            const player = ctx.room.playerMap.get(killedInfo.ownerId)!;
-            player.isSpectating = true;
-            player.coins = 0;
-            ReferenceManager.updatePlayerReference(killedInfo.ownerId, player);
-        }
-        //If it was, set spectating on
-        DS.logTransition("Removed card at " + index);
-        DS.logTransition(newAction);
-        return TransitionAction.Success;
-    });
 }
 
 export function inferStateInfo(
