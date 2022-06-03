@@ -1,5 +1,5 @@
 export const DS = {
-    AutoEnd: false,
+    StrictRules: false,
     logTransition(msg: any) {
         console.warn(msg);
     }

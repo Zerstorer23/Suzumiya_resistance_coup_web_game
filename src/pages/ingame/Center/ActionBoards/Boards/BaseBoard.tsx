@@ -1,5 +1,7 @@
 import {setMyTimer} from "pages/components/ui/MyTimer/MyTimer";
-import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
+import BaseActionButton, {
+    getRequiredCoins
+} from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import {Fragment, useContext, useEffect, useState} from "react";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 import {CursorState} from "system/context/localInfo/LocalContextProvider";
@@ -11,6 +13,7 @@ import classes from "./BaseBoard.module.css";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {DS} from "system/Debugger/DS";
 import {GameManager} from "system/GameStates/GameManager";
+import {TurnManager} from "system/GameStates/TurnManager";
 
 const actions = [
     ActionType.GetOne,
@@ -22,14 +25,16 @@ const actions = [
     ActionType.None,
     ActionType.ChangeCards,
 ];
+const coupAction = [ActionType.None, ActionType.None, ActionType.None, ActionType.None, ActionType.Coup];
 
 export default function BaseBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
-    const myId: string = localCtx.getVal(LocalField.Id)!;
+    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     //For target actions, save which button we pressed
     const [savedAction, setSaved] = useState(ActionType.None);
     const pSelector = localCtx.getVal(LocalField.PlayerSelector);
+    const forceCoup = myPlayer.coins >= 10;
 
     function clearSelector() {
         if (savedAction === ActionType.None) return;
@@ -52,8 +57,13 @@ export default function BaseBoard(): JSX.Element {
 
     useEffect(() => {
         setMyTimer(localCtx, WaitTime.MakingDecision, () => {
-            if (!DS.AutoEnd) return;
-            onMakeAction(actions[0]);
+            if (!DS.StrictRules) return;
+            if (forceCoup) {
+                onMakeAction(actions[0]);
+            } else {
+                //TODO spend coins
+                ActionManager.pushPrepareDiscarding(ctx, GameManager.createKillInfo(ActionType.Coup, myId));
+            }
         });
     }, []);
 
@@ -62,10 +72,9 @@ export default function BaseBoard(): JSX.Element {
         if (pSelector === CursorState.Selecting || pSelector === CursorState.Idle)
             return;
         if (!StateManager.isTargetableAction(savedAction)) return;
+        //Coup is special
         if (savedAction === ActionType.Coup) {
-            //Coup is special
-            const killInfo = GameManager.createKillInfo(ActionType.Coup, pSelector);
-            ActionManager.pushPrepareDiscarding(ctx, killInfo);
+            ActionManager.pushPrepareDiscarding(ctx, GameManager.createKillInfo(ActionType.Coup, pSelector));
             return;
         }
         //You selected something
@@ -76,7 +85,7 @@ export default function BaseBoard(): JSX.Element {
 
 
     function onMakeAction(action: ActionType) {
-        //Target Actions
+        if (DS.StrictRules && getRequiredCoins(action) < myPlayer.coins) return;
         const handled = handleTargetableAction(action);
         if (handled) return;
         //Non Target Actions
@@ -84,11 +93,13 @@ export default function BaseBoard(): JSX.Element {
         ActionManager.pushCalledState(ctx, action, myId);
     }
 
+    let buttons = (forceCoup) ? coupAction : actions;
+
     return (
         <Fragment>
             <div className={classes.header}>Do my action...</div>
             <div className={classes.container}>
-                {actions.map((action: ActionType, index: number) => {
+                {buttons.map((action: ActionType, index: number) => {
                     const baseIndex = index + 1;
                     const cssName = classes[`cell${baseIndex}`];
                     return (
