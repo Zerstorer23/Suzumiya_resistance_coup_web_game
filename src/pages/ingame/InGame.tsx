@@ -66,7 +66,7 @@ export default function InGame() {
                 <ActionBoards code={roomCode}/>
             </VerticalLayout>
             <VerticalLayout className={`${gc.flex1}`}>
-                <GameDeckBoard deck={ctx.room.game.deck}/>
+                <GameDeckBoard/>
                 <InGameChatBoard/>
             </VerticalLayout>
         </HorizontalLayout>
