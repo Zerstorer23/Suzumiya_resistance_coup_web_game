@@ -1,4 +1,4 @@
-import {CardRole} from "system/cards/Card";
+import {CardDeck, CardRole} from "system/cards/Card";
 import {ActionType, BoardState} from "system/GameStates/States";
 
 export type Player = {
@@ -49,7 +49,7 @@ export type TurnState = {
     board: BoardState;
 };
 export type Game = {
-    deck: CardRole[];
+    deck: CardDeck;
     action: GameAction;
     state: TurnState;
 };

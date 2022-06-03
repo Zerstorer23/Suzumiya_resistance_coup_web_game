@@ -1,5 +1,4 @@
 import {setMyTimer} from "pages/components/ui/MyTimer/MyTimer";
-import {waitAndEnd} from "pages/ingame/Center/ActionBoards/Boards/Solver/Solver";
 import {CardRole} from "system/cards/Card";
 import {DeckManager} from "system/cards/DeckManager";
 import {LocalContextType, LocalField} from "system/context/localInfo/local-context";
@@ -22,7 +21,6 @@ export function solveChallenges(ctx: RoomContextType, localCtx: LocalContextType
         case ChallengeState.Reveal:
             handleReveal(ctx, localCtx, killInfo);
             return preChallengeBoard;
-        //TODO ERROR
         default:
             return preChallengeBoard;
     }
@@ -71,8 +69,7 @@ export function handleReveal(ctx: RoomContextType, localCtx: LocalContextType, k
     const myId = localCtx.getVal(LocalField.Id);
     console.log(`Pay penalty?  loser: ${loserId}  / lost? ${loserId === myId}`);
     killInfo.ownerId = loserId;
-    //TODO if equals pier, or challenger
-    killInfo.nextState = inferNextStateFromChallenge(pierWon, board);//TODO infer this
+    killInfo.nextState = inferNextStateFromChallenge(pierWon, board);
     ActionManager.pushPrepareDiscarding(ctx, killInfo);
 }
 
@@ -111,7 +108,7 @@ function determineLoser(
     susPlayer: Player,
     susCard: CardRole,
 ): string {
-    const hasTheCard = DeckManager.playerHasCard(susCard, susPlayer);
+    const hasTheCard = DeckManager.playerHasCard(ctx.room.game.deck, susCard, susPlayer);
     console.log(`Check if ${susId} has ${susPlayer} ? has = ${hasTheCard}`);
     let loserId;
     if (hasTheCard) {
@@ -122,6 +119,4 @@ function determineLoser(
     return loserId;
 }
 
-function showResults(ctx: RoomContextType, localCtx: LocalContextType) {
-    waitAndEnd(ctx, localCtx);
-}
+

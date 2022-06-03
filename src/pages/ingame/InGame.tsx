@@ -31,24 +31,19 @@ export default function InGame() {
      *
      */
 
-    function checkHostIsAlive() {
+    function checkSanity() {
         if (myId === ctx.room.header.hostId) {
             ReferenceManager.updateReference(DbReferences.GAME_action, ctx.room.game.action);
             ReferenceManager.updateReference(DbReferences.GAME_state, ctx.room.game.state);
             ReferenceManager.updateReference(DbReferences.HEADER_hostId, myId);
-            //TODO state UI actually changes according to STATE. So it wont trigger change in the first turn
         }
     }
 
     useEffect(() => {
         console.log("Host ID = " + ctx.room.header.hostId);
-        checkHostIsAlive();
+        checkSanity();
         setRoomCode((n) => n++);
-    }, [
-        //ctx.room.header.hostId,
-        ctx.room.playerMap.size]);
-    //TODO but how do we detect if something is wrong?
-    //Just CHange host to null when it is wrong.
+    }, [ctx.room.playerMap.size]);
 
     useEffect(() => {
         console.log(`In game id ${myId}`);

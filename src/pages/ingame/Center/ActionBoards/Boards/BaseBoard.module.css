@@ -37,6 +37,7 @@
     height: 100%;
 }
 
+
 .cell {
     background-color: antiquewhite;
     height: 100%;
@@ -57,7 +58,13 @@
 
 .characterIcon {
     height: 2rem;
-    margin-left: 10px;
+    margin-left: 0.5rem;
+}
+
+.emptyIcon {
+    height: 2rem;
+    /*!*visibility: hidden;*!*/
+    /*visibility: ;*/
 }
 
 .nameText {
@@ -81,14 +88,13 @@
 }
 
 .noCoinText {
-    color: chocolate;
+    color: aliceblue;
     height: 100%;
     display: block;
     flex: 1;
     justify-self: center;
     align-self: center;
     text-align: center;
-    margin-right: 10px;
 }
 
 .cell:hover {

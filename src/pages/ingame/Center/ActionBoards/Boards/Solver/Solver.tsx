@@ -27,7 +27,7 @@ export function solveState(ctx: RoomContextType, localCtx: LocalContextType) {
             handleGetThree(ctx);
             break;
         case BoardState.StealAccepted:
-            handleSteal(ctx);
+            handleSteal(ctx, localCtx);
             break;
         case BoardState.DiscardingCard:
             break;
@@ -102,17 +102,19 @@ export function handleGetThree(
  * add to pier
  * take from target
  */
-//TODO STEAL MAX 2 and put in Param
-export function handleSteal(ctx: RoomContextType) {
+export function handleSteal(ctx: RoomContextType, localCtx: LocalContextType) {
     const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
     const [targetId, target] = TurnManager.getPlayerInfo(ctx, PlayerType.Target);
-    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
-        const stealAmount = Math.min(target.coins, 2);
-        pier.coins += stealAmount;
-        target.coins -= stealAmount;
-        newAction.param = stealAmount;
-        ReferenceManager.updatePlayerReference(pierId, pier);
-        ReferenceManager.updatePlayerReference(targetId, target);
-        return TransitionAction.EndTurn;
+    setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
+        ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+            const stealAmount = Math.min(target.coins, 2);
+            pier.coins += stealAmount;
+            target.coins -= stealAmount;
+            newAction.param = stealAmount;
+            ReferenceManager.updatePlayerReference(pierId, pier);
+            ReferenceManager.updatePlayerReference(targetId, target);
+            return TransitionAction.EndTurn;
+        });
     });
+
 }

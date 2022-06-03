@@ -9,16 +9,16 @@ import DiscardBoard from "pages/ingame/Center/ActionBoards/Boards/Discard/Discar
 import ReactAssassinBoard from "pages/ingame/Center/ActionBoards/Boards/ReactAssassinBoard";
 import ReactCaptainBoard from "pages/ingame/Center/ActionBoards/Boards/ReactCaptainBoard";
 import {TurnManager} from "system/GameStates/TurnManager";
-import {LocalContextType, LocalField} from "system/context/localInfo/local-context";
+import {LocalContextType} from "system/context/localInfo/local-context";
 import ReactForeignAidBoard from "pages/ingame/Center/ActionBoards/Boards/ReactForeignAidBoard";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 export function getBoardElemFromRoom(ctx: RoomContextType, localCtx: LocalContextType): JSX.Element {
-    const myId = localCtx.getVal(LocalField.Id);
+    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
+    if (myPlayer.isSpectating) return <WaitingBoard/>;
     const isMyTurn: boolean = TurnManager.isMyTurn(ctx, localCtx);
     const board = ctx.room.game.state.board;
     const amTargeted: boolean = ctx.room.game.action.targetId === myId;
-
     if (board === BoardState.DiscardingCard) return <DiscardBoard/>;
     if (StateManager.isFinal(board)) return <SolverBoard/>;
     if (isMyTurn) return handleMyTurn(board);
@@ -46,6 +46,7 @@ function handleMyTurn(boardState: BoardState): JSX.Element {
 function handleNotMyTurn(board: BoardState, game: Game): JSX.Element {
     const hasChallenger: boolean = game.action.challengerId.length > 0;
     if (board === BoardState.CalledGetTwo) return <ReactForeignAidBoard/>;
+    console.log(`has challenger = ${hasChallenger} counter = ${StateManager.isCounterable(board)}`);
     if (!hasChallenger && StateManager.isCounterable(board)) return <CounterBoard/>;
     return <WaitingBoard/>;
 

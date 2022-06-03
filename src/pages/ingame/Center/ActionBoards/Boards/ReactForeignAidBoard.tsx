@@ -11,7 +11,6 @@ import {DS} from "system/Debugger/DS";
 
 const actions = [ActionType.None, ActionType.DukeBlocksForeignAid];
 export default function ReactForeignAidBoard(): JSX.Element {
-    //TODO change by board state
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const myId = localCtx.getVal(LocalField.Id);

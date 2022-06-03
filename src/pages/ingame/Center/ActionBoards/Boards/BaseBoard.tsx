@@ -61,7 +61,6 @@ export default function BaseBoard(): JSX.Element {
             if (forceCoup) {
                 onMakeAction(actions[0]);
             } else {
-                //TODO spend coins
                 ActionManager.pushPrepareDiscarding(ctx, GameManager.createKillInfo(ActionType.Coup, myId));
             }
         });
@@ -93,7 +92,7 @@ export default function BaseBoard(): JSX.Element {
         ActionManager.pushCalledState(ctx, action, myId);
     }
 
-    let buttons = (forceCoup) ? coupAction : actions;
+    let buttons = (forceCoup && DS.StrictRules) ? coupAction : actions;
 
     return (
         <Fragment>

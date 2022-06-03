@@ -208,7 +208,6 @@ export const StateManager = {
             case BoardState.StealBlocked:
                 return BoardState.StealBlockAccepted;
             default: //Exception
-                console.log("Invalid State");
                 return null;
         }
     },

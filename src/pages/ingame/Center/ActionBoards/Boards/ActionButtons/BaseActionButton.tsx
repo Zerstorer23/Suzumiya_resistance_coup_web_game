@@ -37,6 +37,7 @@ export default function BaseActionButton(props: Prop) {
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const myCards = DeckManager.peekCards(ctx.room.game.deck, myPlayer.icard, 2);
     let relatedRole = CardRole.None;
+    let cost = 0;
     if (param instanceof Card) {
         hasCard = true;
         relatedRole = param.cardRole;
@@ -51,6 +52,7 @@ export default function BaseActionButton(props: Prop) {
                 break;
             case ActionType.Assassinate:
                 relatedRole = CardRole.Assassin;
+                cost = 3;
                 break;
             case ActionType.ContessaBlocksAssassination:
                 relatedRole = CardRole.Contessa;
@@ -65,6 +67,11 @@ export default function BaseActionButton(props: Prop) {
                 break;
             case ActionType.None:
                 return <Fragment/>;
+            case ActionType.Coup:
+                hasCard = true;
+                isCard = false;
+                cost = 7;
+                break;
             default:
                 hasCard = true;
                 isCard = false;
@@ -80,19 +87,31 @@ export default function BaseActionButton(props: Prop) {
             src={`${CardPool.getCard(relatedRole).getImage()}`}
             alt="card"
         />
-    ) : (
-        <Fragment/>
+    ) : (<Fragment/>
+        /*        <img
+                    className={`${classes.emptyIcon}`}
+                    src={`${CardPool.getCard(CardRole.None).getImage()}`}
+                    alt=""
+                />*/
     );
+    const hasEnoughMoney = myPlayer.coins >= cost;
+    let subClassName = isCard ? classes.lieText : "";
+    let subText = hasCard ? "" : "[Lie]";
+    if (!hasEnoughMoney) {
+        subClassName = classes.noCoinText;
+        subText = `${cost} coins`;
+    }
+
     return (
         <button
-            className={`${classes.cell} ${props.className}`}
+            className={`${(hasEnoughMoney) ? classes.cell : classes.cellDisabled} ${props.className}`}
             onClick={props.onClickButton}
         >
             <HorizontalLayout className={classes.fullBox}>
                 {iconElem}
                 <p className={classes.nameText}>{name}</p>
-                <p className={isCard ? classes.lieText : ""}>
-                    {hasCard ? "" : "[Lie]"}
+                <p className={subClassName}>
+                    {subText}
                 </p>
             </HorizontalLayout>
         </button>

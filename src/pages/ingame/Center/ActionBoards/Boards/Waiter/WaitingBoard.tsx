@@ -14,7 +14,6 @@ export default function WaitingBoard(): JSX.Element {
     const board = ctx.room.game.state.board;
     useEffect(() => {
         const waitTime = inferWaitTime(board, ctx.room.game.action);
-        console.log("Wait State " + board + " time " + waitTime);
         setMyTimer(localCtx, waitTime, () => {
             const isMyTurn: boolean = TurnManager.isMyTurn(ctx, localCtx);
             if (!isMyTurn) return;

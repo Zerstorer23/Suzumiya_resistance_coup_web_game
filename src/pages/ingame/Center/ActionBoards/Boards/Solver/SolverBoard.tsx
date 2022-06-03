@@ -25,21 +25,13 @@ export default function SolverBoard(): JSX.Element {
     //Challenge Handler
     useEffect(() => {
         if (!StateManager.isChallenged(board)) return;
-        console.log("Solved board:");
         const elem = ChallengeSolver.solveChallenges(ctx, localCtx);
-        console.log(elem);
         setJSX(elem);
     }, [action]);
 
-    /**
-     * Normal state solver
-     */
+
     useEffect(() => {
         if (StateManager.isChallenged(board)) return;
-        /*        if (board === BoardState.DiscardingCard) {
-                    setJSX(<DiscardBoard/>);
-                    return;
-                }*/
         Solver.solveState(ctx, localCtx);
     }, []);
 

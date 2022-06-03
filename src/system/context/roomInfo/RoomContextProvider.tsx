@@ -5,6 +5,7 @@ import {getDefaultRoom, getSortedListFromMap} from "system/GameStates/RoomGenera
 import {IProps, ListenerTypes} from "system/types/CommonTypes";
 import {isSafe} from "system/GameConstants";
 import {BoardState} from "system/GameStates/States";
+import {TurnManager} from "system/GameStates/TurnManager";
 
 /* Room Context
 Holds data 1 to 1 match to DB.
@@ -84,7 +85,7 @@ function handlePlayerUpdate(newRoom: Room, action: RoomActionType) {
             }
             if (newRoom.game.state.turn >= newRoom.playerMap.size) {
                 newRoom.game.state.board = BoardState.ChoosingBaseAction;
-                newRoom.game.state.turn = newRoom.game.state.turn % newRoom.playerMap.size;
+                newRoom.game.state.turn = TurnManager.getNextTurn(newRoom.playerMap, newRoom.playerList, newRoom.game.state.turn, false);
                 console.log("Detected invalid turn");
             }
             break;

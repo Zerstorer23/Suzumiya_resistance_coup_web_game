@@ -38,11 +38,11 @@ export function inferWaitTime(board: BoardState, action: GameAction): number {
         case BoardState.CalledGetTwoBlocked:
         case BoardState.CalledAssassinate:
         case BoardState.AssassinBlocked:
+        case BoardState.CalledSteal:
             return WaitTime.MakingDecision;
         case BoardState.CalledGetTwo:
         case BoardState.CalledGetThree:
         case BoardState.CalledChangeCards:
-        case BoardState.CalledSteal:
             return WaitTime.WaitReactions;
         case BoardState.GetOneAccepted:
         case BoardState.DukeBlocksAccepted:

@@ -7,11 +7,7 @@ import {CardRole} from "system/cards/Card";
 import {DS} from "system/Debugger/DS";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
-/**
- *
- * @param ctx
- * @param changer : Changes state and returns if state should be applied
- */
+
 export enum TransitionAction {
     Success,
     Abort,
@@ -36,7 +32,7 @@ export function prepareAndPushState(
     }
     DS.logTransition("Next state " + newState.board);
     if (result === TransitionAction.EndTurn) {
-        setEndTurn(ctx, newState);
+        setEndTurn(ctx, newAction, newState);
     }
     pushActionState(newAction, newState);
 }
@@ -44,19 +40,20 @@ export function prepareAndPushState(
 /**
  * Do nothing and End
  */
-export function pushJustEndTurn(ctx: RoomContextType) {
+export function pushJustEndTurn(ctx: RoomContextType,) {
     const [newAction, newState] = prepareActionState(ctx);
     DS.logTransition("End turn");
-    setEndTurn(ctx, newState);
+    setEndTurn(ctx, newAction, newState);
     pushActionState(newAction, newState);
 }
 
-function setEndTurn(ctx: RoomContextType, newState: TurnState) {
+function setEndTurn(ctx: RoomContextType, newAction: GameAction, newState: TurnState) {
     newState.board = BoardState.ChoosingBaseAction;
+    resetAction(newAction);
     newState.turn = TurnManager.getNextTurn(
-        ctx,
-        newState.turn,
-        ctx.room.playerMap.size
+        ctx.room.playerMap,
+        ctx.room.playerList,
+        newState.turn
     );
 }
 
@@ -192,13 +189,10 @@ export function pushPrepareDiscarding(
     });
 }
 
-export function pushResetTurn(ctx: RoomContextType) {
-    prepareAndPushState(ctx, (newAction, newState) => {
-        newAction.param = "";
-        newAction.pierId = "";
-        newAction.challengerId = "";
-        newAction.targetId = "";
-        newState.board = BoardState.ChoosingBaseAction;
-        return TransitionAction.Success;
-    });
+function resetAction(newAction: GameAction) {
+    newAction.param = "";
+    newAction.pierId = "";
+    newAction.challengerId = "";
+    newAction.targetId = "";
 }
+

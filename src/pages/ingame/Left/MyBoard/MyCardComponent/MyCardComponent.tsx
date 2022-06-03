@@ -1,5 +1,4 @@
 import classes from "./MyCardComponent.module.css";
-import gc from "global.module.css";
 import {IProps} from "system/types/CommonTypes";
 import {Card} from "system/cards/Card";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
@@ -17,8 +16,8 @@ export default function MyCardComponent(props: Props): JSX.Element {
                 alt="card"
             />
             {isDead ? (
-                <div className={`${classes.deadPanel} `}>
-                    <p>is Dead!!</p>
+                <div className={`${classes.descPanel} `}>
+                    <p className={classes.deadPanel}>DEAD</p>
                 </div>
             ) : (
                 <div className={`${classes.descPanel} `}>

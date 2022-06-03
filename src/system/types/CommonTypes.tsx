@@ -19,7 +19,7 @@ export type Snapshot = firebase.database.DataSnapshot;
 export enum LoadStatus {
     init = "Initialising",
     isLoading = "Loading room",
-    loaded = "Room loadd",
+    loaded = "Room loaded",
     listening = "Listening changes",
     joined = "Joined room",
     outerSpace = "A outer space",

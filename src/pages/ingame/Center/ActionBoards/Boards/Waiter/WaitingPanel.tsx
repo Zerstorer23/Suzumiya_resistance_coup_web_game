@@ -3,15 +3,12 @@ import {useContext} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {TurnManager} from "system/GameStates/TurnManager";
-// type Props = IProps & {
-//   isMyTurn: boolean;
-// };
+
 export default function WaitingPanel() {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const currId = TurnManager.getCurrentPlayerId(ctx);
     const isMyTurn: boolean = TurnManager.isMyTurn(ctx, localCtx);
-    console.log("LOad waiting panel");
     if (isMyTurn) {
         return (
             <div className={classes.singleContainer}>

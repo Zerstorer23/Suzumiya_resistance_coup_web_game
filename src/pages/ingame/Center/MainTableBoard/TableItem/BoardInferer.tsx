@@ -8,6 +8,94 @@ import {ChallengeState, KillInfo, Player} from "system/GameStates/GameTypes";
 import {BoardState, StateManager} from "system/GameStates/States";
 import {createWaitingBoard, PostKillPanel} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardPanels";
 
+export function inferStateInfo(
+    ctx: RoomContextType,
+    localCtx: LocalContextType,
+    playerId: string,
+    isMain: boolean
+): JSX.Element {
+    const board = ctx.room.game.state.board;
+    const [pier, target] = TurnManager.getShareholders(ctx);
+    if (pier === null) return <Fragment/>;
+    if (StateManager.isChallenged(board)) {
+        return inferChallenged(ctx, playerId, isMain);
+    }
+    if (StateManager.isTargetableState(board)) {
+        return inferTargeted(ctx, playerId);
+    }
+    if (StateManager.isBlockedState(board)) {
+        return inferBlocked(ctx, playerId);
+    }
+    switch (board) {
+        case BoardState.GetOneAccepted:
+            return claimElem(pier, "income", "will receive 1 coin...");
+        case BoardState.ForeignAidAccepted:
+            return claimElem(pier, "foreign aid", " received 2 coins...");
+        case BoardState.GetThreeAccepted:
+            return claimElem(pier, CardPool.getCard(CardRole.Duke).getName(), " will receive 3 coins...");
+        case BoardState.CalledChangeCards:
+            return <Fragment>
+                {claimElem(pier, CardPool.getCard(CardRole.Ambassador).getName(), " will change cards...")}
+                {rejectionElem}
+            </Fragment>;
+        case BoardState.ChoosingBaseAction:
+            return <Fragment>{`${pier.name} is choosing action ...`}</Fragment>;
+        case BoardState.CalledGetTwo:
+            return (
+                <Fragment>
+                    {claimElem(pier, "foreign aid to get 2 coins", "")}
+                    {rejectionElem}
+                </Fragment>
+            );
+        case BoardState.DukeBlocksAccepted:
+            return isMain ? (
+                <Fragment>
+                    {`${pier.name} accepted and receives nothing...`}
+                </Fragment>
+            ) : (
+                <Fragment>
+                    {claimElem(target!, CardPool.getCard(CardRole.Duke).getName(), " to block foreign aid.")}
+                </Fragment>
+            );
+        case BoardState.CalledGetThree:
+            return (
+                <Fragment>
+                    {claimElem(pier!, CardPool.getCard(CardRole.Duke).getName(), " to get 3 coins.")}
+                    {rejectionElem}
+                </Fragment>
+            );
+        case BoardState.AmbassadorAccepted:
+            return (
+                <Fragment>
+                    <p>{`${pier!.name} is changing cards...`}</p>
+                </Fragment>
+            );
+        case BoardState.StealAccepted:
+            if (isMain) {
+                return <p>{`${pier?.name} stole ${ctx.room.game.action.param as number} coins from ${target?.name}`}</p>;
+            } else {
+                return <p>{`${target?.name} is robbed!`}</p>;
+            }
+        case BoardState.StealBlockAccepted:
+            if (isMain) {
+                return <p>{`${pier?.name} accepted. Will not steal anything.`}</p>;
+            } else {
+                return <p>{`${target?.name} is safe!`}</p>;
+            }
+        case BoardState.ContessaAccepted:
+            if (isMain) {
+                return <p>{`${pier?.name} accepted. Will not kill anyone.`}</p>;
+            } else {
+                return <p>{`${target?.name} is safe!`}</p>;
+            }
+        case BoardState.DiscardingCard:
+            return inferDiscardState(ctx, playerId);
+    }
+    /**
+     return <p>{`${localPlayer.name} gained 1 coin...`}</p>; */
+    return <Fragment/>;
+}
+
 const rejectionElem = (<Fragment>
     <br/>
     {`Any rejections?...`}
@@ -29,8 +117,10 @@ function notifyChallengedElem(amChallenger: boolean, challenger: Player, sus: Pl
             <Fragment>
                 <p>
                     {
-                        `${challenger.name} does not think ${sus.name} has ${CardPool.getCard(susCard).getElemName()}!`
-                    }
+                        `${challenger.name} does not think ${sus.name} has `
+                    }{
+                    CardPool.getCard(susCard).getElemName()
+                }
                 </p>
 
             </Fragment>
@@ -38,7 +128,9 @@ function notifyChallengedElem(amChallenger: boolean, challenger: Player, sus: Pl
     } else {
         return <Fragment>
             <p>
-                {`${sus.name} will reveal his cards to show ${CardPool.getCard(susCard).getElemName()}`}
+                {`${sus.name} will reveal his cards to show `}{
+                CardPool.getCard(susCard).getElemName()
+            }
             </p>
         </Fragment>;
     }
@@ -103,8 +195,7 @@ function inferChallenged(
 
 function inferTargeted(
     ctx: RoomContextType,
-    playerId: string,
-    isMain: boolean
+    playerId: string
 ): JSX.Element {
     const board = ctx.room.game.state.board;
     const action = ctx.room.game.action;
@@ -172,7 +263,7 @@ function inferBlocked(
         case BoardState.StealBlocked:
             return claimElem(target!, CardPool.getCard(action.param as CardRole).getName(), " to block steal!");
         case BoardState.AssassinBlocked:
-            return claimElem(target!, CardPool.getCard(CardRole.Contessa).getName(), " to block assasination");
+            return claimElem(target!, CardPool.getCard(CardRole.Contessa).getName(), " to block assassination");
         default:
             return <Fragment/>;
     }
@@ -185,10 +276,10 @@ export function inferDiscardState(ctx: RoomContextType, playerId: string): JSX.E
     if (playerId === killInfo.ownerId) {
         if (cardSelected) {
             return (<Fragment>
-                <p>{`${ctx.room.playerMap.get(playerId)} is choosing a card to discard...`}</p>
+                <p>{`${ctx.room.playerMap.get(playerId)?.name} is choosing a card to discard...`}</p>
             </Fragment>);
         } else {
-            return (<PostKillPanel/>);
+            return (<Fragment/>);
         }
     } else {
         if (cardSelected) {
@@ -200,91 +291,4 @@ export function inferDiscardState(ctx: RoomContextType, playerId: string): JSX.E
     }
 }
 
-export function inferStateInfo(
-    ctx: RoomContextType,
-    localCtx: LocalContextType,
-    playerId: string,
-    isMain: boolean
-): JSX.Element {
-    const board = ctx.room.game.state.board;
-    const [pier, target] = TurnManager.getShareholders(ctx);
-    if (pier === null) return <Fragment/>;
-    if (StateManager.isChallenged(board)) {
-        return inferChallenged(ctx, playerId, isMain);
-    }
-    if (StateManager.isTargetableState(board)) {
-        return inferTargeted(ctx, playerId, isMain);
-    }
-    if (StateManager.isBlockedState(board)) {
-        return inferBlocked(ctx, playerId);
-    }
-    switch (board) {
-        case BoardState.GetOneAccepted:
-            return claimElem(pier, "income", "will receive 1 coin...");
-        case BoardState.ForeignAidAccepted:
-            return claimElem(pier, "foreign aid", " received 2 coins...");
-        case BoardState.GetThreeAccepted:
-            return claimElem(pier, CardPool.getCard(CardRole.Duke).getName(), " received 3 coins...");
-        case BoardState.CalledChangeCards:
-            return <Fragment>
-                {claimElem(pier, CardPool.getCard(CardRole.Duke).getName(), " received 3 coins...")}
-                {rejectionElem}
-            </Fragment>;
-        case BoardState.ChoosingBaseAction:
-            return <Fragment>{`${pier.name} is choosing action ...`}</Fragment>;
-        case BoardState.CalledGetTwo:
-            return (
-                <Fragment>
-                    {claimElem(pier, "foreign aid to get 2 coins", "")}
-                    {rejectionElem}
-                </Fragment>
-            );
-        case BoardState.DukeBlocksAccepted:
-            return isMain ? (
-                <Fragment>
-                    {`${pier.name} accepted and receives nothing...`}
-                </Fragment>
-            ) : (
-                <Fragment>
-                    {claimElem(target!, CardPool.getCard(CardRole.Duke).getName(), " to block foreign aid.")}
-                </Fragment>
-            );
-        case BoardState.CalledGetThree:
-            return (
-                <Fragment>
-                    {claimElem(pier!, CardPool.getCard(CardRole.Duke).getName(), " to get 3 coins.")}
-                    {rejectionElem}
-                </Fragment>
-            );
-        case BoardState.AmbassadorAccepted:
-            return (
-                <Fragment>
-                    <p>{`${pier!.name} is changing cards...`}</p>
-                </Fragment>
-            );
-        case BoardState.StealAccepted:
-            if (isMain) {
-                return <p>{`${pier?.name} stole ${ctx.room.game.action.param as number} coins from ${target?.name}`}</p>;
-            } else {
-                return <p>{`${target?.name} is robbed!`}</p>;
-            }
-        case BoardState.StealBlockAccepted:
-            if (isMain) {
-                return <p>{`${pier?.name} accepted. Will not steal anything.`}</p>;
-            } else {
-                return <p>{`${target?.name} is safe!`}</p>;
-            }
-        case BoardState.ContessaAccepted:
-            if (isMain) {
-                return <p>{`${pier?.name} accepted. Will not kill anyone.`}</p>;
-            } else {
-                return <p>{`${target?.name} is safe!`}</p>;
-            }
-        case BoardState.DiscardingCard:
-            return inferDiscardState(ctx, playerId);
-            break;
-    }
-    /**
-     return <p>{`${localPlayer.name} gained 1 coin...`}</p>; */
-    return <Fragment/>;
-}
+
