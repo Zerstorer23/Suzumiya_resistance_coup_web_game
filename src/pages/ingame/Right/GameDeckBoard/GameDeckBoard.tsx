@@ -11,7 +11,7 @@ const cardsInDeck = [
 type Props = IProps & {
     deck: CardDeck;
 }
-export default function GameDeckBoard(props: Props): JSX.Element {
+export default function GameDeckBoard(): JSX.Element {
     //pass deck
     return (
         <div className={`${gc.round_border} ${classes.container}`}>
