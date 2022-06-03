@@ -7,9 +7,9 @@ import {ActionInfo} from "system/GameStates/ActionInfo";
 import {ActionType, BoardState} from "system/GameStates/States";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {DeckManager} from "system/cards/DeckManager";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {GameManager} from "system/GameStates/GameManager";
+import {playerClaimedRole} from "system/Database/RoomDatabase";
 
 const baseActions = [
     ActionType.Accept,
@@ -20,20 +20,6 @@ export default function ReactAssassinBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    const deck = ctx.room.game.deck;
-    const myCards = DeckManager.peekCards(deck, myPlayer.icard, 2);
-
-    /*    function onSelectedCard(index: number) {
-            ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
-                newState.board = BoardState.AssissinateAccepted;
-                newAction.param = {
-                    idx: index,
-                    playerId: myId,
-                };
-
-                return TransitionAction.Success;
-            });
-        }*/
 
     function onMakeAction(action: ActionType) {
         switch (action) {
@@ -47,6 +33,7 @@ export default function ReactAssassinBoard(): JSX.Element {
             case ActionType.ContessaBlocksAssassination:
                 ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
                     newState.board = BoardState.AssassinBlocked;
+                    playerClaimedRole(myId, myPlayer, action);
                     return TransitionAction.Success;
                 });
                 break;

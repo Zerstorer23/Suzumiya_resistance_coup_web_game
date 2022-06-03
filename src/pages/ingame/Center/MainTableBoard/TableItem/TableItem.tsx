@@ -6,7 +6,6 @@ import RoomContext from "system/context/roomInfo/room-context";
 import {Fragment, useContext, useEffect, useState} from "react";
 import {inferStateInfo} from "pages/ingame/Center/MainTableBoard/TableItem/BoardInferer";
 import {CardPool} from "system/cards/CardPool";
-import {ReferenceManager} from "system/Database/RoomDatabase";
 
 type Props = {
     playerId: string;
@@ -25,7 +24,6 @@ export default function TableItem(props: Props) {
 
     if (player === null || player === undefined) return <Fragment/>;
     const lastCard = CardPool.getCard(player.lastClaimed);
-    ReferenceManager;
     return (
         <HorizontalLayout className={`${props.className} ${classes.container}`}>
             <div className={classes.profileContainer}>

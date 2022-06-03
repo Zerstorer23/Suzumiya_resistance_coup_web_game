@@ -14,7 +14,6 @@ import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {DS} from "system/Debugger/DS";
 import {GameManager} from "system/GameStates/GameManager";
 import {TurnManager} from "system/GameStates/TurnManager";
-import {playerClaimedRole} from "system/Database/RoomDatabase";
 
 const actions = [
     ActionType.GetOne,
@@ -78,7 +77,6 @@ export default function BaseBoard(): JSX.Element {
             return;
         }
         //You selected something
-        playerClaimedRole(myId, myPlayer, savedAction);
         ActionManager.pushCalledState(ctx, savedAction, myId, pSelector);
         //Clear states
         clearSelector();
@@ -91,7 +89,6 @@ export default function BaseBoard(): JSX.Element {
         if (handled) return;
         //Non Target Actions
         clearSelector();
-        playerClaimedRole(myId, myPlayer, action);
         ActionManager.pushCalledState(ctx, action, myId);
     }
 

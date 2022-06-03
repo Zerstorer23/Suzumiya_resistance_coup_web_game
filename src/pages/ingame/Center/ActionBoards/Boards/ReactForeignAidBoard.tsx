@@ -1,20 +1,21 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import {useContext} from "react";
-import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
+import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
 import {ActionType, BoardState} from "system/GameStates/States";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {DS} from "system/Debugger/DS";
+import {playerClaimedRole} from "system/Database/RoomDatabase";
+import {TurnManager} from "system/GameStates/TurnManager";
 
 const actions = [ActionType.None, ActionType.DukeBlocksForeignAid];
 export default function ReactForeignAidBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
-    const myId = localCtx.getVal(LocalField.Id);
-    console.log("Loaded React foreign aid " + ctx.room.game.state.board);
+    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
 
     function onMakeAction(action: ActionType) {
         if (action !== ActionType.DukeBlocksForeignAid) return;
@@ -23,6 +24,7 @@ export default function ReactForeignAidBoard(): JSX.Element {
             //Target == the one who blocks
             newAction.targetId = myId;
             newState.board = BoardState.CalledGetTwoBlocked;
+            playerClaimedRole(myId, myPlayer, action);
             DS.logTransition("Block aid");
             DS.logTransition(newAction);
             return TransitionAction.Success;

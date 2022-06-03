@@ -1,6 +1,6 @@
 import {ChallengeState, GameAction, KillInfo, TurnState,} from "system/GameStates/GameTypes";
 import {GameManager} from "system/GameStates/GameManager";
-import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
+import {DbReferences, playerClaimedRole, ReferenceManager} from "system/Database/RoomDatabase";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {CardRole} from "system/cards/Card";
@@ -150,6 +150,7 @@ export function pushCalledState(
     prepareAndPushState(ctx, (newAction, newState) => {
         const newBoard = StateManager.getCalledState(action);
         if (newBoard === null) return TransitionAction.Abort;
+        playerClaimedRole(myId, ctx.room.playerMap.get(myId)!, action);
         newState.board = newBoard;
         newAction.pierId = myId;
         newAction.targetId = targetId;
