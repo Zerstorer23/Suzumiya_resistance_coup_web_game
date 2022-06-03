@@ -57,9 +57,14 @@ Assassin: ?Assassin->[CalledAssassinate: Wait]
 //Get 1 : ?GetOne-> [GetOneAccepted : Solve Wait NextTurn]
 function handleGetOne(ctx: RoomContextType, localCtx: LocalContextType) {
     const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
-    pier.coins++;
-    ReferenceManager.updatePlayerReference(pierId, pier);
-    waitAndEnd(ctx, localCtx);
+    setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
+        ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+            pier.coins++;
+            ReferenceManager.updatePlayerReference(pierId, pier);
+            return TransitionAction.EndTurn;
+        });
+    });
+
 }
 
 export function handleGetTwo(ctx: RoomContextType) {
@@ -97,6 +102,7 @@ export function handleGetThree(
  * add to pier
  * take from target
  */
+//TODO STEAL MAX 2 and put in Param
 export function handleSteal(ctx: RoomContextType) {
     const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
     const [targetId, target] = TurnManager.getPlayerInfo(ctx, PlayerType.Target);
@@ -104,6 +110,7 @@ export function handleSteal(ctx: RoomContextType) {
         const stealAmount = Math.min(target.coins, 2);
         pier.coins += stealAmount;
         target.coins -= stealAmount;
+        newAction.param = stealAmount;
         ReferenceManager.updatePlayerReference(pierId, pier);
         ReferenceManager.updatePlayerReference(targetId, target);
         return TransitionAction.EndTurn;

@@ -23,21 +23,6 @@ function claimElem(player: Player, role: string, desc: string): JSX.Element {
 }
 
 
-function inferAccepted(
-    board: BoardState,
-    ctx: RoomContextType,
-    localCtx: LocalContextType,
-    isPier: boolean
-): JSX.Element {
-    const [pier, target, challenger] = TurnManager.getShareholders(ctx);
-    if (pier === null) return <Fragment/>;
-    switch (board) {
-        case BoardState.GetOneAccepted:
-            return claimElem(pier, "income", "will receive 1 coin...");
-    }
-    return <Fragment/>;
-}
-
 function notifyChallengedElem(amChallenger: boolean, challenger: Player, sus: Player, susCard: CardRole): JSX.Element {
     if (amChallenger) {
         return (
@@ -222,8 +207,7 @@ export function inferStateInfo(
     isMain: boolean
 ): JSX.Element {
     const board = ctx.room.game.state.board;
-    const player = ctx.room.playerMap.get(playerId);
-    const [pier, target, challenger] = TurnManager.getShareholders(ctx);
+    const [pier, target] = TurnManager.getShareholders(ctx);
     if (pier === null) return <Fragment/>;
     if (StateManager.isChallenged(board)) {
         return inferChallenged(ctx, playerId, isMain);
@@ -235,6 +219,17 @@ export function inferStateInfo(
         return inferBlocked(ctx, playerId);
     }
     switch (board) {
+        case BoardState.GetOneAccepted:
+            return claimElem(pier, "income", "will receive 1 coin...");
+        case BoardState.ForeignAidAccepted:
+            return claimElem(pier, "foreign aid", " received 2 coins...");
+        case BoardState.GetThreeAccepted:
+            return claimElem(pier, CardPool.getCard(CardRole.Duke).getName(), " received 3 coins...");
+        case BoardState.CalledChangeCards:
+            return <Fragment>
+                {claimElem(pier, CardPool.getCard(CardRole.Duke).getName(), " received 3 coins...")}
+                {rejectionElem}
+            </Fragment>;
         case BoardState.ChoosingBaseAction:
             return <Fragment>{`${pier.name} is choosing action ...`}</Fragment>;
         case BoardState.CalledGetTwo:
@@ -269,7 +264,7 @@ export function inferStateInfo(
             );
         case BoardState.StealAccepted:
             if (isMain) {
-                return <p>{`${pier?.name} stole 2 coins from ${target?.name}`}</p>;
+                return <p>{`${pier?.name} stole ${ctx.room.game.action.param as number} coins from ${target?.name}`}</p>;
             } else {
                 return <p>{`${target?.name} is robbed!`}</p>;
             }

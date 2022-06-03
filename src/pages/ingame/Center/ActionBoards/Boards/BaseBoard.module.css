@@ -46,6 +46,15 @@
     text-align: center;
 }
 
+.cellDisabled {
+    background-color: grey;
+    height: 100%;
+    width: 100%;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+}
+
 .characterIcon {
     height: 2rem;
     margin-left: 10px;
@@ -62,6 +71,17 @@
 
 .lieText {
     color: crimson;
+    height: 100%;
+    display: block;
+    flex: 1;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.noCoinText {
+    color: chocolate;
     height: 100%;
     display: block;
     flex: 1;

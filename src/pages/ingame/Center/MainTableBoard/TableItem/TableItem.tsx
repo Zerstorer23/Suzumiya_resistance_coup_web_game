@@ -18,10 +18,12 @@ export default function TableItem(props: Props) {
     const lastChar = getImage(Images.Haruhi);
     const [elem, setJSX] = useState<JSX.Element>(<Fragment/>);
     useEffect(() => {
+        if (player === null || player === undefined) return;
         const stateElem: JSX.Element = inferStateInfo(ctx, localCtx, props.playerId, props.isMain);
         setJSX(stateElem);
     }, [ctx.room.game.state.board, ctx.room.game.action]);
-    if (player === null) return <Fragment/>;
+
+    if (player === null || player === undefined) return <Fragment/>;
 
     return (
         <HorizontalLayout className={`${props.className} ${classes.container}`}>
