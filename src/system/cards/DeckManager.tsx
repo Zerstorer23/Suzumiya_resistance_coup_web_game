@@ -97,8 +97,10 @@ export const DeckManager = {
 
   generateStartingDeck(numPlayers: number): CardRole[] {
     let numCards = 15;
-    if (numPlayers > 6) numCards = (numPlayers - 6) * 5 + 15;
-    let arr: CardRole[] = []; ////
+    while (numCards - 2 * numPlayers < 2) {
+      numCards += 5;
+    }
+    let arr: CardRole[] = [];
     for (let i = 0; i < numCards / 5; i++) {
       arr.push(CardRole.Duke);
       arr.push(CardRole.Captain);
