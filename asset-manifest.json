@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.66b20ede.css",
+    "main.js": "/static/js/main.9536f0da.js",
+    "static/media/haruhi.png": "/static/media/haruhi.c1eb865e5725e7145c77.png",
+    "static/media/nagato2.png": "/static/media/nagato2.f450c0f49672ecd3be65.png",
+    "static/media/kyon.png": "/static/media/kyon.f11906f9a43713448b39.png",
+    "static/media/koihime.png": "/static/media/koihime.f026d9f4c6bc8c5d25a0.png",
+    "index.html": "/index.html",
+    "main.66b20ede.css.map": "/static/css/main.66b20ede.css.map",
+    "main.9536f0da.js.map": "/static/js/main.9536f0da.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.66b20ede.css",
+    "static/js/main.9536f0da.js"
+  ]
+}
