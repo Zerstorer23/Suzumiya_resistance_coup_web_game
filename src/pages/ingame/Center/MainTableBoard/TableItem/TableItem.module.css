@@ -17,14 +17,15 @@
 }
 
 .playerName {
-    /*text-align: center;*/
     margin-left: 1rem;
 }
 
 .actionContainer {
     width: 70%;
+    align-content: center;
+    justify-content: center;
 }
 
-.textMainAction {
+.textMainAction p {
     text-align: center;
 }

@@ -19,7 +19,7 @@ export default function DeckItem(props: Prop): JSX.Element {
     if (role === CardRole.None) {
         counterText = `${(deck.length - deckTop)} in deck`;
     } else {
-        const total = deck.length / ctx.room.playerList.length / 5;
+        const total = deck.length / 5;
         const count = DeckManager.countCards(deck, role);
         counterText = `${count} / ${total}`;
     }
