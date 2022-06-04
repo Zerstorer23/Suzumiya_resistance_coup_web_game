@@ -5,7 +5,7 @@ import classes from "./MainTableBoard.module.css";
 import {MyTimer} from "pages/components/ui/MyTimer/MyTimer";
 import {useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
-import {BoardState, StateManager} from "system/GameStates/States";
+import {StateManager} from "system/GameStates/States";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 export default function MainTableBoard(): JSX.Element {
@@ -27,8 +27,6 @@ export default function MainTableBoard(): JSX.Element {
 
 export function getMainPlayerFromState(ctx: RoomContextType): string {
     const board = ctx.room.game.state.board;
-    if (board === BoardState.ChoosingBaseAction)
-        return ctx.room.playerList[ctx.room.game.state.turn];
     if (StateManager.targetIsChallenged(board))
         return ctx.room.game.action.targetId;
     return ctx.room.game.action.pierId;
@@ -36,8 +34,6 @@ export function getMainPlayerFromState(ctx: RoomContextType): string {
 
 export function getSubPlayerFromState(ctx: RoomContextType): string {
     const board = ctx.room.game.state.board;
-    if (board === BoardState.ChoosingBaseAction)
-        return "";
     if (StateManager.targetIsChallenged(board))
         return ctx.room.game.action.challengerId;
     return ctx.room.game.action.targetId;

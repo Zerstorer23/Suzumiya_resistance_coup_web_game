@@ -47,10 +47,8 @@ export function PostKillPanel(): JSX.Element {
     const info = ctx.room.game.action.param as KillInfo;
     const player = ctx.room.playerMap.get(info.ownerId)!;
     const cardRole = ctx.room.game.deck[info.removed];
-    const isDead = DeckManager.playerIsDead(
-        ctx.room.game.deck,
-        ctx.room.playerMap.get(info.ownerId)!
-    );
+    if (player === undefined) return <Fragment/>;
+    const isDead = DeckManager.playerIsDead(ctx.room.game.deck, player);
     return (
         <Fragment>
             <p>{`${player.name} discarded `}{CardPool.getCard(cardRole).getElemName()}</p>

@@ -21,8 +21,6 @@ export default function WaitingBoard(): JSX.Element {
     const localCtx = useContext(LocalContext);
     const board = ctx.room.game.state.board;
     useEffect(() => {
-        DS.logTransition("I am waiting");
-        if (!TurnManager.isMyTurn(ctx, localCtx)) return;
         const waitTime = DS.infiniteWait ? 99999 : inferWaitTime(board, ctx.room.game.action);
         setMyTimer(localCtx, waitTime, () => {
             if (!TurnManager.isMyTurn(ctx, localCtx)) return;
@@ -30,9 +28,7 @@ export default function WaitingBoard(): JSX.Element {
             switch (ctx.room.game.state.board) {
                 case BoardState.CalledGetTwo:
                 case BoardState.CalledGetThree:
-                case BoardState.CalledSteal:
                 case BoardState.CalledChangeCards:
-                case BoardState.CalledAssassinate:
                     ActionManager.pushAcceptedState(ctx);
                     break;
                 default:

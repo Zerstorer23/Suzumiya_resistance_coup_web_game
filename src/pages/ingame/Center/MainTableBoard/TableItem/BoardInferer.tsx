@@ -15,9 +15,6 @@ export function inferStateInfo(
     isMain: boolean
 ): JSX.Element {
     const board = ctx.room.game.state.board;
-    if (board === BoardState.ChoosingBaseAction) {
-        return <Fragment><p>{`${ctx.room.playerMap.get(playerId)!.name} is choosing action ...`}</p></Fragment>;
-    }
     const [pier, target] = TurnManager.getShareholders(ctx);
     if (pier === null) return <Fragment/>;
     if (StateManager.isChallenged(board)) {
@@ -30,6 +27,8 @@ export function inferStateInfo(
         return inferBlocked(ctx, playerId);
     }
     switch (board) {
+        case BoardState.ChoosingBaseAction:
+            return <Fragment><p>{`${pier.name} is choosing action ...`}</p></Fragment>;
         case BoardState.GetOneAccepted:
             return claimElem(pier, "income", "will receive 1 coin...");
         case BoardState.ForeignAidAccepted:
@@ -75,7 +74,7 @@ export function inferStateInfo(
             );
         case BoardState.StealAccepted:
             if (isMain) {
-                return <p>{`${pier?.name} stole ${ctx.room.game.action.param as number} coins from ${target?.name}`}</p>;
+                return <p>{`${pier?.name} stole ${Math.min(target!.coins, 2)} coins from ${target?.name}`}</p>;
             } else {
                 return <p>{`${target?.name} is robbed!`}</p>;
             }

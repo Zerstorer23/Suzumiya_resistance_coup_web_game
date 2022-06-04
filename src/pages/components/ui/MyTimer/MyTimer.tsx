@@ -5,24 +5,25 @@ import {TimerReturnType} from "system/types/CommonTypes";
 
 export const TimerCode = [0];
 
-export function MyTimer(): JSX.Element {
+function getTimeAfter(sec: number) {
     const expiryTimestamp = new Date();
+    expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + sec); // 10 minutes time
+    return expiryTimestamp;
+}
+
+export function MyTimer(): JSX.Element {
     const localCtx = useContext(LocalContext);
     const option: TimerOptionType = localCtx.getVal(LocalField.Timer);
-    expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + option.duration); // 10 minutes timer
     const timer: TimerReturnType = useTimer({
-        expiryTimestamp,
+        expiryTimestamp: getTimeAfter(option.duration),
         onExpire: () => {
-            if (TimerCode[0] === option.code) {
-                option.onExpire();
-            } else {
-                console.warn("Wrong timer");
-            }
+            option.onExpire();
         },
     });
     useEffect(() => {
-        timer.restart(expiryTimestamp, true);
-    }, [option.code]);
+        console.log("Start timer " + option.duration);
+        timer.restart(getTimeAfter(option.duration), true);
+    }, [option]);
 
     return <Fragment>{timer.seconds}</Fragment>;
 }
@@ -39,8 +40,7 @@ export function setMyTimer(
 
 /**
  * Easily generates Option object for you.
- * @param duration
- * @param onExpire
+
  */
 function createTimeOption(
     duration: number,

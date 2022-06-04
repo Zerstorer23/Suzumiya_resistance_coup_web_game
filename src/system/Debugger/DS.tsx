@@ -1,6 +1,6 @@
 export const DS = {
     StrictRules: false,
-    infiniteWait: true,
+    infiniteWait: false,
     logTransition(msg: any) {
         console.log(msg);
     }

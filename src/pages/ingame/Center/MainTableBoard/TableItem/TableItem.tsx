@@ -36,9 +36,7 @@ export default function TableItem(props: Props) {
                 <p className={classes.playerName}>{player?.name}</p>
             </div>
             <div className={classes.actionContainer}>
-                {/*<div className={classes.textMainAction}>*/}
                 {elem}
-                {/*</div>*/}
             </div>
         </HorizontalLayout>
     );

@@ -7,6 +7,7 @@ import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {DeckManager} from "system/cards/DeckManager";
 import {CardRole} from "system/cards/Card";
 import {TurnManager} from "system/GameStates/TurnManager";
+import {GameManager} from "system/GameStates/GameManager";
 
 export function getDefaultAction(): GameAction {
     return {
@@ -79,15 +80,13 @@ export function setStartingRoom(room: Room) {
         ReferenceManager.updatePlayerReference(playerId, player);
     });
     //Set Room
+    const action = GameManager.createGameAction(room.playerList[seed % room.playerList.length]);
+    ReferenceManager.updateReference(DbReferences.GAME_action, action);
     const deck: CardRole[] = DeckManager.generateStartingDeck(numPlayer);
     const state: TurnState = {
         turn: TurnManager.getFirstTurn(seed, room.playerList.length),
         board: BoardState.ChoosingBaseAction
     };
     ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
-    ReferenceManager.updateReference(
-        DbReferences.GAME_action,
-        getDefaultAction()
-    );
     ReferenceManager.updateReference(DbReferences.GAME_state, state);
 }

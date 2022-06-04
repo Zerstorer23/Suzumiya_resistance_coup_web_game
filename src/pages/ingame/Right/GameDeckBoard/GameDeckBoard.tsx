@@ -1,16 +1,13 @@
 import gc from "global.module.css";
 import classes from "./GameDeckBoard.module.css";
 import DeckItem from "pages/ingame/Right/GameDeckBoard/RevealedDeckDisplay/DeckItem";
-import {CardDeck, CardRole} from "system/cards/Card";
-import {IProps} from "system/types/CommonTypes";
+import {CardRole} from "system/cards/Card";
 
 const cardsInDeck = [
     CardRole.None, CardRole.DEAD_Duke,
     CardRole.DEAD_Captain, CardRole.DEAD_Assassin,
     CardRole.DEAD_Contessa, CardRole.DEAD_Ambassador];
-type Props = IProps & {
-    deck: CardDeck;
-}
+
 export default function GameDeckBoard(): JSX.Element {
     //pass deck
     return (

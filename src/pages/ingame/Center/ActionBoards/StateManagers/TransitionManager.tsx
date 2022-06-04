@@ -45,12 +45,12 @@ function setEndTurn(ctx: RoomContextType, newAction: GameAction, newState: TurnS
         return false;
     }
     newState.board = BoardState.ChoosingBaseAction;
-    resetAction(newAction);
     newState.turn = TurnManager.getNextTurn(
         ctx.room.playerMap,
         ctx.room.playerList,
         newState.turn
     );
+    resetAction(newAction, ctx.room.playerList[newState.turn]);
     DS.logTransition(`next turn state = ${newState.board} / t ${newState.turn} / ${newAction.pierId}`);
     return true;
 }
@@ -191,9 +191,9 @@ export function pushPrepareDiscarding(
     });
 }
 
-function resetAction(newAction: GameAction) {
+function resetAction(newAction: GameAction, newPier: string) {
     newAction.param = "";
-    newAction.pierId = "";
+    newAction.pierId = newPier;
     newAction.challengerId = "";
     newAction.targetId = "";
 }

@@ -26,17 +26,16 @@ function inferNextStateFromChallenge(doPierAction: boolean, board: BoardState): 
         case BoardState.GetThreeChallenged:
             return BoardState.GetThreeAccepted;
         case BoardState.AssassinateChallenged:
+        case BoardState.ContessaChallenged:
             return BoardState.CalledAssassinate;
         case BoardState.AmbassadorChallenged:
             return BoardState.AmbassadorAccepted;
         case BoardState.StealChallenged:
+        case BoardState.StealBlockChallenged:
             return BoardState.StealAccepted;
         case BoardState.DukeBlocksChallenged:
             return BoardState.ForeignAidAccepted;
-        case BoardState.StealBlockChallenged:
-        case BoardState.ContessaChallenged:
         default:
-            console.trace("WTF");
             return BoardState.ChoosingBaseAction;
     }
 }
@@ -54,9 +53,8 @@ function handleReveal(ctx: RoomContextType, localCtx: LocalContextType, killInfo
     console.log(`Pay penalty?  loser: ${loserId}  / lost? ${loserId === myId}`);
     killInfo.ownerId = loserId;
     killInfo.nextState = inferNextStateFromChallenge(pierWon, board);
-    if (myId === loserId) {
-        pushPostChallengeState(ctx, susId, winnerId, susPlayer, killInfo);
-    }
+    pushPostChallengeState(ctx, susId, winnerId, susPlayer, killInfo);
+
 }
 
 function pushPostChallengeState(ctx: RoomContextType, susId: string, winnerId: string, susPlayer: Player, killInfo: KillInfo) {
@@ -75,6 +73,8 @@ function pushPostChallengeState(ctx: RoomContextType, susId: string, winnerId: s
         DeckManager.swap(index, random, deck);
         ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
     }
+    console.log("Push discarding state");
+    console.log(killInfo);
     ActionManager.pushPrepareDiscarding(ctx, killInfo);
 }
 

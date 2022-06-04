@@ -12,15 +12,13 @@ export default function ActionBoards(props: Props): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const [boardElem, setBoardElem] = useState(<BaseBoard/>);
-
-    useEffect(() => {
-        // console.clear();
-        console.log("New turn " + ctx.room.game.state.turn);
-    }, [ctx.room.game.state.turn]);
+    
     useEffect(() => {
         const elem = getBoardElemFromRoom(ctx, localCtx);
         setBoardElem((prev) => elem);
-    }, [ctx.room.game.state.turn, ctx.room.game.state.board, ctx.room.playerMap.size]);
+    }, [
+        // ctx.room.game.state.turn,
+        ctx.room.game.state.board, ctx.room.playerMap.size]);
 
 
     return (

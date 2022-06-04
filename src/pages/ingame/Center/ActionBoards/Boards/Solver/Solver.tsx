@@ -115,7 +115,6 @@ export function handleSteal(ctx: RoomContextType, localCtx: LocalContextType) {
             const stealAmount = Math.min(target.coins, 2);
             pier.coins += stealAmount;
             target.coins -= stealAmount;
-            newAction.param = stealAmount;
             ReferenceManager.updatePlayerReference(pierId, pier);
             ReferenceManager.updatePlayerReference(targetId, target);
             return TransitionAction.EndTurn;
