@@ -39,7 +39,7 @@ export default function BaseActionButton(props: Prop) {
   let relatedRole = CardRole.None;
   let cost = 0;
   if (param instanceof Card) {
-    if (param.cardRole === CardRole.None) return <Fragment />;
+    if (DeckManager.isDead(param.cardRole)) return <Fragment />;
     hasCard = true;
     relatedRole = param.cardRole;
     name = param.getName();
