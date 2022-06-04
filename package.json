@@ -1,5 +1,6 @@
 {
-  "name": "hamang-coup-app",
+  "homepage": "https://zerstorer23.github.io/suzumiya/",
+  "name": "suzumiya",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,6 +14,7 @@
     "@types/react-router-dom": "^5.3.3",
     "base-64": "^1.0.0",
     "firebase": "^9.8.1",
+    "gh-pages": "^4.0.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-router-dom": "^5.0.1",
@@ -25,7 +27,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "gh-pages -d build",
+    "deploy": "npm run build"
   },
   "eslintConfig": {
     "extends": [
