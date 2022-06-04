@@ -1,22 +1,24 @@
 .container {
-    height: 20%;
+    height: 10%;
     width: 100%;
 }
 
 .coinBox {
-    flex: 8;
+    width: 70%;
 }
 
 .display {
-    flex: 2;
-    padding-right: 8px;
+    display: block;
+    width: 30%;
+    padding-right: 0.5rem;
     text-align: center;
-    border-right: 2px dashed navy;
+    border-right: 0.1rem dashed navy;
+    font-size: 1rem;
 }
 
 .coin {
     width: 8%;
-    margin-right: 4px;
+    margin-right: 0.3rem;
 }
 
 .invisible {

@@ -1,19 +1,28 @@
 .container {
     height: 65%;
     width: 100%;
-    display: flex;
+    padding: 0.4rem;
     justify-items: center;
     align-items: flex-start;
-    gap: 15px;
+    gap: 1rem;
     flex-direction: column;
 }
 
-.chatbox {
+/*.chatbox {
     flex: 8;
     height: 100%;
     width: 100%;
     overflow-y: scroll;
+    -ms-overflow-style: none; !* IE and Edge *!
+    scrollbar-width: none; !* Firefox *!
+
+}*/
+/*
+
+.chatbox::-webkit-scrollbar {
+    display: none;
 }
+
 
 .sendBox {
     flex: 1;
@@ -35,3 +44,4 @@
     display: inline-block;
     flex: 2;
 }
+*/

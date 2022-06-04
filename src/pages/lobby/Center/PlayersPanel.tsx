@@ -6,7 +6,7 @@ import {IProps} from "system/types/CommonTypes";
 import {useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import {setStartingRoom} from "system/GameStates/RoomGenerator";
-
+import gc from "global.module.css";
 
 export default function PlayersPanel(props: IProps) {
     const ctx = useContext(RoomContext);
@@ -22,7 +22,7 @@ export default function PlayersPanel(props: IProps) {
         elemList.push(elem);
     });
     return (
-        <VerticalLayout className={`${classes.container} `}>
+        <VerticalLayout className={`${gc.round_border} ${classes.container} `}>
             <div className={classes.headerContainer}>
                 <p className={classes.headerTitle}>Hamang No.6</p>
                 <p className={classes.headerPlayerNum}>{`${currPlayer} connected`}</p>

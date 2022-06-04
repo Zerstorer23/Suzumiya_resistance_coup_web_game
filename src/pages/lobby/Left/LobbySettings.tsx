@@ -29,7 +29,7 @@ export default function LobbySettings() {
         console.log(event.target.value);
         setNetworkCondition(event.target.value.value);
     };
-    
+
     async function onFinishEditName(event: any) {
         let newName: string = event.target.value;
         if (newName.length <= 1) return;
@@ -44,26 +44,26 @@ export default function LobbySettings() {
     return (
         <div className={`${classes.container} ${gc.round_border}`}>
             <HorizontalLayout>
-                <p>Name</p>
+                <p className={classes.fieldType}>Name</p>
                 <input
-                    className={classes.inputName}
+                    className={classes.fieldType}
                     type="text"
                     onBlur={onFinishEditName}
                     defaultValue={myPlayer.name}
                 ></input>
             </HorizontalLayout>
             <HorizontalLayout>
-                <p>Net ping</p>
+                <p className={classes.fieldType}>Net ping</p>
                 <Dropdown
-                    className={classes.pingDropdown}
+                    className={classes.fieldType}
                     label={null}
                     options={networkOptions}
                     value={networkCondition}
                     onChange={onChangeNetworkCondition}
                 />
             </HorizontalLayout>
-            <button className={classes.helpButton}>Help</button>
-            <button className={classes.helpButton}>Settings</button>
+            <button className={classes.fieldType}>Help</button>
+            <button className={classes.fieldType}>Settings</button>
         </div>
     );
 }

@@ -1,36 +1,44 @@
 .container {
-  flex: 1;
-  display: flex;
-  margin-left: 10px;
-  justify-items: center;
-  align-items: flex-start;
-  gap: 15px;
-  flex-direction: column;
-  height: 98%;
+    width: 25%;
+    display: flex;
+    margin-left: 10px;
+    justify-items: center;
+    align-items: flex-start;
+    gap: 0.8rem;
+    flex-direction: column;
+    height: 100%;
 }
 
 .chatbox {
-  flex: 8;
-  height: 100%;
-  width: 100%;
-  overflow-y: scroll;
+    height: 90%;
+    width: 100%;
+    overflow-y: scroll;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+}
+
+.chatbox::-webkit-scrollbar {
+    display: none;
 }
 
 .sendBox {
-  flex: 1;
-  width: 100%;
-  display: flex;
-  justify-items: center;
-  align-items: center;
-  gap: 10px;
+    height: 10%;
+    width: 100%;
+    justify-items: center;
+    align-items: center;
+    gap: 10px;
 }
+
 .inputField {
-  height: 100%;
-  display: inline-block;
-  flex: 8;
+    height: 100%;
+    display: block;
+    width: 80%;
 }
+
 .buttonSend {
-  height: 100%;
-  display: inline-block;
-  flex: 2;
+    height: 100%;
+    display: block;
+    width: 20%;
+    font-size: 0.7rem;
 }
