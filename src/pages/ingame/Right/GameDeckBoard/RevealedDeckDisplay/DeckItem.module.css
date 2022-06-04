@@ -6,9 +6,19 @@
     width: 30%;
 }
 
+.numDead {
+    display: inline;
+    font-size: 2rem;
+}
+
+.numTotal {
+    display: inline;
+    font-size: 0.5rem;
+}
+
 .itemDesc {
+    padding-left: 0.5rem;
     font-size: 1.2rem;
-    display: block;
     text-align: left;
 }
 

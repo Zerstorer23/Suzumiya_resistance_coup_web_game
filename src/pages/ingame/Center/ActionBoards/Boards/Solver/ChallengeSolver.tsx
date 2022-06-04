@@ -3,7 +3,7 @@ import {CardRole} from "system/cards/Card";
 import {DeckManager} from "system/cards/DeckManager";
 import {LocalContextType} from "system/context/localInfo/local-context";
 import {WaitTime} from "system/GameConstants";
-import {ChallengeState, GameAction, KillInfo, Player,} from "system/GameStates/GameTypes";
+import {ChallengeState, GameAction, KillInfo, Player, PostChallengeStates,} from "system/GameStates/GameTypes";
 import {BoardState, StateManager} from "system/GameStates/States";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
@@ -20,7 +20,7 @@ export function solveChallenges(ctx: RoomContextType, localCtx: LocalContextType
     });
 }
 
-function inferNextStateFromChallenge(doPierAction: boolean, board: BoardState): BoardState {
+function inferNextStateFromChallenge(doPierAction: boolean, board: BoardState): PostChallengeStates {
     if (!doPierAction) return BoardState.ChoosingBaseAction;
     switch (board) {
         case BoardState.GetThreeChallenged:

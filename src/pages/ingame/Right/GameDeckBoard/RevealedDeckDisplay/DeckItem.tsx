@@ -2,7 +2,7 @@ import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import classes from "pages/ingame/Right/GameDeckBoard/RevealedDeckDisplay/DeckItem.module.css";
 import {CardRole} from "system/cards/Card";
 import {IProps} from "system/types/CommonTypes";
-import {useContext} from "react";
+import {Fragment, useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import {CardPool} from "system/cards/CardPool";
 import {DeckManager} from "system/cards/DeckManager";
@@ -14,14 +14,14 @@ export default function DeckItem(props: Prop): JSX.Element {
     const role = props.card;
     const card = CardPool.getCard(role);
     const deckTop = DeckManager.peekTopIndex(ctx);
-    let counterText: string;
+    let counterText;
     //TODO do the iteration here
     if (role === CardRole.None) {
-        counterText = `${(deck.length - deckTop)} in deck`;
+        counterText = <Fragment> {`${(deck.length - deckTop)} in deck`}</Fragment>;
     } else {
         const total = deck.length / 5;
         const count = DeckManager.countCards(deck, role);
-        counterText = `${count} / ${total}`;
+        counterText = <Fragment><strong className={classes.numDead}>{count}</strong> / {total}</Fragment>;
     }
     return (
         <HorizontalLayout className={`${props.className} ${classes.itemContainer}`}>

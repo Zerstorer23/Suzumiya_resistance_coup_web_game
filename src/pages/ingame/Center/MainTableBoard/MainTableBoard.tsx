@@ -5,8 +5,9 @@ import classes from "./MainTableBoard.module.css";
 import {MyTimer} from "pages/components/ui/MyTimer/MyTimer";
 import {useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
-import {StateManager} from "system/GameStates/States";
+import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
+import {KillInfo} from "system/GameStates/GameTypes";
 
 export default function MainTableBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
@@ -29,12 +30,30 @@ export function getMainPlayerFromState(ctx: RoomContextType): string {
     const board = ctx.room.game.state.board;
     if (StateManager.targetIsChallenged(board))
         return ctx.room.game.action.targetId;
+    /*    if (board === BoardState.DiscardingCard) {
+            const killInfo = ctx.room.game.action.param as KillInfo;
+            if (killInfo.cause === ActionType.IsALie) {
+                return ctx.room.game.action.pierId;
+            } else {
+                return ctx.room.game.action.pierId;
+            }
+        }*/
     return ctx.room.game.action.pierId;
 }
 
 export function getSubPlayerFromState(ctx: RoomContextType): string {
     const board = ctx.room.game.state.board;
-    if (StateManager.targetIsChallenged(board))
+    if (StateManager.isChallenged(board))
         return ctx.room.game.action.challengerId;
+    if (board === BoardState.DiscardingCard) {
+        const killInfo = ctx.room.game.action.param as KillInfo;
+        if (killInfo.cause === ActionType.IsALie) {
+            if (ctx.room.game.action.pierId === killInfo.ownerId) {
+                return ctx.room.game.action.challengerId;
+            } else {
+                return killInfo.ownerId;
+            }
+        }
+    }
     return ctx.room.game.action.targetId;
 }

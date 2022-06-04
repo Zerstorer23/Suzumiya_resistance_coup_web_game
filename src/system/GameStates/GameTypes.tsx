@@ -24,12 +24,20 @@ export type KillActionTypes =
     // | ActionType.DefendWithCaptain
     | ActionType.Assassinate
     | ActionType.Coup;
+export type PostChallengeStates =
+    BoardState.GetThreeAccepted
+    | BoardState.CalledAssassinate
+    | BoardState.AmbassadorAccepted
+    | BoardState.StealAccepted
+    | BoardState.ForeignAidAccepted
+    | BoardState.ChoosingBaseAction;
+
 export type KillInfo = {
     cause: KillActionTypes; //What caused this kill
     card: CardRole; //If lie, what was expected?
     ownerId: string; //id of player whos killed
     removed: number; //card index in deck that is removed. -1 when none chosne
-    nextState: BoardState | ChallengeState; //
+    nextState: PostChallengeStates | ChallengeState; //
 };
 /*
 * Coup = Coup / None / target / -1 / choose

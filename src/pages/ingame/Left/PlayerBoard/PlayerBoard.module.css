@@ -2,17 +2,22 @@
     /* flex: 6; */
     width: 100%;
     height: 60%;
+}
+
+.playersContainer {
+    height: 90%;
     overflow-y: scroll;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
 }
 
-.container::-webkit-scrollbar {
+.playersContainer::-webkit-scrollbar {
     display: none;
 }
 
 
 .header {
+    height: 10%;
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
 }

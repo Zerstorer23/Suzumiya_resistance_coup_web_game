@@ -5,7 +5,7 @@ import {Fragment} from "react";
 import {CardPool} from "system/cards/CardPool";
 import {CardRole} from "system/cards/Card";
 import {KillInfo, Player} from "system/GameStates/GameTypes";
-import {BoardState, StateManager} from "system/GameStates/States";
+import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import {PostKillPanel} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardPanels";
 
 export function inferStateInfo(
@@ -74,7 +74,8 @@ export function inferStateInfo(
             );
         case BoardState.StealAccepted:
             if (isMain) {
-                return <p>{`${pier?.name} stole ${Math.min(target!.coins, 2)} coins from ${target?.name}`}</p>;
+                if (target === null || target === undefined) return <p>{`${pier?.name} stole coins `}</p>;
+                return <p>{`${pier?.name} stole ${Math.min(target.coins, 2)} coins from ${target.name}`}</p>;
             } else {
                 return <p>{`${target?.name} is robbed!`}</p>;
             }
@@ -139,6 +140,7 @@ function notifyChallengedElem(amChallenger: boolean, challenger: Player, sus: Pl
 
 
 function ChallengeResultBoard(
+    ctx: RoomContextType,
     myPlayer: Player,
     playerId: string,
     challengerId: string,
@@ -164,9 +166,35 @@ function ChallengeResultBoard(
             <p>{`${myPlayer.name} caught the lie!`}</p>
         </Fragment>);
     }
+    const nextState = killInfo.nextState;
+    let nextStateElem = <Fragment/>;
+    const [pier, target] = TurnManager.getShareholders(ctx);
+    switch (nextState) {
+        case BoardState.GetThreeAccepted:
+            nextStateElem = <p>{myPlayer.name}{` will get 3 coins`}</p>;
+            break;
+        case BoardState.CalledAssassinate:
+            nextStateElem = <p>{myPlayer.name}{` will assassinate `}{target?.name}</p>;
+            break;
+        case BoardState.AmbassadorAccepted:
+            nextStateElem = <p>{myPlayer.name}{` will change cards `}</p>;
+            break;
+        case BoardState.StealAccepted:
+            nextStateElem = <p>{myPlayer.name}{` will steal coins from`}{target?.name}</p>;
+            break;
+        case BoardState.ForeignAidAccepted:
+            nextStateElem = <p>{myPlayer.name}{` will get 2 coins`}</p>;
+            break;
+        case BoardState.ChoosingBaseAction:
+            nextStateElem = <Fragment/>;
+            break;
+
+    }
     //I won and I was challenged and I had card
     return (<Fragment>
         <p>{`${myPlayer.name} has `}{susCard.getElemName()}</p>
+        <p>{myPlayer.name}{` will draw a new card from deck`}</p>
+        {nextStateElem}
     </Fragment>);
 }
 
@@ -180,20 +208,12 @@ function inferChallenged(
     if (pier === null || challenger === null) return <Fragment/>;
     const action = ctx.room.game.action;
     const killInfo: KillInfo = action.param as KillInfo;
-    let amChallenger = isMain;
     let susPlayer = pier;
     let susCard = killInfo.card;
     if (StateManager.targetIsChallenged(board)) {
-        amChallenger = !isMain;
         susPlayer = target!;
     }
-    return notifyChallengedElem(amChallenger, challenger!, susPlayer, susCard);
-    /*    if (killInfo.nextState === ChallengeState.Notify) {
-            return notifyChallengedElem(amChallenger, challenger!, susPlayer, susCard);
-        } else {
-            return ChallengeResultBoard(ctx, playerId, amChallenger, killInfo);
-        }*/
-
+    return notifyChallengedElem(!isMain, challenger!, susPlayer, susCard);
 }
 
 function inferTargeted(
@@ -255,7 +275,7 @@ function inferBlocked(
     const [pier, target] = TurnManager.getShareholders(ctx);
     if (playerId === action.pierId) {
         return (<Fragment><p>
-            {`${pier!.name} is deciding if he wants to challenge it...`}
+            {`${pier?.name} is deciding if he wants to challenge it...`}
         </p>
         </Fragment>);
     }
@@ -283,10 +303,11 @@ export function inferDiscardState(ctx: RoomContextType, playerId: string): JSX.E
             return (<p> is satisfied.</p>);
         }
     } else {
-        const myPlayer = ctx.room.playerMap.get(playerId)!;
-        const lostPlayer = ctx.room.playerMap.get(killInfo.ownerId)!;
-        if (killInfo.card.length > 0) {
-            return ChallengeResultBoard(myPlayer, playerId, action.challengerId, killInfo);
+        const myPlayer = ctx.room.playerMap.get(playerId);
+        const lostPlayer = ctx.room.playerMap.get(killInfo.ownerId);
+        if (myPlayer === undefined || lostPlayer === undefined) return <Fragment/>;
+        if (killInfo.cause === ActionType.IsALie) {
+            return ChallengeResultBoard(ctx, myPlayer, playerId, action.challengerId, killInfo);
         } else {
             //Coup or assassin
             if (playerId === killInfo.ownerId) {
@@ -295,6 +316,7 @@ export function inferDiscardState(ctx: RoomContextType, playerId: string): JSX.E
                 return <p>{`Waiting for ${lostPlayer.name} to remove card.`}</p>;
             }
         }
+
     }
 
 }

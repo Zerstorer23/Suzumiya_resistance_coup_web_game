@@ -6,13 +6,13 @@
 
 .topContainer {
     width: 100%;
-    height: 40%;
+    height: 50%;
     border-bottom: 3px dashed navy;
 }
 
 .bottomContainer {
     width: 100%;
-    height: 40%;
+    height: 50%;
 }
 
 .timer {
