@@ -7,13 +7,11 @@ import {useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import {BoardState, StateManager} from "system/GameStates/States";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
-import {TurnManager} from "system/GameStates/TurnManager";
 
 export default function MainTableBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const mainId: string = getMainPlayerFromState(ctx);
     const subId: string = getSubPlayerFromState(ctx);
-
     return (
         <div className={`${gc.round_border} ${classes.container}`}>
             <VerticalLayout>
@@ -29,7 +27,6 @@ export default function MainTableBoard(): JSX.Element {
 
 export function getMainPlayerFromState(ctx: RoomContextType): string {
     const board = ctx.room.game.state.board;
-    const [pier, target] = TurnManager.getShareholders(ctx);
     if (board === BoardState.ChoosingBaseAction)
         return ctx.room.playerList[ctx.room.game.state.turn];
     if (StateManager.targetIsChallenged(board))

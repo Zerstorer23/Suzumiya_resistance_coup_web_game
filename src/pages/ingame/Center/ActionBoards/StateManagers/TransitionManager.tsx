@@ -31,22 +31,19 @@ export function prepareAndPushState(
     }
     DS.logTransition("Next state " + newState.board);
     if (result === TransitionAction.EndTurn) {
-        setEndTurn(ctx, newAction, newState);
+        const res = setEndTurn(ctx, newAction, newState);
+        if (!res) return;
     }
     pushActionState(newAction, newState);
 }
 
-/**
- * Do nothing and End
- */
-export function pushJustEndTurn(ctx: RoomContextType,) {
-    const [newAction, newState] = prepareActionState(ctx);
-    DS.logTransition("End turn");
-    setEndTurn(ctx, newAction, newState);
-    pushActionState(newAction, newState);
-}
 
-function setEndTurn(ctx: RoomContextType, newAction: GameAction, newState: TurnState) {
+function setEndTurn(ctx: RoomContextType, newAction: GameAction, newState: TurnState): boolean {
+    DS.logTransition(`END TURN prev state = ${newState.board} / t ${newState.turn}`);
+    if (newState.board === BoardState.ChoosingBaseAction) {
+        console.trace("Cant end turn at state 0");
+        return false;
+    }
     newState.board = BoardState.ChoosingBaseAction;
     resetAction(newAction);
     newState.turn = TurnManager.getNextTurn(
@@ -54,6 +51,8 @@ function setEndTurn(ctx: RoomContextType, newAction: GameAction, newState: TurnS
         ctx.room.playerList,
         newState.turn
     );
+    DS.logTransition(`next turn state = ${newState.board} / t ${newState.turn} / ${newAction.pierId}`);
+    return true;
 }
 
 /**
@@ -154,7 +153,10 @@ export function pushCalledState(
         newState.board = newBoard;
         newAction.pierId = myId;
         newAction.targetId = targetId;
-        DS.logTransition("Move to Called " + newBoard);
+        DS.logTransition(myId + " Move to Called " + newBoard);
+        DS.logTransition(ctx.room);
+        DS.logTransition(newState);
+        DS.logTransition(newAction);
         return TransitionAction.Success;
     });
 }

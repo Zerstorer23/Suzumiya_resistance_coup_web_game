@@ -228,6 +228,7 @@ export const StateManager = {
             case ActionType.Steal:
                 return BoardState.CalledSteal;
             default:
+                console.trace("INVALID BOARD");
                 return null;
         }
     },

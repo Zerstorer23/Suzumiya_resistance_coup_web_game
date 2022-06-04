@@ -24,7 +24,6 @@ export default function TableItem(props: Props) {
 
     if (player === null || player === undefined) return <Fragment/>;
     const lastCard = CardPool.getCard(player.lastClaimed);
-    console.log(elem);
     return (
         <HorizontalLayout className={`${props.className} ${classes.container}`}>
             <div className={classes.profileContainer}>

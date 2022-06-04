@@ -12,22 +12,38 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import {LocalContextType} from "system/context/localInfo/local-context";
 import ReactForeignAidBoard from "pages/ingame/Center/ActionBoards/Boards/ReactForeignAidBoard";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
+import {DS} from "system/Debugger/DS";
 
 export function getBoardElemFromRoom(ctx: RoomContextType, localCtx: LocalContextType): JSX.Element {
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    if (myPlayer.isSpectating) return <WaitingBoard/>;
+    if (myPlayer.isSpectating) {
+        console.log("I am spectating");
+        return <WaitingBoard/>;
+    }
     const isMyTurn: boolean = TurnManager.isMyTurn(ctx, localCtx);
+    console.log(`turn : ${ctx.room.game.state.turn} / myId = ${myId} / ct ${ctx.room.playerList[ctx.room.game.state.turn]} / myturn? ${isMyTurn}`);
     const board = ctx.room.game.state.board;
     const amTargeted: boolean = ctx.room.game.action.targetId === myId;
     if (board === BoardState.DiscardingCard) return <DiscardBoard/>;
-    if (StateManager.isFinal(board)) return <SolverBoard/>;
-    if (isMyTurn) return handleMyTurn(board);
-    if (amTargeted) return handleTargeted(board);
-    return handleNotMyTurn(board, ctx.room.game);
+    if (isMyTurn) {
+        if (StateManager.isFinal(board)) {
+            console.log("Solve board ...");
+            console.log(ctx.room);
+            return <SolverBoard/>;
+        }
+        DS.logTransition("is my turn");
+        return handleMyTurn(board);
+    } else {
+        if (amTargeted) {
+            DS.logTransition("is targetted");
+            return handleTargeted(board);
+        }
+        DS.logTransition("is not my turn");
+        return handleNotMyTurn(board, ctx.room.game);
+    }
 }
 
 function handleMyTurn(boardState: BoardState): JSX.Element {
-
     switch (boardState) {
         case BoardState.ChoosingBaseAction:
             return <BaseBoard/>;
@@ -40,7 +56,6 @@ function handleMyTurn(boardState: BoardState): JSX.Element {
         default:
             return <WaitingBoard/>;
     }
-
 }
 
 function handleNotMyTurn(board: BoardState, game: Game): JSX.Element {

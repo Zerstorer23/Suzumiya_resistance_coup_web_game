@@ -1,7 +1,8 @@
 export const DS = {
     StrictRules: false,
+    infiniteWait: true,
     logTransition(msg: any) {
-        console.warn(msg);
+        console.log(msg);
     }
 
 };

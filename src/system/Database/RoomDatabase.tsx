@@ -129,6 +129,7 @@ export function registerListeners(): Listeners {
 }
 
 export function playerClaimedRole(id: string, player: Player, action: ActionType) {
+    return;
     switch (action) {
         case ActionType.Steal:
         case ActionType.DefendWithCaptain:

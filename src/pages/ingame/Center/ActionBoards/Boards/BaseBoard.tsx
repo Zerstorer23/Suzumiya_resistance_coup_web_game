@@ -56,6 +56,8 @@ export default function BaseBoard(): JSX.Element {
 
 
     useEffect(() => {
+        DS.logTransition("I am choosing ....");
+        DS.logTransition(ctx.room);
         setMyTimer(localCtx, WaitTime.MakingDecision, () => {
             if (!DS.StrictRules) return;
             if (forceCoup) {

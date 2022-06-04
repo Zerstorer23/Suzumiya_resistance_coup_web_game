@@ -1,6 +1,6 @@
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {LocalContextType} from "system/context/localInfo/local-context";
-import {PlayerType, TurnManager} from "system/GameStates/TurnManager";
+import {TurnManager} from "system/GameStates/TurnManager";
 import {Fragment} from "react";
 import {CardPool} from "system/cards/CardPool";
 import {CardRole} from "system/cards/Card";
@@ -16,8 +16,7 @@ export function inferStateInfo(
 ): JSX.Element {
     const board = ctx.room.game.state.board;
     if (board === BoardState.ChoosingBaseAction) {
-        const [id, player] = TurnManager.getPlayerInfo(ctx, PlayerType.CurrentTurn);
-        return <Fragment><p>{`${player!.name} is choosing action ...`}</p></Fragment>;
+        return <Fragment><p>{`${ctx.room.playerMap.get(playerId)!.name} is choosing action ...`}</p></Fragment>;
     }
     const [pier, target] = TurnManager.getShareholders(ctx);
     if (pier === null) return <Fragment/>;

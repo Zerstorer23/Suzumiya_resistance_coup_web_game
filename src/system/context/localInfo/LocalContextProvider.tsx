@@ -2,6 +2,7 @@ import {useState} from "react";
 import LocalContext, {LocalContextType, LocalField, TimerOptionType,} from "system/context/localInfo/local-context";
 import {WaitTime} from "system/GameConstants";
 import {IProps} from "system/types/CommonTypes";
+import {TimerCode} from "pages/components/ui/MyTimer/MyTimer";
 
 /*
 Local context holds local data that does not go into database
@@ -21,6 +22,7 @@ export default function LocalProvider(props: IProps) {
         useState<CursorState>(CursorState.Idle);
     const [timerOption, setTimerOption] = useState<TimerOptionType>({
         duration: WaitTime.MakingDecision,
+        code: TimerCode[0],
         onExpire: () => {
         },
     });

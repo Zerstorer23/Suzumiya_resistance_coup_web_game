@@ -7,16 +7,25 @@ import {BoardState} from "system/GameStates/States";
 import {TurnManager} from "system/GameStates/TurnManager";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {inferWaitTime} from "pages/ingame/Center/MainTableBoard/TimeInferer";
+import {DS} from "system/Debugger/DS";
 
+const guards = [
+    BoardState.CalledGetTwo,
+    BoardState.CalledGetThree,
+    BoardState.CalledSteal,
+    BoardState.CalledChangeCards,
+    BoardState.CalledAssassinate,
+];
 export default function WaitingBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const board = ctx.room.game.state.board;
     useEffect(() => {
-        const waitTime = inferWaitTime(board, ctx.room.game.action);
+        DS.logTransition("I am waiting");
+        if (!TurnManager.isMyTurn(ctx, localCtx)) return;
+        const waitTime = DS.infiniteWait ? 99999 : inferWaitTime(board, ctx.room.game.action);
         setMyTimer(localCtx, waitTime, () => {
-            const isMyTurn: boolean = TurnManager.isMyTurn(ctx, localCtx);
-            if (!isMyTurn) return;
+            if (!TurnManager.isMyTurn(ctx, localCtx)) return;
             //If it my turn, it is very likely that I will do something about it.
             switch (ctx.room.game.state.board) {
                 case BoardState.CalledGetTwo:
@@ -24,7 +33,6 @@ export default function WaitingBoard(): JSX.Element {
                 case BoardState.CalledSteal:
                 case BoardState.CalledChangeCards:
                 case BoardState.CalledAssassinate:
-                case BoardState.AssassinBlocked:
                     ActionManager.pushAcceptedState(ctx);
                     break;
                 default:
@@ -33,6 +41,6 @@ export default function WaitingBoard(): JSX.Element {
             }
         });
 
-    }, [board]);
+    }, [ctx.room.game.state.board]);
     return <WaitingPanel/>;
 };
