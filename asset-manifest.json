@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/suzumiya/static/css/main.682ad0d1.css",
-    "main.js": "/suzumiya/static/js/main.4bb4193a.js",
+    "main.css": "/suzumiya/static/css/main.8518187b.css",
+    "main.js": "/suzumiya/static/js/main.3a5bfd58.js",
     "static/media/haruhi.png": "/suzumiya/static/media/haruhi.c1eb865e5725e7145c77.png",
     "static/media/haruhi_dead.png": "/suzumiya/static/media/haruhi_dead.7d49acc45ee12ac93f45.png",
     "static/media/kyonko.png": "/suzumiya/static/media/kyonko.5bbc4a93b6c32183bd07.png",
@@ -16,11 +16,11 @@
     "static/media/koihime.png": "/suzumiya/static/media/koihime.f026d9f4c6bc8c5d25a0.png",
     "static/media/unknown.png": "/suzumiya/static/media/unknown.1c3c27e9b18c20378807.png",
     "index.html": "/suzumiya/index.html",
-    "main.682ad0d1.css.map": "/suzumiya/static/css/main.682ad0d1.css.map",
-    "main.4bb4193a.js.map": "/suzumiya/static/js/main.4bb4193a.js.map"
+    "main.8518187b.css.map": "/suzumiya/static/css/main.8518187b.css.map",
+    "main.3a5bfd58.js.map": "/suzumiya/static/js/main.3a5bfd58.js.map"
   },
   "entrypoints": [
-    "static/css/main.682ad0d1.css",
-    "static/js/main.4bb4193a.js"
+    "static/css/main.8518187b.css",
+    "static/js/main.3a5bfd58.js"
   ]
 }
