@@ -124,12 +124,10 @@ function parsePlayerMap(roomMap: PlayerMap): PlayerMap {
 }
 
 export function registerListeners(): Listeners {
-    const listeners = parseListeners();
-    return listeners;
+    return parseListeners();
 }
 
 export function playerClaimedRole(id: string, player: Player, action: ActionType) {
-    return;
     switch (action) {
         case ActionType.Steal:
         case ActionType.DefendWithCaptain:

@@ -101,7 +101,6 @@ export const StateManager = {
             case BoardState.StealBlockChallenged:
             case BoardState.AssassinateChallenged:
             case BoardState.ContessaChallenged:
-            case BoardState.DiscardingCard:
                 return true;
             default:
                 return false;
