@@ -2,7 +2,6 @@ import {useState} from "react";
 import LocalContext, {LocalContextType, LocalField, TimerOptionType,} from "system/context/localInfo/local-context";
 import {WaitTime} from "system/GameConstants";
 import {IProps} from "system/types/CommonTypes";
-import {TimerCode} from "pages/components/ui/MyTimer/MyTimer";
 
 /*
 Local context holds local data that does not go into database
@@ -13,16 +12,18 @@ export enum CursorState {
     Selecting = "Selecting",
 }
 
+export enum InputCursor {
+    Idle,
+    Chat,
+}
+
 export default function LocalProvider(props: IProps) {
     const [myId, setMyId] = useState<string | null>(null);
-    // const [sortedPlayerList, setSortedPlayerList] = useState<Player[]>([]);
-    const [playerSelector, setPlayerSelected]: [string, any] =
-        useState<CursorState>(CursorState.Idle);
-    const [tutorialSelector, setTutorialSelected]: [string, any] =
-        useState<CursorState>(CursorState.Idle);
+    const [playerSelector, setPlayerSelected] = useState<CursorState>(CursorState.Idle);
+    const [tutorialSelector, setTutorialSelected] = useState<CursorState>(CursorState.Idle);
+    const [inputFocused, setInputFocused] = useState<InputCursor>(InputCursor.Idle);
     const [timerOption, setTimerOption] = useState<TimerOptionType>({
         duration: WaitTime.MakingDecision,
-        code: TimerCode[0],
         onExpire: () => {
         },
     });
@@ -49,6 +50,10 @@ export default function LocalProvider(props: IProps) {
     map.set(LocalField.Timer, {
         val: timerOption,
         set: setTimerOption,
+    });
+    map.set(LocalField.InputFocus, {
+        val: inputFocused,
+        set: setInputFocused,
     });
 
     /*

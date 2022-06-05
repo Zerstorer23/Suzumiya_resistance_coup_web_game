@@ -1,6 +1,6 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
-import {useContext, useEffect} from "react";
+import {useContext} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
@@ -10,27 +10,16 @@ import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {DS} from "system/Debugger/DS";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
 import {TurnManager} from "system/GameStates/TurnManager";
-import {keyCodeToIndex} from "pages/ingame/Center/ActionBoards/Boards/BaseBoard";
+import useShortcut from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/useShortcut";
 
 const actions = [ActionType.None, ActionType.DukeBlocksForeignAid];
 export default function ReactForeignAidBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-
-    useEffect(() => {
-        document.addEventListener('keydown', onKeyDown);
-        return () => {
-            document.removeEventListener('keydown', onKeyDown);
-        };
-    }, []);
-
-    function onKeyDown(event: any) {
-        const idx = keyCodeToIndex(event.keyCode, actions.length - 1);
-        if (idx < 0) return;
-        onMakeAction(actions[idx]);
-    }
-
+    useShortcut(actions.length, (n) => {
+        onMakeAction(actions[n]);//Block Accept will be filtered anyway
+    });
 
     function onMakeAction(action: ActionType) {
         if (action !== ActionType.DukeBlocksForeignAid) return;

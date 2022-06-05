@@ -109,11 +109,15 @@
 }
 
 .cell7 {
-    grid-column: 1;
+    grid-column: 2;
     grid-row: 4;
+    /*    grid-column: 1;
+        grid-row: 4;*/
 }
 
+/*
 .cell8 {
     grid-column: 2;
     grid-row: 4;
 }
+*/

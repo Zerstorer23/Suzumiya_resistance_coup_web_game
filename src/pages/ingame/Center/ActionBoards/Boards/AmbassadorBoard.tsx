@@ -8,44 +8,34 @@ import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButt
 import {TurnManager} from "system/GameStates/TurnManager";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {keyCodeToIndex} from "pages/ingame/Center/ActionBoards/Boards/BaseBoard";
+import useShortcut from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/useShortcut";
 
 export default function AmbassadorBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
-    const playerMap = ctx.room.playerMap;
     const deck: CardRole[] = ctx.room.game.deck;
 
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     //get 2 cards from top of the deck
     const topIndex = DeckManager.peekTopIndex(ctx);
+    const [cardArr, setCardArr] = useState<Card[]>(
+        [
+            ...DeckManager.peekCards(deck, myPlayer.icard, 2),
+            ...DeckManager.peekCards(deck, topIndex, 2),
+        ].map((val) => {
+            return DeckManager.getCardFromChar(val);
+        })
+    );
 
-    useEffect(() => {
-        document.addEventListener('keydown', onKeyDown);
-        return () => {
-            document.removeEventListener('keydown', onKeyDown);
-        };
-    }, []);
-
-    function onKeyDown(event: any) {
-        const idx = keyCodeToIndex(event.keyCode, 3);
-        if (idx < 0) return;
-        //TODO cleanse invaalid indices
-        // if(idx >= 0 && idex < )
-        // onMakeAction(idx);
-    }
+    useShortcut(cardArr.length, (n) => {
+        //TODO
+        console.log("Selected " + n);
+        onMakeAction(n);
+    });
 
     /**************************************************************
      * Handle the case where deck only has 0 ~ 2 cards available  *
      **************************************************************/
-    let charArr = [
-        ...DeckManager.peekCards(deck, myPlayer.icard, 2),
-        ...DeckManager.peekCards(deck, topIndex, 2),
-    ];
-
-    const cardArr: Card[] = charArr.map((val) => {
-        return DeckManager.getCardFromChar(val);
-    });
 
     const [firstCardPicked, setFirstCardPicked] = useState<number>(-1);
     //TODO: Dead Card

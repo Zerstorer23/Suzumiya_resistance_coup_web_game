@@ -34,7 +34,7 @@ export function setMyTimer(
     onExpire: () => void
 ) {
     TimerCode[0]++;
-    const option = createTimeOption(duration, TimerCode[0], onExpire);
+    const option = createTimeOption(duration, onExpire);
     localCtx.setVal(LocalField.Timer, option);
 }
 
@@ -44,12 +44,10 @@ export function setMyTimer(
  */
 function createTimeOption(
     duration: number,
-    code: number,
     onExpire: () => void
 ): TimerOptionType {
     return {
         duration,
-        code,
         onExpire,
     };
 }

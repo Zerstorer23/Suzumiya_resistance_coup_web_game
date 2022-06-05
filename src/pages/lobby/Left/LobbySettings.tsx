@@ -1,7 +1,6 @@
 import {useContext, useState} from "react";
 import gc from "global.module.css";
 import {ItemPair} from "system/types/CommonTypes";
-import Dropdown from "pages/components/ui/Dropdown";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import classes from "./LobbySettings.module.css";
 import RoomContext from "system/context/roomInfo/room-context";
@@ -52,7 +51,7 @@ export default function LobbySettings() {
                     defaultValue={myPlayer.name}
                 ></input>
             </HorizontalLayout>
-            <HorizontalLayout>
+            {/*            <HorizontalLayout>
                 <p className={classes.fieldType}>Net ping</p>
                 <Dropdown
                     className={classes.fieldType}
@@ -61,9 +60,9 @@ export default function LobbySettings() {
                     value={networkCondition}
                     onChange={onChangeNetworkCondition}
                 />
-            </HorizontalLayout>
+            </HorizontalLayout>*/}
             <button className={classes.fieldType}>Help</button>
-            <button className={classes.fieldType}>Settings</button>
+            {/*<button className={classes.fieldType}>Settings</button>*/}
         </div>
     );
 }

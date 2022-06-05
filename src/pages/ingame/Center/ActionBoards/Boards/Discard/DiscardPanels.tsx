@@ -1,4 +1,4 @@
-import {Fragment, useContext, useEffect} from "react";
+import {Fragment, useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import LocalContext from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
@@ -9,32 +9,19 @@ import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.cs
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import {handleCardKill} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardSolver";
 import {CardPool} from "system/cards/CardPool";
-import {keyCodeToIndex} from "pages/ingame/Center/ActionBoards/Boards/BaseBoard";
+import useShortcut from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/useShortcut";
+
+const MAX_PCARD = 2;
 
 export function MyCardsPanel(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const deck = ctx.room.game.deck;
     const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    const myCards: CardRole[] = DeckManager.peekCards(deck, localPlayer.icard, 2);
-
-    useEffect(() => {
-        if (DeckManager.playerIsDead(deck, ctx.room.playerMap.get(myId)!)) {
-            console.trace("WTF?");
-            handleCardKill(ctx, localPlayer.icard);
-        }
-
-        document.addEventListener('keydown', onKeyDown);
-        return () => {
-            document.removeEventListener('keydown', onKeyDown);
-        };
-    }, []);
-
-    function onKeyDown(event: any) {
-        const idx = keyCodeToIndex(event.keyCode, myCards.length - 1);
-        if (idx < 0) return;
-        onMakeAction(idx);
-    }
+    const myCards: CardRole[] = DeckManager.peekCards(deck, localPlayer.icard, MAX_PCARD);
+    useShortcut(MAX_PCARD, (n) => {
+        onMakeAction(n);
+    });
 
     function onMakeAction(index: number) {
         const myIndex = localPlayer.icard + index;

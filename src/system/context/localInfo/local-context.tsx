@@ -15,11 +15,11 @@ export enum LocalField {
     PlayerSelector,
     TutorialSelector,
     Timer,
+    InputFocus
 }
 
 export type TimerOptionType = {
     duration: number;
-    code: number;
     onExpire: any;
 };
 const LocalContext = React.createContext<LocalContextType>({

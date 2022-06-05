@@ -14,24 +14,17 @@ import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {DS} from "system/Debugger/DS";
 import {GameManager} from "system/GameStates/GameManager";
 import {TurnManager} from "system/GameStates/TurnManager";
+import useShortcut from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/useShortcut";
 
-const actions = [
+const actionsDefault = [
     ActionType.GetOne,
     ActionType.GetThree,
     ActionType.GetForeignAid,
     ActionType.Steal,
     ActionType.Coup,
     ActionType.Assassinate,
-    ActionType.None,
     ActionType.ChangeCards,
 ];
-
-export function keyCodeToIndex(code: number, max: number) {
-    const n = code - 49;
-    if (n < 0 || n > max) return -1;
-    return n;
-}
-
 const coupAction = [ActionType.None, ActionType.None, ActionType.None, ActionType.None, ActionType.Coup];
 
 export default function BaseBoard(): JSX.Element {
@@ -42,21 +35,14 @@ export default function BaseBoard(): JSX.Element {
     const [savedAction, setSaved] = useState(ActionType.None);
     const pSelector = localCtx.getVal(LocalField.PlayerSelector);
     const forceCoup = myPlayer.coins >= 10;
-
+    const [actions, setButtons] = useState<ActionType[]>(actionsDefault);
     useEffect(() => {
-        document.addEventListener('keydown', onKeyDown);
-        return () => {
-            document.removeEventListener('keydown', onKeyDown);
-        };
-    }, []);
+        setButtons((forceCoup && DS.StrictRules) ? coupAction : actionsDefault);
+    }, [forceCoup]);
 
-    function onKeyDown(event: any) {
-        let buttons = (forceCoup && DS.StrictRules) ? coupAction : actions;
-        const idx = keyCodeToIndex(event.keyCode, buttons.length - 1);
-        if (idx < 0) return;
-        console.log("Index " + idx);
-        onMakeAction(buttons[idx]);
-    }
+    useShortcut(actions.length, (n) => {
+        onMakeAction(actions[n]);
+    });
 
     function clearSelector() {
         if (savedAction === ActionType.None) return;
@@ -83,7 +69,7 @@ export default function BaseBoard(): JSX.Element {
         setMyTimer(localCtx, WaitTime.MakingDecision, () => {
             if (!DS.StrictRules) return;
             if (forceCoup) {
-                onMakeAction(actions[0]);
+                onMakeAction(actions[5]);
             } else {
                 ActionManager.pushPrepareDiscarding(ctx, GameManager.createKillInfo(ActionType.Coup, myId));
             }
@@ -118,13 +104,12 @@ export default function BaseBoard(): JSX.Element {
         ActionManager.pushCalledState(ctx, action, myId);
     }
 
-    let buttons = (forceCoup && DS.StrictRules) ? coupAction : actions;
 
     return (
         <Fragment>
             <div className={classes.header}>Do my action...</div>
             <div className={classes.container}>
-                {buttons.map((action: ActionType, index: number) => {
+                {actions.map((action: ActionType, index: number) => {
                     return (
                         <BaseActionButton
                             key={index}
