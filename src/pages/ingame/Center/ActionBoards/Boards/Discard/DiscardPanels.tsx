@@ -1,4 +1,4 @@
-import {Fragment, useContext} from "react";
+import {Fragment, useContext, useEffect} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import LocalContext from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
@@ -9,6 +9,7 @@ import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.cs
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import {handleCardKill} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardSolver";
 import {CardPool} from "system/cards/CardPool";
+import {keyCodeToIndex} from "pages/ingame/Center/ActionBoards/Boards/BaseBoard";
 
 export function MyCardsPanel(): JSX.Element {
     const ctx = useContext(RoomContext);
@@ -16,6 +17,31 @@ export function MyCardsPanel(): JSX.Element {
     const deck = ctx.room.game.deck;
     const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const myCards: CardRole[] = DeckManager.peekCards(deck, localPlayer.icard, 2);
+
+    useEffect(() => {
+        if (DeckManager.playerIsDead(deck, ctx.room.playerMap.get(myId)!)) {
+            console.trace("WTF?");
+            handleCardKill(ctx, localPlayer.icard);
+        }
+
+        document.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.removeEventListener('keydown', onKeyDown);
+        };
+    }, []);
+
+    function onKeyDown(event: any) {
+        const idx = keyCodeToIndex(event.keyCode, myCards.length - 1);
+        if (idx < 0) return;
+        onMakeAction(idx);
+    }
+
+    function onMakeAction(index: number) {
+        const myIndex = localPlayer.icard + index;
+        const card = deck[myIndex];
+        if (DeckManager.isDead(card) || card === CardRole.None) return;
+        handleCardKill(ctx, myIndex);
+    }
 
     return (
         <Fragment>
@@ -32,7 +58,7 @@ export function MyCardsPanel(): JSX.Element {
                                 DeckManager.isDead(role) ? CardRole.None : role
                             )}
                             onClickButton={() => {
-                                handleCardKill(ctx, localPlayer.icard + index);
+                                onMakeAction(index);
                             }}
                         />
                     );

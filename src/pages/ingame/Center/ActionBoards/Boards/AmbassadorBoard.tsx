@@ -8,6 +8,7 @@ import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButt
 import {TurnManager} from "system/GameStates/TurnManager";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import {keyCodeToIndex} from "pages/ingame/Center/ActionBoards/Boards/BaseBoard";
 
 export default function AmbassadorBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
@@ -18,6 +19,21 @@ export default function AmbassadorBoard(): JSX.Element {
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     //get 2 cards from top of the deck
     const topIndex = DeckManager.peekTopIndex(ctx);
+
+    useEffect(() => {
+        document.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.removeEventListener('keydown', onKeyDown);
+        };
+    }, []);
+
+    function onKeyDown(event: any) {
+        const idx = keyCodeToIndex(event.keyCode, 3);
+        if (idx < 0) return;
+        //TODO cleanse invaalid indices
+        // if(idx >= 0 && idex < )
+        // onMakeAction(idx);
+    }
 
     /**************************************************************
      * Handle the case where deck only has 0 ~ 2 cards available  *
@@ -32,7 +48,7 @@ export default function AmbassadorBoard(): JSX.Element {
     });
 
     const [firstCardPicked, setFirstCardPicked] = useState<number>(-1);
-  //TODO: Dead Card
+    //TODO: Dead Card
     useEffect(() => {
         if (DeckManager.playerCardNum(deck, myPlayer.icard) === 1) {
             //swap

@@ -1,6 +1,6 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
-import {Fragment, useContext} from "react";
+import {Fragment, useContext, useEffect} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
@@ -10,6 +10,7 @@ import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {TurnManager} from "system/GameStates/TurnManager";
 import {GameManager} from "system/GameStates/GameManager";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
+import {keyCodeToIndex} from "pages/ingame/Center/ActionBoards/Boards/BaseBoard";
 
 const baseActions = [
     ActionType.Accept,
@@ -20,6 +21,18 @@ export default function ReactAssassinBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
+    useEffect(() => {
+        document.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.removeEventListener('keydown', onKeyDown);
+        };
+    }, []);
+
+    function onKeyDown(event: any) {
+        const idx = keyCodeToIndex(event.keyCode, baseActions.length - 1);
+        if (idx < 0) return;
+        onMakeAction(baseActions[idx]);
+    }
 
     function onMakeAction(action: ActionType) {
         switch (action) {

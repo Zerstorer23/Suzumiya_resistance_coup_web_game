@@ -13,40 +13,41 @@ export default function ChatModule() {
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({behavior: 'smooth'});
-    };
+    const chatFieldRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
-        console.log("Scroll");
         messagesEndRef.current!.scrollIntoView({behavior: 'smooth'});
     }, [chatCtx.chatList.length]);
+    ///====Key listener====///
+    useEffect(() => {
+        document.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.removeEventListener('keydown', onKeyDown);
+        };
+    }, []);
 
     function onKeyDown(event: any) {
-        console.log("key down");
-        console.log(event.keyCode);
+        // console.log(`Key: ${event.key} with keycode ${event.keyCode} has been pressed`);
+        if (event.keyCode === 13) {//Enter
+            if (document.activeElement === chatFieldRef.current) {
+                handleSend();
+            } else {
+                chatFieldRef.current!.focus();
+            }
+        }
     }
 
-    //TODO
-//https://www.kindacode.com/article/react-typescript-handling-keyboard-events/
-    /*
-        useEffect(() => {
-            document.addEventListener("keydown", onKeyDown);
-            return document.removeEventListener("keydown", onKeyDown);
-        }, []);
-    */
+    function handleSend() {
+        if (chatFieldRef.current!.value.length <= 0) {
+            chatFieldRef.current!.blur();
+        } else {
+            chatCtx.sendChat(ChatFormat.normal, myPlayer.name, chatFieldRef.current!.value.toString());
+            chatFieldRef.current!.value = "";
+        }
+    }
 
-    /**
-     * TODO
-     * Format Chats.
-     * Scroll to bottom
-     * listen to enter or on blur
-     * press enter to start chat,
-     * if in chat, press enter to end chat
-     *              useRef, send what is in to db
-     */
+
     function onSendChat(e: any) {
-        console.log("Blue");
-        chatCtx.sendChat(ChatFormat.normal, myPlayer.name, Math.random().toString());
+        handleSend();
     }
 
     return (<div className={`${classes.container}`} onKeyDown={onKeyDown} onKeyDownCapture={onKeyDown}>
@@ -59,7 +60,7 @@ export default function ChatModule() {
             <div ref={messagesEndRef}/>
         </div>
         <HorizontalLayout className={classes.sendBox}>
-            <input type="text" className={classes.inputField} onBlur={onSendChat}></input>
+            <input ref={chatFieldRef} type="text" className={classes.inputField} onBlur={onSendChat}></input>
             <button className={classes.buttonSend}>Send</button>
         </HorizontalLayout>
     </div>);

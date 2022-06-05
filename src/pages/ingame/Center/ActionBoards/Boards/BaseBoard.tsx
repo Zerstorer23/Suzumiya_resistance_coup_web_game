@@ -25,6 +25,13 @@ const actions = [
     ActionType.None,
     ActionType.ChangeCards,
 ];
+
+export function keyCodeToIndex(code: number, max: number) {
+    const n = code - 49;
+    if (n < 0 || n > max) return -1;
+    return n;
+}
+
 const coupAction = [ActionType.None, ActionType.None, ActionType.None, ActionType.None, ActionType.Coup];
 
 export default function BaseBoard(): JSX.Element {
@@ -35,6 +42,21 @@ export default function BaseBoard(): JSX.Element {
     const [savedAction, setSaved] = useState(ActionType.None);
     const pSelector = localCtx.getVal(LocalField.PlayerSelector);
     const forceCoup = myPlayer.coins >= 10;
+
+    useEffect(() => {
+        document.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.removeEventListener('keydown', onKeyDown);
+        };
+    }, []);
+
+    function onKeyDown(event: any) {
+        let buttons = (forceCoup && DS.StrictRules) ? coupAction : actions;
+        const idx = keyCodeToIndex(event.keyCode, buttons.length - 1);
+        if (idx < 0) return;
+        console.log("Index " + idx);
+        onMakeAction(buttons[idx]);
+    }
 
     function clearSelector() {
         if (savedAction === ActionType.None) return;
@@ -86,6 +108,8 @@ export default function BaseBoard(): JSX.Element {
 
 
     function onMakeAction(action: ActionType) {
+        console.log("Pressed " + action);
+        if (action === ActionType.None) return;
         if (DS.StrictRules && getRequiredCoins(action) < myPlayer.coins) return;
         const handled = handleTargetableAction(action);
         if (handled) return;
