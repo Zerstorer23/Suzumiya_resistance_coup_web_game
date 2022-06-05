@@ -98,7 +98,7 @@ export default function AmbassadorBoard(): JSX.Element {
     console.log("index: ", index);
     console.log("count: ", count);
     if (count === 0) setFirstCardPicked(index);
-    if (count === 1) setSecondCardPicked(index);
+    if (count !== 0) setSecondCardPicked(index);
     setCount((count: number) => {
       return count + 1;
     });
