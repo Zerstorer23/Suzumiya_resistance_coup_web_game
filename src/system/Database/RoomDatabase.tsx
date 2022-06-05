@@ -7,21 +7,31 @@ import {ActionType} from "system/GameStates/States";
 import {CardRole} from "system/cards/Card";
 
 export enum DbReferences {
-    ROOM = "/",
-    GAME = "/game",
-    GAME_deck = `/game/deck`,
-    GAME_state = `/game/state`,
-    GAME_action = `/game/action`,
-    PLAYERS = `/playerMap`,
-    HEADER = `/header`,
-    HEADER_hostId = `/header/hostId`,
-    HEADER_seed = `/header/seed`,
+    ROOM = "/room",
+    GAME = "/room/game",
+    GAME_deck = `/room/game/deck`,
+    GAME_state = `/room/game/state`,
+    GAME_action = `/room/game/action`,
+    PLAYERS = `/room/playerMap`,
+    HEADER = `/room/header`,
+    HEADER_hostId = `/room/header/hostId`,
+    HEADER_seed = `/room/header/seed`,
+    CHAT = "/chat"
 }
 
 /**
  * Reference Manager is responsible for
  * uploading data to Firebase.
  */
+const RefPool = new Map<string, DbRef>();
+
+function queryRef(tag: string): DbRef {
+    if (!RefPool.has(tag)) {
+        RefPool.set(tag, db.ref(tag));
+    }
+    return RefPool.get(tag)!;
+}
+
 export const ReferenceManager = {
     /**
      * @param field
@@ -47,10 +57,11 @@ export const ReferenceManager = {
     },
     getRef(refName: DbReferences): DbRef {
         //NOTE USE DB TAGS
-        return db.ref(refName);
+        return queryRef(refName);
+
     },
     getPlayerReference(playerId: string): DbRef {
-        return db.ref(`${DbReferences.PLAYERS}/${playerId}`);
+        return queryRef(`${DbReferences.PLAYERS}/${playerId}`);
     },
 };
 

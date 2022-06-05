@@ -5,7 +5,8 @@
 }
 
 .round_border {
-    padding: 0.5rem;
+    padding: 0.25rem;
+    margin: 0.25rem;
     border: 0.2rem solid rgb(44, 9, 150);
     border-radius: 1rem;
 }
