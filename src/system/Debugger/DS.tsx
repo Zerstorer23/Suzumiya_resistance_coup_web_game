@@ -1,7 +1,10 @@
 export const DS = {
     StrictRules: false,
+    infiniteWait: false,
     logTransition(msg: any) {
-        console.warn(msg);
+        console.log(msg);
     }
 
 };
+//TODO
+//https://www.my-ip.io/api

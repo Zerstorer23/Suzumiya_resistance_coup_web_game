@@ -1,26 +1,30 @@
 .container {
     height: 60%;
     width: 100%;
+    position: relative;
 }
 
 .topContainer {
     width: 100%;
-    height: 40%;
+    height: 50%;
     border-bottom: 3px dashed navy;
 }
 
 .bottomContainer {
     width: 100%;
-    height: 40%;
+    height: 50%;
 }
 
 .timer {
     display: block;
+    position: absolute;
     width: 100%;
     text-align: center;
     justify-content: center;
     height: 10%;
     color: brown;
+    padding: 0;
+    margin: 0;
     font-size: 1.5rem;
     font-weight: bold;
 }

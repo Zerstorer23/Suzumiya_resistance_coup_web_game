@@ -101,7 +101,6 @@ export const StateManager = {
             case BoardState.StealBlockChallenged:
             case BoardState.AssassinateChallenged:
             case BoardState.ContessaChallenged:
-            case BoardState.DiscardingCard:
                 return true;
             default:
                 return false;
@@ -228,6 +227,7 @@ export const StateManager = {
             case ActionType.Steal:
                 return BoardState.CalledSteal;
             default:
+                console.trace("INVALID BOARD");
                 return null;
         }
     },

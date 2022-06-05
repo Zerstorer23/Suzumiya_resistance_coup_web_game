@@ -1,36 +1,44 @@
 .container {
-  flex: 2;
-  padding: 10px;
-  border: 5px solid rgb(44, 9, 150);
-  border-radius: 10px;
+    width: 50%;
 }
+
 .headerContainer {
-  display: flex;
-  border-bottom: 2px dashed rgb(18, 31, 103);
-  padding-bottom: 20px;
-  padding-top: 10px;
-  width: 100%;
-  justify-content: center;
+    display: flex;
+    border-bottom: 2px dashed rgb(18, 31, 103);
+    padding-bottom: 20px;
+    padding-top: 10px;
+    width: 100%;
+    justify-content: center;
 }
+
 .headerTitle {
-  text-align: center;
-  align-self: center;
-  font-size: 32px;
-  flex: 1;
+    text-align: center;
+    align-self: center;
+    font-size: 32px;
+    flex: 1;
 }
+
 .headerPlayerNum {
-  text-align: right;
-  align-self: center;
-  font-size: 24px;
-  display: block;
+    text-align: right;
+    align-self: center;
+    font-size: 24px;
+    display: block;
 }
 
 .list {
-  flex: 8;
-  overflow-y: scroll;
-  width: 100%;
+    flex: 8;
+    overflow-y: scroll;
+    width: 100%;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
+
+.list::-webkit-scrollbar {
+    display: none;
+}
+
+
 .buttonStart {
-  flex: 1;
-  width: 100%;
+    flex: 1;
+    width: 100%;
 }

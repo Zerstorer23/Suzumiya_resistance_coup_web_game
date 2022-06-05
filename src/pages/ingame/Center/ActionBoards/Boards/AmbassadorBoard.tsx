@@ -8,31 +8,38 @@ import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButt
 import { TurnManager } from "system/GameStates/TurnManager";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import { TransitionAction } from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import useShortcut from "system/hooks/useShortcut";
 
 export default function AmbassadorBoard(): JSX.Element {
   const ctx = useContext(RoomContext);
-  const playerMap = ctx.room.playerMap;
   const deck: CardRole[] = ctx.room.game.deck;
 
   const localCtx = useContext(LocalContext);
   const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
   //get 2 cards from top of the deck
   const topIndex = DeckManager.peekTopIndex(ctx);
+  const [firstCardPicked, setFirstCardPicked] = useState<number>(-1);
+  const [cardArr, setCardArr] = useState<Card[]>(
+    [
+      ...DeckManager.peekCards(deck, myPlayer.icard, 2),
+      ...DeckManager.peekCards(deck, topIndex, 2),
+    ].map((val) => {
+      return DeckManager.getCardFromChar(val);
+    })
+  );
+
+  useShortcut(cardArr.length, (idx) => {
+    //TODO
+    console.log("Selected " + idx);
+    console.log(firstCardPicked);
+    onMakeAction(idx);
+  });
 
   /**************************************************************
    * Handle the case where deck only has 0 ~ 2 cards available  *
    **************************************************************/
-  let charArr = [
-    ...DeckManager.peekCards(deck, myPlayer.icard, 2),
-    ...DeckManager.peekCards(deck, topIndex, 2),
-  ];
 
-  const cardArr: Card[] = charArr.map((val) => {
-    return DeckManager.getCardFromChar(val);
-  });
-
-  const [firstCardPicked, setFirstCardPicked] = useState<number>(-1);
-
+  //TODO: Dead Card
   useEffect(() => {
     if (DeckManager.playerCardNum(deck, myPlayer.icard) === 1) {
       //swap
@@ -50,38 +57,49 @@ export default function AmbassadorBoard(): JSX.Element {
     }
   }, [firstCardPicked]);
 
-  function onMakeAction(index: number) {
-    if (firstCardPicked === -1) {
-      setFirstCardPicked(index);
-    } else if (firstCardPicked !== -1) {
-      if (firstCardPicked === 1) {
-        DeckManager.swap(myPlayer!.icard + 1, myPlayer!.icard, deck);
-      } else if (firstCardPicked === 2) {
-        DeckManager.swap(topIndex, myPlayer!.icard, deck);
-        if (index === 0) {
-          DeckManager.swap(topIndex, myPlayer!.icard + 1, deck);
-        }
-      } else if (firstCardPicked === 3) {
-        DeckManager.swap(topIndex + 1, myPlayer!.icard, deck);
-        if (index === 0) {
-          DeckManager.swap(topIndex + 1, myPlayer!.icard + 1, deck);
-        }
-      }
+  const [count, setCount] = useState<number>(0);
+  const [secondCardPicked, setSecondCardPicked] = useState<number>(-1);
 
-      switch (index) {
-        case 2:
-          DeckManager.swap(topIndex, myPlayer!.icard + 1, deck);
-          break;
-        case 3:
-          DeckManager.swap(topIndex + 1, myPlayer!.icard + 1, deck);
-          break;
+  //test
+  useEffect(() => {
+    if (count !== 2) return;
+    if (secondCardPicked === firstCardPicked) return;
+    if (firstCardPicked === 1) {
+      DeckManager.swap(myPlayer!.icard + 1, myPlayer!.icard, deck);
+    } else if (firstCardPicked === 2) {
+      DeckManager.swap(topIndex, myPlayer!.icard, deck);
+      if (secondCardPicked === 0) {
+        DeckManager.swap(topIndex, myPlayer!.icard + 1, deck);
       }
-      DeckManager.pushDeck(ctx, deck);
-      ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
-        return TransitionAction.EndTurn;
-      });
+    } else if (firstCardPicked === 3) {
+      DeckManager.swap(topIndex + 1, myPlayer!.icard, deck);
+      if (secondCardPicked === 0) {
+        DeckManager.swap(topIndex + 1, myPlayer!.icard + 1, deck);
+      }
     }
-  }
+
+    switch (secondCardPicked) {
+      case 2:
+        DeckManager.swap(topIndex, myPlayer!.icard + 1, deck);
+        break;
+      case 3:
+        DeckManager.swap(topIndex + 1, myPlayer!.icard + 1, deck);
+        break;
+    }
+    DeckManager.pushDeck(ctx, deck);
+    console.log("ending turn");
+    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+      return TransitionAction.EndTurn;
+    });
+  }, [firstCardPicked, secondCardPicked]);
+
+  const onMakeAction = (index: number) => {
+    if (count === 0) setFirstCardPicked(index);
+    if (count === 1) setSecondCardPicked(index);
+    setCount((count: number) => {
+      return count + 1;
+    });
+  };
 
   //ADD SELCETED CSS STYLE
   return (
@@ -92,7 +110,6 @@ export default function AmbassadorBoard(): JSX.Element {
       <p>mine</p>
       <div className={classes.quarterContainer}>
         {cardArr.map((action: Card, index: number) => {
-          console.log(index);
           if (firstCardPicked === index) {
             return <Fragment />;
           }
@@ -100,12 +117,10 @@ export default function AmbassadorBoard(): JSX.Element {
             return <Fragment key={index} />;
           }
 
-          const baseIndex = index + 1;
-          const cssName = classes[`cell${baseIndex}`];
           return (
             <BaseActionButton
               key={index}
-              className={`${cssName}`}
+              index={index}
               param={action}
               onClickButton={() => {
                 onMakeAction(index);
@@ -124,12 +139,10 @@ export default function AmbassadorBoard(): JSX.Element {
           if (index < 2) {
             return <Fragment key={index} />;
           }
-          const baseIndex = index - 1;
-          const cssName = classes[`cell${baseIndex}`];
           return (
             <BaseActionButton
               key={index}
-              className={`${cssName}`}
+              index={index}
               param={action}
               onClickButton={() => {
                 onMakeAction(index);

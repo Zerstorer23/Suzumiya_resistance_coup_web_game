@@ -1,10 +1,11 @@
 .container {
-  display: flex;
-  justify-items: center;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    gap: 0.25rem;
+    width: 100%;
 }
+
 .flex1 {
-  flex: 1;
+    flex: 1;
 }

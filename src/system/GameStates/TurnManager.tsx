@@ -32,7 +32,10 @@ export const TurnManager = {
         }
         return newTurn;
     },
-
+    amHost(ctx: RoomContextType, localCtx: LocalContextType) {
+        const myId = localCtx.getVal(LocalField.Id);
+        return ctx.room.header.hostId === myId;
+    },
     /**
      *
      * @param ctx

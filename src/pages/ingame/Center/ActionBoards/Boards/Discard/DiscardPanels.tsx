@@ -9,30 +9,41 @@ import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.cs
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import {handleCardKill} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardSolver";
 import {CardPool} from "system/cards/CardPool";
+import useShortcut from "system/hooks/useShortcut";
+
+const MAX_PCARD = 2;
 
 export function MyCardsPanel(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const deck = ctx.room.game.deck;
     const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    const myCards: CardRole[] = DeckManager.peekCards(deck, localPlayer.icard, 2);
+    const myCards: CardRole[] = DeckManager.peekCards(deck, localPlayer.icard, MAX_PCARD);
+    useShortcut(MAX_PCARD, (n) => {
+        onMakeAction(n);
+    });
+
+    function onMakeAction(index: number) {
+        const myIndex = localPlayer.icard + index;
+        const card = deck[myIndex];
+        if (DeckManager.isDead(card) || card === CardRole.None) return;
+        handleCardKill(ctx, myIndex);
+    }
 
     return (
         <Fragment>
             <div className={classes.header}>Choose a card to discard...</div>
             <div className={classes.container}>
                 {myCards.map((role: CardRole, index: number) => {
-                    const baseIndex = index + 1;
-                    const cssName = classes[`cell${baseIndex}`];
                     return (
                         <BaseActionButton
                             key={index}
-                            className={`${cssName} `}
+                            index={index}
                             param={CardPool.getCard(
                                 DeckManager.isDead(role) ? CardRole.None : role
                             )}
                             onClickButton={() => {
-                                handleCardKill(ctx, localPlayer.icard + index);
+                                onMakeAction(index);
                             }}
                         />
                     );
@@ -47,10 +58,8 @@ export function PostKillPanel(): JSX.Element {
     const info = ctx.room.game.action.param as KillInfo;
     const player = ctx.room.playerMap.get(info.ownerId)!;
     const cardRole = ctx.room.game.deck[info.removed];
-    const isDead = DeckManager.playerIsDead(
-        ctx.room.game.deck,
-        ctx.room.playerMap.get(info.ownerId)!
-    );
+    if (player === undefined) return <Fragment/>;
+    const isDead = DeckManager.playerIsDead(ctx.room.game.deck, player);
     return (
         <Fragment>
             <p>{`${player.name} discarded `}{CardPool.getCard(cardRole).getElemName()}</p>

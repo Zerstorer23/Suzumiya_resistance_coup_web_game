@@ -19,8 +19,6 @@ export function handleDiscardState(
     killInfo: KillInfo
 ): JSX.Element {
     const [myId] = TurnManager.getMyInfo(ctx, localCtx);
-    console.log("Discard receive info");
-    console.log(killInfo);
     if (myId === killInfo.ownerId) {
         return handleMyTurn(ctx, localCtx, killInfo);
     } else {
@@ -57,7 +55,9 @@ function handleMyTurn(
                     });
                     break;
                 default:
-                    ActionManager.pushJustEndTurn(ctx);
+                    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+                        return TransitionAction.EndTurn;
+                    });
                     break;
             }
         });

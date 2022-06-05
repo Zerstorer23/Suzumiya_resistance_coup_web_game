@@ -1,6 +1,7 @@
 .container {
     height: 35%;
     width: 100%;
+    padding-top: 0.2rem;
 }
 
 .title {
@@ -12,7 +13,7 @@
 .gridContainer {
     height: 80%;
     width: 100%;
-    gap: 0.33rem;
+    gap: 1%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, 1fr);

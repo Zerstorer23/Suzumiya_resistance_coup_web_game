@@ -1,5 +1,5 @@
 .container {
-    height: 45%;
+    height: 40%;
     margin-bottom: 5px;
 }
 
@@ -11,7 +11,7 @@
 .descPanel {
     width: 80%;
     border-left: 2px dashed navy;
-    padding-left: 10px;
+    padding-left: 0.5rem;
 }
 
 .deadPanel {

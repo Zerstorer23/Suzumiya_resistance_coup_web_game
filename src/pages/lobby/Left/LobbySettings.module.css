@@ -1,20 +1,15 @@
 .container {
-  width: 25%;
-  margin-right: 10px;
+    width: 25%;
+    margin-right: 0.2rem;
 }
+
 .container * {
-  margin-bottom: 10px;
-  font-size: 24px;
+    margin-bottom: 10px;
+    font-size: 1rem;
 }
-.helpButton {
-  padding: 10px;
-  width: fit-content;
-  height: 50px;
-}
-.inputName {
-  width: 60%;
-}
-.pingDropdown {
-  margin-top: 15px;
-  width: 50%;
+
+.fieldType {
+    width: 50%;
+    align-content: center;
+    margin: 0.2rem 0.2rem;
 }

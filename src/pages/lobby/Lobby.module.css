@@ -1,6 +1,12 @@
 .container {
-  display: flex;
-  height: 100vh;
-  background-color: rgb(159, 180, 198);
-  padding: 10px;
+    display: flex;
+    height: 100vh;
+    background-color: rgb(159, 180, 198);
+    /*background-color: black;*/
+
+    padding: 0.5rem;
 }
+
+/** {*/
+/*  color: greenyellow;*/
+/*}*/

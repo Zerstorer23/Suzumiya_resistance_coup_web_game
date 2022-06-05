@@ -4,7 +4,7 @@ import kyon from "resources/images/kyon.png";
 import haruhi from "resources/images/haruhi.png";
 import koihime from "resources/images/koihime.png";
 import coin from "resources/images/coin_ico.png";
-import card from "resources/images/card_ico.png";
+import card from "resources/images/emptyCard.png";
 import unknown from "resources/images/unknown.png";
 import nagato_dead from "resources/images/nagato_dead.png";
 import mikuru_dead from "resources/images/mikuru_dead.png";
@@ -40,6 +40,7 @@ export enum Images {
     UnknownCard,
     Coin,
     Card,
+
 }
 
 /*

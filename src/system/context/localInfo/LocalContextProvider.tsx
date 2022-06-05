@@ -12,13 +12,15 @@ export enum CursorState {
     Selecting = "Selecting",
 }
 
+export enum InputCursor {
+    Idle,
+    Chat,
+}
+
 export default function LocalProvider(props: IProps) {
     const [myId, setMyId] = useState<string | null>(null);
-    // const [sortedPlayerList, setSortedPlayerList] = useState<Player[]>([]);
-    const [playerSelector, setPlayerSelected]: [string, any] =
-        useState<CursorState>(CursorState.Idle);
-    const [tutorialSelector, setTutorialSelected]: [string, any] =
-        useState<CursorState>(CursorState.Idle);
+    const [tutorialSelector, setTutorialSelected] = useState<CursorState>(CursorState.Idle);
+    const [inputFocused, setInputFocused] = useState<InputCursor>(InputCursor.Idle);
     const [timerOption, setTimerOption] = useState<TimerOptionType>({
         duration: WaitTime.MakingDecision,
         onExpire: () => {
@@ -32,14 +34,7 @@ export default function LocalProvider(props: IProps) {
         val: myId,
         set: setMyId,
     });
-    /*  map.set(LocalField.SortedList, {
-        val: sortedPlayerList,
-        set: setSortedPlayerList,
-      });*/
-    map.set(LocalField.PlayerSelector, {
-        val: playerSelector,
-        set: setPlayerSelected,
-    });
+
     map.set(LocalField.TutorialSelector, {
         val: tutorialSelector,
         set: setTutorialSelected,
@@ -47,6 +42,10 @@ export default function LocalProvider(props: IProps) {
     map.set(LocalField.Timer, {
         val: timerOption,
         set: setTimerOption,
+    });
+    map.set(LocalField.InputFocus, {
+        val: inputFocused,
+        set: setInputFocused,
     });
 
     /*

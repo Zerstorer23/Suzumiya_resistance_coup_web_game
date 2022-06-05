@@ -1,20 +1,32 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
+
 .round_border {
-  padding: 10px;
-  border: 5px solid rgb(44, 9, 150);
-  border-radius: 10px;
+    padding: 0.25rem;
+    margin: 0.25rem;
+    border: 0.2rem solid rgb(44, 9, 150);
+    border-radius: 1rem;
 }
+
 .flex1 {
-  flex: 1;
+    flex: 1;
 }
 
 .flex2 {
-  flex: 2;
+    flex: 2;
 }
+
 .flex3 {
-  flex: 3;
+    flex: 3;
+}
+
+button {
+    border-radius: 0.7rem;
+}
+
+input {
+    border-radius: 0.7rem;
 }

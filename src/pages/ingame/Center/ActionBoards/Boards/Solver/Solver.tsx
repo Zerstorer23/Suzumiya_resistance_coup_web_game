@@ -10,7 +10,9 @@ import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 export function waitAndEnd(ctx: RoomContextType, localCtx: LocalContextType) {
     setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
-        ActionManager.pushJustEndTurn(ctx);
+        ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+            return TransitionAction.EndTurn;
+        });
     });
 }
 
@@ -31,6 +33,9 @@ export function solveState(ctx: RoomContextType, localCtx: LocalContextType) {
             break;
         case BoardState.DiscardingCard:
             break;
+        case BoardState.ChoosingBaseAction:
+            console.trace("Why solve this??");
+            return;
         case BoardState.StealBlockAccepted:
         case BoardState.DukeBlocksAccepted:
         case BoardState.ContessaAccepted:
@@ -110,7 +115,6 @@ export function handleSteal(ctx: RoomContextType, localCtx: LocalContextType) {
             const stealAmount = Math.min(target.coins, 2);
             pier.coins += stealAmount;
             target.coins -= stealAmount;
-            newAction.param = stealAmount;
             ReferenceManager.updatePlayerReference(pierId, pier);
             ReferenceManager.updatePlayerReference(targetId, target);
             return TransitionAction.EndTurn;

@@ -10,6 +10,7 @@ import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
 import {TurnManager} from "system/GameStates/TurnManager";
+import useShortcut from "system/hooks/useShortcut";
 
 const actions = [
     ActionType.Accept,
@@ -21,8 +22,11 @@ export default function ReactCaptainBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
+    useShortcut(actions.length, (n) => {
+        onMakeAction(actions[n]);//Block Accept will be filtered anyway
+    });
 
-    function onMakeAction(action: ActionType) {
+    const onMakeAction = (action: ActionType) => {
         //Accept or Lie
         const handled = ActionManager.handleAcceptOrLie(ctx, action, myId);
         if (handled) return;
@@ -43,17 +47,15 @@ export default function ReactCaptainBoard(): JSX.Element {
             playerClaimedRole(myId, myPlayer, action);
             return TransitionAction.Success;
         });
-    }
+    };
 
     return (
         <div className={classes.container}>
             {actions.map((action: ActionType, index: number) => {
-                const baseIndex = index + 1;
-                const cssName = classes[`cell${baseIndex}`];
                 return (
                     <BaseActionButton
                         key={index}
-                        className={`${cssName}`}
+                        index={index}
                         param={new ActionInfo(action)}
                         onClickButton={() => {
                             onMakeAction(action);

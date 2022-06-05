@@ -1,10 +1,9 @@
 import * as ChallengeSolver from "pages/ingame/Center/ActionBoards/Boards/Solver/ChallengeSolver";
 import * as Solver from "pages/ingame/Center/ActionBoards/Boards/Solver/Solver";
-import {useContext, useEffect} from "react";
+import {Fragment, useContext, useEffect} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {StateManager} from "system/GameStates/States";
-import {preChallengeBoard} from "pages/ingame/Center/ActionBoards/Boards/Solver/ChallengeHelperPanels";
 
 export default function SolverBoard(): JSX.Element {
     /**
@@ -33,5 +32,7 @@ export default function SolverBoard(): JSX.Element {
         Solver.solveState(ctx, localCtx);
     }, []);
 
-    return preChallengeBoard;
+    return <Fragment>
+        <p><strong>Resolving actions...</strong></p>
+    </Fragment>;
 }

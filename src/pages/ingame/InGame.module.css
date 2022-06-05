@@ -1,7 +1,19 @@
 .container {
-  display: flex;
-  height: 100vh;
-  width: 100%;
-  background-color: rgb(159, 180, 198);
-  padding: 10px;
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    background-color: rgb(159, 180, 198);
+    padding: 0.4rem;
+}
+
+.leftPanel {
+    width: 25%;
+}
+
+.centerPanel {
+    width: 50%;
+}
+
+.rightPanel {
+    width: 25%;
 }

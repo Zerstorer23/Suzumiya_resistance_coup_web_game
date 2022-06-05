@@ -3,7 +3,7 @@ import {CardRole} from "system/cards/Card";
 import {DeckManager} from "system/cards/DeckManager";
 import {LocalContextType} from "system/context/localInfo/local-context";
 import {WaitTime} from "system/GameConstants";
-import {ChallengeState, GameAction, KillInfo, Player,} from "system/GameStates/GameTypes";
+import {ChallengeState, GameAction, KillInfo, Player, PostChallengeStates,} from "system/GameStates/GameTypes";
 import {BoardState, StateManager} from "system/GameStates/States";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
@@ -20,23 +20,22 @@ export function solveChallenges(ctx: RoomContextType, localCtx: LocalContextType
     });
 }
 
-function inferNextStateFromChallenge(doPierAction: boolean, board: BoardState): BoardState {
+function inferNextStateFromChallenge(doPierAction: boolean, board: BoardState): PostChallengeStates {
     if (!doPierAction) return BoardState.ChoosingBaseAction;
     switch (board) {
         case BoardState.GetThreeChallenged:
             return BoardState.GetThreeAccepted;
         case BoardState.AssassinateChallenged:
+        case BoardState.ContessaChallenged:
             return BoardState.CalledAssassinate;
         case BoardState.AmbassadorChallenged:
             return BoardState.AmbassadorAccepted;
         case BoardState.StealChallenged:
+        case BoardState.StealBlockChallenged:
             return BoardState.StealAccepted;
         case BoardState.DukeBlocksChallenged:
             return BoardState.ForeignAidAccepted;
-        case BoardState.StealBlockChallenged:
-        case BoardState.ContessaChallenged:
         default:
-            console.trace("WTF");
             return BoardState.ChoosingBaseAction;
     }
 }
@@ -54,9 +53,8 @@ function handleReveal(ctx: RoomContextType, localCtx: LocalContextType, killInfo
     console.log(`Pay penalty?  loser: ${loserId}  / lost? ${loserId === myId}`);
     killInfo.ownerId = loserId;
     killInfo.nextState = inferNextStateFromChallenge(pierWon, board);
-    if (myId === loserId) {
-        pushPostChallengeState(ctx, susId, winnerId, susPlayer, killInfo);
-    }
+    pushPostChallengeState(ctx, susId, winnerId, susPlayer, killInfo);
+
 }
 
 function pushPostChallengeState(ctx: RoomContextType, susId: string, winnerId: string, susPlayer: Player, killInfo: KillInfo) {
@@ -75,6 +73,8 @@ function pushPostChallengeState(ctx: RoomContextType, susId: string, winnerId: s
         DeckManager.swap(index, random, deck);
         ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
     }
+    console.log("Push discarding state");
+    console.log(killInfo);
     ActionManager.pushPrepareDiscarding(ctx, killInfo);
 }
 

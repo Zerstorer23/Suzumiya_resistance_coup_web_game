@@ -10,8 +10,9 @@ import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {TurnManager} from "system/GameStates/TurnManager";
 import {GameManager} from "system/GameStates/GameManager";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
+import useShortcut from "system/hooks/useShortcut";
 
-const baseActions = [
+const actions = [
     ActionType.Accept,
     ActionType.IsALie,
     ActionType.ContessaBlocksAssassination,
@@ -20,8 +21,11 @@ export default function ReactAssassinBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
+    useShortcut(actions.length, (n) => {
+        onMakeAction(actions[n]);//Block Accept will be filtered anyway
+    });
 
-    function onMakeAction(action: ActionType) {
+    const onMakeAction = (action: ActionType) => {
         switch (action) {
             case ActionType.Accept:
                 const killInfo = GameManager.createKillInfo(ActionType.Assassinate, myId);
@@ -37,21 +41,18 @@ export default function ReactAssassinBoard(): JSX.Element {
                     return TransitionAction.Success;
                 });
                 break;
-
         }
-    }
+    };
 
     return (
         <Fragment>
             <h1>Tsukomi</h1>
             <div className={classes.halfContainer}>
-                {baseActions.map((action: ActionType, index: number) => {
-                    const baseIndex = index + 1;
-                    const cssName = classes[`cell${baseIndex}`];
+                {actions.map((action: ActionType, index: number) => {
                     return (
                         <BaseActionButton
                             key={index}
-                            className={`${cssName}`}
+                            index={index}
                             param={new ActionInfo(action)}
                             onClickButton={() => {
                                 onMakeAction(action);

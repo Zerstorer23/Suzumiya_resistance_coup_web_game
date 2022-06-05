@@ -1,12 +1,10 @@
-.container {
-}
 
 .profileContainer {
     width: 25%;
 }
 
 .imgLastUsed {
-    width: 60%;
+    width: 50%;
     align-self: center;
     justify-self: center;
 }

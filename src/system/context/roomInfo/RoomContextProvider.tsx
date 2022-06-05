@@ -81,7 +81,6 @@ function handlePlayerUpdate(newRoom: Room, action: RoomActionType) {
                 //need reset
                 resetState(newRoom);
                 console.log("Detected ghost player ");
-                console.log(newRoom);
             }
             if (newRoom.game.state.turn >= newRoom.playerMap.size) {
                 newRoom.game.state.board = BoardState.ChoosingBaseAction;

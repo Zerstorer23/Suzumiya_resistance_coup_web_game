@@ -24,9 +24,8 @@ export default function TableItem(props: Props) {
 
     if (player === null || player === undefined) return <Fragment/>;
     const lastCard = CardPool.getCard(player.lastClaimed);
-    console.log(elem);
     return (
-        <HorizontalLayout className={`${props.className} ${classes.container}`}>
+        <HorizontalLayout className={`${props.className}`}>
             <div className={classes.profileContainer}>
                 <img
                     src={`${lastCard.getImage()}`}
@@ -37,9 +36,7 @@ export default function TableItem(props: Props) {
                 <p className={classes.playerName}>{player?.name}</p>
             </div>
             <div className={classes.actionContainer}>
-                {/*<div className={classes.textMainAction}>*/}
                 {elem}
-                {/*</div>*/}
             </div>
         </HorizontalLayout>
     );

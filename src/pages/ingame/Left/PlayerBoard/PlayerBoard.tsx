@@ -14,13 +14,16 @@ export default function PlayerBoard(): JSX.Element {
         <Fragment>
             <div className={`${gc.round_border} ${classes.container}`}>
                 <p className={classes.header}>Players</p>
-                {sortedList.map((playerId) => (
-                    <PlayerItem
-                        key={playerId}
-                        playerId={playerId}
-                        player={playerMap.get(playerId)!}
-                    />
-                ))}
+                <div className={classes.playersContainer}>
+                    {sortedList.map((playerId) => (
+                        <PlayerItem
+                            key={playerId}
+                            playerId={playerId}
+                            isSelectable={false}
+                            player={playerMap.get(playerId)!}
+                        />
+                    ))}
+                </div>
             </div>
         </Fragment>
     );

@@ -5,6 +5,7 @@ import App from "./App";
 import {BrowserRouter} from "react-router-dom";
 import RoomProvider from "system/context/roomInfo/RoomContextProvider";
 import LocalProvider from "system/context/localInfo/LocalContextProvider";
+import {ChatProvider} from "system/context/chatInfo/ChatContextProvider";
 // import { enableMapSet } from "immer";
 //enableMapSet()
 const root = ReactDOM.createRoot(
@@ -14,8 +15,9 @@ root.render(
     <BrowserRouter>
         <RoomProvider>
             <LocalProvider>
-                <App/>
-                {/* <MyTimer /> */}
+                <ChatProvider>
+                    <App/>
+                </ChatProvider>
             </LocalProvider>
         </RoomProvider>
     </BrowserRouter>
