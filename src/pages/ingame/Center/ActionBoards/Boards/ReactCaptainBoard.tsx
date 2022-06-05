@@ -61,12 +61,10 @@ export default function ReactCaptainBoard(): JSX.Element {
     return (
         <div className={classes.container}>
             {actions.map((action: ActionType, index: number) => {
-                const baseIndex = index + 1;
-                const cssName = classes[`cell${baseIndex}`];
                 return (
                     <BaseActionButton
                         key={index}
-                        className={`${cssName}`}
+                        index={index}
                         param={new ActionInfo(action)}
                         onClickButton={() => {
                             onMakeAction(action);

@@ -1,0 +1,119 @@
+.cell {
+    position: relative;
+    background-color: antiquewhite;
+    height: 100%;
+    width: 100%;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+}
+
+
+.cell:hover {
+    background-color: bisque;
+}
+
+.cell:focus {
+    background-color: aquamarine;
+}
+
+
+.cellDisabled {
+    position: relative;
+    background-color: grey;
+    height: 100%;
+    width: 100%;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+}
+
+.shortcutHint {
+    font-size: 0.5rem;
+    position: absolute;
+    top: 0.25rem;
+    left: 0.25rem;
+}
+
+.characterIcon {
+    height: 2rem;
+    margin-left: 0.5rem;
+}
+
+.emptyIcon {
+    height: 2rem;
+    /*!*visibility: hidden;*!*/
+    /*visibility: ;*/
+}
+
+.nameText {
+    height: 100%;
+    display: block;
+    flex: 8;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+}
+
+.lieText {
+    color: crimson;
+    height: 100%;
+    display: block;
+    flex: 1;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+    margin-right: 0.5rem;
+}
+
+.noCoinText {
+    color: aliceblue;
+    height: 100%;
+    display: block;
+    flex: 1;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+    margin-right: 0.5rem;
+}
+
+
+.cell1 {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.cell2 {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.cell3 {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.cell4 {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.cell5 {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.cell6 {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.cell7 {
+    grid-column: 1;
+    grid-row: 4;
+}
+
+.cell8 {
+    grid-column: 2;
+    grid-row: 4;
+}

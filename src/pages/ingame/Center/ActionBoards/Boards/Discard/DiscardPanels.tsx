@@ -48,12 +48,10 @@ export function MyCardsPanel(): JSX.Element {
             <div className={classes.header}>Choose a card to discard...</div>
             <div className={classes.container}>
                 {myCards.map((role: CardRole, index: number) => {
-                    const baseIndex = index + 1;
-                    const cssName = classes[`cell${baseIndex}`];
                     return (
                         <BaseActionButton
                             key={index}
-                            className={`${cssName} `}
+                            index={index}
                             param={CardPool.getCard(
                                 DeckManager.isDead(role) ? CardRole.None : role
                             )}

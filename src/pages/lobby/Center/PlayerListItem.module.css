@@ -1,6 +1,10 @@
 .item {
-  border-bottom: 2px dotted rgb(9, 77, 116);
-  width: 95%;
-  padding: 15px 0;
-  font-size: 20px;
+    border-bottom: 0.1rem dotted rgb(9, 77, 116);
+    width: 100%;
+    padding: 1rem 0;
+    font-size: 2rem;
+}
+
+.isHost {
+    color: red;
 }

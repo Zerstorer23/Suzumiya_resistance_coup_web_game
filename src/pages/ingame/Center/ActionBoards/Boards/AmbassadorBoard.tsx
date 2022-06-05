@@ -115,12 +115,11 @@ export default function AmbassadorBoard(): JSX.Element {
                         return <Fragment key={index}/>;
                     }
 
-                    const baseIndex = index + 1;
-                    const cssName = classes[`cell${baseIndex}`];
+
                     return (
                         <BaseActionButton
                             key={index}
-                            className={`${cssName}`}
+                            index={index}
                             param={action}
                             onClickButton={() => {
                                 onMakeAction(index);
@@ -139,12 +138,10 @@ export default function AmbassadorBoard(): JSX.Element {
                     if (index < 2) {
                         return <Fragment key={index}/>;
                     }
-                    const baseIndex = index - 1;
-                    const cssName = classes[`cell${baseIndex}`];
                     return (
                         <BaseActionButton
                             key={index}
-                            className={`${cssName}`}
+                            index={index}
                             param={action}
                             onClickButton={() => {
                                 onMakeAction(index);

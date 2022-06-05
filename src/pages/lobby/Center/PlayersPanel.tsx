@@ -37,20 +37,22 @@ export default function PlayersPanel(props: IProps) {
         }
     }
 
-    const elemList: JSX.Element[] = [];
     const playerMap: PlayerMap = ctx.room.playerMap;
     const currPlayer = playerMap.size;
-    playerMap.forEach((player, key) => {
-        const elem = <PlayerListItem key={key} player={player}/>;
-        elemList.push(elem);
-    });
+
+    const playerList = ctx.room.playerList;
     return (
         <VerticalLayout className={`${gc.round_border} ${classes.container} `}>
             <div className={classes.headerContainer}>
                 <p className={classes.headerTitle}>Hamang No.6</p>
                 <p className={classes.headerPlayerNum}>{`${currPlayer} connected`}</p>
             </div>
-            <VerticalLayout className={classes.list}>{elemList}</VerticalLayout>
+            <VerticalLayout className={classes.list}>{
+                playerList.map((id, index, array) => {
+                    return <PlayerListItem key={id} player={playerMap.get(id)!}
+                                           isHost={id === ctx.room.header.hostId}/>;
+                })
+            }</VerticalLayout>
             <button ref={startBtnRef} className={classes.buttonStart} onClick={onClickStart}>
                 start
             </button>

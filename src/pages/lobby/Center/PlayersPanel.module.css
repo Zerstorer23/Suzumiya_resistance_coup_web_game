@@ -29,7 +29,14 @@
     flex: 8;
     overflow-y: scroll;
     width: 100%;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
+
+.list::-webkit-scrollbar {
+    display: none;
+}
+
 
 .buttonStart {
     flex: 1;

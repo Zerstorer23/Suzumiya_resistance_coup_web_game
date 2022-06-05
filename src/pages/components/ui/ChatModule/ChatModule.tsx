@@ -15,6 +15,7 @@ export default function ChatModule() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const chatFieldRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
+        console.log("Scroll");
         messagesEndRef.current!.scrollIntoView({behavior: 'smooth'});
     }, [chatCtx.chatList.length]);
     ///====Key listener====///

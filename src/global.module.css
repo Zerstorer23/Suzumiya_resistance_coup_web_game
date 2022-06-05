@@ -22,3 +22,11 @@
 .flex3 {
     flex: 3;
 }
+
+button {
+    border-radius: 0.7rem;
+}
+
+input {
+    border-radius: 0.7rem;
+}
