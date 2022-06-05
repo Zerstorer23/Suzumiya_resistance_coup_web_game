@@ -32,7 +32,7 @@ export default function AmbassadorBoard(): JSX.Element {
   });
 
   const [firstCardPicked, setFirstCardPicked] = useState<number>(-1);
-  //TODO: Dead Card
+
   useEffect(() => {
     if (DeckManager.playerCardNum(deck, myPlayer.icard) === 1) {
       //swap
