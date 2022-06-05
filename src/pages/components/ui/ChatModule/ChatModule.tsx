@@ -15,14 +15,17 @@ export default function ChatModule() {
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const chatFieldRef = useRef<HTMLInputElement>(null);
-
+    useEffect(() => {
+        console.log("Focus: " + localCtx.getVal(LocalField.InputFocus));
+    }, []);
     useEffect(() => {
         messagesEndRef.current!.scrollIntoView({behavior: "smooth"});
     }, [chatCtx.chatList.length]);
     ///====Key listener====///
     useKeyListener([KeyCode.Enter], onKeyDown);
 
-    function onKeyDown() {
+    function onKeyDown(keyCode: KeyCode) {
+        if (keyCode === KeyCode.Undefined) return;
         if (document.activeElement === chatFieldRef.current!) {
             handleSend();
         } else {

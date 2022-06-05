@@ -29,6 +29,7 @@ export default function useKeyListener(targets: KeyCode[], onKeyDown: (keyCode: 
     }
 
     useEffect(() => {
+        if (keyInfo.code === KeyCode.Undefined) return;
         onKeyDown(keyInfo.code);
     }, [keyInfo.idx]);
 

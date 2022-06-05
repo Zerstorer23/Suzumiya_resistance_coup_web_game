@@ -19,7 +19,6 @@ export enum InputCursor {
 
 export default function LocalProvider(props: IProps) {
     const [myId, setMyId] = useState<string | null>(null);
-    const [playerSelector, setPlayerSelected] = useState<CursorState>(CursorState.Idle);
     const [tutorialSelector, setTutorialSelected] = useState<CursorState>(CursorState.Idle);
     const [inputFocused, setInputFocused] = useState<InputCursor>(InputCursor.Idle);
     const [timerOption, setTimerOption] = useState<TimerOptionType>({
@@ -35,14 +34,7 @@ export default function LocalProvider(props: IProps) {
         val: myId,
         set: setMyId,
     });
-    /*  map.set(LocalField.SortedList, {
-        val: sortedPlayerList,
-        set: setSortedPlayerList,
-      });*/
-    map.set(LocalField.PlayerSelector, {
-        val: playerSelector,
-        set: setPlayerSelected,
-    });
+
     map.set(LocalField.TutorialSelector, {
         val: tutorialSelector,
         set: setTutorialSelected,

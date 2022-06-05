@@ -19,6 +19,7 @@ export default function PlayerBoard(): JSX.Element {
                         <PlayerItem
                             key={playerId}
                             playerId={playerId}
+                            isSelectable={false}
                             player={playerMap.get(playerId)!}
                         />
                     ))}

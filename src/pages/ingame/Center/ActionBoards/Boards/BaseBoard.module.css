@@ -53,6 +53,16 @@
     justify-content: center;
 }
 
+.playersContainer {
+    height: 90%;
+    overflow-y: scroll;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.playersContainer::-webkit-scrollbar {
+    display: none;
+}
 
 .singleContainer {
     width: 100%;

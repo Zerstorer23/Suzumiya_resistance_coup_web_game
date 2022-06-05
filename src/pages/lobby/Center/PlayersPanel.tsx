@@ -17,7 +17,7 @@ export default function PlayersPanel() {
     const amHost = TurnManager.amHost(ctx, localCtx);
     const startBtnRef = useRef<HTMLButtonElement>(null);
 
-    const keyCode = useKeyListener([KeyCode.Space], onKey);
+    useKeyListener([KeyCode.Space], onKey);
 
     function onKey(keyCode: KeyCode) {
         console.log("Key " + keyCode + " s" + KeyCode.Space);

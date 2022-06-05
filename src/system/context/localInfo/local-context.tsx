@@ -12,7 +12,6 @@ export type LocalContextType = {
 
 export enum LocalField {
     Id,
-    PlayerSelector,
     TutorialSelector,
     Timer,
     InputFocus

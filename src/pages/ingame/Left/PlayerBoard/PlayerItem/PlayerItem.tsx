@@ -4,7 +4,6 @@ import {IProps} from "system/types/CommonTypes";
 import {Player} from "system/GameStates/GameTypes";
 import {Fragment, useContext} from "react";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
-import {CursorState} from "system/context/localInfo/LocalContextProvider";
 import RoomContext from "system/context/roomInfo/room-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {DeckManager} from "system/cards/DeckManager";
@@ -13,6 +12,8 @@ import {CardPool} from "system/cards/CardPool";
 
 type Props = IProps & {
     player: Player;
+    isSelectable: boolean;
+    onSelect?: () => void;
     playerId: string;
 };
 export default function PlayerItem(props: Props): JSX.Element {
@@ -20,36 +21,31 @@ export default function PlayerItem(props: Props): JSX.Element {
     const ctx = useContext(RoomContext);
     const deck = ctx.room.game.deck;
     if (props.player.isSpectating) return <Fragment/>;
-
-    const pSelector = localCtx.getVal(LocalField.PlayerSelector);
-    let panelColor = "";
     const currentTurnId = TurnManager.getCurrentPlayerId(ctx);
     const nextTurnId = TurnManager.getNextPlayerId(ctx);
     const isMe = props.playerId === localCtx.getVal(LocalField.Id);
+    let panelColor = "";
     let subtitle = "";
 
-    if (isMe) {
-        //My panel has highest priority and is unselectable
-        panelColor = classes.isMe;
-        subtitle = "Me";
-    } else if (pSelector === CursorState.Selecting) {
-        //When selecting, show color
-        panelColor = classes.selectable;
-        subtitle = "Select this player";
-    } else if (props.playerId === currentTurnId) {
-        panelColor = classes.currentTurn;
-        subtitle = "This turn";
-    } else if (props.playerId === nextTurnId) {
-        panelColor = classes.nextTurn;
-        subtitle = "Next turn";
+    if (!props.isSelectable) {
+        if (isMe) {
+            //My panel has highest priority and is unselectable
+            panelColor = classes.isMe;
+            subtitle = "Me";
+        } else if (props.playerId === currentTurnId) {
+            panelColor = classes.currentTurn;
+            subtitle = "This turn";
+        } else if (props.playerId === nextTurnId) {
+            panelColor = classes.nextTurn;
+            subtitle = "Next turn";
+        }
     }
     const namePanelClass =
         subtitle.length <= 0 ? classes.namePanelWithTitle : classes.namePanel;
 
     function onClickPanel() {
-        if (isMe || pSelector !== CursorState.Selecting) return;
-        console.log(`Clicked ${props.player.name}`);
-        localCtx.setVal(LocalField.PlayerSelector, props.playerId);
+        if (!props.isSelectable || props.onSelect === undefined || props.onSelect === null) return;
+        props.onSelect();
     }
 
     return (
