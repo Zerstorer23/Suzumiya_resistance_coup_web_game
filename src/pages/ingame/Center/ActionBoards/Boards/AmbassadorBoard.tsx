@@ -1,7 +1,7 @@
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import RoomContext from "system/context/roomInfo/room-context";
 import {Fragment, useContext, useEffect, useState} from "react";
-import LocalContext, {LocalField} from "system/context/localInfo/local-context";
+import LocalContext from "system/context/localInfo/local-context";
 import {DeckManager} from "system/cards/DeckManager";
 import {Card, CardRole} from "system/cards/Card";
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
@@ -9,7 +9,6 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import useShortcut from "system/hooks/useShortcut";
-import {InputCursor} from "system/context/localInfo/LocalContextProvider";
 
 export default function AmbassadorBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
@@ -28,11 +27,10 @@ export default function AmbassadorBoard(): JSX.Element {
         })
     );
 
-    useShortcut(cardArr.length, (n) => {
-        if (localCtx.getVal(LocalField.InputFocus) !== InputCursor.Idle) return;
+    useShortcut(cardArr.length, (idx) => {
         //TODO
-        console.log("Selected " + n);
-        onMakeAction(n);
+        console.log("Selected " + idx);
+        onMakeAction(idx);
     });
 
     /**************************************************************
@@ -59,6 +57,8 @@ export default function AmbassadorBoard(): JSX.Element {
     }, [firstCardPicked]);
 
     const onMakeAction = (index: number) => {
+        //TODO check if thats valid
+        //DO nothing if invalid
         if (firstCardPicked === -1) {
             setFirstCardPicked(index);
         } else if (firstCardPicked !== -1) {
