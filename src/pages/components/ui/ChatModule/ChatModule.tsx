@@ -21,6 +21,20 @@ export default function ChatModule() {
         messagesEndRef.current!.scrollIntoView({behavior: 'smooth'});
     }, [chatCtx.chatList.length]);
 
+    function onKeyDown(event: any) {
+        console.log("key down");
+        console.log(event.keyCode);
+    }
+
+    //TODO
+//https://www.kindacode.com/article/react-typescript-handling-keyboard-events/
+    /*
+        useEffect(() => {
+            document.addEventListener("keydown", onKeyDown);
+            return document.removeEventListener("keydown", onKeyDown);
+        }, []);
+    */
+
     /**
      * TODO
      * Format Chats.
@@ -35,7 +49,7 @@ export default function ChatModule() {
         chatCtx.sendChat(ChatFormat.normal, myPlayer.name, Math.random().toString());
     }
 
-    return (<div className={`${classes.container}`}>
+    return (<div className={`${classes.container}`} onKeyDown={onKeyDown} onKeyDownCapture={onKeyDown}>
         <div className={classes.chatbox}>
             {
                 chatCtx.chatList.map((chat, index) => {
