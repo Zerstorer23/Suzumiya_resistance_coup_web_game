@@ -9,7 +9,7 @@ import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.cs
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import {handleCardKill} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardSolver";
 import {CardPool} from "system/cards/CardPool";
-import useShortcut from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/useShortcut";
+import useShortcut from "system/hooks/useShortcut";
 
 const MAX_PCARD = 2;
 

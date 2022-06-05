@@ -6,7 +6,7 @@ import RoomContext from "system/context/roomInfo/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import useShortcut from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/useShortcut";
+import useShortcut from "system/hooks/useShortcut";
 /*
     case BoardState.CalledGetThree:
     case BoardState.CalledChangeCards:
@@ -40,7 +40,7 @@ export default function CounterBoard(): JSX.Element {
         ActionManager.pushAcceptedState(ctx);
     }
 
-    function onMakeAction(action: ActionType) {
+    const onMakeAction = (action: ActionType) => {
         //NOTE in some states, we are actually interested in this.
         switch (action) {
             case ActionType.Accept:
@@ -50,8 +50,7 @@ export default function CounterBoard(): JSX.Element {
                 ActionManager.pushIsALieState(ctx, myId);
                 break;
         }
-
-    }
+    };
 
 
     return (

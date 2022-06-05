@@ -10,7 +10,7 @@ import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {DS} from "system/Debugger/DS";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
 import {TurnManager} from "system/GameStates/TurnManager";
-import useShortcut from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/useShortcut";
+import useShortcut from "system/hooks/useShortcut";
 
 const actions = [ActionType.None, ActionType.DukeBlocksForeignAid];
 export default function ReactForeignAidBoard(): JSX.Element {
@@ -21,7 +21,7 @@ export default function ReactForeignAidBoard(): JSX.Element {
         onMakeAction(actions[n]);//Block Accept will be filtered anyway
     });
 
-    function onMakeAction(action: ActionType) {
+    const onMakeAction = (action: ActionType) => {
         if (action !== ActionType.DukeBlocksForeignAid) return;
         //Only interested in when it is blocked
         ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
@@ -33,7 +33,7 @@ export default function ReactForeignAidBoard(): JSX.Element {
             DS.logTransition(newAction);
             return TransitionAction.Success;
         });
-    }
+    };
 
     return (
         <div className={classes.container}>

@@ -6,6 +6,7 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import RoomContext from "system/context/roomInfo/room-context";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import {InputCursor} from "system/context/localInfo/LocalContextProvider";
+import useKeyListener, {KeyCode} from "system/hooks/useKeyListener";
 
 export default function ChatModule() {
     const chatCtx = useContext(ChatContext);
@@ -14,46 +15,22 @@ export default function ChatModule() {
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const chatFieldRef = useRef<HTMLInputElement>(null);
-    const focusedTarget: InputCursor = localCtx.getVal(LocalField.InputFocus);
 
     useEffect(() => {
         messagesEndRef.current!.scrollIntoView({behavior: "smooth"});
     }, [chatCtx.chatList.length]);
     ///====Key listener====///
-    useEffect(() => {
-        document.addEventListener("keydown", onKeyDown);
-        return () => {
-            document.removeEventListener("keydown", onKeyDown);
-        };
-    }, []);
-    //====Chaat===///
-    /*       useEffect(() => {
-               switch (focusedTarget) {
-                   case InputCursor.Idle:
-                       chatFieldRef.current!.focus();
-                       break;
-                   case InputCursor.Chat:
-                       handleSend();
-                       break;
-                   case InputCursor.Name:
-                       break;
-               }
-           }, [focusedTarget]);*/
+    useKeyListener([KeyCode.Enter], onKeyDown);
 
-
-    function onKeyDown(event: any) {
-        // console.log(`Key: ${event.key} with keycode ${event.keyCode} has been pressed`);
-        if (event.keyCode !== 13) return;
+    function onKeyDown() {
         if (document.activeElement === chatFieldRef.current!) {
             handleSend();
         } else {
-            console.log("Focus");
             chatFieldRef.current!.focus();
         }
     }
 
     function handleSend() {
-        if (document.activeElement !== chatFieldRef.current) return;
         if (chatFieldRef.current!.value.length <= 0) {
             chatFieldRef.current!.blur();
             return;
@@ -64,22 +41,15 @@ export default function ChatModule() {
             chatFieldRef.current!.value.toString()
         );
         chatFieldRef.current!.value = "";
+        chatFieldRef.current!.blur();
     }
 
     function toggleFocus(toggle: boolean) {
-        if (toggle && document.activeElement !== chatFieldRef.current) {
-            localCtx.setVal(LocalField.InputFocus, InputCursor.Chat);
-        } else if (!toggle && document.activeElement === chatFieldRef.current) {
-            localCtx.setVal(LocalField.InputFocus, InputCursor.Idle);
-        }
+        localCtx.setVal(LocalField.InputFocus, (toggle) ? InputCursor.Chat : InputCursor.Idle);
     }
 
     return (
-        <div
-            className={`${classes.container}`}
-            onKeyDown={onKeyDown}
-            onKeyDownCapture={onKeyDown}
-        >
+        <div className={`${classes.container}`}>
             <div className={classes.chatbox}>
                 {chatCtx.chatList.map((chat, index) => {
                     return ChatEntryToElem(index, chat);

@@ -10,7 +10,7 @@ import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
 import {TurnManager} from "system/GameStates/TurnManager";
-import useShortcut from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/useShortcut";
+import useShortcut from "system/hooks/useShortcut";
 
 const actions = [
     ActionType.Accept,
@@ -26,7 +26,7 @@ export default function ReactCaptainBoard(): JSX.Element {
         onMakeAction(actions[n]);//Block Accept will be filtered anyway
     });
 
-    function onMakeAction(action: ActionType) {
+    const onMakeAction = (action: ActionType) => {
         //Accept or Lie
         const handled = ActionManager.handleAcceptOrLie(ctx, action, myId);
         if (handled) return;
@@ -47,7 +47,7 @@ export default function ReactCaptainBoard(): JSX.Element {
             playerClaimedRole(myId, myPlayer, action);
             return TransitionAction.Success;
         });
-    }
+    };
 
     return (
         <div className={classes.container}>

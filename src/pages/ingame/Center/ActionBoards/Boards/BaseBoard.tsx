@@ -14,7 +14,7 @@ import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {DS} from "system/Debugger/DS";
 import {GameManager} from "system/GameStates/GameManager";
 import {TurnManager} from "system/GameStates/TurnManager";
-import useShortcut from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/useShortcut";
+import useShortcut from "system/hooks/useShortcut";
 
 const actionsDefault = [
     ActionType.GetOne,
@@ -31,15 +31,21 @@ export default function BaseBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    //For target actions, save which button we pressed
     const [savedAction, setSaved] = useState(ActionType.None);
     const pSelector = localCtx.getVal(LocalField.PlayerSelector);
+    const [isSelecting, setSelecting] = useState<boolean>(false);
+
     const forceCoup = myPlayer.coins >= 10;
     const [actions, setButtons] = useState<ActionType[]>(actionsDefault);
     useEffect(() => {
+        const newSelector = isSelecting ? CursorState.Selecting : CursorState.Idle;
+        localCtx.setVal(LocalField.PlayerSelector, newSelector);
+    }, [isSelecting]);
+
+    useEffect(() => {
         setButtons((forceCoup && DS.StrictRules) ? coupAction : actionsDefault);
     }, [forceCoup]);
-
+    
     useShortcut(actions.length, (n) => {
         onMakeAction(actions[n]);
     });
@@ -53,19 +59,12 @@ export default function BaseBoard(): JSX.Element {
     function handleTargetableAction(action: ActionType): boolean {
         if (!StateManager.isTargetableAction(action)) return false;
         setSaved(action);
-        localCtx.setVal(
-            LocalField.PlayerSelector,
-            pSelector === CursorState.Selecting
-                ? CursorState.Idle
-                : CursorState.Selecting
-        );
+        setSelecting((prev) => !prev);
         return true;
     }
 
 
     useEffect(() => {
-        DS.logTransition("I am choosing ....");
-        DS.logTransition(ctx.room);
         setMyTimer(localCtx, WaitTime.MakingDecision, () => {
             if (!DS.StrictRules) return;
             if (forceCoup) {
@@ -77,7 +76,6 @@ export default function BaseBoard(): JSX.Element {
     }, []);
 
     useEffect(() => {
-        //Only do something whenn selector has name AND we saved Action.
         if (pSelector === CursorState.Selecting || pSelector === CursorState.Idle)
             return;
         if (!StateManager.isTargetableAction(savedAction)) return;
@@ -86,15 +84,11 @@ export default function BaseBoard(): JSX.Element {
             ActionManager.pushPrepareDiscarding(ctx, GameManager.createKillInfo(ActionType.Coup, pSelector));
             return;
         }
-        //You selected something
         ActionManager.pushCalledState(ctx, savedAction, myId, pSelector);
-        //Clear states
         clearSelector();
     }, [pSelector, savedAction]);
 
-
-    function onMakeAction(action: ActionType) {
-        console.log("Pressed " + action);
+    const onMakeAction = (action: ActionType) => {
         if (action === ActionType.None) return;
         if (DS.StrictRules && getRequiredCoins(action) < myPlayer.coins) return;
         const handled = handleTargetableAction(action);
@@ -102,7 +96,7 @@ export default function BaseBoard(): JSX.Element {
         //Non Target Actions
         clearSelector();
         ActionManager.pushCalledState(ctx, action, myId);
-    }
+    };
 
 
     return (

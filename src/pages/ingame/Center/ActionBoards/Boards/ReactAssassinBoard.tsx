@@ -10,7 +10,7 @@ import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {TurnManager} from "system/GameStates/TurnManager";
 import {GameManager} from "system/GameStates/GameManager";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
-import useShortcut from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/useShortcut";
+import useShortcut from "system/hooks/useShortcut";
 
 const actions = [
     ActionType.Accept,
@@ -25,7 +25,7 @@ export default function ReactAssassinBoard(): JSX.Element {
         onMakeAction(actions[n]);//Block Accept will be filtered anyway
     });
 
-    function onMakeAction(action: ActionType) {
+    const onMakeAction = (action: ActionType) => {
         switch (action) {
             case ActionType.Accept:
                 const killInfo = GameManager.createKillInfo(ActionType.Assassinate, myId);
@@ -41,9 +41,8 @@ export default function ReactAssassinBoard(): JSX.Element {
                     return TransitionAction.Success;
                 });
                 break;
-
         }
-    }
+    };
 
     return (
         <Fragment>
