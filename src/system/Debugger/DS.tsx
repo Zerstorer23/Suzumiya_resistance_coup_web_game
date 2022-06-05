@@ -6,3 +6,5 @@ export const DS = {
     }
 
 };
+//TODO
+//https://www.my-ip.io/api
