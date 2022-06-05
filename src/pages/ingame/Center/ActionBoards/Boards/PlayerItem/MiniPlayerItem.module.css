@@ -1,0 +1,69 @@
+.container {
+    width: 100%;
+    height: 100%;
+}
+
+.clickContainer {
+    height: 3.5rem;
+    width: 100%;
+    margin-bottom: 0.2rem;
+    border-radius: 1rem;
+}
+
+.iconPanel {
+    position: relative;
+    height: 100%;
+    width: 10%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.icon {
+    position: absolute;
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.iconText {
+    position: absolute;
+    display: block;
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    transform: translateY(0.3rem);
+    font-size: 2rem;
+    text-align: center;
+}
+
+.selectable {
+    background-color: rgba(67, 244, 185, 0.445);
+}
+
+.selectable:hover {
+    background-color: rgba(222, 107, 24, 0.445);
+}
+
+
+.characterIcon {
+    padding: 0.5rem;
+    width: 20%;
+    display: block;
+}
+
+.namePanel {
+    display: block;
+    overflow-x: hidden;
+    padding: 0 0;
+    margin: auto;
+    width: 80%;
+    text-align: center;
+    font-size: 2rem;
+    background-color: #009812;
+}

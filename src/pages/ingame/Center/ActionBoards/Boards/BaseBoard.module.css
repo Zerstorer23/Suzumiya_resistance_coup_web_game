@@ -53,6 +53,13 @@
     justify-content: center;
 }
 
+.playerHeader {
+    height: 10%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
 .playersContainer {
     height: 90%;
     overflow-y: scroll;

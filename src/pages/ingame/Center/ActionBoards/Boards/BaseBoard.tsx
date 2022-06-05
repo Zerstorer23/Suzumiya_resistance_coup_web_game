@@ -13,10 +13,10 @@ import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {DS} from "system/Debugger/DS";
 import {GameManager} from "system/GameStates/GameManager";
 import {TurnManager} from "system/GameStates/TurnManager";
-import useShortcut from "system/hooks/useShortcut";
+import {useShortcutEffect} from "system/hooks/useShortcut";
 import {PlayerMap} from "system/GameStates/GameTypes";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
-import PlayerItem from "pages/ingame/Left/PlayerBoard/PlayerItem/PlayerItem";
+import MiniPlayerItem from "pages/ingame/Center/ActionBoards/Boards/PlayerItem/MiniPlayerItem";
 
 const actionsDefault = [
     ActionType.GetOne,
@@ -30,38 +30,45 @@ const actionsDefault = [
 const coupAction = [ActionType.None, ActionType.None, ActionType.None, ActionType.None, ActionType.Coup];
 
 function createActionBoards(actions: ActionType[], onMakeAction: any): JSX.Element {
-    return <div className={classes.container}>
-        {actions.map((action: ActionType, index: number) => {
-            return (
-                <BaseActionButton
-                    key={index}
-                    index={index}
-                    param={new ActionInfo(action)}
-                    onClickButton={() => {
-                        onMakeAction(action);
-                    }}
-                />
-            );
-        })}
-    </div>;
+    return <Fragment>
+        <div className={classes.header}>Do my action...</div>
+        <div className={classes.container}>
+            {actions.map((action: ActionType, index: number) => {
+                return (
+                    <BaseActionButton
+                        key={index}
+                        index={index}
+                        param={new ActionInfo(action)}
+                        onClickButton={() => {
+                            onMakeAction(action);
+                        }}
+                    />
+                );
+            })}
+        </div>
+    </Fragment>;
+
 }
 
-function createTargetPlayerBoards(ctx: RoomContextType, localCtx: LocalContextType, onPlayerSelected: any): JSX.Element {
+function createTargetPlayerBoards(ctx: RoomContextType, localCtx: LocalContextType, onPlayerSelected: (id: string) => void): JSX.Element {
     const playerList: string[] = ctx.room.playerList;
     const playerMap: PlayerMap = ctx.room.playerMap;
     const myId = localCtx.getVal(LocalField.Id);
-    return <div className={classes.playersContainer}>
-        {playerList.map((playerId) => {
-            if (playerId === myId) return <Fragment key={playerId}/>;
-            return <PlayerItem
-                key={playerId}
-                playerId={playerId}
-                player={playerMap.get(playerId)!}
-                isSelectable={true}
-                onSelect={onPlayerSelected(playerId)}
-            />;
-        })}
-    </div>;
+    return <Fragment>
+        <div className={classes.playerHeader}>Choose a target...</div>
+        <div className={classes.playersContainer}>
+            {playerList.map((playerId, index) => {
+                if (playerId === myId) return <Fragment key={playerId}/>;
+                return <MiniPlayerItem
+                    key={playerId}
+                    index={index}
+                    playerId={playerId}
+                    player={playerMap.get(playerId)!}
+                    onSelect={onPlayerSelected}
+                />;
+            })}
+        </div>
+    </Fragment>;
 }
 
 export default function BaseBoard(): JSX.Element {
@@ -86,9 +93,21 @@ export default function BaseBoard(): JSX.Element {
         setButtons((forceCoup && DS.StrictRules) ? coupAction : actionsDefault);
     }, [forceCoup]);
 
-    useShortcut(actions.length, (n) => {
-        onMakeAction(actions[n]);
-    });
+    const keyInfo = useShortcutEffect(actions.length);
+
+    useEffect(() => {
+        if (keyInfo.index < 0) return;
+        console.log("Received " + keyInfo.index);
+        console.log("saved " + savedAction);
+        if (savedAction === ActionType.None) {
+            onMakeAction(actions[keyInfo.index]);
+        } else {
+            const targetId = ctx.room.playerList[keyInfo.index];
+            if (targetId === undefined || targetId === null) return;
+            if (targetId === myId) return;
+            onPlayerSelected(targetId);
+        }
+    }, [keyInfo]);
 
 
     function handleTargetableAction(action: ActionType): boolean {
@@ -112,6 +131,7 @@ export default function BaseBoard(): JSX.Element {
 
     function onPlayerSelected(playerId: string) {
         if (!StateManager.isTargetableAction(savedAction)) return;
+        console.log("Selected player " + playerId);
         //Coup is special
         if (savedAction === ActionType.Coup) {
             ActionManager.pushPrepareDiscarding(ctx, GameManager.createKillInfo(ActionType.Coup, playerId));
@@ -131,9 +151,6 @@ export default function BaseBoard(): JSX.Element {
 
 
     return (
-        <Fragment>
-            <div className={classes.header}>Do my action...</div>
-            {elem}
-        </Fragment>
+        elem
     );
 }

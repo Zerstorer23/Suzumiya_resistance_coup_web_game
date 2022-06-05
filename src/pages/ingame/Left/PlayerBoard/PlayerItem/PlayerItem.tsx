@@ -12,8 +12,6 @@ import {CardPool} from "system/cards/CardPool";
 
 type Props = IProps & {
     player: Player;
-    isSelectable: boolean;
-    onSelect?: () => void;
     playerId: string;
 };
 export default function PlayerItem(props: Props): JSX.Element {
@@ -27,29 +25,22 @@ export default function PlayerItem(props: Props): JSX.Element {
     let panelColor = "";
     let subtitle = "";
 
-    if (!props.isSelectable) {
-        if (isMe) {
-            //My panel has highest priority and is unselectable
-            panelColor = classes.isMe;
-            subtitle = "Me";
-        } else if (props.playerId === currentTurnId) {
-            panelColor = classes.currentTurn;
-            subtitle = "This turn";
-        } else if (props.playerId === nextTurnId) {
-            panelColor = classes.nextTurn;
-            subtitle = "Next turn";
-        }
-    }
-    const namePanelClass =
-        subtitle.length <= 0 ? classes.namePanelWithTitle : classes.namePanel;
-
-    function onClickPanel() {
-        if (!props.isSelectable || props.onSelect === undefined || props.onSelect === null) return;
-        props.onSelect();
+    if (isMe) {
+        //My panel has highest priority and is unselectable
+        panelColor = classes.isMe;
+        subtitle = "Me";
+    } else if (props.playerId === currentTurnId) {
+        panelColor = classes.currentTurn;
+        subtitle = "This turn";
+    } else if (props.playerId === nextTurnId) {
+        panelColor = classes.nextTurn;
+        subtitle = "Next turn";
     }
 
+    const namePanelClass = subtitle.length <= 0 ? classes.namePanelWithTitle : classes.namePanel;
+    
     return (
-        <div className={`${classes.clickContainer}`} onClick={onClickPanel}>
+        <div className={`${classes.clickContainer}`}>
             <HorizontalLayout className={`${classes.container} ${panelColor}`}>
                 <img
                     src={`${CardPool.getCard(props.player.lastClaimed).getImage()}`}
