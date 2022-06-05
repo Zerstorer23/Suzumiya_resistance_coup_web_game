@@ -93,21 +93,21 @@ export default function BaseBoard(): JSX.Element {
         setButtons((forceCoup && DS.StrictRules) ? coupAction : actionsDefault);
     }, [forceCoup]);
 
-    const keyInfo = useShortcutEffect(actions.length);
+    const keyInfo = useShortcutEffect(8);
 
     useEffect(() => {
-        if (keyInfo.index < 0) return;
-        console.log("Received " + keyInfo.index);
-        console.log("saved " + savedAction);
+        const index = keyInfo.index;
+        if (index < 0) return;
         if (savedAction === ActionType.None) {
-            onMakeAction(actions[keyInfo.index]);
+            if (index >= actions.length) return;
+            onMakeAction(actions[index]);
         } else {
-            const targetId = ctx.room.playerList[keyInfo.index];
+            const targetId = ctx.room.playerList[index];
             if (targetId === undefined || targetId === null) return;
             if (targetId === myId) return;
             onPlayerSelected(targetId);
         }
-    }, [keyInfo]);
+    }, [keyInfo, actions]);
 
 
     function handleTargetableAction(action: ActionType): boolean {
@@ -150,7 +150,5 @@ export default function BaseBoard(): JSX.Element {
     }
 
 
-    return (
-        elem
-    );
+    return (elem);
 }

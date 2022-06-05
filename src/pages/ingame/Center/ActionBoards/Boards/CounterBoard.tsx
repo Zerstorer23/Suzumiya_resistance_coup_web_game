@@ -6,7 +6,7 @@ import RoomContext from "system/context/roomInfo/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import useShortcut from "system/hooks/useShortcut";
+import {useShortcutEffect} from "system/hooks/useShortcut";
 /*
     case BoardState.CalledGetThree:
     case BoardState.CalledChangeCards:
@@ -31,9 +31,12 @@ export default function CounterBoard(): JSX.Element {
     useEffect(() => {
         setActions((StateManager.isBlockedState(board)) ? actionsAcceptable : actionsNonAcceptable);
     }, [board]);
-    useShortcut(actions.length, (n) => {
-        onMakeAction(actions[n]);//Block Accept will be filtered anyway
-    });
+    const keyInfo = useShortcutEffect(actions.length);
+    useEffect(() => {
+        if (keyInfo.index < 0) return;
+        onMakeAction(actions[keyInfo.index]);
+    }, [keyInfo])
+
 
     function handleAccept(board: BoardState) {
         if (!StateManager.isBlockedState(board)) return;

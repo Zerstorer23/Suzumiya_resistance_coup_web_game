@@ -1,10 +1,10 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/database";
-import {firebaseConfigSG} from "system/Database/keys/SGconfig";
+import {firebaseConfigUS} from "system/Database/keys/USconfig";
 
 function initFirebase() {
     if (firebase.apps.length === 0) {
-        firebase.initializeApp(firebaseConfigSG);
+        firebase.initializeApp(firebaseConfigUS);
     }
 }
 

@@ -1,6 +1,6 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
-import {Fragment, useContext} from "react";
+import {Fragment, useContext, useEffect} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
@@ -10,7 +10,7 @@ import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {TurnManager} from "system/GameStates/TurnManager";
 import {GameManager} from "system/GameStates/GameManager";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
-import useShortcut from "system/hooks/useShortcut";
+import {useShortcutEffect} from "system/hooks/useShortcut";
 
 const actions = [
     ActionType.Accept,
@@ -21,9 +21,13 @@ export default function ReactAssassinBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    useShortcut(actions.length, (n) => {
-        onMakeAction(actions[n]);//Block Accept will be filtered anyway
-    });
+    const keyInfo = useShortcutEffect(actions.length);
+    useEffect(() => {
+        const index = keyInfo.index
+        if (index < 0) return;
+        onMakeAction(actions[index]);
+    }, [keyInfo])
+
 
     const onMakeAction = (action: ActionType) => {
         switch (action) {

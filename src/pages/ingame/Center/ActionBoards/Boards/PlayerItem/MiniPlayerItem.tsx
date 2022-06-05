@@ -23,10 +23,13 @@ export default function MiniPlayerItem(props: Props): JSX.Element {
         props.onSelect(props.playerId);
     }
 
+    const baseIndex = props.index + 1;
+    const mainText = (baseIndex <= 8) ? `[${baseIndex}] ${props.player.name}` : props.player.name;
+
     return (
         <div className={`${classes.clickContainer} ${classes.selectable}`} onClick={onClickPanel}>
             <HorizontalLayout className={`${classes.container}`}>
-                <p className={`${classes.namePanel} `}>[{props.index + 1}] {props.player.name}</p>
+                <p className={`${classes.namePanel} `}>{mainText}</p>
                 <div className={`${classes.iconPanel} `}>
                     <img alt="" src={`${getImage(Images.Card)}`} className={classes.icon}/>
                     <p className={classes.iconText}>

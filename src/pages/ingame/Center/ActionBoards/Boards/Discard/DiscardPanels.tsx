@@ -1,4 +1,4 @@
-import {Fragment, useContext} from "react";
+import {Fragment, useContext, useEffect} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import LocalContext from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
@@ -9,7 +9,7 @@ import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.cs
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import {handleCardKill} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardSolver";
 import {CardPool} from "system/cards/CardPool";
-import useShortcut from "system/hooks/useShortcut";
+import {useShortcutEffect} from "system/hooks/useShortcut";
 
 const MAX_PCARD = 2;
 
@@ -19,9 +19,14 @@ export function MyCardsPanel(): JSX.Element {
     const deck = ctx.room.game.deck;
     const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const myCards: CardRole[] = DeckManager.peekCards(deck, localPlayer.icard, MAX_PCARD);
-    useShortcut(MAX_PCARD, (n) => {
-        onMakeAction(n);
-    });
+
+    const keyInfo = useShortcutEffect(MAX_PCARD);
+    useEffect(() => {
+        const index = keyInfo.index;
+        if (index < 0) return;
+        onMakeAction(index);
+    }, [keyInfo]);
+
 
     function onMakeAction(index: number) {
         const myIndex = localPlayer.icard + index;

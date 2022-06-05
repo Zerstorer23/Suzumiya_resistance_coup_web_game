@@ -47,11 +47,11 @@ export default function PlayersPanel() {
             <VerticalLayout className={classes.list}>{
                 playerList.map((id, index, array) => {
                     return <PlayerListItem key={id} player={playerMap.get(id)!}
-                                           isHost={id === ctx.room.header.hostId}/>;
+                                           isHost={amHost}/>;
                 })
             }</VerticalLayout>
             <button ref={startBtnRef} className={classes.buttonStart} onClick={onClickStart}>
-                start
+                {(amHost) ? "start" : "Waiting for host to start"}
             </button>
         </VerticalLayout>
     );

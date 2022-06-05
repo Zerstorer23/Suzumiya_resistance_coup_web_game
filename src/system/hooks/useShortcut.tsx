@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {useCallback, useContext, useEffect, useState} from "react";
-import useKeyListener, {KeyCode} from "system/hooks/useKeyListener";
+import {useContext, useEffect, useState} from "react";
+import {KeyCode} from "system/hooks/useKeyListener";
 import LocalContext, {LocalField} from "system/context/localInfo/local-context";
 import {InputCursor} from "system/context/localInfo/LocalContextProvider";
 
@@ -27,18 +27,7 @@ const targets = [
     KeyCode.Six,
     KeyCode.Seven,
 ];
-export default function useShortcut(size: number, onIndexSelected: (n: number) => void) {
-    const localCtx = useContext(LocalContext);
-    const onKeyDown = useCallback(
-        (keyCode: KeyCode) => {
-            const idx = keyCodeToIndex(keyCode, size - 1);
-            if (idx < 0) return;
-            if (localCtx.getVal(LocalField.InputFocus) !== InputCursor.Idle) return;
-            onIndexSelected(idx);
-        }
-        , [localCtx]);
-    useKeyListener(targets, onKeyDown);
-};
+
 
 export function useShortcutEffect(size: number) {
     const localCtx = useContext(LocalContext);
