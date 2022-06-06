@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useRef} from "react";
 import classes from "./ChatModule.module.css";
-import ChatContext, {ChatEntryToElem, ChatFormat,} from "system/context/chatInfo/ChatContextProvider";
+import ChatContext, {ChatEntryToElem, ChatFormat, sendChat,} from "system/context/chatInfo/ChatContextProvider";
 import LocalContext, {LocalField} from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import RoomContext from "system/context/roomInfo/room-context";
@@ -41,7 +41,7 @@ export default function ChatModule() {
             chatFieldRef.current!.blur();
             return;
         }
-        chatCtx.sendChat(
+        sendChat(
             ChatFormat.normal,
             myPlayer.name,
             chatFieldRef.current!.value.toString()

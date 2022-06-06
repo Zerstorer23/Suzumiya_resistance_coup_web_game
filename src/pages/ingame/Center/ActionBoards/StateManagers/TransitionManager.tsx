@@ -6,6 +6,7 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import {CardRole} from "system/cards/Card";
 import {DS} from "system/Debugger/DS";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
+import {ChatFormat, sendChat} from "system/context/chatInfo/ChatContextProvider";
 
 
 export enum TransitionAction {
@@ -33,6 +34,7 @@ export function prepareAndPushState(
     if (result === TransitionAction.EndTurn) {
         const res = setEndTurn(ctx, newAction, newState);
         if (!res) return;
+        sendChat(ChatFormat.announcement, "", `${ctx.room.playerMap.get(ctx.room.playerList[newState.turn])}'s turn`);
     }
     pushActionState(newAction, newState);
 }

@@ -6,7 +6,6 @@ import classes from "pages/components/ui/ChatModule/ChatModule.module.css";
 export type ChatContextType = {
     chatList: ChatEntry[];
     loadChat: (a: ChatEntry) => void;
-    sendChat: (format: ChatFormat, sender: string, msg: string) => void;
     setter: any;
 };
 
@@ -14,8 +13,6 @@ export type ChatContextType = {
 const ChatContext = React.createContext<ChatContextType>({
     chatList: [],
     loadChat: (a: ChatEntry) => {
-    },
-    sendChat: (format: ChatFormat, m: string, a: string) => {
     },
     setter: () => {
     },
@@ -54,8 +51,7 @@ export function ChatEntryToElem(key: any, ce: ChatEntry): JSX.Element {
 
 export function ChatProvider(props: IProps) {
     const [chatList, setChatList] = useState<ChatEntry[]>([]);
-
-
+    
     function loadChat(ce: ChatEntry) {
         if (ce === null) return;
         setChatList((prev) => {
@@ -65,16 +61,10 @@ export function ChatProvider(props: IProps) {
         });
     }
 
-    function sendChat(format: number, name: string, msg: string) {
-        const ce: ChatEntry = {name, msg, format};
-        const ref = ReferenceManager.getRef(DbReferences.CHAT);
-        ref.push(ce);
-    }
 
     const context: ChatContextType = {
         chatList,
         loadChat,
-        sendChat,
         setter: setChatList
     };
     return (
@@ -82,6 +72,12 @@ export function ChatProvider(props: IProps) {
             {props.children}
         </ChatContext.Provider>
     );
+}
+
+export function sendChat(format: number, name: string, msg: string) {
+    const ce: ChatEntry = {name, msg, format};
+    const ref = ReferenceManager.getRef(DbReferences.CHAT);
+    ref.push(ce);
 }
 
 export default ChatContext;

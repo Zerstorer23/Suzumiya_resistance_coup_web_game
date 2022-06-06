@@ -9,7 +9,10 @@
 }
 
 .fieldType {
+    height: 2rem;
     width: 50%;
+    justify-self: center;
+    text-align: center;
     align-content: center;
     margin: 0.2rem 0.2rem;
 }

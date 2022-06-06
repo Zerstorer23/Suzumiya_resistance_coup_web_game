@@ -44,7 +44,7 @@ export default function LobbySettings() {
                 ></input>
             </HorizontalLayout>
             <button className={classes.fieldType}>{t("_help")}</button>
-            <button className={classes.fieldType}>{t("_help")}</button>
+            {/*<button className={classes.fieldType}>{t("_help")}</button>*/}
         </div>
     );
 }

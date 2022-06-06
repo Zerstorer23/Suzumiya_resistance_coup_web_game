@@ -85,5 +85,7 @@
   "_discard_result": "$b$0$b discarded $b$1$b",
   "_discard_result_challenge": "$b$0$b discarded $b$1$b for losing challenge",
   "_is_removed": "$b$0$b is removed from game!",
+  "_waiting_others": "Waiting for other player's reaction...",
+  "_waiting_other_player": "Waiting for $b$0%b's reaction...",
   "dymmy": "dummy"
 }
