@@ -7,11 +7,14 @@ import RoomContext from "system/context/roomInfo/room-context";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import {InputCursor} from "system/context/localInfo/LocalContextProvider";
 import useKeyListener, {KeyCode} from "system/hooks/useKeyListener";
+import {useTranslation} from "react-i18next";
 
 export default function ChatModule() {
     const chatCtx = useContext(ChatContext);
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
+    const {t} = useTranslation();
+
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const chatFieldRef = useRef<HTMLInputElement>(null);
@@ -72,7 +75,7 @@ export default function ChatModule() {
                     }}
                 ></input>
                 <button className={classes.buttonSend} onClick={handleSend}>
-                    Send
+                    {t("_send")}
                 </button>
             </HorizontalLayout>
         </div>

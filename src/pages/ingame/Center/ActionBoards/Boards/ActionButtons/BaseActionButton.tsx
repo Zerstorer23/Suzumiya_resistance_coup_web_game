@@ -10,9 +10,12 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import {DeckManager} from "system/cards/DeckManager";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import {CardPool} from "system/cards/CardPool";
+import {useTranslation} from "react-i18next";
+import {insert} from "lang/i18nHelper";
 
 type Prop = IProps & {
     index: number;
+    cssIndex?: number;
     param: Card | ActionInfo;
     onClickButton: () => void;
 };
@@ -35,6 +38,7 @@ export default function BaseActionButton(props: Prop) {
     const param = props.param;
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
+    const {t} = useTranslation();
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const myCards = DeckManager.peekCards(ctx.room.game.deck, myPlayer.icard, 2);
     let relatedRole = CardRole.None;
@@ -43,7 +47,7 @@ export default function BaseActionButton(props: Prop) {
         if (DeckManager.isDead(param.cardRole)) return <Fragment/>;
         hasCard = true;
         relatedRole = param.cardRole;
-        name = param.getName();
+        name = param.getName(t);
         //Card case
     } else {
         //ActionInfo Case
@@ -79,7 +83,7 @@ export default function BaseActionButton(props: Prop) {
                 isCard = false;
                 break;
         }
-        name = param.getName();
+        name = param.getName(t);
         hasCard = myCards.includes(relatedRole) || !isCard;
     }
 
@@ -94,14 +98,17 @@ export default function BaseActionButton(props: Prop) {
     );
     const hasEnoughMoney = myPlayer.coins >= cost;
     let subClassName = isCard ? classes.lieText : "";
-    let subText = hasCard ? "" : "[Lie]";
+    let subText = hasCard ? "" : t("_lie_marker");
     if (!hasEnoughMoney) {
         subClassName = classes.noCoinText;
-        subText = `${cost} coins`;
+        subText = insert(t, "_coin_cost", cost);
     }
 
     const disableCss = hasEnoughMoney ? classes.cell : classes.cellDisabled;
-    const baseIndex = props.index + 1;
+    let baseIndex = props.index + 1;
+    if (props.cssIndex !== undefined && props.cssIndex > 0) {
+        baseIndex = props.cssIndex;
+    }
     const cellCss = classes[`cell${baseIndex}`];
     return (
         <button

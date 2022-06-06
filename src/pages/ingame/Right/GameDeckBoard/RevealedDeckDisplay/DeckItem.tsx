@@ -6,10 +6,13 @@ import {Fragment, useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import {CardPool} from "system/cards/CardPool";
 import {DeckManager} from "system/cards/DeckManager";
+import {useTranslation} from "react-i18next";
+import {insert} from "lang/i18nHelper";
 
 type Prop = IProps & { card: CardRole };
 export default function DeckItem(props: Prop): JSX.Element {
     const ctx = useContext(RoomContext);
+    const {t} = useTranslation();
     const deck = ctx.room.game.deck;
     const role = props.card;
     const card = CardPool.getCard(role);
@@ -17,7 +20,9 @@ export default function DeckItem(props: Prop): JSX.Element {
     let counterText;
     //TODO do the iteration here
     if (role === CardRole.None) {
-        counterText = <Fragment> {`${(deck.length - deckTop)} in deck`}</Fragment>;
+        counterText = <Fragment> {
+            insert(t, "_cin_deck", (deck.length - deckTop))}
+        </Fragment>;
     } else {
         const total = deck.length / 5;
         const count = DeckManager.countCards(deck, role);

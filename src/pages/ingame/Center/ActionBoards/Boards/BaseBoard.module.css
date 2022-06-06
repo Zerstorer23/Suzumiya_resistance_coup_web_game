@@ -71,6 +71,11 @@
     display: none;
 }
 
+.centerText {
+    font-size: 1.2rem;
+    text-align: center;
+}
+
 .singleContainer {
     width: 100%;
     height: 100%;

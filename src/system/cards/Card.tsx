@@ -67,50 +67,47 @@ export class Card {
         }
     }
 
-    getName() {
+    getName(t: any) {
         switch (this.cardRole) {
             case CardRole.Duke:
             case CardRole.DEAD_Duke:
-                return "Duke";
+                return t("_duke_name");
             case CardRole.DEAD_Captain:
             case CardRole.Captain:
-                return "Captain";
+                return t("_captain_name");
             case CardRole.DEAD_Assassin:
             case CardRole.Assassin:
-                return "Assassin";
+                return t("_assaassin_name");
             case CardRole.DEAD_Contessa:
             case CardRole.Contessa:
-                return "Contessa";
+                return t("_contessa_name");
             case CardRole.DEAD_Ambassador:
             case CardRole.Ambassador:
-                return "Ambassdor";
+                return t("_ambassador_name");
             case CardRole.None:
             default:
-                return "Unknown";
+                return t("_unknown_name");
         }
     }
+    
 
-    getElemName() {
-        return <strong>{this.getName()}</strong>;
-    }
-
-    getDesc() {
+    getDesc(t: any) {
         switch (this.cardRole) {
             case CardRole.Duke:
             case CardRole.DEAD_Duke:
-                return "Description for Duke";
+                return t("_duke_desc");
             case CardRole.Captain:
             case CardRole.DEAD_Captain:
-                return "Description for Captain";
+                return t("_captain_desc");
             case CardRole.Assassin:
             case CardRole.DEAD_Assassin:
-                return "Description for Assassin";
+                return t("_assaassin_desc");
             case CardRole.Contessa:
             case CardRole.DEAD_Contessa:
-                return "Description for Contessa";
+                return t("_contessa_desc");
             case CardRole.Ambassador:
             case CardRole.DEAD_Ambassador:
-                return "Description for Ambassador";
+                return t("_ambassador_desc");
             case CardRole.None:
             default:
                 return "";

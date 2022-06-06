@@ -33,7 +33,7 @@ export async function joinLocalPlayer(
         player.icard = -2;
     }
     const myRef = playersRef.push();
-    myRef.set(player);
+    await myRef.set(player);
     const myId = await myRef.key;
     if (asHost) {
         ReferenceManager.updateReference(DbReferences.HEADER_hostId, myId);

@@ -23,10 +23,10 @@ export default function ReactAssassinBoard(): JSX.Element {
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const keyInfo = useShortcutEffect(actions.length);
     useEffect(() => {
-        const index = keyInfo.index
+        const index = keyInfo.index;
         if (index < 0) return;
         onMakeAction(actions[index]);
-    }, [keyInfo])
+    }, [keyInfo]);
 
 
     const onMakeAction = (action: ActionType) => {
@@ -50,7 +50,6 @@ export default function ReactAssassinBoard(): JSX.Element {
 
     return (
         <Fragment>
-            <h1>Tsukomi</h1>
             <div className={classes.halfContainer}>
                 {actions.map((action: ActionType, index: number) => {
                     return (

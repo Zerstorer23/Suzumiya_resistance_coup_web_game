@@ -10,6 +10,8 @@ import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButt
 import {handleCardKill} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardSolver";
 import {CardPool} from "system/cards/CardPool";
 import {useShortcutEffect} from "system/hooks/useShortcut";
+import {useTranslation} from "react-i18next";
+import {formatInsert} from "lang/i18nHelper";
 
 const MAX_PCARD = 2;
 
@@ -60,23 +62,25 @@ export function MyCardsPanel(): JSX.Element {
 
 export function PostKillPanel(): JSX.Element {
     const ctx = useContext(RoomContext);
+    const {t} = useTranslation();
     const info = ctx.room.game.action.param as KillInfo;
     const player = ctx.room.playerMap.get(info.ownerId)!;
     const cardRole = ctx.room.game.deck[info.removed[0]];
     let secondElem = <Fragment/>;
     if (info.removed[1] >= 0) {
         const secCard = ctx.room.game.deck[info.removed[1]];
-        secondElem =
-            <p>{`${player.name} discarded `}{CardPool.getCard(secCard).getElemName()}{" for losing challenge"}</p>;
+        secondElem = <p>{formatInsert(t, "_discard_result_challenge", player.name,
+            CardPool.getCard(secCard).getName(t))}</p>;
     }
 
     if (player === undefined) return <Fragment/>;
     const isDead = DeckManager.playerIsDead(ctx.room.game.deck, player);
     return (
         <Fragment>
-            <p>{`${player.name} discarded `}{CardPool.getCard(cardRole).getElemName()}</p>
+            <p>{formatInsert(t, "_discard_result", player.name,
+                CardPool.getCard(cardRole).getName(t))}</p>
             {secondElem}
-            {isDead && <p>{`${player.name} is removed from game!`}</p>}
+            {isDead && <p>{formatInsert(t, "_is_removed", player.name)}</p>}
         </Fragment>
     );
 }

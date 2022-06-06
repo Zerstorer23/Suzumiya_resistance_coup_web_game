@@ -22,7 +22,7 @@ export function handleDiscardState(
     if (myId === killInfo.ownerId) {
         return handleLoserTurn(ctx, localCtx, killInfo);
     } else {
-        return handleWinnerTurn(ctx, localCtx, killInfo);
+        return handleOtherTurn(ctx, localCtx, killInfo);
     }
 }
 
@@ -32,11 +32,11 @@ function handleLoserTurn(
     killInfo: KillInfo
 ): JSX.Element {
     if (killInfo.nextState === BoardState.CalledAssassinate) {
-        const numAlive = DeckManager.playerCardNum(ctx.room.game.deck, ctx.room.playerMap.get(killInfo.ownerId)!.icard);
+        const numAlive = DeckManager.playerAliveCardNum(ctx.room.game.deck, ctx.room.playerMap.get(killInfo.ownerId)!.icard);
         if (numAlive === 2) {
             handleSuicide(ctx, killInfo.ownerId);
+            return <WaitingPanel/>;
         }
-        return <WaitingPanel/>;
     }
     if (killInfo.removed[0] < 0) {
         return <MyCardsPanel/>;
@@ -45,7 +45,7 @@ function handleLoserTurn(
     }
 }
 
-function handleWinnerTurn(
+function handleOtherTurn(
     ctx: RoomContextType,
     localCtx: LocalContextType,
     killInfo: KillInfo
@@ -61,9 +61,10 @@ function handleWinnerTurn(
 function hostEndsState(ctx: RoomContextType,
                        localCtx: LocalContextType,
                        killInfo: KillInfo) {
-    //TODO Host handles ending discarding state.
     const amHost = TurnManager.amHost(ctx, localCtx);
     if (!amHost) return;
+
+    //TODO Host handles ending discarding state.
     setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
         const nextBoard = killInfo.nextState as BoardState;
         //TODO if alive player number <= 1, set turn -2 . return TransitionAction.EndGame

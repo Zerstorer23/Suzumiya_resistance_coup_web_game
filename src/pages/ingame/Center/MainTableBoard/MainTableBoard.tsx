@@ -8,16 +8,18 @@ import RoomContext from "system/context/roomInfo/room-context";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {KillInfo} from "system/GameStates/GameTypes";
+import {useTranslation} from "react-i18next";
 
 export default function MainTableBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const mainId: string = getMainPlayerFromState(ctx);
     const subId: string = getSubPlayerFromState(ctx);
+    const {t} = useTranslation();
     return (
         <div className={`${gc.round_border} ${classes.container}`}>
             <VerticalLayout>
                 <p className={classes.timer}>
-                    <MyTimer/> seconds remaining...
+                    <MyTimer/>{t("_seconds_remaining")}
                 </p>
                 <TableItem isMain={true} className={classes.topContainer} playerId={mainId}/>
                 <TableItem isMain={false} className={classes.bottomContainer} playerId={subId}/>

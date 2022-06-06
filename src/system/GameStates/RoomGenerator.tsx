@@ -77,8 +77,6 @@ export function setStartingRoom(room: Room) {
         player.coins = 2;
         player.icard = index * 2;
         player.isSpectating = false;
-        console.log("Update player " + index);
-        console.log(player);
         ReferenceManager.updatePlayerReference(playerId, player);
     });
     //Set Room

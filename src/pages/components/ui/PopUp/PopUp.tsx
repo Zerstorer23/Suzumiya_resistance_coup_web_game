@@ -34,7 +34,7 @@ function GameOverWindow(props: GOprops) {
             <div className={classes.content}>
                 <p>Game Winner: {props.player?.name}</p>
                 <p>{`Used cards:${CardPool.getCard(props.card1!)} , ${CardPool.getCard(props.card1!)}`}</p>
-                <p>Return to lobby in ....</p>
+                <p>Return to lobby in 5 seconds...</p>
             </div>
         </div>
     );

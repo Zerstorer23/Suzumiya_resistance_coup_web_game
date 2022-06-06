@@ -3,15 +3,15 @@ import {Fragment, useContext, useEffect, useState} from "react";
 import RoomContext, {UpdateType} from "system/context/roomInfo/room-context";
 import {initialiseRoom, joinLobby, loadRoom, ReferenceManager, registerListeners,} from "system/Database/RoomDatabase";
 import {
-  IProps,
-  LISTEN_CHILD_ADDED,
-  LISTEN_CHILD_CHANGED,
-  LISTEN_CHILD_REMOVED,
-  LISTEN_VALUE,
-  Listeners,
-  ListenerTypes,
-  LoadStatus,
-  Snapshot,
+    IProps,
+    LISTEN_CHILD_ADDED,
+    LISTEN_CHILD_CHANGED,
+    LISTEN_CHILD_REMOVED,
+    LISTEN_VALUE,
+    Listeners,
+    ListenerTypes,
+    LoadStatus,
+    Snapshot,
 } from "system/types/CommonTypes";
 import {GameAction, Player, Room, RoomHeader,} from "system/GameStates/GameTypes";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
@@ -149,10 +149,11 @@ export default function DataLoader(props: IProps) {
     const myId = localCtx.getVal(LocalField.Id);
     useEffect(() => {
         if (myId === null) return;
-        if (context.room.game.state.turn < 0) {
+        const turn = context.room.game.state.turn;
+        if (turn === -1) {
             history.replace(Navigation.Lobby);
         } else {
-            history.replace(Navigation.Lobby);
+            history.replace(Navigation.InGame);
         }
         setStatus(LoadStatus.outerSpace);
     }, [myId]);

@@ -10,6 +10,9 @@ import LocalContext, {LocalField} from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import useKeyListener, {KeyCode} from "system/hooks/useKeyListener";
 import {InputCursor} from "system/context/localInfo/LocalContextProvider";
+import {useTranslation} from "react-i18next";
+import {insert} from "lang/i18nHelper";
+
 
 export default function PlayersPanel() {
     const ctx = useContext(RoomContext);
@@ -17,10 +20,11 @@ export default function PlayersPanel() {
     const amHost = TurnManager.amHost(ctx, localCtx);
     const startBtnRef = useRef<HTMLButtonElement>(null);
 
+    const {t} = useTranslation();
+
     useKeyListener([KeyCode.Space], onKey);
 
     function onKey(keyCode: KeyCode) {
-        console.log("Key " + keyCode + " s" + KeyCode.Space);
         if (localCtx.getVal(LocalField.InputFocus) === InputCursor.Chat) return;
         if (keyCode === KeyCode.Space) {
             onClickStart();
@@ -41,8 +45,8 @@ export default function PlayersPanel() {
     return (
         <VerticalLayout className={`${gc.round_border} ${classes.container} `}>
             <div className={classes.headerContainer}>
-                <p className={classes.headerTitle}>Hamang No.6</p>
-                <p className={classes.headerPlayerNum}>{`${currPlayer} connected`}</p>
+                <p className={classes.headerTitle}>{t("_game_title")}</p>
+                <p className={classes.headerPlayerNum}>{insert(t, "_connected", currPlayer)}</p>
             </div>
             <VerticalLayout className={classes.list}>{
                 playerList.map((id, index, array) => {
@@ -51,7 +55,7 @@ export default function PlayersPanel() {
                 })
             }</VerticalLayout>
             <button ref={startBtnRef} className={classes.buttonStart} onClick={onClickStart}>
-                {(amHost) ? "start" : "Waiting for host to start"}
+                {t((amHost) ? "_start" : "_waiting_at_lobby")}
             </button>
         </VerticalLayout>
     );

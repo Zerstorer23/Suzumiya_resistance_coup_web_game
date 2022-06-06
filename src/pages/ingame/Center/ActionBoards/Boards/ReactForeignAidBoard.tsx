@@ -7,7 +7,6 @@ import {ActionInfo} from "system/GameStates/ActionInfo";
 import {ActionType, BoardState} from "system/GameStates/States";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {DS} from "system/Debugger/DS";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
@@ -32,8 +31,6 @@ export default function ReactForeignAidBoard(): JSX.Element {
             newAction.targetId = myId;
             newState.board = BoardState.CalledGetTwoBlocked;
             playerClaimedRole(myId, myPlayer, action);
-            DS.logTransition("Block aid");
-            DS.logTransition(newAction);
             return TransitionAction.Success;
         });
     };

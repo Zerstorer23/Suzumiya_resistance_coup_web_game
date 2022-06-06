@@ -69,8 +69,7 @@ export async function initialiseRoom(turn: number) {
     const roomRef = ReferenceManager.getRoomRef();
     const defaultRoom = getDefaultRoom();
     await roomRef.set(defaultRoom);
-    const myId = await joinLocalPlayer(turn, true);
-    return myId;
+    return await joinLocalPlayer(turn, true);
 }
 
 export async function joinLobby(turn: number): Promise<string> {

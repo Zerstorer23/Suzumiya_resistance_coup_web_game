@@ -9,11 +9,12 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
+import {useTranslation} from "react-i18next";
 
 export default function AmbassadorBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const deck: CardRole[] = ctx.room.game.deck;
-
+    const {t} = useTranslation();
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     //get 2 cards from top of the deck
@@ -40,7 +41,7 @@ export default function AmbassadorBoard(): JSX.Element {
 
     //TODO: Dead Card
     useEffect(() => {
-        if (DeckManager.playerCardNum(deck, myPlayer.icard) === 1) {
+        if (DeckManager.playerAliveCardNum(deck, myPlayer.icard) === 1) {
             console.log("one card alive");
             //swap
             if (firstCardPicked === 1) {
@@ -110,7 +111,7 @@ export default function AmbassadorBoard(): JSX.Element {
             <div className={classes.header}>
                 Choose 2 cards that you want to keep...
             </div>
-            <p>mine</p>
+            <p className={classes.centerText}>{t("_my_card_pool")}</p>
             <div className={classes.quarterContainer}>
                 {cardArr.map((action: Card, index: number) => {
                     if (firstCardPicked === index) {
@@ -132,8 +133,7 @@ export default function AmbassadorBoard(): JSX.Element {
                     );
                 })}
             </div>
-            <p>deck</p>
-
+            <p className={classes.centerText}>{t("_deck_card_pool")}</p>
             <div className={classes.singleContainer}>
                 {cardArr.map((action: Card, index: number) => {
                     if (firstCardPicked === index) {
@@ -144,10 +144,9 @@ export default function AmbassadorBoard(): JSX.Element {
                     }
                     return (
                         <BaseActionButton
-                            //TODO CSS index is 1,2
-                            //But HotKey index is 3,4
                             key={index}
                             index={index}
+                            cssIndex={index - 1}
                             param={action}
                             onClickButton={() => {
                                 onMakeAction(index);

@@ -14,6 +14,7 @@ import {useHistory} from "react-router-dom";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import GameOverPopUp from "pages/components/ui/PopUp/PopUp";
 import {Navigation} from "App";
+import {TurnManager} from "system/GameStates/TurnManager";
 
 export default function InGame() {
     const ctx = useContext(RoomContext);
@@ -22,14 +23,7 @@ export default function InGame() {
     const myId = localCtx.getVal(LocalField.Id);
     const [roomCode, setRoomCode] = useState<number>(0);
     const [isGameOver, setIsGameOver] = useState<boolean>(false);
-
-    /**
-     * If any id field is not length 0 but not in player Map,
-     * show some other board.
-     * and host should clean up to new turnstate and clean action board
-     * send message that turn is reset
-     *
-     */
+    const amHost = TurnManager.amHost(ctx, localCtx);
 
     function checkSanity() {
         if (myId === ctx.room.header.hostId) {
@@ -46,13 +40,11 @@ export default function InGame() {
     }
 
     useEffect(() => {
-        console.log("Host ID = " + ctx.room.header.hostId);
         checkSanity();
         setRoomCode((n) => n++);
     }, [ctx.room.playerMap.size]);
 
     useEffect(() => {
-        console.log(`In game id ${myId}`);
         if (myId === null) {
             history.replace(Navigation.Loading);
         }
@@ -62,10 +54,11 @@ export default function InGame() {
         if (turn === -2) {
             setIsGameOver(true);
             //TODO
-            //If I am host, set timer and change turn
+            //Set timer 5 sec,
+            //If I am host,  change turn on expire
         } else if (turn === -1) {
             setIsGameOver(false);
-            //Redirect to Lobby
+            history.replace(Navigation.Lobby);
         }
     }, [turn]);
 

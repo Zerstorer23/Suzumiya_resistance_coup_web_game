@@ -19,7 +19,6 @@ export default function MiniPlayerItem(props: Props): JSX.Element {
     if (props.player.isSpectating) return <Fragment/>;
 
     function onClickPanel() {
-        console.log("Select " + props.playerId);
         props.onSelect(props.playerId);
     }
 
@@ -33,7 +32,7 @@ export default function MiniPlayerItem(props: Props): JSX.Element {
                 <div className={`${classes.iconPanel} `}>
                     <img alt="" src={`${getImage(Images.Card)}`} className={classes.icon}/>
                     <p className={classes.iconText}>
-                        {DeckManager.playerCardNum(deck, props.player.icard)}
+                        {DeckManager.playerAliveCardNum(deck, props.player.icard)}
                     </p>
                 </div>
                 <div className={`${classes.iconPanel} `}>

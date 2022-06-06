@@ -16,6 +16,7 @@ export function waitAndEnd(ctx: RoomContextType, localCtx: LocalContextType) {
     });
 }
 
+
 export function solveState(ctx: RoomContextType, localCtx: LocalContextType) {
     const board = ctx.room.game.state.board;
     switch (board) {
