@@ -12,7 +12,11 @@ import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
 import { DS } from "system/Debugger/DS";
 import { RoomContextType } from "system/context/roomInfo/RoomContextProvider";
 import WaitingPanel from "pages/ingame/Center/ActionBoards/Boards/Waiter/WaitingPanel";
-import { ChatFormat, ChatProvider } from "system/context/chatInfo/ChatContextProvider";
+import {
+  ChatFormat,
+  ChatProvider,
+  sendChat,
+} from "system/context/chatInfo/ChatContextProvider";
 
 export function handleDiscardState(
   ctx: RoomContextType,
@@ -76,6 +80,7 @@ function hostEndsState(
     //TODO if alive player number <= 1, set turn -2 . return TransitionAction.EndGame
     const winnerId = DeckManager.checkGameOver(ctx);
     if (winnerId !== "") {
+      sendChat(ChatFormat.important, "", "$The game has finished");
       ActionManager.pushEndGame(ctx, winnerId);
       return;
     }
@@ -117,7 +122,7 @@ export function handleCardKill(ctx: RoomContextType, index: number) {
       player.isSpectating = true;
       player.coins = 0;
       ReferenceManager.updatePlayerReference(killedInfo.ownerId, player);
-      ChatProvider.sendChat(ChatFormat.important, "", $The player is removed from the game);
+      sendChat(ChatFormat.important, "", `${player.name} is dead.`);
     }
     //If it was, set spectating on
     DS.logTransition("Removed card at " + index);
