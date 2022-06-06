@@ -19,10 +19,10 @@ export default function DiscardBoard(): JSX.Element {
 
     const [jsxElem, setJSX] = useState<JSX.Element>(<Fragment/>);
     useEffect(() => {
-        if (ctx.room.game.state.board !== BoardState.DiscardingCard) return;
+        if (BoardState.DiscardingCard !== (ctx.room.game.state.board)) return;
         const time = inferWaitTime(ctx.room.game.state.board, ctx.room.game.action);
         setMyTimer(localCtx, time, () => {
-            if (DS.StrictRules && killInfo.removed < 0) {
+            if (DS.StrictRules && killInfo.removed[0] < 0) {
                 //TODO kill himself
             }
         });

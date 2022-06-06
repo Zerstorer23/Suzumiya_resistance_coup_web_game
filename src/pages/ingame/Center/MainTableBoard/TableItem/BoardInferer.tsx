@@ -295,7 +295,8 @@ function inferBlocked(
 export function inferDiscardState(ctx: RoomContextType, playerId: string): JSX.Element {
     const action = ctx.room.game.action;
     const killInfo: KillInfo = action.param as KillInfo;
-    const cardSelected = killInfo.removed >= 0;
+    if (killInfo.removed === undefined) return <Fragment/>;
+    const cardSelected = killInfo.removed[0] >= 0;
     if (cardSelected) {
         if (playerId === killInfo.ownerId) {
             return (<PostKillPanel/>);

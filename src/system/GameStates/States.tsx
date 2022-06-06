@@ -51,6 +51,9 @@ export enum ActionType {
 }
 
 export const StateManager = {
+    /*    isDiscardingState(state: BoardState): boolean {
+            return state === BoardState.DiscardingCard || state === BoardState.DiscardingCard2;
+        },*/
     isBlockedState(state: BoardState): boolean {
         /**
          * States that require HOST to react LIE or ACCEPT
@@ -72,7 +75,6 @@ export const StateManager = {
             case BoardState.CalledGetThree:
             case BoardState.CalledChangeCards:
             case BoardState.CalledSteal:
-            case BoardState.CalledAssassinate:
             case BoardState.CalledGetTwoBlocked:
             case BoardState.StealBlocked:
             case BoardState.AssassinBlocked:

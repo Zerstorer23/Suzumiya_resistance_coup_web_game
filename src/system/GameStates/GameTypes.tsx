@@ -36,7 +36,7 @@ export type KillInfo = {
     cause: KillActionTypes; //What caused this kill
     card: CardRole; //If lie, what was expected?
     ownerId: string; //id of player whos killed
-    removed: number; //card index in deck that is removed. -1 when none chosne
+    removed: number[]; //card index in deck that is removed. -1 when none chosne
     nextState: PostChallengeStates | ChallengeState; //
 };
 /*

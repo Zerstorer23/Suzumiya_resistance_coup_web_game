@@ -20,19 +20,38 @@ export function handleDiscardState(
 ): JSX.Element {
     const [myId] = TurnManager.getMyInfo(ctx, localCtx);
     if (myId === killInfo.ownerId) {
-        return handleMyTurn(ctx, localCtx, killInfo);
+        return handleLoserTurn(ctx, localCtx, killInfo);
+    } else {
+        return handleWinnerTurn(ctx, localCtx, killInfo);
+    }
+}
+
+function handleLoserTurn(
+    ctx: RoomContextType,
+    localCtx: LocalContextType,
+    killInfo: KillInfo
+): JSX.Element {
+    if (killInfo.nextState === BoardState.CalledAssassinate) {
+        const numAlive = DeckManager.playerCardNum(ctx.room.game.deck, ctx.room.playerMap.get(killInfo.ownerId)!.icard);
+        if (numAlive === 2) {
+            handleSuicide(ctx, killInfo.ownerId);
+        }
+        return <WaitingPanel/>;
+    }
+    if (killInfo.removed[0] < 0) {
+        return <MyCardsPanel/>;
     } else {
         return <WaitingPanel/>;
     }
 }
 
-function handleMyTurn(
+function handleWinnerTurn(
     ctx: RoomContextType,
     localCtx: LocalContextType,
     killInfo: KillInfo
 ): JSX.Element {
-    if (killInfo.removed < 0) {
-        return <MyCardsPanel/>;
+    if (killInfo.removed[0] < 0) {
+        return <WaitingPanel/>;
     } else {
         setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
             const nextBoard = killInfo.nextState as BoardState;
@@ -46,14 +65,18 @@ function handleMyTurn(
                         return TransitionAction.Success;
                     });
                     break;
+                /*                    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+                                        const target = ctx.room.playerMap.get(newAction.targetId)!;
+                                        if (target.isSpectating) {
+                                            //He is already dead
+                                            return TransitionAction.EndTurn;
+                                        } else {
+                                            newState.board = BoardState.DiscardingCard2;
+                                            return TransitionAction.Success;
+                                        }
+                                    });
+                                    break;*/
                 case BoardState.CalledAssassinate:
-                    //NOTE Just kill all cards and set him dead.
-                    // Kill both card and set spectating true
-                    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
-                        newState.board = BoardState.DiscardingCard;
-                        return TransitionAction.Success;
-                    });
-                    break;
                 default:
                     ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
                         return TransitionAction.EndTurn;
@@ -70,7 +93,7 @@ export function handleCardKill(ctx: RoomContextType, index: number) {
     DeckManager.killCardAt(deck, index);
     ActionManager.prepareAndPushState(ctx, (newAction) => {
         const killedInfo = newAction.param as KillInfo;
-        killedInfo.removed = index;
+        killedInfo.removed[0] = index;
         newAction.param = killedInfo;
         ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
         const isDead = DeckManager.playerIsDead(
@@ -86,6 +109,24 @@ export function handleCardKill(ctx: RoomContextType, index: number) {
         //If it was, set spectating on
         DS.logTransition("Removed card at " + index);
         DS.logTransition(newAction);
+        return TransitionAction.Success;
+    });
+}
+
+export function handleSuicide(ctx: RoomContextType, playerId: string) {
+    const deck = ctx.room.game.deck;
+    ActionManager.prepareAndPushState(ctx, (newAction) => {
+        const player = ctx.room.playerMap.get(playerId)!;
+        DeckManager.killCardAt(deck, player.icard);
+        DeckManager.killCardAt(deck, player.icard + 1);
+        const killedInfo = newAction.param as KillInfo;
+        killedInfo.removed[0] = player.icard;
+        killedInfo.removed[1] = player.icard + 1;
+        newAction.param = killedInfo;
+        ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
+        player.isSpectating = true;
+        player.coins = 0;
+        ReferenceManager.updatePlayerReference(killedInfo.ownerId, player);
         return TransitionAction.Success;
     });
 }

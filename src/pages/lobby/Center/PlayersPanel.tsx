@@ -47,7 +47,7 @@ export default function PlayersPanel() {
             <VerticalLayout className={classes.list}>{
                 playerList.map((id, index, array) => {
                     return <PlayerListItem key={id} player={playerMap.get(id)!}
-                                           isHost={amHost}/>;
+                                           isHost={id === ctx.room.header.hostId}/>;
                 })
             }</VerticalLayout>
             <button ref={startBtnRef} className={classes.buttonStart} onClick={onClickStart}>

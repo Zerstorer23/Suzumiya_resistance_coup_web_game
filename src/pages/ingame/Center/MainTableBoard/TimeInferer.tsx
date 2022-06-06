@@ -14,7 +14,8 @@ import {BoardState} from "system/GameStates/States";
 
 function inferDiscardingTime(action: GameAction) {
     const killInfo = action.param as KillInfo;
-    if (killInfo.removed < 0) return WaitTime.MakingDecision;
+    if (killInfo.removed === undefined) return WaitTime.WaitConfirms;
+    if (killInfo.removed[0] < 0) return WaitTime.MakingDecision;
     return WaitTime.WaitConfirms;
 }
 

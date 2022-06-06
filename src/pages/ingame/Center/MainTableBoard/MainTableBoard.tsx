@@ -45,7 +45,7 @@ export function getSubPlayerFromState(ctx: RoomContextType): string {
     const board = ctx.room.game.state.board;
     if (StateManager.isChallenged(board))
         return ctx.room.game.action.challengerId;
-    if (board === BoardState.DiscardingCard) {
+    if (BoardState.DiscardingCard === (board)) {
         const killInfo = ctx.room.game.action.param as KillInfo;
         if (killInfo.cause === ActionType.IsALie) {
             if (ctx.room.game.action.pierId === killInfo.ownerId) {

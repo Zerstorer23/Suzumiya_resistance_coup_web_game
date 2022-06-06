@@ -34,7 +34,7 @@ export const GameManager = {
             cause,
             card: CardRole.None,
             ownerId,
-            removed: -1,
+            removed: [-1, -1],
             nextState: BoardState.ChoosingBaseAction
         };
     }
