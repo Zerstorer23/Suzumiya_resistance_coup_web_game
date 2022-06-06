@@ -12,6 +12,7 @@ import RoomContext from "system/context/roomInfo/room-context";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 import {useHistory} from "react-router-dom";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
+import GameOverPopUp from "pages/components/ui/PopUp/PopUp";
 
 export default function InGame() {
     const ctx = useContext(RoomContext);
@@ -19,6 +20,7 @@ export default function InGame() {
     const history = useHistory();
     const myId = localCtx.getVal(LocalField.Id);
     const [roomCode, setRoomCode] = useState<number>(0);
+    const [isGameOver, setIsGameOver] = useState<boolean>(false);
 
     /**
      * If any id field is not length 0 but not in player Map,
@@ -54,12 +56,25 @@ export default function InGame() {
             history.replace("/suzumiya/");
         }
     }, [myId, history]);
+    const turn = ctx.room.game.state.turn;
+    useEffect(() => {
+        if (turn === -2) {
+            setIsGameOver(true);
+            //TODO
+            //If I am host, set timer and change turn
+        } else if (turn === -1) {
+            setIsGameOver(false);
+            //Redirect to Lobby
+        }
+    }, [turn]);
+
     if (myId === null) {
         return <p>Loading...</p>;
     }
 
     return (
         <div className={classes.container}>
+            {isGameOver && <GameOverPopUp/>}
             <HorizontalLayout>
                 <VerticalLayout className={`${classes.leftPanel}`}>
                     <PlayerBoard/>

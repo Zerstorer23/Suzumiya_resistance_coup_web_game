@@ -53,40 +53,41 @@ function handleWinnerTurn(
     if (killInfo.removed[0] < 0) {
         return <WaitingPanel/>;
     } else {
-        setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
-            const nextBoard = killInfo.nextState as BoardState;
-            switch (nextBoard) {
-                case BoardState.GetThreeAccepted:
-                case BoardState.AmbassadorAccepted:
-                case BoardState.StealAccepted:
-                case BoardState.ForeignAidAccepted:
-                    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
-                        newState.board = nextBoard;
-                        return TransitionAction.Success;
-                    });
-                    break;
-                /*                    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
-                                        const target = ctx.room.playerMap.get(newAction.targetId)!;
-                                        if (target.isSpectating) {
-                                            //He is already dead
-                                            return TransitionAction.EndTurn;
-                                        } else {
-                                            newState.board = BoardState.DiscardingCard2;
-                                            return TransitionAction.Success;
-                                        }
-                                    });
-                                    break;*/
-                case BoardState.CalledAssassinate:
-                default:
-                    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
-                        return TransitionAction.EndTurn;
-                    });
-                    break;
-            }
-        });
+        hostEndsState(ctx, localCtx, killInfo);
         return <WaitingPanel/>;
     }
 }
+
+function hostEndsState(ctx: RoomContextType,
+                       localCtx: LocalContextType,
+                       killInfo: KillInfo) {
+    //TODO Host handles ending discarding state.
+    const amHost = TurnManager.amHost(ctx, localCtx);
+    if (!amHost) return;
+    setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
+        const nextBoard = killInfo.nextState as BoardState;
+        //TODO if alive player number <= 1, set turn -2 . return success. [endturn will clear turn]
+        //else do next board switch
+        switch (nextBoard) {
+            case BoardState.GetThreeAccepted:
+            case BoardState.AmbassadorAccepted:
+            case BoardState.StealAccepted:
+            case BoardState.ForeignAidAccepted:
+                ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+                    newState.board = nextBoard;
+                    return TransitionAction.Success;
+                });
+                break;
+            case BoardState.CalledAssassinate:
+            default:
+                ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+                    return TransitionAction.EndTurn;
+                });
+                break;
+        }
+    });
+}
+
 
 export function handleCardKill(ctx: RoomContextType, index: number) {
     const deck = ctx.room.game.deck;
