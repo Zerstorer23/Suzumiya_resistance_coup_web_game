@@ -66,7 +66,12 @@ function hostEndsState(ctx: RoomContextType,
     if (!amHost) return;
     setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
         const nextBoard = killInfo.nextState as BoardState;
-        //TODO if alive player number <= 1, set turn -2 . return success. [endturn will clear turn]
+        //TODO if alive player number <= 1, set turn -2 . return TransitionAction.EndGame
+        const winnerId = null;
+        if (winnerId !== null) {
+            ActionManager.pushEndGame(ctx, winnerId);
+            return;
+        }
         //else do next board switch
         switch (nextBoard) {
             case BoardState.GetThreeAccepted:

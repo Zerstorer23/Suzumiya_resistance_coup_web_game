@@ -6,6 +6,7 @@ import classes from "./Lobby.module.css";
 import LobbySettings from "./Left/LobbySettings";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 import {useHistory} from "react-router-dom";
+import {Navigation} from "App";
 
 export default function Lobby() {
     const context = useContext(RoomContext);
@@ -15,11 +16,11 @@ export default function Lobby() {
     const myId = localCtx.getVal(LocalField.Id);
     const turns = context.room.game.state.turn;
     if (myId === null) {
-        history.replace("/suzumiya/");
+        history.replace(Navigation.Loading);
     }
     useEffect(() => {
         if (turns >= 0) {
-            history.replace("/suzumiya/game");
+            history.replace(Navigation.InGame);
         }
     }, [turns]);
 

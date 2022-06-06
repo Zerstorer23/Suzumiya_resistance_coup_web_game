@@ -198,3 +198,10 @@ function resetAction(newAction: GameAction, newPier: string) {
     newAction.targetId = "";
 }
 
+export function pushEndGame(ctx: RoomContextType, winnerId: string) {
+    const [newAction, newState] = prepareActionState(ctx);
+    resetAction(newAction, winnerId);
+    newState.board = BoardState.ChoosingBaseAction;
+    newState.turn = -2;
+    pushActionState(newAction, newState);
+}

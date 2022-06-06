@@ -13,6 +13,7 @@ import LocalContext, {LocalField,} from "system/context/localInfo/local-context"
 import {useHistory} from "react-router-dom";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import GameOverPopUp from "pages/components/ui/PopUp/PopUp";
+import {Navigation} from "App";
 
 export default function InGame() {
     const ctx = useContext(RoomContext);
@@ -53,7 +54,7 @@ export default function InGame() {
     useEffect(() => {
         console.log(`In game id ${myId}`);
         if (myId === null) {
-            history.replace("/suzumiya/");
+            history.replace(Navigation.Loading);
         }
     }, [myId, history]);
     const turn = ctx.room.game.state.turn;
