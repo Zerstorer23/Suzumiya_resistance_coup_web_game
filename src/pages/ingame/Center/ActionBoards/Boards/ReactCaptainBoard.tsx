@@ -11,9 +11,7 @@ import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {playerClaimedRole} from "system/Database/RoomDatabase";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
-import {setMyTimer} from "pages/components/ui/MyTimer/MyTimer";
-import {WaitTime} from "system/GameConstants";
-import {DS} from "system/Debugger/DS";
+import useDefaultAction from "system/hooks/useDefaultAction";
 
 const actions = [
     ActionType.Accept,
@@ -26,12 +24,11 @@ export default function ReactCaptainBoard(): JSX.Element {
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const keyInfo = useShortcutEffect(actions.length);
-    useEffect(() => {
-        setMyTimer(localCtx, WaitTime.MakingDecision, () => {
-            if (!DS.StrictRules) return;
-            onMakeAction(ActionType.Accept);
-        });
-    }, []);
+    useDefaultAction(localCtx, () => {
+        onMakeAction(ActionType.Accept);
+    });
+
+
     useEffect(() => {
         const index = keyInfo.index;
         if (index < 0) return;

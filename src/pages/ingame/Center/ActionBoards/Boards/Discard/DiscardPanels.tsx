@@ -4,7 +4,7 @@ import LocalContext from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {CardRole} from "system/cards/Card";
 import {DeckManager} from "system/cards/DeckManager";
-import {KillInfo} from "system/GameStates/GameTypes";
+import {KillInfo, Player} from "system/GameStates/GameTypes";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import {handleCardKill} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardSolver";
@@ -12,6 +12,7 @@ import {CardPool} from "system/cards/CardPool";
 import {useShortcutEffect} from "system/hooks/useShortcut";
 import {useTranslation} from "react-i18next";
 import {formatInsert} from "lang/i18nHelper";
+import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 const MAX_PCARD = 2;
 
@@ -28,7 +29,6 @@ export function MyCardsPanel(): JSX.Element {
         if (index < 0) return;
         onMakeAction(index);
     }, [keyInfo]);
-
 
     function onMakeAction(index: number) {
         const myIndex = localPlayer.icard + index;
@@ -83,4 +83,13 @@ export function PostKillPanel(): JSX.Element {
             {isDead && <p>{formatInsert(t, "_is_removed", player.name)}</p>}
         </Fragment>
     );
+}
+
+export function autoKillCard(ctx: RoomContextType, player: Player) {
+    let card = ctx.room.game.deck[player.icard];
+    if (DeckManager.isDead(card)) {
+        handleCardKill(ctx, player.icard);
+    } else {
+        handleCardKill(ctx, player.icard + 1);
+    }
 }

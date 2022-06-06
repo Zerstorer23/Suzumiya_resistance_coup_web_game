@@ -73,7 +73,7 @@
   "_challenge_the_card": "$b$0$b does not think $b$1$b has $b$2$b",
   "_notify_challenge_reveal": "$b$0$b will reveal $b$1$b soon...",
   "_notify_lose_card": "$b$0$b will lose a card...",
-  "_notify_i_lost_card": "$b$0%b does not have $b$1$b $n$b$0$b will lose a card ...",
+  "_notify_i_lost_card": "$b$0$b does not have $b$1$b $n$b$0$b will lose a card ...",
   "_challenge_success": "$b$0$b caught the lie!",
   "_challenge_has_card": "$b$0$b has $b$1$b!",
   "_challenge_replace_card": "$b$0$b will draw a new card from deck",
@@ -86,6 +86,6 @@
   "_discard_result_challenge": "$b$0$b discarded $b$1$b for losing challenge",
   "_is_removed": "$b$0$b is removed from game!",
   "_waiting_others": "Waiting for other player's reaction...",
-  "_waiting_other_player": "Waiting for $b$0%b's reaction...",
+  "_waiting_other_player": "Waiting for $b$0$b's reaction...",
   "dymmy": "dummy"
 }

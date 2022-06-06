@@ -35,8 +35,7 @@ export default function CounterBoard(): JSX.Element {
     useEffect(() => {
         if (keyInfo.index < 0) return;
         onMakeAction(actions[keyInfo.index]);
-    }, [keyInfo])
-
+    }, [keyInfo]);
 
     function handleAccept(board: BoardState) {
         if (!StateManager.isBlockedState(board)) return;

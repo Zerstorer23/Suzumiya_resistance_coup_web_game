@@ -1,5 +1,5 @@
 export const DS = {
-    StrictRules: false,
+    StrictRules: true,
     infiniteWait: false,
     logTransition(msg: any) {
         console.log(msg);

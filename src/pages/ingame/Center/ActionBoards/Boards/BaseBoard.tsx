@@ -1,11 +1,9 @@
-import {setMyTimer} from "pages/components/ui/MyTimer/MyTimer";
 import BaseActionButton, {
     getRequiredCoins
 } from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import {Fragment, useContext, useEffect, useState} from "react";
 import LocalContext, {LocalContextType, LocalField,} from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
-import {WaitTime} from "system/GameConstants";
 import {ActionInfo} from "system/GameStates/ActionInfo";
 import {ActionType, StateManager} from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
@@ -17,6 +15,7 @@ import {useShortcutEffect} from "system/hooks/useShortcut";
 import {PlayerMap} from "system/GameStates/GameTypes";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import MiniPlayerItem from "pages/ingame/Center/ActionBoards/Boards/PlayerItem/MiniPlayerItem";
+import useDefaultAction from "system/hooks/useDefaultAction";
 
 const actionsDefault = [
     ActionType.GetOne,
@@ -109,6 +108,10 @@ export default function BaseBoard(): JSX.Element {
         }
     }, [keyInfo, actions]);
 
+    useDefaultAction(localCtx, () => {
+        onMakeAction(ActionType.GetOne);
+    });
+
 
     function handleTargetableAction(action: ActionType): boolean {
         if (!StateManager.isTargetableAction(action)) return false;
@@ -117,17 +120,6 @@ export default function BaseBoard(): JSX.Element {
         return true;
     }
 
-
-    useEffect(() => {
-        setMyTimer(localCtx, WaitTime.MakingDecision, () => {
-            if (!DS.StrictRules) return;
-            if (forceCoup) {
-                onMakeAction(actions[5]);
-            } else {
-                ActionManager.pushPrepareDiscarding(ctx, GameManager.createKillInfo(ActionType.Coup, myId));
-            }
-        });
-    }, []);
 
     function onPlayerSelected(playerId: string) {
         if (!StateManager.isTargetableAction(savedAction)) return;
@@ -148,7 +140,6 @@ export default function BaseBoard(): JSX.Element {
         if (handled) return;
         ActionManager.pushCalledState(ctx, action, myId);
     }
-
 
     return (elem);
 }

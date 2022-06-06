@@ -11,6 +11,7 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import {GameManager} from "system/GameStates/GameManager";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
 import {useShortcutEffect} from "system/hooks/useShortcut";
+import useDefaultAction from "system/hooks/useDefaultAction";
 
 const actions = [
     ActionType.Accept,
@@ -22,6 +23,9 @@ export default function ReactAssassinBoard(): JSX.Element {
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const keyInfo = useShortcutEffect(actions.length);
+    useDefaultAction(localCtx, () => {
+        onMakeAction(ActionType.Accept);
+    });
     useEffect(() => {
         const index = keyInfo.index;
         if (index < 0) return;
