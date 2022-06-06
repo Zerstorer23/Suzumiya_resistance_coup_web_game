@@ -162,7 +162,7 @@ export const DeckManager = {
     const sortedList: string[] = getSortedListFromMap(playerMap);
     let player: Player;
     let playerCards: CardRole[];
-    let alive: string = "not over";
+    let alive: string = "";
     let numAlive = 0;
 
     for (let playerID of sortedList) {
@@ -174,6 +174,6 @@ export const DeckManager = {
       }
     }
     if (numAlive === 1) return alive;
-    return "not over";
+    return "";
   },
 };
