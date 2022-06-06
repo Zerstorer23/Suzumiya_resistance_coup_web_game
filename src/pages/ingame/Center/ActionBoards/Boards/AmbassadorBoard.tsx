@@ -134,7 +134,7 @@ export default function AmbassadorBoard(): JSX.Element {
             </div>
             <p>deck</p>
 
-            <div className={classes.quarterContainer}>
+            <div className={classes.singleContainer}>
                 {cardArr.map((action: Card, index: number) => {
                     if (firstCardPicked === index) {
                         return <Fragment/>;
