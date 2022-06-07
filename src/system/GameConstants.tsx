@@ -6,7 +6,7 @@ export var PING = 100;
  * Enum for Waiting times.
  */
 export enum WaitTime {
-    MakingDecision = 5,
+    MakingDecision = 15,
     WaitReactions = 5,
     WaitConfirms = 3,
 }

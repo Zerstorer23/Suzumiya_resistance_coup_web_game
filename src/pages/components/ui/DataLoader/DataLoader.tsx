@@ -157,6 +157,7 @@ export default function DataLoader(props: IProps) {
     return (
         <Fragment>
             <ChatLoader/>
+            {/*<MusicLoader/>*/}
             {props.children}
         </Fragment>
     );
