@@ -5,9 +5,9 @@ import LocalContext, {LocalField} from "system/context/localInfo/local-context";
 import {handleDiscardState} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardSolver";
 import {setMyTimer} from "pages/components/ui/MyTimer/MyTimer";
 import {inferWaitTime} from "pages/ingame/Center/MainTableBoard/TimeInferer";
-import {DS} from "system/Debugger/DS";
 import {BoardState} from "system/GameStates/States";
-import {WaitTime} from "system/GameConstants";
+import {autoKillCard} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardPanels";
+import {useTranslation} from "react-i18next";
 
 
 export default function DiscardBoard(): JSX.Element {
@@ -18,16 +18,16 @@ export default function DiscardBoard(): JSX.Element {
     const localCtx = useContext(LocalContext);
     const killInfo = ctx.room.game.action.param as KillInfo;
     const myId = localCtx.getVal(LocalField.Id);
+    const {t} = useTranslation();
     const [jsxElem, setJSX] = useState<JSX.Element>(<Fragment/>);
     useEffect(() => {
         if (BoardState.DiscardingCard !== (ctx.room.game.state.board)) return;
         const time = inferWaitTime(ctx.room.game.state.board, ctx.room.game.action);
-        if (myId === killInfo.ownerId && time === WaitTime.MakingDecision) {
 
-        }
         setMyTimer(localCtx, time, () => {
-            if (DS.StrictRules && killInfo.removed[0] < 0) {
-                //TODO kill himself
+            if (myId === killInfo.ownerId && killInfo.ownerId === myId) {
+                //I didnt choose anything for 15 sec....
+                autoKillCard(t, ctx, ctx.room.playerMap.get(myId)!);
             }
         });
         const elem = handleDiscardState(ctx, localCtx, killInfo);

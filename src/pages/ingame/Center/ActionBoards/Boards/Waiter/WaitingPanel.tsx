@@ -4,7 +4,7 @@ import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {useTranslation} from "react-i18next";
-import {insert} from "lang/i18nHelper";
+import {formatInsert} from "lang/i18nHelper";
 
 export default function WaitingPanel() {
     const ctx = useContext(RoomContext);
@@ -22,7 +22,7 @@ export default function WaitingPanel() {
         return (
             <div className={classes.singleContainer}>
                 <h1>
-                    {insert(t, "_waiting_other_player", ctx.room.playerMap.get(currId)?.name)}
+                    {formatInsert(t, "_waiting_other_player", ctx.room.playerMap.get(currId)?.name)}
                 </h1>
             </div>
         );

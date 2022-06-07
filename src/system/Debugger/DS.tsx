@@ -1,6 +1,7 @@
 export const DS = {
     StrictRules: true,
     infiniteWait: false,
+    serverSG: false,
     logTransition(msg: any) {
         console.log(msg);
     }

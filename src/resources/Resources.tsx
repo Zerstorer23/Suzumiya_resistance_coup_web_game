@@ -15,6 +15,7 @@ import koihime_dead from "resources/images/koihime_dead.png";
 import haruhi_dead from "resources/images/haruhi_dead.png";
 import asakura_dead from "resources/images/asakura_dead.png";
 import mikuru from "resources/images/mikuru2.png";
+import loadingImg from "resources/images/untitled.png";
 
 /*
 This file adds reference to all image files
@@ -40,6 +41,7 @@ export enum Images {
     UnknownCard,
     Coin,
     Card,
+    LoadingImg,
 
 }
 
@@ -82,6 +84,8 @@ export default function getImage(res: Images): NodeModule {
             return card;
         case Images.Coin:
             return coin;
+        case Images.LoadingImg:
+            return loadingImg;
         default:
             return unknown;
     }

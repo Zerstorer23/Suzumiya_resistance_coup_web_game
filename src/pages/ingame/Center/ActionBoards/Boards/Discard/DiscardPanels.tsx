@@ -22,7 +22,7 @@ export function MyCardsPanel(): JSX.Element {
     const deck = ctx.room.game.deck;
     const [myId, localPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const myCards: CardRole[] = DeckManager.peekCards(deck, localPlayer.icard, MAX_PCARD);
-
+    const {t} = useTranslation();
     const keyInfo = useShortcutEffect(MAX_PCARD);
     useEffect(() => {
         const index = keyInfo.index;
@@ -34,7 +34,7 @@ export function MyCardsPanel(): JSX.Element {
         const myIndex = localPlayer.icard + index;
         const card = deck[myIndex];
         if (DeckManager.isDead(card) || card === CardRole.None) return;
-        handleCardKill(ctx, myIndex);
+        handleCardKill(t, ctx, myIndex);
     }
 
     return (
@@ -85,11 +85,11 @@ export function PostKillPanel(): JSX.Element {
     );
 }
 
-export function autoKillCard(ctx: RoomContextType, player: Player) {
+export function autoKillCard(t: any, ctx: RoomContextType, player: Player) {
     let card = ctx.room.game.deck[player.icard];
     if (DeckManager.isDead(card)) {
-        handleCardKill(ctx, player.icard);
+        handleCardKill(t, ctx, player.icard);
     } else {
-        handleCardKill(ctx, player.icard + 1);
+        handleCardKill(t, ctx, player.icard + 1);
     }
 }

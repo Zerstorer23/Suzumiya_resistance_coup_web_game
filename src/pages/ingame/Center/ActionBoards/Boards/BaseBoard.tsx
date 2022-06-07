@@ -135,9 +135,10 @@ export default function BaseBoard(): JSX.Element {
 
     function onMakeAction(action: ActionType) {
         if (action === ActionType.None) return;
-        if (DS.StrictRules && getRequiredCoins(action) < myPlayer.coins) return;
+        if (DS.StrictRules && getRequiredCoins(action) >= myPlayer.coins) return;
         const handled = handleTargetableAction(action);
         if (handled) return;
+        console.log("Make action");
         ActionManager.pushCalledState(ctx, action, myId);
     }
 
