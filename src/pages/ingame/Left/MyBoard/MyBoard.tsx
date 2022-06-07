@@ -42,10 +42,10 @@ export default function MyBoard(): JSX.Element {
                         </Fragment>
                     )}
                     {!showCards && (
-                        <div className={classes.tutorialContainer}>{t("_tutorial_board")}</div>
+                        <div className={classes.infoContainer}>{t("_tutorial_board")}</div>
                     )}
                 </div>
-                <CoinDisplayComponent coins={myCoin}/>
+                <CoinDisplayComponent className={classes.coinContainer} coins={myCoin}/>
             </VerticalLayout>
         </div>
     );

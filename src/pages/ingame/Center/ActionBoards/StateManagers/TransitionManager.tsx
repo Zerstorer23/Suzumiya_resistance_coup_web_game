@@ -34,7 +34,7 @@ export function prepareAndPushState(
     if (result === TransitionAction.EndTurn) {
         const res = setEndTurn(ctx, newAction, newState);
         if (!res) return;
-        sendChat(ChatFormat.announcement, "", `${ctx.room.playerMap.get(ctx.room.playerList[newState.turn])!.name}'s turn`);
+        sendChat(ChatFormat.announcement, "", `${ctx.room.playerMap.get(ctx.room.playerList[newState.turn])!.name}님의 턴`);
     }
     pushActionState(newAction, newState);
 }

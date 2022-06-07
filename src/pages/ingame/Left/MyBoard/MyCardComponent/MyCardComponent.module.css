@@ -1,6 +1,6 @@
 .container {
-    height: 40%;
-    margin-bottom: 5px;
+    height: 43%;
+    margin-bottom: 0.5rem;
 }
 
 .characterIcon {
@@ -12,6 +12,10 @@
     width: 80%;
     border-left: 2px dashed navy;
     padding-left: 0.5rem;
+}
+
+.descPanel p {
+    font-size: 0.8rem;
 }
 
 .deadPanel {

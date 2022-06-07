@@ -110,12 +110,9 @@ export default function AmbassadorBoard(): JSX.Element {
         });
     };
 
-    //ADD SELCETED CSS STYLE
     return (
         <Fragment>
-            <div className={classes.header}>
-                Choose 2 cards that you want to keep...
-            </div>
+            <div className={classes.header}>{t("_amba_choose_cards")}</div>
             <p className={classes.centerText}>{t("_my_card_pool")}</p>
             <div className={classes.quarterContainer}>
                 {cardArr.map((action: Card, index: number) => {

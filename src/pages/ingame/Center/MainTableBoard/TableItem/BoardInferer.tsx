@@ -68,7 +68,6 @@ export function inferStateInfo(
         case BoardState.CalledGetThree:
             return (
                 <Fragment>
-                    {claimElem(t, pier!, CardPool.getCard(CardRole.Duke).getName(t), "_call_aid_block")}
                     {claimElem(t, pier!, CardPool.getCard(CardRole.Duke).getName(t), "_call_get_three")}
                     {rejectionElem(t)}
                 </Fragment>
@@ -293,7 +292,7 @@ export function inferDiscardState(t: any, ctx: RoomContextType, playerId: string
         if (playerId === killInfo.ownerId) {
             return (<PostKillPanel/>);
         } else {
-            return (<p> is satisfied.</p>);
+            return (<p>{formatInsert(t, "_is_satisfied", ctx.room.playerMap.get(playerId)?.name)}</p>);
         }
     } else {
         const myPlayer = ctx.room.playerMap.get(playerId);
@@ -304,9 +303,9 @@ export function inferDiscardState(t: any, ctx: RoomContextType, playerId: string
         } else {
             //Coup or assassin
             if (playerId === killInfo.ownerId) {
-                return <p>{`${myPlayer.name} is choosing a card to discard...`}</p>;
+                return <p>{formatInsert(t, "_is_choosing_discard", myPlayer.name)}</p>;
             } else {
-                return <p>{`Waiting for ${lostPlayer.name} to remove card.`}</p>;
+                return <p>{formatInsert(t, "_waiting_choosing_discard", lostPlayer.name)}</p>;
             }
         }
 

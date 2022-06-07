@@ -3,7 +3,7 @@ import BaseBoard from "pages/ingame/Center/ActionBoards/Boards/BaseBoard";
 import CounterBoard from "pages/ingame/Center/ActionBoards/Boards/CounterBoard";
 import SolverBoard from "pages/ingame/Center/ActionBoards/Boards/Solver/SolverBoard";
 import WaitingBoard from "pages/ingame/Center/ActionBoards/Boards/Waiter/WaitingBoard";
-import {Game} from "system/GameStates/GameTypes";
+import {Game, KillInfo} from "system/GameStates/GameTypes";
 import {BoardState, StateManager} from "system/GameStates/States";
 import DiscardBoard from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardBoard";
 import ReactAssassinBoard from "pages/ingame/Center/ActionBoards/Boards/ReactAssassinBoard";
@@ -12,6 +12,7 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import {LocalContextType} from "system/context/localInfo/local-context";
 import ReactForeignAidBoard from "pages/ingame/Center/ActionBoards/Boards/ReactForeignAidBoard";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
+import {Fragment} from "react";
 
 export function getBoardElemFromRoom(ctx: RoomContextType, localCtx: LocalContextType): JSX.Element {
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
@@ -23,7 +24,7 @@ export function getBoardElemFromRoom(ctx: RoomContextType, localCtx: LocalContex
     // console.log(`turn : ${ctx.room.game.state.turn} / myId = ${myId} / ct ${ctx.room.playerList[ctx.room.game.state.turn]} / myturn? ${isMyTurn}`);
     const board = ctx.room.game.state.board;
     const amTargeted: boolean = ctx.room.game.action.targetId === myId;
-    if (board === BoardState.DiscardingCard) return <DiscardBoard/>;
+    if (board === BoardState.DiscardingCard) return handleDiscarding(ctx, myId);
     if (isMyTurn) {
         if (StateManager.isFinal(board)) {
             return <SolverBoard/>;
@@ -74,5 +75,12 @@ function handleTargeted(boardState: BoardState): JSX.Element {
         default:
             return <WaitingBoard/>;
     }
+}
 
+function handleDiscarding(ctx: RoomContextType, myId: string): JSX.Element {
+    const killInfo = ctx.room.game.action.param as KillInfo;
+    if (killInfo.removed === undefined) return <Fragment/>;
+    if (killInfo.removed[0] >= 0) return <WaitingBoard/>;
+    if (killInfo.ownerId === myId) return <DiscardBoard/>;
+    return <WaitingBoard/>;
 }

@@ -1,6 +1,6 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
-import {useContext, useEffect} from "react";
+import {Fragment, useContext, useEffect} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {ActionInfo} from "system/GameStates/ActionInfo";
@@ -12,6 +12,7 @@ import {playerClaimedRole} from "system/Database/RoomDatabase";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
 import useDefaultAction from "system/hooks/useDefaultAction";
+import {useTranslation} from "react-i18next";
 
 const actions = [
     ActionType.Accept,
@@ -24,6 +25,7 @@ export default function ReactCaptainBoard(): JSX.Element {
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const keyInfo = useShortcutEffect(actions.length);
+    const {t} = useTranslation();
     useDefaultAction(localCtx, () => {
         onMakeAction(ActionType.Accept);
     });
@@ -58,20 +60,22 @@ export default function ReactCaptainBoard(): JSX.Element {
         });
     };
 
-    return (
-        <div className={classes.container}>
-            {actions.map((action: ActionType, index: number) => {
-                return (
-                    <BaseActionButton
-                        key={index}
-                        index={index}
-                        param={new ActionInfo(action)}
-                        onClickButton={() => {
-                            onMakeAction(action);
-                        }}
-                    />
-                );
-            })}
-        </div>
+    return (<Fragment>
+            <div className={classes.header}>{t("_react_action")}</div>
+            <div className={classes.container}>
+                {actions.map((action: ActionType, index: number) => {
+                    return (
+                        <BaseActionButton
+                            key={index}
+                            index={index}
+                            param={new ActionInfo(action)}
+                            onClickButton={() => {
+                                onMakeAction(action);
+                            }}
+                        />
+                    );
+                })}
+            </div>
+        </Fragment>
     );
 }

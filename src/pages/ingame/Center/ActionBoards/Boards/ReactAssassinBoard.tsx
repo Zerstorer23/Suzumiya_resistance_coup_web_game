@@ -12,6 +12,7 @@ import {GameManager} from "system/GameStates/GameManager";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
 import {useShortcutEffect} from "system/hooks/useShortcut";
 import useDefaultAction from "system/hooks/useDefaultAction";
+import {useTranslation} from "react-i18next";
 
 const actions = [
     ActionType.Accept,
@@ -31,7 +32,7 @@ export default function ReactAssassinBoard(): JSX.Element {
         if (index < 0) return;
         onMakeAction(actions[index]);
     }, [keyInfo]);
-
+    const {t} = useTranslation();
 
     const onMakeAction = (action: ActionType) => {
         switch (action) {
@@ -54,6 +55,7 @@ export default function ReactAssassinBoard(): JSX.Element {
 
     return (
         <Fragment>
+            <div className={classes.header}>{t("_react_action")}</div>
             <div className={classes.halfContainer}>
                 {actions.map((action: ActionType, index: number) => {
                     return (

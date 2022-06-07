@@ -4,7 +4,13 @@
 }
 
 .infoContainer {
-    height: 80%;
+    height: 90%;
+    width: 100%;
+}
+
+.coinContainer {
+    height: 10%;
+    width: 100%;
 }
 
 .tutorialContainer {

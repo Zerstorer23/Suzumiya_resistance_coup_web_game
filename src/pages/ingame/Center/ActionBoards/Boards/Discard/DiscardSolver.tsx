@@ -1,126 +1,68 @@
-import {LocalContextType} from "system/context/localInfo/local-context";
-import {KillInfo} from "system/GameStates/GameTypes";
-import {TurnManager} from "system/GameStates/TurnManager";
+import {KillInfo, Player} from "system/GameStates/GameTypes";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {setMyTimer} from "pages/components/ui/MyTimer/MyTimer";
-import {WaitTime} from "system/GameConstants";
 import {BoardState} from "system/GameStates/States";
-import {MyCardsPanel} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardPanels";
 import {DeckManager} from "system/cards/DeckManager";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
-import WaitingPanel from "pages/ingame/Center/ActionBoards/Boards/Waiter/WaitingPanel";
 import {ChatFormat, sendChat,} from "system/context/chatInfo/ChatContextProvider";
+import {CardDeck} from "system/cards/Card";
+import {insert} from "lang/i18nHelper";
 
-export function handleDiscardState(
-    ctx: RoomContextType,
-    localCtx: LocalContextType,
-    killInfo: KillInfo
-): JSX.Element {
-    const [myId] = TurnManager.getMyInfo(ctx, localCtx);
-    if (myId === killInfo.ownerId) {
-        return handleLoserTurn(ctx, localCtx, killInfo);
-    } else {
-        return handleOtherTurn(ctx, localCtx, killInfo);
-    }
-}
 
-function handleLoserTurn(
-    ctx: RoomContextType,
-    localCtx: LocalContextType,
-    killInfo: KillInfo
-): JSX.Element {
-    if (killInfo.nextState === BoardState.CalledAssassinate) {
-        const numAlive = DeckManager.playerAliveCardNum(
-            ctx.room.game.deck,
-            ctx.room.playerMap.get(killInfo.ownerId)!.icard
-        );
-        if (numAlive === 2) {
-            handleSuicide(ctx, killInfo.ownerId);
-            return <WaitingPanel/>;
-        }
-    }
-    if (killInfo.removed[0] < 0) {
-        return <MyCardsPanel/>;
-    } else {
-        return <WaitingPanel/>;
-    }
-}
-
-function handleOtherTurn(
-    ctx: RoomContextType,
-    localCtx: LocalContextType,
-    killInfo: KillInfo
-): JSX.Element {
-    if (killInfo.removed[0] < 0) {
-        return <WaitingPanel/>;
-    } else {
-        hostEndsState(ctx, localCtx, killInfo);
-        return <WaitingPanel/>;
-    }
-}
-
-function hostEndsState(
-    ctx: RoomContextType,
-    localCtx: LocalContextType,
-    killInfo: KillInfo
+export function checkGameEnd(t: any,
+                             ctx: RoomContextType
 ) {
-    const amHost = TurnManager.amHost(ctx, localCtx);
-    if (!amHost) return;
-
-    //TODO Host handles ending discarding state.
-    setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
-        const nextBoard = killInfo.nextState as BoardState;
-        //TODO if alive player number <= 1, set turn -2 . return TransitionAction.EndGame
-        const winnerId = DeckManager.checkGameOver(ctx);
-        if (winnerId !== "") {
-            sendChat(ChatFormat.important, "", "$The game has finished");
-            ActionManager.pushEndGame(ctx, winnerId);
-            return;
-        }
-        //else do next board switch
-        switch (nextBoard) {
-            case BoardState.GetThreeAccepted:
-            case BoardState.AmbassadorAccepted:
-            case BoardState.StealAccepted:
-            case BoardState.ForeignAidAccepted:
-                ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
-                    newState.board = nextBoard;
-                    return TransitionAction.Success;
-                });
-                break;
-            case BoardState.CalledAssassinate:
-            default:
-                ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
-                    return TransitionAction.EndTurn;
-                });
-                break;
-        }
-    });
+    const killInfo = ctx.room.game.action.param as KillInfo;
+    if (killInfo.removed === undefined) return;
+    const nextBoard = killInfo.nextState as BoardState;
+    const winnerId = DeckManager.checkGameOver(ctx);
+    if (winnerId !== "") {
+        sendChat(ChatFormat.important, "", t("_notify_game_end"));
+        ActionManager.pushEndGame(ctx, winnerId);
+        return;
+    }
+    switch (nextBoard) {
+        case BoardState.GetThreeAccepted:
+        case BoardState.AmbassadorAccepted:
+        case BoardState.StealAccepted:
+        case BoardState.ForeignAidAccepted:
+            ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+                newState.board = nextBoard;
+                return TransitionAction.Success;
+            });
+            break;
+        default:
+            ActionManager.prepareAndPushState(ctx, () => {
+                return TransitionAction.EndTurn;
+            });
+            break;
+    }
 }
 
 export function handleCardKill(t: any, ctx: RoomContextType, index: number) {
     const deck = ctx.room.game.deck;
     DeckManager.killCardAt(deck, index);
     ActionManager.prepareAndPushState(ctx, (newAction) => {
-        const killedInfo = newAction.param as KillInfo;
-        killedInfo.removed[0] = index;
-        newAction.param = killedInfo;
+        const killInfo = newAction.param as KillInfo;
+        const player = ctx.room.playerMap.get(killInfo.ownerId)!;
+        killInfo.removed[0] = index;
+        newAction.param = killInfo;
         ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
-        const isDead = DeckManager.playerIsDead(
-            deck,
-            ctx.room.playerMap.get(killedInfo.ownerId)!
-        );
-        if (isDead) {
-            const player = ctx.room.playerMap.get(killedInfo.ownerId)!;
-            player.isSpectating = true;
-            player.coins = 0;
-            ReferenceManager.updatePlayerReference(killedInfo.ownerId, player);
-            sendChat(ChatFormat.important, "", t("_notify_dead_player", player.name));
-        }
+        handleDeadCase(t, deck, player, killInfo);
+        console.log("Push card kill");
+        console.log(newAction);
         return TransitionAction.Success;
     });
+}
+
+function handleDeadCase(t: any, deck: CardDeck, player: Player, killInfo: KillInfo) {
+    const isDead = DeckManager.playerIsDead(deck, player);
+    if (!isDead) return;
+    player.isSpectating = true;
+    player.coins = 0;
+    ReferenceManager.updatePlayerReference(killInfo.ownerId, player);
+    sendChat(ChatFormat.important, "", insert(t, "_notify_dead_player", player.name));
 }
 
 export function handleSuicide(ctx: RoomContextType, playerId: string) {

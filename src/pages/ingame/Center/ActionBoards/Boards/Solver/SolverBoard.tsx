@@ -4,6 +4,7 @@ import {Fragment, useContext, useEffect} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {StateManager} from "system/GameStates/States";
+import {useTranslation} from "react-i18next";
 
 export default function SolverBoard(): JSX.Element {
     /**
@@ -13,6 +14,7 @@ export default function SolverBoard(): JSX.Element {
      */
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
+    const {t} = useTranslation();
     /**
      * Challenged state solver.
      * Separate because this uses param
@@ -33,6 +35,6 @@ export default function SolverBoard(): JSX.Element {
     }, []);
 
     return <Fragment>
-        <p><strong>Resolving actions...</strong></p>
+        <p><strong>{t("_resolving_actions")}</strong></p>
     </Fragment>;
 }

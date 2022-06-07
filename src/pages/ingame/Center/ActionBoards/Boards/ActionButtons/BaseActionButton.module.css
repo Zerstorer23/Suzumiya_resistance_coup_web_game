@@ -59,7 +59,6 @@
     color: crimson;
     height: 100%;
     display: block;
-    flex: 1;
     justify-self: center;
     align-self: center;
     text-align: center;
@@ -70,7 +69,6 @@
     color: aliceblue;
     height: 100%;
     display: block;
-    flex: 1;
     justify-self: center;
     align-self: center;
     text-align: center;
