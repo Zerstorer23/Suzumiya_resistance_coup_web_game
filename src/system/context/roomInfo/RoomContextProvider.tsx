@@ -73,7 +73,7 @@ function handlePlayerUpdate(newRoom: Room, action: RoomActionType) {
         case UpdateType.Delete:
             newRoom.playerMap.delete(entry.id);
             newRoom.playerList = getSortedListFromMap(newRoom.playerMap);
-            if (entry.id === newRoom.header.hostId) {
+            if (entry.id === newRoom.header.hostId || !newRoom.playerMap.has(newRoom.header.hostId)) {
                 newRoom.header.hostId = newRoom.playerList[0];
                 console.log("Detected host disconnect " + newRoom.header.hostId);
             }

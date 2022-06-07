@@ -26,16 +26,16 @@ export default function PlayerItem(props: Props): JSX.Element {
     const isMe = props.playerId === localCtx.getVal(LocalField.Id);
     let panelColor = "";
     let subtitle = null;
-    if (isMe) {
-        //My panel has highest priority and is unselectable
-        panelColor = classes.isMe;
-        subtitle = "_me";
-    } else if (props.playerId === currentTurnId) {
+    if (props.playerId === currentTurnId) {
         panelColor = classes.currentTurn;
         subtitle = "_this_turn";
     } else if (props.playerId === nextTurnId) {
         panelColor = classes.nextTurn;
         subtitle = "_next_turn";
+    } else if (isMe) {
+        //My panel has highest priority and is unselectable
+        panelColor = classes.isMe;
+        subtitle = "_me";
     }
 
     const namePanelClass = subtitle !== null ? classes.namePanelWithTitle : classes.namePanel;

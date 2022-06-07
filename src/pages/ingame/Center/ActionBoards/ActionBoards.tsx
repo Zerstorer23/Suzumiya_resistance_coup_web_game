@@ -10,6 +10,7 @@ import {BoardState} from "system/GameStates/States";
 
 type Props = IProps & { code: number }
 export default function ActionBoards(props: Props): JSX.Element {
+    console.log("Code", props.code);
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const [boardElem, setBoardElem] = useState(<BaseBoard/>);

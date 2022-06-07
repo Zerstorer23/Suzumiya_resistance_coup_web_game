@@ -3,6 +3,7 @@
   "_name": "Name",
   "_help": "Help",
   "_start": "Start",
+  "_not_enough_people": "Waiting for more players",
   "_waiting_at_lobby": "Waiting for the host to start",
   "_game_title": "No 6",
   "_duke_name": "Duke",
@@ -101,7 +102,9 @@
   "_react_action": "Will you challenge?",
   "_amba_choose_cards": "Choose 2 cards that you want to keep...",
   "_game_winner": "Game Winner: $b$0$b",
-  "_game_cardUsed": "Used cards:$$b$0$b , $b$1$b",
+  "_game_cardUsed": "Used cards:$b$0$b , $b$1$b",
   "_return_lobby": "Return to lobby in ... ",
+  "_loading": "Loading...",
+  "_copy_link": "copy link",
   "dymmy": "dummy"
 }

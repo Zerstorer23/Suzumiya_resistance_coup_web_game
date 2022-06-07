@@ -18,7 +18,6 @@ export default function DeckItem(props: Prop): JSX.Element {
     const card = CardPool.getCard(role);
     const deckTop = DeckManager.peekTopIndex(ctx);
     let counterText;
-    //TODO do the iteration here
     if (role === CardRole.None) {
         counterText = <Fragment> {
             insert(t, "_cin_deck", (deck.length - deckTop))}

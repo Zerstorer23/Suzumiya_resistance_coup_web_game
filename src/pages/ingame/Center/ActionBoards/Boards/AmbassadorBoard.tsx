@@ -32,7 +32,6 @@ export default function AmbassadorBoard(): JSX.Element {
     const keyInfo = useShortcutEffect(cardArr.length);
     useEffect(() => {
         const idx = keyInfo.index;
-        //TODO
         if (idx !== -1) onMakeAction(idx);
     }, [keyInfo]);
 
@@ -40,7 +39,6 @@ export default function AmbassadorBoard(): JSX.Element {
      * Handle the case where deck only has 0 ~ 2 cards available  *
      **************************************************************/
 
-    //TODO: Dead Card
     useEffect(() => {
         if (DeckManager.playerAliveCardNum(deck, myPlayer.icard) === 1) {
             console.log("one card alive");

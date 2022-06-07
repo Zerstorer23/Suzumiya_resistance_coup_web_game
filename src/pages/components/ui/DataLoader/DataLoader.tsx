@@ -15,7 +15,7 @@ import {
 } from "system/types/CommonTypes";
 import {GameAction, Player, Room, RoomHeader,} from "system/GameStates/GameTypes";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
-import ChatLoader from "pages/DataLoader/ChatLoader";
+import ChatLoader from "pages/components/ui/DataLoader/ChatLoader";
 import {cleanChats} from "system/context/chatInfo/ChatContextProvider";
 import {Navigation} from "App";
 
@@ -117,7 +117,6 @@ export default function DataLoader(props: IProps) {
                 console.log("Join as client");
                 playerJoin();
             }
-            //Join as client
         }
     }
 
@@ -150,10 +149,8 @@ export default function DataLoader(props: IProps) {
     useEffect(() => {
         if (myId === null) return;
         const turn = context.room.game.state.turn;
-        if (turn === -1) {
+        if (turn < 0) {
             history.replace(Navigation.Lobby);
-        } else {
-            history.replace(Navigation.InGame);
         }
         setStatus(LoadStatus.outerSpace);
     }, [myId]);

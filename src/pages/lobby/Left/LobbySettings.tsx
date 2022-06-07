@@ -32,6 +32,15 @@ export default function LobbySettings() {
         myRef.set(myPlayer);
     }
 
+    function onClickHelp(e: any) {
+        //TODO direct
+    }
+
+    function onClickCopy(e: any) {
+        //TODO Copy links button
+
+    }
+
     return (
         <div className={`${classes.container} ${gc.round_border}`}>
             <HorizontalLayout>
@@ -43,7 +52,8 @@ export default function LobbySettings() {
                     defaultValue={myPlayer.name}
                 ></input>
             </HorizontalLayout>
-            <button className={classes.fieldType}>{t("_help")}</button>
+            <button className={classes.fieldType} onClick={onClickHelp}>{t("_help")}</button>
+            <button className={classes.fieldType} onClick={onClickCopy}>{t("_copy_link")}</button>
             {/*<button className={classes.fieldType}>{t("_help")}</button>*/}
         </div>
     );

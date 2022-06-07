@@ -33,6 +33,7 @@ export function setMyTimer(
     duration: number,
     onExpire: () => void
 ) {
+    console.trace("Set timer");
     TimerCode[0]++;
     const option = createTimeOption(duration, onExpire);
     localCtx.setVal(LocalField.Timer, option);

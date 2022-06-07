@@ -19,7 +19,9 @@ export default function PlayersPanel() {
     const localCtx = useContext(LocalContext);
     const amHost = TurnManager.amHost(ctx, localCtx);
     const startBtnRef = useRef<HTMLButtonElement>(null);
-
+    const playerMap: PlayerMap = ctx.room.playerMap;
+    const currPlayer = playerMap.size;
+    const playerList = ctx.room.playerList;
     const {t} = useTranslation();
 
     useKeyListener([KeyCode.Space], onKey);
@@ -33,15 +35,15 @@ export default function PlayersPanel() {
 
     function onClickStart() {
         if (!amHost) return;
+        if (ctx.room.playerMap.size <= 1) return;
         const room = ctx.room;
         setStartingRoom(room);
     }
 
+    let buttonKey = (amHost) ? "_start" : "_waiting_at_lobby";
+    if (ctx.room.playerMap.size <= 1) buttonKey = "_not_enough_people";
 
-    const playerMap: PlayerMap = ctx.room.playerMap;
-    const currPlayer = playerMap.size;
 
-    const playerList = ctx.room.playerList;
     return (
         <VerticalLayout className={`${gc.round_border} ${classes.container} `}>
             <div className={classes.headerContainer}>
@@ -55,7 +57,7 @@ export default function PlayersPanel() {
                 })
             }</VerticalLayout>
             <button ref={startBtnRef} className={classes.buttonStart} onClick={onClickStart}>
-                {t((amHost) ? "_start" : "_waiting_at_lobby")}
+                {t(buttonKey)}
             </button>
         </VerticalLayout>
     );
