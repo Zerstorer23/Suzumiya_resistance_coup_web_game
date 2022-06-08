@@ -6,7 +6,7 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import {CardRole} from "system/cards/Card";
 import {DS} from "system/Debugger/DS";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
-import {ChatFormat, sendChat} from "system/context/chatInfo/ChatContextProvider";
+import {ChatFormat, sendChat} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
 
 
 export enum TransitionAction {

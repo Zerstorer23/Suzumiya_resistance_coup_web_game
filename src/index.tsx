@@ -5,8 +5,8 @@ import App from "./App";
 import {BrowserRouter} from "react-router-dom";
 import RoomProvider from "system/context/roomInfo/RoomContextProvider";
 import LocalProvider from "system/context/localInfo/LocalContextProvider";
-import {ChatProvider} from "system/context/chatInfo/ChatContextProvider";
-import {MusicProvider} from "system/context/musicInfo/MusicContextProvider";
+import {ChatProvider} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
+import {MusicProvider} from "pages/components/ui/MusicModule/musicInfo/MusicContextProvider";
 import 'lang/i18n';
 
 const root = ReactDOM.createRoot(

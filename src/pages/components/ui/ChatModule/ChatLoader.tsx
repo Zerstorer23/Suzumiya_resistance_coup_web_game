@@ -1,5 +1,5 @@
 import {Fragment, useContext, useEffect} from "react";
-import ChatContext, {ChatEntry} from "system/context/chatInfo/ChatContextProvider";
+import ChatContext, {ChatEntry} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {LISTEN_CHILD_ADDED, Snapshot} from "system/types/CommonTypes";
 

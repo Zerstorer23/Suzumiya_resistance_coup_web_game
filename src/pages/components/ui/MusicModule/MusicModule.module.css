@@ -1,0 +1,26 @@
+.hudPanel {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.show {
+    visibility: visible;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.hide {
+    visibility: hidden;
+}
+
+
+.ytButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 2rem;
+    width: 5rem;
+    transform: translate(0, 0);
+}

@@ -15,9 +15,11 @@ import {
 } from "system/types/CommonTypes";
 import {GameAction, Player, Room, RoomHeader,} from "system/GameStates/GameTypes";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
-import ChatLoader from "pages/components/ui/DataLoader/ChatLoader";
-import {cleanChats} from "system/context/chatInfo/ChatContextProvider";
+import ChatLoader from "pages/components/ui/ChatModule/ChatLoader";
+import {cleanChats} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
 import {Navigation} from "App";
+import MusicLoader from "pages/components/ui/MusicModule/musicInfo/MusicLoader";
+import {cleanMusic} from "pages/components/ui/MusicModule/musicInfo/MusicContextProvider";
 
 export default function DataLoader(props: IProps) {
     const [isLoaded, setStatus] = useState(LoadStatus.init);
@@ -109,6 +111,7 @@ export default function DataLoader(props: IProps) {
             //Join as host
             console.log("Join as host");
             cleanChats();
+            cleanMusic();
             setUpRoom();
         } else {
             if (idField?.val !== null && context.room.playerMap.has(idField?.val)) {
@@ -157,7 +160,7 @@ export default function DataLoader(props: IProps) {
     return (
         <Fragment>
             <ChatLoader/>
-            {/*<MusicLoader/>*/}
+            <MusicLoader/>
             {props.children}
         </Fragment>
     );

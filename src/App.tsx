@@ -4,6 +4,7 @@ import DataLoader from "pages/components/ui/DataLoader/DataLoader";
 import getImage, {Images} from "resources/Resources";
 import ImagePage from "pages/components/ui/ImagePage/ImagePage";
 import Lobby from "pages/lobby/Lobby";
+import MusicModule from "pages/components/ui/MusicModule/MusicModule";
 
 export enum Navigation {
     Loading = "/suzumiya/loading",
@@ -14,6 +15,7 @@ export enum Navigation {
 export default function App(): JSX.Element {
     return (
         <DataLoader>
+            <MusicModule/>
             <Switch>
                 <Route path={Navigation.Loading} exact>
                     <ImagePage imgSrc={Images.LoadingImg} titleKey={"_loading"}/>

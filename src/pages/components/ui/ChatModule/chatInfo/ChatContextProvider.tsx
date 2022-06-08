@@ -16,6 +16,7 @@ const ChatContext = React.createContext<ChatContextType>({
     },
     setter: () => {
     },
+
 });
 export type ChatEntry = {
     name: string;
