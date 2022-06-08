@@ -1,7 +1,7 @@
 export const DS = {
-    StrictRules: true,
-    infiniteWait: false,
+    StrictRules: false,
     serverSG: false,
+    abundantCoins: true,
     logTransition(msg: any) {
         console.log(msg);
     }

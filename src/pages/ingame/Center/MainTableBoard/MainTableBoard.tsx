@@ -1,5 +1,4 @@
 import VerticalLayout from "pages/components/ui/VerticalLayout";
-import TableItem from "pages/ingame/Center/MainTableBoard/TableItem/TableItem";
 import gc from "global.module.css";
 import classes from "./MainTableBoard.module.css";
 import {MyTimer} from "pages/components/ui/MyTimer/MyTimer";
@@ -9,6 +8,10 @@ import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {KillInfo} from "system/GameStates/GameTypes";
 import {useTranslation} from "react-i18next";
+import PierItem from "pages/ingame/Center/MainTableBoard/TableItem/Pier/PierItem";
+import TargetItem from "pages/ingame/Center/MainTableBoard/TableItem/Target/TargetItem";
+import ChallengerItem from "pages/ingame/Center/MainTableBoard/TableItem/Challenger/ChallengerItem";
+import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 
 export default function MainTableBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
@@ -21,8 +24,13 @@ export default function MainTableBoard(): JSX.Element {
                 <p className={classes.timer}>
                     <MyTimer/>{t("_seconds_remaining")}
                 </p>
-                <TableItem isMain={true} className={classes.topContainer} playerId={mainId}/>
-                <TableItem isMain={false} className={classes.bottomContainer} playerId={subId}/>
+                <PierItem className={classes.pierContainer}/>
+                {/*<TableItem isMain={true} className={classes.topContainer} playerId={mainId}/>*/}
+                <HorizontalLayout className={classes.horizontalContainer}>
+                    <TargetItem className={classes.targetContainer}/>
+                    <ChallengerItem className={classes.challengerContainer}/>
+                </HorizontalLayout>
+                {/*<TableItem isMain={false} className={classes.bottomContainer} playerId={subId}/>*/}
             </VerticalLayout>
         </div>
     );

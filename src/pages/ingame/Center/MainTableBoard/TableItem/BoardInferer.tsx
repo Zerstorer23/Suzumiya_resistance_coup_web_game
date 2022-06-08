@@ -106,19 +106,20 @@ export function inferStateInfo(
     return <Fragment/>;
 }
 
-function rejectionElem(t: any) {
+export function rejectionElem(t: any) {
     return (<Fragment>
         <br/>
         <p>{t("_ask_rejection")}</p>
     </Fragment>);
 }
 
-function claimElem(t: any, player: Player, roleText: string, descKey: string): JSX.Element {
+
+export function claimElem(t: any, player: Player, roleText: string, descKey: string): JSX.Element {
     return formatInsert(t, "_call_general", player.name, roleText, t(descKey));
 }
 
 
-function notifyChallengedElem(t: any, amChallenger: boolean, challenger: Player, sus: Player, susCard: CardRole): JSX.Element {
+export function notifyChallengedElem(t: any, amChallenger: boolean, challenger: Player, sus: Player, susCard: CardRole): JSX.Element {
     if (amChallenger) {
         return (
             <Fragment>
@@ -138,7 +139,7 @@ function notifyChallengedElem(t: any, amChallenger: boolean, challenger: Player,
 }
 
 
-function ChallengeResultBoard(
+export function ChallengeResultBoard(
     t: any,
     ctx: RoomContextType,
     myPlayer: Player,
@@ -190,6 +191,17 @@ function ChallengeResultBoard(
         <p>{formatInsert(t, "_challenge_replace_card", myPlayer.name)}</p>
         {nextStateElem}
     </Fragment>);
+}
+
+export function inferPostDiscard(t: any, ctx: RoomContextType, playerId: string): JSX.Element {
+    const action = ctx.room.game.action;
+    const killInfo: KillInfo = action.param as KillInfo;
+    if (killInfo.removed === undefined) return <Fragment/>;
+    if (playerId === killInfo.ownerId) {
+        return (<PostKillPanel/>);
+    } else {
+        return (<p>{formatInsert(t, "_is_satisfied", ctx.room.playerMap.get(playerId)?.name)}</p>);
+    }
 }
 
 function inferChallenged(

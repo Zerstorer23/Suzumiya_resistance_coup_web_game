@@ -25,7 +25,6 @@ export default function MusicLoader() {
 
     function onMusicSet(snapshot: Snapshot) {
         const current: CounterMusicType = snapshot.val();
-        console.log("change in current", current);
         if (current === null || current === undefined) return;
         musicCtx.setMusic(current);
     }
@@ -40,7 +39,6 @@ export default function MusicLoader() {
             onMusicSet(snapshot);
         });
         currRef.on(LISTEN_VALUE, onMusicSet);
-        console.log("Listening music");
         return () => {
             queueRef.off();
             currRef.off();

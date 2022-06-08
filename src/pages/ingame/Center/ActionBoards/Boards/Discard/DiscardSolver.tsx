@@ -63,7 +63,7 @@ function handleDeadCase(t: any, deck: CardDeck, player: Player, killInfo: KillIn
 
 export function handleSuicide(ctx: RoomContextType, playerId: string) {
     const deck = ctx.room.game.deck;
-    ActionManager.prepareAndPushState(ctx, (newAction) => {
+    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
         const player = ctx.room.playerMap.get(playerId)!;
         DeckManager.killCardAt(deck, player.icard);
         DeckManager.killCardAt(deck, player.icard + 1);
@@ -75,6 +75,7 @@ export function handleSuicide(ctx: RoomContextType, playerId: string) {
         player.isSpectating = true;
         player.coins = 0;
         ReferenceManager.updatePlayerReference(killedInfo.ownerId, player);
+        newState.board = BoardState.DiscardingFinished;
         return TransitionAction.Success;
     });
 }

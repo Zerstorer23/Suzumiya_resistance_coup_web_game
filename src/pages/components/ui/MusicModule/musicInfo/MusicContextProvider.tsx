@@ -53,7 +53,6 @@ export function MusicProvider(props: IProps) {
         setList((prev) => {
             const newState = prev.filter((entry) => {
                 return entry.key !== removed.key;
-                //  return entry.vid !== removed.vid && entry.pid !== removed.pid;
             });
             return (newState);
         });
@@ -68,7 +67,6 @@ export function MusicProvider(props: IProps) {
     }
 
     function setMusic(cm: CounterMusicType) {
-        console.log("set current");
         setCurrent(cm);
     }
 

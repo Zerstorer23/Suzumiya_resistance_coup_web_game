@@ -64,3 +64,7 @@ export function isSafe(id: string, map: PlayerMap): boolean {
     if (id.length === 0) return true;
     return map.has(id);
 }
+
+export function isNull(obj: any): boolean {
+    return obj === null || obj === undefined;
+}

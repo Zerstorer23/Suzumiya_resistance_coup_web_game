@@ -4,7 +4,6 @@ import LocalContext, {LocalContextType, LocalField, TimerOptionType,} from "syst
 import {TimerReturnType} from "system/types/CommonTypes";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {inferWaitTime} from "pages/ingame/Center/ActionBoards/StateManagers/TimeInferer";
-import {DS} from "system/Debugger/DS";
 
 
 function getTimeAfter(sec: number) {
@@ -34,7 +33,7 @@ export function setMyTimer(
     localCtx: LocalContextType,
     onExpire: () => void,
 ) {
-    const duration = DS.infiniteWait ? 99999 : inferWaitTime(ctx.room.game.state.board);
+    const duration = inferWaitTime(ctx.room.game.state.board);
     // console.trace("Set timer");
     const option = createTimeOption(duration, onExpire);
     localCtx.setVal(LocalField.Timer, option);

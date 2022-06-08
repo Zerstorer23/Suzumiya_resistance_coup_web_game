@@ -59,9 +59,8 @@ export default function MusicModule() {
                 setJSX(<Fragment/>);
                 if (!amHost) return;
                 const success = pollMusic(musicCtx);
-                if (!success) {
-                    cleanMusic();
-                }
+                if (success) return;
+                cleanMusic();
                 break;
             case PlayerState.Injecting:
                 setJSX(<p>로딩중</p>);
