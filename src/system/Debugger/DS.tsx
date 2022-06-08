@@ -1,6 +1,6 @@
 export const DS = {
     StrictRules: true,
-    serverSG: false,
+    serverSG: true,
     abundantCoins: true,
     logTransition(msg: any) {
         console.log(msg);

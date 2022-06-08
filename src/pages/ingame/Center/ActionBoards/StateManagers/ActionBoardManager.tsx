@@ -2,7 +2,7 @@ import BaseBoard from "pages/ingame/Center/ActionBoards/Boards/BaseBoard";
 import CounterBoard from "pages/ingame/Center/ActionBoards/Boards/CounterBoard";
 import SolverBoard from "pages/ingame/Center/ActionBoards/Boards/Solver/SolverBoard";
 import WaitingBoard from "pages/ingame/Center/ActionBoards/Boards/Waiter/WaitingBoard";
-import {Game, KillInfo} from "system/GameStates/GameTypes";
+import {Game, GameAction, KillInfo} from "system/GameStates/GameTypes";
 import {BoardState, StateManager} from "system/GameStates/States";
 import DiscardBoard from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardBoard";
 import ReactAssassinBoard from "pages/ingame/Center/ActionBoards/Boards/ReactAssassinBoard";
@@ -24,7 +24,7 @@ export function getBoardElemFromRoom(ctx: RoomContextType, localCtx: LocalContex
     if (board === BoardState.DiscardingCard) return handleDiscarding(ctx, myId);
     const amTargeted: boolean = ctx.room.game.action.targetId === myId;
     if (isMyTurn) {
-        return handleMyTurn(board);
+        return handleMyTurn(board, ctx.room.game.action, myId);
     } else if (amTargeted) {
         return handleTargeted(board);
     } else {
@@ -32,7 +32,7 @@ export function getBoardElemFromRoom(ctx: RoomContextType, localCtx: LocalContex
     }
 }
 
-function handleMyTurn(boardState: BoardState): JSX.Element {
+function handleMyTurn(boardState: BoardState, action: GameAction, myId: string): JSX.Element {
     if (StateManager.isFinal(boardState)) {
         return <SolverBoard/>;
     }
@@ -40,6 +40,12 @@ function handleMyTurn(boardState: BoardState): JSX.Element {
         return <CounterBoard/>;
     }
     switch (boardState) {
+        case BoardState.CalledCoup:
+            if (action.targetId === myId) {
+                return <DiscardBoard/>;
+            } else {
+                return <WaitingBoard/>;
+            }
         case BoardState.ChoosingBaseAction:
             return <BaseBoard/>;
         case BoardState.AmbassadorAccepted:

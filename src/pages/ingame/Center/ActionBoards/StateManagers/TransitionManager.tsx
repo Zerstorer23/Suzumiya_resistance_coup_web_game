@@ -163,6 +163,7 @@ export function pushCalledState(
         console.log("New state = ", newState);
         if (newBoard === BoardState.CalledCoup) {
             newAction.param = GameManager.createKillInfo(ActionType.Coup, targetId);
+            payCost(ctx, newAction);
         }
 
         return TransitionAction.Success;
