@@ -25,6 +25,8 @@ export enum CardRole {
     DEAD_Ambassador = "s",
 }
 
+export const BASE_CARDS = [CardRole.Duke, CardRole.Captain, CardRole.Assassin, CardRole.Ambassador, CardRole.Contessa];
+
 /*
 This class is intended to be used as UI purposed
 does not go into database

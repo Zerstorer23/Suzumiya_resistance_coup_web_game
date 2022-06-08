@@ -3,7 +3,7 @@ import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.cs
 import {Fragment, useContext, useEffect, useState} from "react";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
-import {ActionInfo} from "system/GameStates/ActionInfo";
+import {ActionPool} from "system/GameStates/ActionInfo";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
@@ -72,7 +72,7 @@ export default function CounterBoard(): JSX.Element {
                         <BaseActionButton
                             key={index}
                             index={index}
-                            param={new ActionInfo(action)}
+                            param={ActionPool.get(action)}
                             onClickButton={() => {
                                 onMakeAction(action);
                             }}

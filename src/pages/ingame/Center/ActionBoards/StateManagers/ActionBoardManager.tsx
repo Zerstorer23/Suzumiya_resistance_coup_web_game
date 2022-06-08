@@ -1,4 +1,3 @@
-import AmbassadorBoard from "pages/ingame/Center/ActionBoards/Boards/AmbassadorBoard";
 import BaseBoard from "pages/ingame/Center/ActionBoards/Boards/BaseBoard";
 import CounterBoard from "pages/ingame/Center/ActionBoards/Boards/CounterBoard";
 import SolverBoard from "pages/ingame/Center/ActionBoards/Boards/Solver/SolverBoard";
@@ -13,6 +12,7 @@ import {LocalContextType} from "system/context/localInfo/local-context";
 import ReactForeignAidBoard from "pages/ingame/Center/ActionBoards/Boards/ReactForeignAidBoard";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {Fragment} from "react";
+import AmbassadorBoard2 from "pages/ingame/Center/ActionBoards/Boards/AmbassadorBoard2";
 
 export function getBoardElemFromRoom(ctx: RoomContextType, localCtx: LocalContextType): JSX.Element {
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
@@ -43,7 +43,7 @@ function handleMyTurn(boardState: BoardState): JSX.Element {
         case BoardState.ChoosingBaseAction:
             return <BaseBoard/>;
         case BoardState.AmbassadorAccepted:
-            return <AmbassadorBoard/>;
+            return <AmbassadorBoard2/>;
         default:
             return <WaitingBoard/>;
     }

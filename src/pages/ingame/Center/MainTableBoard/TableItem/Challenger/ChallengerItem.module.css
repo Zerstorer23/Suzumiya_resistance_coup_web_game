@@ -34,3 +34,7 @@
     align-content: center;
     justify-content: center;
 }
+
+.actionContainer * {
+    font-size: 0.9rem;
+}

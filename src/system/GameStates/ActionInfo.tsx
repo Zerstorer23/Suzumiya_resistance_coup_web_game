@@ -1,5 +1,15 @@
 import {ActionType} from "system/GameStates/States";
 
+const actionMap = new Map<ActionType, ActionInfo>();
+export const ActionPool = {
+    get(action: ActionType): ActionInfo {
+        if (!actionMap.has(action)) {
+            actionMap.set(action, new ActionInfo(action));
+        }
+        return actionMap.get(action)!;
+    }
+};
+
 export class ActionInfo {
     actionType: ActionType;
 
