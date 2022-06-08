@@ -9,7 +9,6 @@ import {ActionType, StateManager} from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {DS} from "system/Debugger/DS";
-import {GameManager} from "system/GameStates/GameManager";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
 import {PlayerMap} from "system/GameStates/GameTypes";
@@ -110,7 +109,7 @@ export default function BaseBoard(): JSX.Element {
 
     useDefaultAction(ctx, localCtx, () => {
         if (forceCoup) {
-            ActionManager.pushPrepareDiscarding(ctx, GameManager.createKillInfo(ActionType.Coup, myId));
+            ActionManager.pushCalledState(ctx, ActionType.Coup, myId, myPlayer, myId);
         } else {
             onMakeAction(ActionType.GetOne);
         }
@@ -128,12 +127,7 @@ export default function BaseBoard(): JSX.Element {
     function onPlayerSelected(playerId: string) {
         if (!StateManager.isTargetableAction(savedAction)) return;
         console.log("Selected player " + playerId);
-        //Coup is special
-        if (savedAction === ActionType.Coup) {
-            ActionManager.pushPrepareDiscarding(ctx, GameManager.createKillInfo(ActionType.Coup, playerId));
-            return;
-        }
-        ActionManager.pushCalledState(ctx, savedAction, myId, playerId);
+        ActionManager.pushCalledState(ctx, savedAction, myId, myPlayer, playerId);
     }
 
 
@@ -142,7 +136,7 @@ export default function BaseBoard(): JSX.Element {
         if (DS.StrictRules && getRequiredCoins(action) > myPlayer.coins) return;
         const handled = handleTargetableAction(action);
         if (handled) return;
-        ActionManager.pushCalledState(ctx, action, myId);
+        ActionManager.pushCalledState(ctx, action, myId, myPlayer);
     }
 
     return (elem);

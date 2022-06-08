@@ -32,7 +32,7 @@ export function inferPierPanel(
         case BoardState.CalledCoup:
             return formatInsert(t, "_call_coup", pier.name, t("_action_Coup"), target?.name);
         case BoardState.GetOneAccepted:
-            return claimElem(t, pier, t("_action_income"), "_accept_getone");
+            return <p>{formatInsert(t, "_call_get_one", pier.name, t("_action_income"))}</p>;
         case BoardState.CalledGetThree:
             return (<Fragment>
                 {claimElem(t, pier!, CardPool.getCard(CardRole.Duke).getName(t), "_call_get_three")}
@@ -71,7 +71,7 @@ export function inferPierPanel(
             </Fragment>;
         case BoardState.CalledGetTwo:
             return (<Fragment>
-                {claimElem(t, pier, t("_action_foreign_aid"), "_call_foreign_aid")}
+                <p>{formatInsert(t, "_call_foreign_aid", pier.name, t("_action_foreign_aid"))}</p>
                 {rejectionElem(t)}
             </Fragment>);
         case BoardState.AmbassadorAccepted:

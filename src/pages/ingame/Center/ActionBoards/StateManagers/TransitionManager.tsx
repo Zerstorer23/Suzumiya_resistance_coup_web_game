@@ -1,4 +1,4 @@
-import {ChallengeState, GameAction, KillInfo, TurnState,} from "system/GameStates/GameTypes";
+import {ChallengeState, GameAction, KillInfo, Player, TurnState,} from "system/GameStates/GameTypes";
 import {GameManager} from "system/GameStates/GameManager";
 import {DbReferences, playerClaimedRole, ReferenceManager} from "system/Database/RoomDatabase";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
@@ -150,15 +150,21 @@ export function pushCalledState(
     ctx: RoomContextType,
     action: ActionType,
     myId: string,
+    myPlayer: Player,
     targetId = ""
 ) {
     prepareAndPushState(ctx, (newAction, newState) => {
         const newBoard = StateManager.getCalledState(action);
         if (newBoard === null) return TransitionAction.Abort;
-        playerClaimedRole(myId, ctx.room.playerMap.get(myId)!, action);
+        playerClaimedRole(myId, myPlayer, action);
         newState.board = newBoard;
         newAction.pierId = myId;
         newAction.targetId = targetId;
+        console.log("New state = ", newState);
+        if (newBoard === BoardState.CalledCoup) {
+            newAction.param = GameManager.createKillInfo(ActionType.Coup, targetId);
+        }
+
         return TransitionAction.Success;
     });
 }

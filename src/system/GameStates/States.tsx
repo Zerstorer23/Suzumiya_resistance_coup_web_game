@@ -225,7 +225,7 @@ export const StateManager = {
             case ActionType.Assassinate:
                 return BoardState.CalledAssassinate;
             case ActionType.Coup:
-                return BoardState.CalledGetTwo;
+                return BoardState.CalledCoup;
             case ActionType.Steal:
                 return BoardState.CalledSteal;
             default:
