@@ -15,6 +15,10 @@
     animation: slide-up 300ms ease-out forwards;
 }
 
+.flash {
+    animation: flash 300ms ease-out forwards;
+}
+
 .gone {
     display: none;
 }
@@ -67,5 +71,16 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes flash {
+    from {
+        opacity: 0.5;
+        background-color: aqua;
+    }
+    to {
+        opacity: 1;
+        background-color: -moz-default-background-color;
     }
 }

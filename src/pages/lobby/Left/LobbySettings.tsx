@@ -1,4 +1,4 @@
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import gc from "global.module.css";
 import classes from "./LobbySettings.module.css";
 import RoomContext from "system/context/roomInfo/room-context";
@@ -7,13 +7,14 @@ import {Player} from "system/GameStates/GameTypes";
 import {ReferenceManager} from "system/Database/RoomDatabase";
 import {useTranslation} from "react-i18next";
 import {formatInsert} from "lang/i18nHelper";
-
+import animClasses from "animation.module.css";
 
 const MAX_NAME_LENGTH = 16;
 export default function LobbySettings() {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const {t} = useTranslation();
+    const [flashCss, setCss] = useState("");
     const myId: string | null = localCtx.getVal(LocalField.Id);
     if (myId === null) {
         return <p>Need to reload</p>;
@@ -31,13 +32,17 @@ export default function LobbySettings() {
         myRef.set(myPlayer);
     }
 
-    function onClickHelp(e: any) {
-        //TODO direct
-    }
 
     function onClickCopy(e: any) {
         //TODO Copy links button
-
+        const myUrl = window.location.href;
+        /* Copy the text inside the text field */
+        navigator.clipboard.writeText(myUrl);
+        /* Alert the copied text */
+        setCss(animClasses.flash);
+        setTimeout(() => {
+            setCss("");
+        }, 100);
     }
 
     return (
@@ -50,9 +55,8 @@ export default function LobbySettings() {
                     onBlur={onFinishEditName}
                     defaultValue={myPlayer.name}
                 ></input>
-                {/*<button className={classes.fieldType} onClick={onClickHelp}>{t("_help")}</button>*/}
-                <button className={classes.fieldType} onClick={onClickCopy}>{t("_copy_link")}</button>
-                {/*<button className={classes.fieldType}>{t("_help")}</button>*/}
+                <button className={`${classes.fieldType} ${flashCss}`}
+                        onClick={onClickCopy}>{t("_copy_link")}</button>
             </div>
             <div className={classes.creditsContainer}>
                 <p>{formatInsert(t, "_rule_three_lines")}</p>

@@ -35,3 +35,9 @@
     align-content: center;
     margin: 0.2rem 0.2rem;
 }
+
+@keyframes flash {
+    from {
+
+    }
+}
