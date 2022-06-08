@@ -4,7 +4,6 @@ import RoomContext from "system/context/roomInfo/room-context";
 import LocalContext from "system/context/localInfo/local-context";
 import {handleCardKill, handleSuicide} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardSolver";
 import {setMyTimer} from "pages/components/ui/MyTimer/MyTimer";
-import {inferWaitTime} from "pages/ingame/Center/MainTableBoard/TimeInferer";
 import {BoardState} from "system/GameStates/States";
 import {useTranslation} from "react-i18next";
 import {TurnManager} from "system/GameStates/TurnManager";
@@ -33,8 +32,7 @@ export default function DiscardBoard(): JSX.Element {
             handleSuicide(ctx, killInfo.ownerId);
             return;
         }
-        const time = inferWaitTime(ctx.room.game.state.board, ctx.room.game.action);
-        setMyTimer(localCtx, time, () => {
+        setMyTimer(ctx, localCtx, () => {
             if (myId !== killInfo.ownerId) return;
             if (killInfo.removed === undefined) return;
             if (killInfo.removed[0] >= 0) return;

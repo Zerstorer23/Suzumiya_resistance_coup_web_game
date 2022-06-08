@@ -81,7 +81,6 @@ export default function BaseBoard(): JSX.Element {
     const [actions, setButtons] = useState<ActionType[]>(actionsDefault);
     const [elem, setJSX] = useState(<Fragment/>);
     useEffect(() => {
-        console.log("Selecting? " + savedAction);
         if (savedAction === ActionType.None) {
             setJSX(createActionBoards(t, actions, onMakeAction));
         } else {
@@ -109,7 +108,7 @@ export default function BaseBoard(): JSX.Element {
         }
     }, [keyInfo, actions]);
 
-    useDefaultAction(localCtx, () => {
+    useDefaultAction(ctx, localCtx, () => {
         if (forceCoup) {
             ActionManager.pushPrepareDiscarding(ctx, GameManager.createKillInfo(ActionType.Coup, myId));
         } else {
@@ -143,7 +142,6 @@ export default function BaseBoard(): JSX.Element {
         if (DS.StrictRules && getRequiredCoins(action) > myPlayer.coins) return;
         const handled = handleTargetableAction(action);
         if (handled) return;
-        console.log("Make action");
         ActionManager.pushCalledState(ctx, action, myId);
     }
 

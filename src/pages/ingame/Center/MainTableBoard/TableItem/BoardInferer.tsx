@@ -25,7 +25,7 @@ export function inferStateInfo(
     if (StateManager.isTargetableState(board)) {
         return inferTargeted(t, ctx, playerId);
     }
-    if (StateManager.isBlockedState(board)) {
+    if (StateManager.pierIsBlocked(board)) {
         return inferBlocked(t, ctx, playerId);
     }
     switch (board) {
@@ -98,6 +98,7 @@ export function inferStateInfo(
                 return <p>{formatInsert(t, "_is_safe_from_action", target?.name)}</p>;
             }
         case BoardState.DiscardingCard:
+        case BoardState.DiscardingFinished:
             return inferDiscardState(t, ctx, playerId);
     }
     /**

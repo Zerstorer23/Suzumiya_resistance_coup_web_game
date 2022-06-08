@@ -91,8 +91,6 @@ export async function loadRoom(): Promise<Room> {
         }
         room.playerMap = parsePlayerMap(room.playerMap);
         room.playerList = getSortedListFromMap(room.playerMap);
-        console.log("LOaded room");
-        console.log(room);
         return room;
     }
 }

@@ -16,36 +16,32 @@ import {Fragment} from "react";
 
 export function getBoardElemFromRoom(ctx: RoomContextType, localCtx: LocalContextType): JSX.Element {
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    if (myPlayer.isSpectating) {
-        console.log("I am spectating");
-        return <WaitingBoard/>;
-    }
+    if (myPlayer.isSpectating) return <WaitingBoard/>;
+
     const isMyTurn: boolean = TurnManager.isMyTurn(ctx, localCtx);
     // console.log(`turn : ${ctx.room.game.state.turn} / myId = ${myId} / ct ${ctx.room.playerList[ctx.room.game.state.turn]} / myturn? ${isMyTurn}`);
     const board = ctx.room.game.state.board;
-    const amTargeted: boolean = ctx.room.game.action.targetId === myId;
     if (board === BoardState.DiscardingCard) return handleDiscarding(ctx, myId);
+    const amTargeted: boolean = ctx.room.game.action.targetId === myId;
     if (isMyTurn) {
-        if (StateManager.isFinal(board)) {
-            return <SolverBoard/>;
-        }
         return handleMyTurn(board);
+    } else if (amTargeted) {
+        return handleTargeted(board);
     } else {
-        if (amTargeted) {
-            return handleTargeted(board);
-        }
         return handleNotMyTurn(board, ctx.room.game);
     }
 }
 
 function handleMyTurn(boardState: BoardState): JSX.Element {
+    if (StateManager.isFinal(boardState)) {
+        return <SolverBoard/>;
+    }
+    if (StateManager.pierIsBlocked(boardState)) {
+        return <CounterBoard/>;
+    }
     switch (boardState) {
         case BoardState.ChoosingBaseAction:
             return <BaseBoard/>;
-        case BoardState.CalledGetTwoBlocked:
-        case BoardState.StealBlocked:
-        case BoardState.AssassinBlocked:
-            return <CounterBoard/>;
         case BoardState.AmbassadorAccepted:
             return <AmbassadorBoard/>;
         default:
@@ -56,7 +52,6 @@ function handleMyTurn(boardState: BoardState): JSX.Element {
 function handleNotMyTurn(board: BoardState, game: Game): JSX.Element {
     const hasChallenger: boolean = game.action.challengerId.length > 0;
     if (board === BoardState.CalledGetTwo) return <ReactForeignAidBoard/>;
-    console.log(`has challenger = ${hasChallenger} counter = ${StateManager.isCounterable(board)}`);
     if (!hasChallenger && StateManager.isCounterable(board)) return <CounterBoard/>;
     return <WaitingBoard/>;
 
@@ -71,7 +66,6 @@ function handleTargeted(boardState: BoardState): JSX.Element {
         case BoardState.CalledSteal:
             return <ReactCaptainBoard/>;
         case BoardState.CalledGetTwoBlocked:
-            return <WaitingBoard/>;
         default:
             return <WaitingBoard/>;
     }
@@ -79,8 +73,7 @@ function handleTargeted(boardState: BoardState): JSX.Element {
 
 function handleDiscarding(ctx: RoomContextType, myId: string): JSX.Element {
     const killInfo = ctx.room.game.action.param as KillInfo;
-    if (killInfo.removed === undefined) return <Fragment/>;
-    if (killInfo.removed[0] >= 0) return <WaitingBoard/>;
+    if (killInfo.ownerId === undefined) return <Fragment/>;
     if (killInfo.ownerId === myId) return <DiscardBoard/>;
     return <WaitingBoard/>;
 }

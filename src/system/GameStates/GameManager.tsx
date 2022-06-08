@@ -1,5 +1,4 @@
 import {GameAction, KillActionTypes, KillInfo} from "system/GameStates/GameTypes";
-import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 import {CardRole} from "system/cards/Card";
 import {BoardState} from "system/GameStates/States";
@@ -16,7 +15,6 @@ export const GameManager = {
             targetId,
             challengerId,
             param: "",
-            time: firebase.database.ServerValue.TIMESTAMP,
         };
     },
     copyGameAction(action: GameAction): GameAction {
@@ -25,7 +23,6 @@ export const GameManager = {
             challengerId: action.challengerId,
             targetId: action.targetId,
             param: action.param,
-            time: firebase.database.ServerValue.TIMESTAMP,
         };
         return gameAction;
     },

@@ -9,10 +9,7 @@ import {ChatFormat, sendChat,} from "pages/components/ui/ChatModule/chatInfo/Cha
 import {CardDeck} from "system/cards/Card";
 import {insert} from "lang/i18nHelper";
 
-
-export function checkGameEnd(t: any,
-                             ctx: RoomContextType
-) {
+export function checkPostDiscarding(t: any, ctx: RoomContextType) {
     const killInfo = ctx.room.game.action.param as KillInfo;
     if (killInfo.removed === undefined) return;
     const nextBoard = killInfo.nextState as BoardState;
@@ -43,15 +40,14 @@ export function checkGameEnd(t: any,
 export function handleCardKill(t: any, ctx: RoomContextType, index: number) {
     const deck = ctx.room.game.deck;
     DeckManager.killCardAt(deck, index);
-    ActionManager.prepareAndPushState(ctx, (newAction) => {
+    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
         const killInfo = newAction.param as KillInfo;
         const player = ctx.room.playerMap.get(killInfo.ownerId)!;
         killInfo.removed[0] = index;
         newAction.param = killInfo;
         ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
         handleDeadCase(t, deck, player, killInfo);
-        console.log("Push card kill");
-        console.log(newAction);
+        newState.board = BoardState.DiscardingFinished;
         return TransitionAction.Success;
     });
 }

@@ -24,7 +24,7 @@ export default function ReactAssassinBoard(): JSX.Element {
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const keyInfo = useShortcutEffect(actions.length);
-    useDefaultAction(localCtx, () => {
+    useDefaultAction(ctx, localCtx, () => {
         onMakeAction(ActionType.Accept);
     });
     useEffect(() => {

@@ -2,8 +2,10 @@ import {Fragment, useContext, useEffect} from "react";
 import {useTimer} from "react-timer-hook";
 import LocalContext, {LocalContextType, LocalField, TimerOptionType,} from "system/context/localInfo/local-context";
 import {TimerReturnType} from "system/types/CommonTypes";
+import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
+import {inferWaitTime} from "pages/ingame/Center/ActionBoards/StateManagers/TimeInferer";
+import {DS} from "system/Debugger/DS";
 
-export const TimerCode = [0];
 
 function getTimeAfter(sec: number) {
     const expiryTimestamp = new Date();
@@ -21,7 +23,6 @@ export function MyTimer(): JSX.Element {
         },
     });
     useEffect(() => {
-        console.log("Start timer " + option.duration);
         timer.restart(getTimeAfter(option.duration), true);
     }, [option]);
 
@@ -29,12 +30,20 @@ export function MyTimer(): JSX.Element {
 }
 
 export function setMyTimer(
+    ctx: RoomContextType,
+    localCtx: LocalContextType,
+    onExpire: () => void,
+) {
+    const duration = DS.infiniteWait ? 99999 : inferWaitTime(ctx.room.game.state.board);
+    // console.trace("Set timer");
+    const option = createTimeOption(duration, onExpire);
+    localCtx.setVal(LocalField.Timer, option);
+}
+
+export function forceSetTimer(
     localCtx: LocalContextType,
     duration: number,
-    onExpire: () => void
-) {
-    console.trace("Set timer");
-    TimerCode[0]++;
+    onExpire: () => void) {
     const option = createTimeOption(duration, onExpire);
     localCtx.setVal(LocalField.Timer, option);
 }

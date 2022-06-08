@@ -30,6 +30,7 @@ export enum BoardState {
     ContessaChallenged,
     ContessaAccepted,
     DiscardingCard,
+    DiscardingFinished,
 }
 
 //These are actions that each player can make
@@ -54,7 +55,7 @@ export const StateManager = {
     /*    isDiscardingState(state: BoardState): boolean {
             return state === BoardState.DiscardingCard || state === BoardState.DiscardingCard2;
         },*/
-    isBlockedState(state: BoardState): boolean {
+    pierIsBlocked(state: BoardState): boolean {
         /**
          * States that require HOST to react LIE or ACCEPT
          */

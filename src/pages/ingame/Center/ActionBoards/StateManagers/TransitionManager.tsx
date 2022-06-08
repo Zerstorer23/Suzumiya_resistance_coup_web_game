@@ -187,8 +187,6 @@ export function pushPrepareDiscarding(
         newState.board = BoardState.DiscardingCard;
         newAction.param = killInfo;
         payCost(ctx, newAction);
-        DS.logTransition("Move to Discarding ");
-        console.log(newAction);
         return TransitionAction.Success;
     });
 }

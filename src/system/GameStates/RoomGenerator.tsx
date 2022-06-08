@@ -1,5 +1,4 @@
 import {Game, GameAction, Player, PlayerMap, Room, RoomHeader, TurnState,} from "system/GameStates/GameTypes";
-import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 import {getRandomSeed} from "system/GameConstants";
 import {BoardState} from "system/GameStates/States";
@@ -15,7 +14,6 @@ export function getDefaultAction(): GameAction {
         targetId: "",
         challengerId: "",
         param: "",
-        time: firebase.database.ServerValue.TIMESTAMP,
     };
 }
 

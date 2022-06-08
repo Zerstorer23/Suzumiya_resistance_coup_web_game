@@ -28,10 +28,16 @@ export default function CounterBoard(): JSX.Element {
     const localCtx = useContext(LocalContext);
     const myId = localCtx.getVal(LocalField.Id);
     const board = ctx.room.game.state.board;
+    const gameAction = ctx.room.game.action;
     const [actions, setActions] = useState<ActionType[]>(actionsAcceptable);
     const {t} = useTranslation();
     useEffect(() => {
-        setActions((StateManager.isBlockedState(board)) ? actionsAcceptable : actionsNonAcceptable);
+        let actions = actionsNonAcceptable;
+        if (StateManager.pierIsBlocked(board) && myId === gameAction.pierId) {
+            actions = actionsAcceptable;
+        }
+//        (StateManager.pierIsBlocked(board)) ? actionsAcceptable : actionsNonAcceptable
+        setActions(actions);
     }, [board]);
     const keyInfo = useShortcutEffect(actions.length);
     useEffect(() => {
@@ -40,7 +46,7 @@ export default function CounterBoard(): JSX.Element {
     }, [keyInfo]);
 
     function handleAccept(board: BoardState) {
-        if (!StateManager.isBlockedState(board)) return;
+        if (!StateManager.pierIsBlocked(board)) return;
         ActionManager.pushAcceptedState(ctx);
     }
 

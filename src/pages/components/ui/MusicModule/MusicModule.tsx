@@ -73,7 +73,6 @@ export default function MusicModule() {
         }
     }, [playerState]);
     useEffect(() => {
-        console.log("Change in c " + musicCtx.current.c);
         if (musicCtx.current.c < 0) return;
         setPlayerState(PlayerState.Injecting);
     }, [musicCtx.current.c]);
@@ -95,7 +94,6 @@ export default function MusicModule() {
         }
     }
 
-    console.log("PLay state ", playerState);
     return <div className={classes.hudPanel}>
         <div className={(showPanel) ? classes.show : classes.hide}>
             {playerElem}

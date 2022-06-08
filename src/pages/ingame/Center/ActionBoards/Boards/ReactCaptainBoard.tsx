@@ -26,7 +26,7 @@ export default function ReactCaptainBoard(): JSX.Element {
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const keyInfo = useShortcutEffect(actions.length);
     const {t} = useTranslation();
-    useDefaultAction(localCtx, () => {
+    useDefaultAction(ctx, localCtx, () => {
         onMakeAction(ActionType.Accept);
     });
 

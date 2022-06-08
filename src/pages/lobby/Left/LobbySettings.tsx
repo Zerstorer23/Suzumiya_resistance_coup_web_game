@@ -27,7 +27,6 @@ export default function LobbySettings() {
         if (newName.length > MAX_NAME_LENGTH) {
             newName = newName.substring(0, MAX_NAME_LENGTH);
         }
-        console.log(newName);
         myPlayer.name = newName;
         myRef.set(myPlayer);
     }

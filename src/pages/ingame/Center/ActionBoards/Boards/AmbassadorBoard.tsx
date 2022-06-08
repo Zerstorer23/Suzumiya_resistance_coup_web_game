@@ -59,7 +59,7 @@ export default function AmbassadorBoard(): JSX.Element {
 
     const [count, setCount] = useState<number>(0);
     const [secondCardPicked, setSecondCardPicked] = useState<number>(-1);
-    useDefaultAction(localCtx, () => {
+    useDefaultAction(ctx, localCtx, () => {
         ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
             return TransitionAction.EndTurn;
         });
@@ -68,7 +68,6 @@ export default function AmbassadorBoard(): JSX.Element {
     useEffect(() => {
         if (count < 2) return;
         if (secondCardPicked === firstCardPicked) return;
-        console.log("swapping");
         if (firstCardPicked === 1) {
             DeckManager.swap(myPlayer!.icard + 1, myPlayer!.icard, deck);
         } else if (firstCardPicked === 2) {
@@ -92,15 +91,12 @@ export default function AmbassadorBoard(): JSX.Element {
                 break;
         }
         DeckManager.pushDeck(ctx, deck);
-        console.log("ending turn");
         ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
             return TransitionAction.EndTurn;
         });
     }, [firstCardPicked, secondCardPicked]);
 
     const onMakeAction = (index: number) => {
-        console.log("index: ", index);
-        console.log("count: ", count);
         if (count === 0) setFirstCardPicked(index);
         if (count !== 0) setSecondCardPicked(index);
         setCount((count: number) => {

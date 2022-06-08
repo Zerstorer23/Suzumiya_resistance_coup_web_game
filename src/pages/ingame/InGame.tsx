@@ -16,7 +16,6 @@ import GameOverPopUp from "pages/components/ui/PopUp/PopUp";
 import {Navigation} from "App";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {setMyTimer} from "pages/components/ui/MyTimer/MyTimer";
-import {WaitTime} from "system/GameConstants";
 import {TurnState} from "system/GameStates/GameTypes";
 import {DS} from "system/Debugger/DS";
 import {pushEndGame} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
@@ -33,7 +32,6 @@ export default function InGame() {
     const amHost = TurnManager.amHost(ctx, localCtx);
 
     function checkSanity(): boolean {
-        console.log("Sanity check");
         if (!amHost) return false;
         ReferenceManager.updateReference(
             DbReferences.GAME_action,
@@ -65,7 +63,7 @@ export default function InGame() {
     useEffect(() => {
         if (turn === -2) {
             setIsGameOver(true);
-            setMyTimer(localCtx, WaitTime.WaitReactions, () => {
+            setMyTimer(ctx, localCtx, () => {
                 if (!amHost) return;
                 const state: TurnState = {turn: -1, board: 0,};
                 ReferenceManager.updateReference(DbReferences.GAME_state, state);
