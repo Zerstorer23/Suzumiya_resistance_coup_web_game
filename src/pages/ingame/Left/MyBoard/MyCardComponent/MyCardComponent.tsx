@@ -6,7 +6,7 @@ import {useContext} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import RoomContext from "system/context/roomInfo/room-context";
-import {CardPool} from "system/cards/CardPool";
+import {cardPool} from "system/cards/CardPool";
 import useAnimFocus, {AnimType} from "system/hooks/useAnimFocus";
 
 type Props = IProps & {
@@ -18,7 +18,7 @@ export default function MyCardComponent(props: Props): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    const card = CardPool.getCard(ctx.room.game.deck[myPlayer.icard + props.offset]);
+    const card = cardPool.get(ctx.room.game.deck[myPlayer.icard + props.offset]);
     const {t} = useTranslation();
     const isDead = card.isDead();
     /*

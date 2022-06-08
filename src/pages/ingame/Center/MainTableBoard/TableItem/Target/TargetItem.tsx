@@ -3,7 +3,7 @@ import classes from "./TargetItem.module.css";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {Fragment, useContext, useEffect, useState} from "react";
-import {CardPool} from "system/cards/CardPool";
+import {cardPool} from "system/cards/CardPool";
 import {useTranslation} from "react-i18next";
 import {isNull} from "system/GameConstants";
 import VerticalLayout from "pages/components/ui/VerticalLayout";
@@ -27,7 +27,7 @@ export default function TargetItem(props: IProps) {
     if (isNull(target)) return <Fragment/>;
 
 
-    const lastCard = CardPool.getCard(target!.lastClaimed);
+    const lastCard = cardPool.get(target!.lastClaimed);
     return (
         <VerticalLayout className={`${props.className}`}>
             <div className={classes.nameContainer}>

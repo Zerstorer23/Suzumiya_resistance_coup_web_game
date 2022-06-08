@@ -11,11 +11,11 @@ import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {useShortcutEffect} from "system/hooks/useShortcut";
 import {useTranslation} from "react-i18next";
 import useDefaultAction from "system/hooks/useDefaultAction";
-import {CardPool} from "system/cards/CardPool";
+import {cardPool} from "system/cards/CardPool";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {ActionType} from "system/GameStates/States";
-import {ActionPool} from "system/GameStates/ActionInfo";
+import {actionPool} from "system/GameStates/ActionInfo";
 
 export default function AmbassadorBoard2(): JSX.Element {
     const ctx = useContext(RoomContext);
@@ -102,8 +102,8 @@ function generatePanels(cardIndicesArr: number[], selectedArr: number[], deck: C
         const isTop = i < 2;
         const elem = <BaseActionButton key={i} index={i}
                                        param={selectedArr.includes(cardIndex) ?
-                                           ActionPool.get(ActionType.None)
-                                           : CardPool.getCard(deck[cardIndex])}
+                                           actionPool.get(ActionType.None)
+                                           : cardPool.get(deck[cardIndex])}
                                        cssIndex={(isTop) ? i + 1 : i - 1}
                                        onClickButton={() => {
                                            onMakeAction(cardIndex);

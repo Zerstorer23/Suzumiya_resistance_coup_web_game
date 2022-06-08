@@ -2,7 +2,7 @@ import {BASE_CARDS, CardDeck, CardRole} from "system/cards/Card";
 import {randomInt, shuffleArray} from "system/GameConstants";
 import {Player} from "system/GameStates/GameTypes";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
-import {CardPool} from "system/cards/CardPool";
+import {cardPool} from "system/cards/CardPool";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 /*
@@ -78,7 +78,7 @@ export const DeckManager = {
      * @returns Card UI form
      */
     getCardFromChar(val: string) {
-        return CardPool.getCard(this.getRoleFromChar(val));
+        return cardPool.get(this.getRoleFromChar(val));
     },
 
     pushDeck(ctx: RoomContextType, deckArr: CardRole[]) {

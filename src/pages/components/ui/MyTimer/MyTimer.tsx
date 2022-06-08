@@ -34,7 +34,7 @@ export function setMyTimer(
     onExpire: () => void,
 ) {
     const duration = inferWaitTime(ctx.room.game.state.board);
-    // console.trace("Set timer");
+    // console.trace("Set timer: ", duration, ctx.room.game.state.board);
     const option = createTimeOption(duration, onExpire);
     localCtx.setVal(LocalField.Timer, option);
 }

@@ -11,7 +11,7 @@ import {DeckManager} from "system/cards/DeckManager";
 import {CardRole} from "system/cards/Card";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
-import {CardPool} from "system/cards/CardPool";
+import {cardPool} from "system/cards/CardPool";
 import {useShortcutEffect} from "system/hooks/useShortcut";
 
 const MAX_PCARD = 2;
@@ -65,7 +65,7 @@ export default function DiscardBoard(): JSX.Element {
                         <BaseActionButton
                             key={index}
                             index={index}
-                            param={CardPool.getCard(
+                            param={cardPool.get(
                                 DeckManager.isDead(role) ? CardRole.None : role
                             )}
                             onClickButton={() => {

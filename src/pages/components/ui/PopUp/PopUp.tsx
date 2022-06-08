@@ -8,7 +8,7 @@ import RoomContext from "system/context/roomInfo/room-context";
 import {DeckManager} from "system/cards/DeckManager";
 import {useTranslation} from "react-i18next";
 import {formatInsert} from "lang/i18nHelper";
-import {CardPool} from "system/cards/CardPool";
+import {cardPool} from "system/cards/CardPool";
 import {MyTimer} from "pages/components/ui/MyTimer/MyTimer";
 import animClasses from "animation.module.css";
 
@@ -43,8 +43,8 @@ function GameOverWindow(props: GOprops) {
             <div className={classes.content}>
                 <p>{formatInsert(t, "_game_winner", props.player.name)}</p>
                 <p>{formatInsert(t, "_game_cardUsed",
-                    CardPool.getCard(props.card1).getName(t),
-                    CardPool.getCard(props.card2).getName(t))}</p>
+                    cardPool.get(props.card1).getName(t),
+                    cardPool.get(props.card2).getName(t))}</p>
                 <p>{t("_return_lobby")}</p><MyTimer/>
             </div>
         </div>

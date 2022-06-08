@@ -2,7 +2,7 @@ import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {LocalContextType} from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {Fragment} from "react";
-import {CardPool} from "system/cards/CardPool";
+import {cardPool} from "system/cards/CardPool";
 import {KillInfo, Player} from "system/GameStates/GameTypes";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import {formatInsert} from "lang/i18nHelper";
@@ -45,13 +45,13 @@ function inferChallenged(
         if (target === null) return <Fragment/>;
         return <p>{formatInsert(t, "_challenge_the_card",
             challenger.name, target.name,
-            CardPool.getCard(susCard).getName(t))}
+            cardPool.get(susCard).getName(t))}
         </p>;
     }
     if (pier === null) return <Fragment/>;
     return <p>{formatInsert(t, "_challenge_the_card",
         challenger.name, pier.name,
-        CardPool.getCard(susCard).getName(t))}
+        cardPool.get(susCard).getName(t))}
     </p>;
 }
 

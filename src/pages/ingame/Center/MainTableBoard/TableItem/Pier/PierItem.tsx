@@ -4,11 +4,11 @@ import classes from "./PierItem.module.css";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {Fragment, useContext, useEffect, useState} from "react";
-import {CardPool} from "system/cards/CardPool";
 import {useTranslation} from "react-i18next";
 import {insert} from "lang/i18nHelper";
 import {inferPierPanel} from "pages/ingame/Center/MainTableBoard/TableItem/Pier/PierInferer";
 import useAnimFocus, {AnimType} from "system/hooks/useAnimFocus";
+import {cardPool} from "system/cards/CardPool";
 
 
 export default function PierItem(props: IProps) {
@@ -27,7 +27,7 @@ export default function PierItem(props: IProps) {
     }, [ctx.room.game.state.board, ctx.room.game.action]);
 
     if (pier === null || pier === undefined) return <Fragment/>;
-    const lastCard = CardPool.getCard(pier.lastClaimed);
+    const lastCard = cardPool.get(pier.lastClaimed);
     return (
         <HorizontalLayout className={`${props.className}`}>
             <div className={classes.profileContainer}>

@@ -8,9 +8,21 @@ import TargetItem from "pages/ingame/Center/MainTableBoard/TableItem/Target/Targ
 import ChallengerItem from "pages/ingame/Center/MainTableBoard/TableItem/Challenger/ChallengerItem";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import animClasses from "animation.module.css";
+import {useContext, useEffect} from "react";
+import RoomContext from "system/context/roomInfo/room-context";
+import {StateManager} from "system/GameStates/States";
+import {AudioFile, audioPool} from "resources/AudioManager";
 
 export default function MainTableBoard(): JSX.Element {
     const {t} = useTranslation();
+    const ctx = useContext(RoomContext);
+    const board = ctx.room.game.state.board
+    useEffect(() => {
+        if (StateManager.isChallenged(board)) {
+            audioPool.play(AudioFile.Objection);
+        }
+    }, [board])
+
     return (
         <div className={`${gc.round_border} ${classes.container}`}>
             <VerticalLayout>

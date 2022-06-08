@@ -2,7 +2,7 @@ import {Fragment, useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import {DeckManager} from "system/cards/DeckManager";
 import {KillInfo} from "system/GameStates/GameTypes";
-import {CardPool} from "system/cards/CardPool";
+import {cardPool} from "system/cards/CardPool";
 import {useTranslation} from "react-i18next";
 import {formatInsert} from "lang/i18nHelper";
 
@@ -18,7 +18,7 @@ export function PostKillPanel(): JSX.Element {
     if (info.removed[1] >= 0) {
         const secCard = ctx.room.game.deck[info.removed[1]];
         secondElem = <p>{formatInsert(t, "_discard_result_challenge", player.name,
-            CardPool.getCard(secCard).getName(t))}</p>;
+            cardPool.get(secCard).getName(t))}</p>;
     }
 
     if (player === undefined) return <Fragment/>;
@@ -26,7 +26,7 @@ export function PostKillPanel(): JSX.Element {
     return (
         <Fragment>
             <p>{formatInsert(t, "_discard_result", player.name,
-                CardPool.getCard(cardRole).getName(t))}</p>
+                cardPool.get(cardRole).getName(t))}</p>
             {secondElem}
             {isDead && <p>{formatInsert(t, "_is_removed", player.name)}</p>}
         </Fragment>

@@ -21,16 +21,9 @@ import {BoardState} from "system/GameStates/States";
 
 export function inferWaitTime(board: BoardState): number {
     switch (board) {
-        case BoardState.AmbassadorChallenged:
-        case BoardState.DukeBlocksChallenged:
-        case BoardState.GetThreeChallenged:
-        case BoardState.StealBlockChallenged:
-        case BoardState.AssassinateChallenged:
-            return WaitTime.WaitConfirms;
         case BoardState.ChoosingBaseAction:
         case BoardState.CalledCoup:
         case BoardState.AmbassadorAccepted:
-        case BoardState.StealChallenged:
         case BoardState.StealBlocked:
         case BoardState.CalledGetTwoBlocked:
         case BoardState.CalledAssassinate:
@@ -51,6 +44,12 @@ export function inferWaitTime(board: BoardState): number {
         case BoardState.ForeignAidAccepted:
         case BoardState.GetThreeAccepted:
         case BoardState.DiscardingFinished:
+        case BoardState.AmbassadorChallenged:
+        case BoardState.DukeBlocksChallenged:
+        case BoardState.GetThreeChallenged:
+        case BoardState.StealBlockChallenged:
+        case BoardState.AssassinateChallenged:
+        case BoardState.StealChallenged:
             return WaitTime.WaitConfirms;
     }
 }

@@ -8,7 +8,7 @@ import RoomContext from "system/context/roomInfo/room-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {DeckManager} from "system/cards/DeckManager";
 import getImage, {Images} from "resources/Resources";
-import {CardPool} from "system/cards/CardPool";
+import {cardPool} from "system/cards/CardPool";
 import {useTranslation} from "react-i18next";
 import useAnimFocus, {AnimType} from "system/hooks/useAnimFocus";
 
@@ -50,7 +50,7 @@ export default function PlayerItem(props: Props): JSX.Element {
         <div className={`${classes.clickContainer}`}>
             <HorizontalLayout className={`${classes.container} ${panelColor}`}>
                 <img
-                    src={`${CardPool.getCard(props.player.lastClaimed).getImage()}`}
+                    src={`${cardPool.get(props.player.lastClaimed).getImage()}`}
                     alt="lastUsd"
                     className={`${classes.characterIcon} ${claimCss}`}
                 />

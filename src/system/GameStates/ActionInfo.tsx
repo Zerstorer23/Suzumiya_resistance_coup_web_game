@@ -1,14 +1,14 @@
 import {ActionType} from "system/GameStates/States";
+import {ObjectPool} from "system/cards/ObjectPool";
 
-const actionMap = new Map<ActionType, ActionInfo>();
-export const ActionPool = {
-    get(action: ActionType): ActionInfo {
-        if (!actionMap.has(action)) {
-            actionMap.set(action, new ActionInfo(action));
-        }
-        return actionMap.get(action)!;
+
+export class ActionPool extends ObjectPool<ActionType, ActionInfo> {
+    instantiate(key: ActionType): ActionInfo {
+        return new ActionInfo(key);
     }
-};
+}
+
+export const actionPool = new ActionPool();
 
 export class ActionInfo {
     actionType: ActionType;

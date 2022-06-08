@@ -2,7 +2,7 @@ import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {LocalContextType} from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {Fragment} from "react";
-import {CardPool} from "system/cards/CardPool";
+import {cardPool} from "system/cards/CardPool";
 import {CardRole} from "system/cards/Card";
 import {KillInfo, Player} from "system/GameStates/GameTypes";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
@@ -35,19 +35,19 @@ export function inferPierPanel(
             return <p>{formatInsert(t, "_call_get_one", pier.name, t("_action_income"))}</p>;
         case BoardState.CalledGetThree:
             return (<Fragment>
-                {claimElem(t, pier!, CardPool.getCard(CardRole.Duke).getName(t), "_call_get_three")}
+                {claimElem(t, pier!, cardPool.get(CardRole.Duke).getName(t), "_call_get_three")}
                 {rejectionElem(t)}
             </Fragment>);
         case BoardState.CalledSteal:
             return <Fragment>
                 <p>{formatInsert(t, "_call_steal", pier.name,
-                    CardPool.getCard(CardRole.Captain).getName(t), target?.name)}</p>
+                    cardPool.get(CardRole.Captain).getName(t), target?.name)}</p>
                 {rejectionElem(t)}
             </Fragment>;
         case BoardState.CalledAssassinate:
             return (<Fragment>
                 <p>{formatInsert(t, "_call_assassinate", pier.name,
-                    CardPool.getCard(CardRole.Assassin).getName(t), target?.name)}</p>
+                    cardPool.get(CardRole.Assassin).getName(t), target?.name)}</p>
                 {rejectionElem(t)}
             </Fragment>);
 
@@ -61,11 +61,11 @@ export function inferPierPanel(
         case BoardState.ForeignAidAccepted:
             return claimElem(t, pier, t("_action_foreign_aid"), "_accept_gettwo");
         case BoardState.GetThreeAccepted:
-            return claimElem(t, pier, CardPool.getCard(CardRole.Duke).getName(t), "_accept_get_three");
+            return claimElem(t, pier, cardPool.get(CardRole.Duke).getName(t), "_accept_get_three");
         case BoardState.CalledChangeCards:
             return <Fragment>
                 {claimElem(t, pier,
-                    CardPool.getCard(CardRole.Ambassador).getName(t),
+                    cardPool.get(CardRole.Ambassador).getName(t),
                     "_call_ambassador")}
                 {rejectionElem(t)}
             </Fragment>;
@@ -115,13 +115,13 @@ function inferChallenged(
         //I challenged Target
         return <p>{formatInsert(t, "_challenge_the_card",
             pier.name, target.name,
-            CardPool.getCard(susCard).getName(t))}
+            cardPool.get(susCard).getName(t))}
         </p>;
     }
     //I am challenged
     return <p>
         {formatInsert(t, "_notify_challenge_reveal",
-            pier.name, CardPool.getCard(susCard).getName(t))}
+            pier.name, cardPool.get(susCard).getName(t))}
     </p>;
 }
 

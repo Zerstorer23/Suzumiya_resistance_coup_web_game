@@ -9,7 +9,7 @@ import LocalContext, {LocalField} from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {DeckManager} from "system/cards/DeckManager";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
-import {CardPool} from "system/cards/CardPool";
+import {cardPool} from "system/cards/CardPool";
 import {useTranslation} from "react-i18next";
 import {insert} from "lang/i18nHelper";
 import {CursorState} from "system/context/localInfo/LocalContextProvider";
@@ -58,7 +58,7 @@ export default function BaseActionButton(props: Prop) {
     if (isCard) {
         iconElem = <img
             className={`${classes.characterIcon}`}
-            src={`${CardPool.getCard(relatedRole).getImage()}`}
+            src={`${cardPool.get(relatedRole).getImage()}`}
             alt="card"
         />;
         subClassName = classes.lieText;
