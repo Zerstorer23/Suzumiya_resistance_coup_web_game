@@ -18,7 +18,7 @@ export function formatInsert(t: (k: string) => string, key: string, ...params: a
     const nlTokens = text.split("$n");
     return (<Fragment>{
         nlTokens.map((value, index, array) => {
-            return <Fragment key={index}>{value}<br/></Fragment>;
+            return <Fragment key={index}>{strongInsert(value)}<br/></Fragment>;
         })
     }
     </Fragment>);

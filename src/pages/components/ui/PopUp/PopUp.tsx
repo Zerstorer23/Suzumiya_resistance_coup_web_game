@@ -10,6 +10,7 @@ import {useTranslation} from "react-i18next";
 import {formatInsert} from "lang/i18nHelper";
 import {CardPool} from "system/cards/CardPool";
 import {MyTimer} from "pages/components/ui/MyTimer/MyTimer";
+import animClasses from "animation.module.css";
 
 function Backdrop(props: IProps) {
     return (
@@ -38,7 +39,7 @@ type GOprops = IProps & {
 function GameOverWindow(props: GOprops) {
     const {t} = useTranslation();
     return (
-        <div className={classes.modal}>
+        <div className={`${classes.modal} ${animClasses.slideDown}`}>
             <div className={classes.content}>
                 <p>{formatInsert(t, "_game_winner", props.player.name)}</p>
                 <p>{formatInsert(t, "_game_cardUsed",

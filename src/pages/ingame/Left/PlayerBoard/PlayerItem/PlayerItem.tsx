@@ -10,6 +10,7 @@ import {DeckManager} from "system/cards/DeckManager";
 import getImage, {Images} from "resources/Resources";
 import {CardPool} from "system/cards/CardPool";
 import {useTranslation} from "react-i18next";
+import useAnimFocus, {AnimType} from "system/hooks/useAnimFocus";
 
 type Props = IProps & {
     player: Player;
@@ -20,6 +21,11 @@ export default function PlayerItem(props: Props): JSX.Element {
     const ctx = useContext(RoomContext);
     const deck = ctx.room.game.deck;
     const {t} = useTranslation();
+    const numAlive = DeckManager.playerAliveCardNum(deck, props.player.icard);
+    const coinCss = useAnimFocus(props.player.coins, AnimType.FadeIn);
+    const cardCss = useAnimFocus(numAlive, AnimType.FadeIn);
+    const claimCss = useAnimFocus(props.player.lastClaimed, AnimType.SlideRight);
+
     if (props.player.isSpectating) return <Fragment/>;
     const currentTurnId = TurnManager.getCurrentPlayerId(ctx);
     const nextTurnId = TurnManager.getNextPlayerId(ctx);
@@ -46,20 +52,20 @@ export default function PlayerItem(props: Props): JSX.Element {
                 <img
                     src={`${CardPool.getCard(props.player.lastClaimed).getImage()}`}
                     alt="lastUsd"
-                    className={`${classes.characterIcon}`}
+                    className={`${classes.characterIcon} ${claimCss}`}
                 />
                 <div className={`${classes.nameContainer}`}>
                     <p className={`${namePanelClass} `}>{props.player.name}</p>
                     <p className={`${classes.subtitle} `}>{subtitle === null ? "" : t(subtitle)}</p>
                 </div>
 
-                <div className={`${classes.iconPanel} `}>
+                <div className={`${classes.iconPanel} ${cardCss}`}>
                     <img alt="" src={`${getImage(Images.Card)}`} className={classes.icon}/>
-                    <p className={classes.iconText}>
-                        {DeckManager.playerAliveCardNum(deck, props.player.icard)}
+                    <p className={`${classes.iconText} `}>
+                        {numAlive}
                     </p>
                 </div>
-                <div className={`${classes.iconPanel} `}>
+                <div className={`${classes.iconPanel} ${coinCss}`}>
                     <img alt="" src={`${getImage(Images.Coin)}`} className={classes.icon}/>
                     <div className={classes.iconText}>{props.player.coins}</div>
                 </div>

@@ -1,13 +1,13 @@
 .container {
-    height: 43%;
+    height: 40%;
     margin-bottom: 0.5rem;
 }
 
 .characterIcon {
     width: 20%;
     height: auto;
-    animation: slide-right 300ms ease-out forwards;
 }
+
 
 .descPanel {
     width: 80%;
@@ -24,15 +24,4 @@
     margin: auto;
     color: crimson;
     font-weight: bold;
-}
-
-@keyframes slide-right {
-    from {
-        opacity: 0;
-        transform: translateX(-3rem);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
 }
