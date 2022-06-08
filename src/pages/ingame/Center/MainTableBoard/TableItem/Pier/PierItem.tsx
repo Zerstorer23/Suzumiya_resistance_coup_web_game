@@ -8,6 +8,7 @@ import {CardPool} from "system/cards/CardPool";
 import {useTranslation} from "react-i18next";
 import {insert} from "lang/i18nHelper";
 import {inferPierPanel} from "pages/ingame/Center/MainTableBoard/TableItem/Pier/PierInferer";
+import useAnimFocus, {AnimType} from "system/hooks/useAnimFocus";
 
 
 export default function PierItem(props: IProps) {
@@ -17,6 +18,9 @@ export default function PierItem(props: IProps) {
     const pier = ctx.room.playerMap.get(action.pierId);
     const {t} = useTranslation();
     const [elem, setJSX] = useState<JSX.Element>(<Fragment/>);
+    const board = ctx.room.game.state.board;
+    const panelCss = useAnimFocus(board, AnimType.FadeIn);
+
     useEffect(() => {
         const stateElem: JSX.Element = inferPierPanel(t, ctx, localCtx, action.pierId);
         setJSX(stateElem);
@@ -35,7 +39,7 @@ export default function PierItem(props: IProps) {
                 <p className={classes.textLastClaim}>{insert(t, "_last_claim", lastCard.getName(t))}</p>
                 <p className={classes.playerName}>{pier.name}</p>
             </div>
-            <div className={classes.actionContainer}>
+            <div className={`${classes.actionContainer} ${panelCss}`}>
                 {elem}
             </div>
         </HorizontalLayout>

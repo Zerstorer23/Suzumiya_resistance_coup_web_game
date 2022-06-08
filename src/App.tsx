@@ -1,10 +1,9 @@
-import {Route, Switch} from "react-router-dom";
+import {Redirect, Route, Switch} from "react-router-dom";
 import InGame from "./pages/ingame/InGame";
 import DataLoader from "pages/components/ui/DataLoader/DataLoader";
-import getImage, {Images} from "resources/Resources";
-import ImagePage from "pages/components/ui/ImagePage/ImagePage";
 import Lobby from "pages/lobby/Lobby";
 import MusicModule from "pages/components/ui/MusicModule/MusicModule";
+import LoadingPage from "pages/components/ui/LoadingPage/LoadingPage";
 
 export enum Navigation {
     Loading = "/suzumiya/loading",
@@ -18,7 +17,7 @@ export default function App(): JSX.Element {
             <MusicModule/>
             <Switch>
                 <Route path={Navigation.Loading} exact>
-                    <ImagePage imgSrc={Images.LoadingImg} titleKey={"_loading"}/>
+                    <LoadingPage/>
                 </Route>
                 <Route path={Navigation.Lobby} exact>
                     <Lobby/>
@@ -27,8 +26,7 @@ export default function App(): JSX.Element {
                     <InGame/>
                 </Route>
                 <Route path="*">
-                    <p>로딩중...</p>
-                    <img src={`${getImage(Images.LoadingImg)}`} alt={"ld"}/>
+                    <Redirect to={Navigation.Loading}/>
                 </Route>
             </Switch>
         </DataLoader>

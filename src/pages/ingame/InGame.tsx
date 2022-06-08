@@ -22,6 +22,7 @@ import {pushEndGame} from "pages/ingame/Center/ActionBoards/StateManagers/Transi
 import ImagePage from "pages/components/ui/ImagePage/ImagePage";
 import {Images} from "resources/Resources";
 import {WaitTime} from "system/GameConstants";
+import {DeckManager} from "system/cards/DeckManager";
 
 export default function InGame() {
     const ctx = useContext(RoomContext);
@@ -43,7 +44,8 @@ export default function InGame() {
             ctx.room.game.state
         );
         ReferenceManager.updateReference(DbReferences.HEADER_hostId, myId);
-        if (!DS.StrictRules || ctx.room.playerMap.size > 1) return true;
+        const alive = DeckManager.countAlivePlayers(ctx);
+        if (!DS.StrictRules || alive > 1) return true;
         setIsGameOver(true);
         pushEndGame(ctx, myId);
         return true;
@@ -53,7 +55,8 @@ export default function InGame() {
         const res = checkSanity();
         if (!res) return;
         setRoomCode((n) => n++);
-        if (ctx.room.playerMap.size <= 1) {
+        const alive = DeckManager.countAlivePlayers(ctx);
+        if (alive <= 1) {
             pushEndGame(ctx, myId);
         }
     }, [ctx.room.playerMap.size]);

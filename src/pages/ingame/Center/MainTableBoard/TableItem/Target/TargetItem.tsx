@@ -9,6 +9,7 @@ import {isNull} from "system/GameConstants";
 import VerticalLayout from "pages/components/ui/VerticalLayout";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import {inferTargetPanel} from "pages/ingame/Center/MainTableBoard/TableItem/Target/TargetInferer";
+import useAnimFocus, {AnimType} from "system/hooks/useAnimFocus";
 
 
 export default function TargetItem(props: IProps) {
@@ -18,6 +19,7 @@ export default function TargetItem(props: IProps) {
     const target = ctx.room.playerMap.get(action.targetId);
     const {t} = useTranslation();
     const [elem, setJSX] = useState<JSX.Element>(<Fragment/>);
+    const panelCss = useAnimFocus(ctx.room.game.state.board, AnimType.FadeIn);
     useEffect(() => {
         const stateElem: JSX.Element = inferTargetPanel(t, ctx, localCtx, action.targetId, target);
         setJSX(stateElem);
@@ -37,7 +39,7 @@ export default function TargetItem(props: IProps) {
                     src={`${lastCard.getImage()}`}
                     alt={lastCard.getName(t)}
                 />
-                <div className={classes.actionContainer}>
+                <div className={`${classes.actionContainer} ${panelCss}`}>
                     {elem}
                 </div>
             </HorizontalLayout>

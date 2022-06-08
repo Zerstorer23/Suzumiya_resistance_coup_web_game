@@ -34,7 +34,11 @@ export function prepareAndPushState(
     if (result === TransitionAction.EndTurn) {
         const res = setEndTurn(ctx, newAction, newState);
         if (!res) return;
-        sendChat(ChatFormat.announcement, "", `${ctx.room.playerMap.get(ctx.room.playerList[newState.turn])!.name}님의 턴`);
+
+        const nextPlayer = ctx.room.playerMap.get(ctx.room.playerList[newState.turn]);
+        if (nextPlayer !== undefined) {
+            sendChat(ChatFormat.announcement, "", `${nextPlayer.name}님의 턴`);
+        }
     }
     pushActionState(newAction, newState);
 }
@@ -155,10 +159,6 @@ export function pushCalledState(
         newState.board = newBoard;
         newAction.pierId = myId;
         newAction.targetId = targetId;
-        DS.logTransition(myId + " Move to Called " + newBoard);
-        DS.logTransition(ctx.room);
-        DS.logTransition(newState);
-        DS.logTransition(newAction);
         return TransitionAction.Success;
     });
 }

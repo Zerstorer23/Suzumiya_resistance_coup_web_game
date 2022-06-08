@@ -4,7 +4,6 @@ import {Player} from "system/GameStates/GameTypes";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {CardPool} from "system/cards/CardPool";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
-import {getSortedListFromMap} from "system/GameStates/RoomGenerator";
 
 /*
 Manager file that helps decoding deck string into cards
@@ -156,21 +155,26 @@ export const DeckManager = {
     checkGameOver(ctx: RoomContextType): string {
         const playerMap = ctx.room.playerMap;
         const deck = ctx.room.game.deck;
-        const sortedList: string[] = getSortedListFromMap(playerMap);
-        let player: Player;
-        let playerCards: CardRole[];
         let alive: string = "";
         let numAlive = 0;
-
-        for (let playerID of sortedList) {
-            player = playerMap.get(playerID)!;
-            playerCards = this.peekCards(deck, player.icard, 2);
-            if (!this.isDead(playerCards[0]) || !this.isDead(playerCards[1])) {
-                alive = playerID;
+        playerMap.forEach((player, id) => {
+            if (!this.isDead(deck[player.icard]) || !this.isDead(deck[player.icard + 1])) {
+                alive = id;
                 numAlive++;
             }
-        }
+        });
         if (numAlive === 1) return alive;
         return "";
     },
+    countAlivePlayers(ctx: RoomContextType): number {
+        const playerMap = ctx.room.playerMap;
+        const deck = ctx.room.game.deck;
+        let numAlive = 0;
+        playerMap.forEach((player, id) => {
+            if (!this.isDead(deck[player.icard]) || !this.isDead(deck[player.icard + 1])) {
+                numAlive++;
+            }
+        });
+        return numAlive;
+    }
 };

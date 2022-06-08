@@ -17,7 +17,6 @@ import {GameAction, Player, Room, RoomHeader,} from "system/GameStates/GameTypes
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 import ChatLoader from "pages/components/ui/ChatModule/ChatLoader";
 import {cleanChats} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
-import {Navigation} from "App";
 import MusicLoader from "pages/components/ui/MusicModule/musicInfo/MusicLoader";
 import {cleanMusic} from "pages/components/ui/MusicModule/musicInfo/MusicContextProvider";
 
@@ -147,16 +146,17 @@ export default function DataLoader(props: IProps) {
                 break;
         }
     }, [isLoaded]);
-
     const myId = localCtx.getVal(LocalField.Id);
     useEffect(() => {
         if (myId === null) return;
-        const turn = context.room.game.state.turn;
-        if (turn < 0) {
-            history.replace(Navigation.Lobby);
-        }
+        /*        const turn = context.room.game.state.turn;
+                if (turn < 0) {
+                    history.replace(Navigation.Lobby);
+                }*/
         setStatus(LoadStatus.outerSpace);
     }, [myId]);
+    // const finishedLoading = isLoaded === LoadStatus.outerSpace;
+    // const elem = (finishedLoading)?<LoadingPage/>
     return (
         <Fragment>
             <ChatLoader/>

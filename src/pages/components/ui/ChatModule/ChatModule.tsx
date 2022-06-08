@@ -31,7 +31,7 @@ export default function ChatModule() {
 
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    const chatFieldRef = useRef<HTMLInputElement>(null);
+    const chatFieldRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
         messagesEndRef.current!.scrollIntoView({behavior: "smooth"});
@@ -63,36 +63,16 @@ export default function ChatModule() {
     }, [myId, chatCtx, musicCtx]);
 
     const handleSend = useCallback(() => {
-        const text = chatFieldRef.current!.value.toString();
+        let text = chatFieldRef.current!.value.toString();
         chatFieldRef.current!.blur();
         chatFieldRef.current!.value = "";
         if (text.length <= 0) return;
         if (handleSpecials(text)) return;
+        if (text.length > 128) {
+            text = text.substring(0, 128);
+        }
         sendChat(ChatFormat.normal, myPlayer.name, text);
     }, [handleSpecials, myPlayer]);
-
-    /*    function handleSend() {
-            const text = chatFieldRef.current!.value.toString();
-            chatFieldRef.current!.blur();
-            chatFieldRef.current!.value = "";
-            if (text.length <= 0) return;
-            if (handleSpecials(text)) return;
-            sendChat(ChatFormat.normal, myPlayer.name, text);
-        }*/
-
-    /* function handleSpecials(text: string): boolean {
-         if (text.length < 2) return false;
-         const firstChar = text.at(0);
-         const theRest = text.substring(1);
-         if (firstChar === "!") {
-             handleMusic(chatCtx, musicCtx, theRest, myId);
-         } else if (firstChar === "/") {
-
-         } else {
-             return false;
-         }
-         return true;
-     }*/
 
 
     function toggleFocus(toggle: boolean) {
@@ -108,9 +88,8 @@ export default function ChatModule() {
                 <div ref={messagesEndRef}/>
             </div>
             <HorizontalLayout className={classes.sendBox}>
-                <input
+                <textarea
                     ref={chatFieldRef}
-                    type="text"
                     className={classes.inputField}
                     onBlur={() => {
                         toggleFocus(false);
@@ -118,7 +97,7 @@ export default function ChatModule() {
                     onFocus={() => {
                         toggleFocus(true);
                     }}
-                ></input>
+                ></textarea>
                 <button className={classes.buttonSend} onClick={handleSend}>
                     {t("_send")}
                 </button>

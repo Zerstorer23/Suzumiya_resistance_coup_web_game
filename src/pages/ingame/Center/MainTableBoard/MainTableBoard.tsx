@@ -17,7 +17,7 @@ export default function MainTableBoard(): JSX.Element {
                 <p className={classes.timer}>
                     <MyTimer/>{t("_seconds_remaining")}
                 </p>
-                <PierItem className={`${classes.pierContainer} ${animClasses.slideUp}`}/>
+                <PierItem className={`${classes.pierContainer} ${animClasses.slideDown}`}/>
                 <HorizontalLayout className={classes.horizontalContainer}>
                     <TargetItem className={`${classes.targetContainer} ${animClasses.slideUp}`}/>
                     <ChallengerItem className={`${classes.challengerContainer} ${animClasses.slideUp}`}/>
