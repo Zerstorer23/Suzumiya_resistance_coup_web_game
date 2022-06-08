@@ -37,7 +37,7 @@
   "_action_assassinate": "암살",
   "_action_ambassador": "납치",
   "_action_ContessaBlocksAssassination": "쿈기방패로 방어",
-  "_action_Coup": "정보개변",
+  "_action_Coup": "소실",
   "_action_DefendWithAmbassador": "스즈미야로 방어",
   "_action_DefendWithCaptain": "나가토로 방어",
   "_action_income": "노동(+1)",
@@ -112,7 +112,7 @@
   "_credits": "그림:jhbk0902, Exoskeleton$n룰:레지스탕스 쿠$n감수:리투아니아연합국가안보국$n투자: 존 스미스$n음악:런던 필하모닉 오케스트라$n극본:리들리 스콧",
   "_tutorial_getone": "$b노동:$b$n$b1$b코인을 받습니다$n아무도 막을수 없습니다.",
   "_tutorial_foreignAid": "$b재난지원금:$b$n$b2$b코인을 받습니다$n$b코이즈미$b가 막을 수 있습니다.",
-  "_tutorial_coup": "$b정보개변:$b$n$b7$b코인을 지불하고 플레이어를 살해합니다.$n아무도 막을 수 없습니다$n코인이 $b10$b개이상 쌓이면 강제로 정보개변을 해야합니다.",
+  "_tutorial_coup": "$b소실:$b$n$b7$b코인을 지불하고 플레이어를 살해합니다.$n아무도 막을 수 없습니다$n코인이 $b10$b개이상 쌓이면 강제로 소실을 해야합니다.",
   "_tutorial_steal": "$b조작:$b$n상대방에게서 최대 2코인을 강탈해옵니다$n$b나가토$b, $b스즈미야$b가 막을 수 있습니다.",
   "_tutorial_getThree": "$b수금:$b$n$b3$b코인을 받습니다.",
   "_tutorial_assassinate": "$b암살:$b$n$b3$b코인을 지불하고 플레이어를 살해합니다.$n$b쿈$b이 막을 수 있습니다.",
@@ -123,5 +123,7 @@
   "_tutorial_defendCaptain": "$b방어:$b$n조작을 막습니다.",
   "_tutorial_defendAMbassaador": "$b방어:$b$n조작을 막습니다.",
   "_tutorial_defendAccept": "$b체념:$b$n이 상황을 받아들입니다.",
+  "_playing_next": "다음곡 재생 시작. 남은 곡: $0",
+  "_music": "음악",
   "dymmy": "dummy"
 }

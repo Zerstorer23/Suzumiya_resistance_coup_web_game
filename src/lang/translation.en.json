@@ -122,5 +122,7 @@
   "_tutorial_defendCaptain": "",
   "_tutorial_defendAMbassaador": "",
   "_tutorial_defendAccept": "",
+  "_playing_next": "다음곡 재생 시작. 남은 곡: $0",
+  "_music": "음악",
   "dymmy": "dummy"
 }

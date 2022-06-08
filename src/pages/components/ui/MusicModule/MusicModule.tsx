@@ -10,6 +10,13 @@ import MusicContext, {
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {TurnManager} from "system/GameStates/TurnManager";
+import {ChatFormat, sendChat} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
+import {insert} from "lang/i18nHelper";
+import {useTranslation} from "react-i18next";
+
+export const MAX_MUSIC_QUEUE = 16;
+export const MAX_PERSONAL_QUEUE = 3;
+export const MAX_MUSIC_SEC = 2 * (60) + 22;
 
 enum YtState {
     NotStarted = -1,
@@ -48,9 +55,11 @@ export default function MusicModule() {
     const [showPanel, setShowPanel] = useState<boolean>(false);
     const [playerState, setPlayerState] = useState<PlayerState>(PlayerState.WaitingMusic);
     const [playerElem, setJSX] = useState(<Fragment/>);
+    const [musicTimer, setMusicTimer] = useState<any>(null);
     const musicCtx = useContext(MusicContext);
     const localCtx = useContext(LocalContext);
     const ctx = useContext(RoomContext);
+    const {t} = useTranslation();
     // const myId = localCtx.getVal(LocalField.Id);
     const amHost = TurnManager.amHost(ctx, localCtx);
     useEffect(() => {
@@ -58,6 +67,7 @@ export default function MusicModule() {
             case PlayerState.WaitingMusic:
                 setJSX(<Fragment/>);
                 if (!amHost) return;
+                clearTimer(musicTimer);
                 const success = pollMusic(musicCtx);
                 if (success) return;
                 cleanMusic();
@@ -68,6 +78,15 @@ export default function MusicModule() {
                 break;
             case PlayerState.Playing:
                 setJSX(<YoutubeModule videoId={musicCtx.current.entry.vid} onStateChange={onStateChange}/>);
+                if (!amHost) return;
+                sendChat(ChatFormat.announcement, "", insert(t, "_playing_next", musicCtx.list.length));
+                setMusicTimer((prevTimer: any) => {
+                    clearTimer(prevTimer);
+                    return setTimeout(() => {
+                        // console.log("Timer expired");
+                        setPlayerState(PlayerState.WaitingMusic);
+                    }, MAX_MUSIC_SEC * 1000);
+                });
                 break;
         }
     }, [playerState]);
@@ -97,7 +116,7 @@ export default function MusicModule() {
         <div className={(showPanel) ? classes.show : classes.hide}>
             {playerElem}
         </div>
-        <button className={classes.ytButton} onClick={onClickButton}>음악</button>
+        <button className={classes.ytButton} onClick={onClickButton}>{t("_music")}</button>
     </div>;
 }
 
@@ -106,4 +125,11 @@ function pollMusic(musicCtx: MusicContextType): boolean {
     if (me === null) return false;
     pushCurrentMusic(musicCtx.current.c, me);
     return true;
+}
+
+function clearTimer(prevTimer: any) {
+    if (prevTimer !== null && prevTimer !== undefined) {
+        // console.log("Clear timeout");
+        clearTimeout(prevTimer);
+    }
 }

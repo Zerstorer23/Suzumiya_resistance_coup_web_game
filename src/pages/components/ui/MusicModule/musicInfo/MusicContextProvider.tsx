@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {IProps} from "system/types/CommonTypes";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import "firebase/compat/database";
+import {MAX_MUSIC_QUEUE, MAX_PERSONAL_QUEUE} from "pages/components/ui/MusicModule/MusicModule";
 
 export type MusicEntry = {
     key: string,
@@ -106,8 +107,6 @@ export enum MusicResponse {
     Overloading,
 }
 
-export const MAX_MUSIC_QUEUE = 20;
-export const MAX_PERSONAL_QUEUE = 5;
 
 export function pushMusicToQueue(musicCtx: MusicContextType, url: string, requesterId: string): MusicResponse {
     const myList = musicCtx.list.filter((entry) => {
@@ -146,14 +145,5 @@ export function cleanMusic() {
     cRef.set(defaultEntry);
 }
 
-
-/*export function getSortedMusicList(list: MusicEntry[]): MusicEntry[] {
-    if (list === undefined) return [];
-    console.log("sort ");
-    console.log(list);
-    return list.sort((e1: MusicEntry, e2: MusicEntry) =>
-        e1.time > e2.time ? 1 : e1.time < e2.time ? -1 : 0
-    );
-}*/
 
 export default MusicContext;

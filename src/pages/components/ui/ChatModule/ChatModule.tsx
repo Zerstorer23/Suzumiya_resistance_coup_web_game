@@ -14,13 +14,12 @@ import {InputCursor} from "system/context/localInfo/LocalContextProvider";
 import useKeyListener, {KeyCode} from "system/hooks/useKeyListener";
 import {useTranslation} from "react-i18next";
 import MusicContext, {
-    MAX_MUSIC_QUEUE,
-    MAX_PERSONAL_QUEUE,
     MusicContextType,
     MusicResponse,
     pushMusicToQueue
 } from "pages/components/ui/MusicModule/musicInfo/MusicContextProvider";
 import {Player} from "system/GameStates/GameTypes";
+import {MAX_MUSIC_QUEUE, MAX_PERSONAL_QUEUE} from "pages/components/ui/MusicModule/MusicModule";
 
 export default function ChatModule() {
     const chatCtx = useContext(ChatContext);

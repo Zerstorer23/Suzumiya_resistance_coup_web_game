@@ -1,6 +1,6 @@
 import {Fragment} from "react";
 
-export function insert(t: (k: string) => string, key: string, ...params: any[]) {
+export function insert(t: (k: string) => string, key: string, ...params: any[]): string {
     let text = t(key) as string;
     params.forEach((value, index, array) => {
         text = text.replaceAll(`$${index}`, value);
