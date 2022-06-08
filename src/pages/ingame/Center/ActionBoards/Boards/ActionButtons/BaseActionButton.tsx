@@ -120,7 +120,7 @@ export default function BaseActionButton(props: Prop) {
                 <p className={classes.nameText}>{name}</p>
                 <p className={subClassName}>{subText}</p>
             </HorizontalLayout>
-            <div className={classes.shortcutHint}>{baseIndex}</div>
+            <div className={classes.shortcutHint}>{props.index + 1}</div>
         </button>
     );
 }

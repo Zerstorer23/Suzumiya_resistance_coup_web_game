@@ -6,6 +6,7 @@
 .characterIcon {
     width: 20%;
     height: auto;
+    animation: slide-right 300ms ease-out forwards;
 }
 
 .descPanel {
@@ -23,4 +24,15 @@
     margin: auto;
     color: crimson;
     font-weight: bold;
+}
+
+@keyframes slide-right {
+    from {
+        opacity: 0;
+        transform: translateX(-3rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }

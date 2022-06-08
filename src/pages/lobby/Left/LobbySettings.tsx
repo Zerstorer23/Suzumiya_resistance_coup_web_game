@@ -1,6 +1,5 @@
 import {useContext} from "react";
 import gc from "global.module.css";
-import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import classes from "./LobbySettings.module.css";
 import RoomContext from "system/context/roomInfo/room-context";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
@@ -42,15 +41,13 @@ export default function LobbySettings() {
 
     return (
         <div className={`${classes.container} ${gc.round_border}`}>
-            <HorizontalLayout>
-                <p className={classes.fieldType}>{t("_name")}</p>
-                <input
-                    className={classes.fieldType}
-                    type="text"
-                    onBlur={onFinishEditName}
-                    defaultValue={myPlayer.name}
-                ></input>
-            </HorizontalLayout>
+            <p className={classes.nameHeader}>{t("_name")}</p>
+            <input
+                className={classes.fieldType}
+                type="text"
+                onBlur={onFinishEditName}
+                defaultValue={myPlayer.name}
+            ></input>
             <button className={classes.fieldType} onClick={onClickHelp}>{t("_help")}</button>
             <button className={classes.fieldType} onClick={onClickCopy}>{t("_copy_link")}</button>
             {/*<button className={classes.fieldType}>{t("_help")}</button>*/}

@@ -54,7 +54,8 @@ export default function GameOverPopUp() {
     const home = document.getElementById("overlays") as HTMLElement;
     const ctx = useContext(RoomContext);
     const winnerID = DeckManager.checkGameOver(ctx);
-    const player: Player = ctx.room.playerMap.get(winnerID)!;
+    const player = ctx.room.playerMap.get(winnerID);
+    if (player === undefined) return <Fragment/>;
     const playerCards: CardRole[] = DeckManager.peekCards(
         ctx.room.game.deck,
         player.icard,

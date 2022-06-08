@@ -54,7 +54,6 @@ function handleNotMyTurn(board: BoardState, game: Game): JSX.Element {
     if (board === BoardState.CalledGetTwo) return <ReactForeignAidBoard/>;
     if (!hasChallenger && StateManager.isCounterable(board)) return <CounterBoard/>;
     return <WaitingBoard/>;
-
 }
 
 function handleTargeted(boardState: BoardState): JSX.Element {

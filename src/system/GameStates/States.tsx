@@ -78,7 +78,6 @@ export const StateManager = {
             case BoardState.CalledSteal:
             case BoardState.CalledGetTwoBlocked:
             case BoardState.StealBlocked:
-            case BoardState.AssassinBlocked:
                 return true;
             default:
                 return false;

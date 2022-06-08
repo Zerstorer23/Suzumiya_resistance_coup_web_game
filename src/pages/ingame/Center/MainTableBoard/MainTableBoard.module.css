@@ -8,7 +8,11 @@
     width: 100%;
     height: 50%;
     border-bottom: 3px dashed navy;
+
+    z-index: 30;
+    animation: slide-down 300ms ease-out forwards;
 }
+
 
 .horizontalContainer {
     height: 50%;
@@ -18,12 +22,18 @@
     height: 100%;
     width: 50%;
     border-right: 3px dashed navy;
+
+    z-index: 30;
+    animation: slide-down 300ms ease-out forwards;
 }
+
 
 .challengerContainer {
     height: 100%;
     width: 47%;
+    animation: slide-down 300ms ease-out forwards;
 }
+
 
 .bottomContainer {
     width: 100%;
@@ -42,4 +52,15 @@
     margin: 0;
     font-size: 1.5rem;
     font-weight: bold;
+}
+
+@keyframes slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-3rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

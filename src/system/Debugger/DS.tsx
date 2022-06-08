@@ -1,5 +1,5 @@
 export const DS = {
-    StrictRules: false,
+    StrictRules: true,
     serverSG: false,
     abundantCoins: true,
     logTransition(msg: any) {

@@ -16,7 +16,9 @@ export function inferChallengerPanel(
     challenger: Player | undefined,
 ): JSX.Element {
     const board = ctx.room.game.state.board;
+    const action = ctx.room.game.action;
     if (challenger === null || challenger === undefined) return <Fragment/>;
+    if (challengerId === action.targetId || challengerId === action.pierId) return <Fragment/>;
     if (StateManager.isChallenged(board)) {
         return inferChallenged(t, ctx);
     }
@@ -39,8 +41,6 @@ function inferChallenged(
     const action = ctx.room.game.action;
     const killInfo: KillInfo = action.param as KillInfo;
     let susCard = killInfo.card;
-    if (action.challengerId === action.targetId) return <Fragment/>;
-    if (action.challengerId === action.pierId) return <Fragment/>;
     if (StateManager.targetIsChallenged(board)) {
         if (target === null) return <Fragment/>;
         return <p>{formatInsert(t, "_challenge_the_card",

@@ -15,12 +15,13 @@ import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import GameOverPopUp from "pages/components/ui/PopUp/PopUp";
 import {Navigation} from "App";
 import {TurnManager} from "system/GameStates/TurnManager";
-import {setMyTimer} from "pages/components/ui/MyTimer/MyTimer";
+import {forceSetTimer} from "pages/components/ui/MyTimer/MyTimer";
 import {TurnState} from "system/GameStates/GameTypes";
 import {DS} from "system/Debugger/DS";
 import {pushEndGame} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import ImagePage from "pages/components/ui/ImagePage/ImagePage";
 import {Images} from "resources/Resources";
+import {WaitTime} from "system/GameConstants";
 
 export default function InGame() {
     const ctx = useContext(RoomContext);
@@ -52,6 +53,9 @@ export default function InGame() {
         const res = checkSanity();
         if (!res) return;
         setRoomCode((n) => n++);
+        if (ctx.room.playerMap.size <= 1) {
+            pushEndGame(ctx, myId);
+        }
     }, [ctx.room.playerMap.size]);
 
     useEffect(() => {
@@ -63,7 +67,7 @@ export default function InGame() {
     useEffect(() => {
         if (turn === -2) {
             setIsGameOver(true);
-            setMyTimer(ctx, localCtx, () => {
+            forceSetTimer(localCtx, WaitTime.WaitReactions, () => {
                 if (!amHost) return;
                 const state: TurnState = {turn: -1, board: 0,};
                 ReferenceManager.updateReference(DbReferences.GAME_state, state);
