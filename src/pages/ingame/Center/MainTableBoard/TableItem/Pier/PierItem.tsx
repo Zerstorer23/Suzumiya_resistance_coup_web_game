@@ -9,6 +9,7 @@ import {insert} from "lang/i18nHelper";
 import {inferPierPanel} from "pages/ingame/Center/MainTableBoard/TableItem/Pier/PierInferer";
 import useAnimFocus, {AnimType} from "system/hooks/useAnimFocus";
 import {cardPool} from "system/cards/CardPool";
+import {BoardState} from "system/GameStates/States";
 
 
 export default function PierItem(props: IProps) {
@@ -27,15 +28,17 @@ export default function PierItem(props: IProps) {
     }, [ctx.room.game.state.board, ctx.room.game.action]);
 
     if (pier === null || pier === undefined) return <Fragment/>;
+    const showIcon = (board !== BoardState.ChoosingBaseAction);
+
     const lastCard = cardPool.get(pier.lastClaimed);
     return (
         <HorizontalLayout className={`${props.className}`}>
             <div className={classes.profileContainer}>
-                <img
+                {(showIcon) && <img
                     src={`${lastCard.getImage()}`}
                     alt={lastCard.getName(t)}
                     className={classes.imgLastUsed}
-                />
+                />}
                 <p className={classes.textLastClaim}>{insert(t, "_last_claim", lastCard.getName(t))}</p>
                 <p className={classes.playerName}>{pier.name}</p>
             </div>

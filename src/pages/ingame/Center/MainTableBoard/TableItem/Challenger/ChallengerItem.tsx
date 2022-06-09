@@ -4,7 +4,6 @@ import classes from "./ChallengerItem.module.css";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {Fragment, useContext, useEffect, useState} from "react";
-import {cardPool} from "system/cards/CardPool";
 import {useTranslation} from "react-i18next";
 import VerticalLayout from "pages/components/ui/VerticalLayout";
 import {inferChallengerPanel} from "pages/ingame/Center/MainTableBoard/TableItem/Challenger/ChallengeInferer";
@@ -24,18 +23,18 @@ export default function ChallengerItem(props: IProps) {
     }, [ctx.room.game.state.board, ctx.room.game.action]);
     if (challenger === null || challenger === undefined) return <Fragment/>;
     if (action.challengerId === action.pierId || action.challengerId === action.targetId) return <Fragment/>;
-    const lastCard = cardPool.get(challenger.lastClaimed);
+    // const lastCard = cardPool.get(challenger.lastClaimed);
     return (
         <VerticalLayout className={`${props.className}`}>
             <div className={classes.nameContainer}>
                 <p className={classes.playerName}>{challenger!.name}</p>
             </div>
             <HorizontalLayout>
-                <img
+                {/*           <img
                     className={classes.mainImg}
                     src={`${lastCard.getImage()}`}
                     alt={lastCard.getName(t)}
-                />
+                />*/}
                 <div className={`${classes.actionContainer} ${panelCss}`}>
                     {elem}
                 </div>
