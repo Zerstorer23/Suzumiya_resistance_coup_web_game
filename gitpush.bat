@@ -4,3 +4,5 @@ SET timestr=%mydate%_%mytime%
 git add .
 git commit -m "%timestr%"
 git push
+npm run build
+npm run deploy
