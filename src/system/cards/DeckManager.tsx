@@ -158,6 +158,7 @@ export const DeckManager = {
         let alive: string = "";
         let numAlive = 0;
         playerMap.forEach((player, id) => {
+            if (player.icard < 0) return;
             if (!this.isDead(deck[player.icard]) || !this.isDead(deck[player.icard + 1])) {
                 alive = id;
                 numAlive++;

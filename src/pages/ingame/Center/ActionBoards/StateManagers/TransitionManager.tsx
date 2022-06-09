@@ -150,6 +150,11 @@ class _TransitionManager {
         });
     }
 
+    public pushLobby() {
+        const state: TurnState = {turn: -1, board: 0,};
+        ReferenceManager.updateReference(DbReferences.GAME_state, state);
+    }
+
     private setEndTurn(ctx: RoomContextType, newAction: GameAction, newState: TurnState): boolean {
         console.log(`END TURN prev state = ${newState.board} / t ${newState.turn}`);
         newState.board = BoardState.ChoosingBaseAction;

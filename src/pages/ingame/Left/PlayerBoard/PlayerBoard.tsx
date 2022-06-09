@@ -14,7 +14,8 @@ export default function PlayerBoard(): JSX.Element {
     const currPlayerRef = useRef<HTMLDivElement>(null);
     const turn = ctx.room.game.state.turn;
     useEffect(() => {
-        currPlayerRef.current!.scrollIntoView({behavior: "smooth"});
+        if (currPlayerRef.current !== null)
+            currPlayerRef.current.scrollIntoView({behavior: "smooth"});
     }, [turn]);
     return (
         <Fragment>

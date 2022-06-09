@@ -29,6 +29,10 @@ export default function AmbassadorBoard2(): JSX.Element {
     //Max Exchangable
     const numAlive = DeckManager.playerAliveCardNum(deck, myPlayer.icard);
     const keyInfo = useShortcutEffect(cardIndicesArr.length);
+    console.log("Cards", cardIndicesArr);
+    console.log("selected", selectedArr);
+    console.log("Top", topIndex);
+    console.log("icard", myPlayer.icard);
     useEffect(() => { // Shortcut system
         const idx = keyInfo.index;
         if (idx < 0) return;
@@ -55,6 +59,9 @@ export default function AmbassadorBoard2(): JSX.Element {
             return;
         }
         const unSelected = cardIndicesArr.filter((value) => !selectedArr.includes(value));//Find the other unselected cards
+        console.log("Cards", cardIndicesArr);
+        console.log("selected", selectedArr);
+        console.log("unSelected", unSelected);
         if (unSelected.length !== 2 || selectedArr.length !== 2) {//Cannot happen
             console.trace("Somethings wrong");
             TransitionManager.pushEndTurn(ctx);

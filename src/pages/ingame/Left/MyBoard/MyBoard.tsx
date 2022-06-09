@@ -3,7 +3,7 @@ import gc from "global.module.css";
 import VerticalLayout from "pages/components/ui/VerticalLayout";
 import MyCardComponent from "pages/ingame/Left/MyBoard/MyCardComponent/MyCardComponent";
 import CoinDisplayComponent from "pages/ingame/Left/MyBoard/CoinDisplayComponent/CoinDisplayComponent";
-import {useContext, useEffect, useState} from "react";
+import {Fragment, useContext, useEffect, useState} from "react";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 import {Player} from "system/GameStates/GameTypes";
 import RoomContext from "system/context/roomInfo/room-context";
@@ -19,19 +19,19 @@ export default function MyBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const [showRuleCard, setShow] = useState(false);
-
-    const {t} = useTranslation();
-    const myId: string = localCtx.getVal(LocalField.Id);
-    const myPlayer: Player = ctx.room.playerMap.get(myId)!;
-    const myCoin = myPlayer.coins;
-    const tutorialKey = localCtx.getVal(LocalField.TutorialSelector);
-    const showCards = tutorialKey === CursorState.Idle;
-    const isMyTurn = TurnManager.isMyTurn(ctx, localCtx);
     useEffect(() => {
         if (!isMyTurn || ctx.room.game.state.board !== BoardState.ChoosingBaseAction) {
             localCtx.setVal(LocalField.TutorialSelector, CursorState.Idle);
         }
     }, [ctx.room.game.state]);
+    const {t} = useTranslation();
+    const myId: string = localCtx.getVal(LocalField.Id);
+    const myPlayer: Player | undefined = ctx.room.playerMap.get(myId);
+    if (myPlayer === undefined) return <Fragment/>;
+    const myCoin = myPlayer.coins;
+    const tutorialKey = localCtx.getVal(LocalField.TutorialSelector);
+    const showCards = tutorialKey === CursorState.Idle;
+    const isMyTurn = TurnManager.isMyTurn(ctx, localCtx);
 
     function onMouseOver(e: any) {
         setShow(true);

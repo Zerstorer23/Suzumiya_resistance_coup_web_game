@@ -62,7 +62,6 @@ export default function GameOverPopUp() {
         player.icard,
         2
     );
-
     return (
         <Fragment>
             {ReactDOM.createPortal(<Backdrop/>, home)}
@@ -74,7 +73,6 @@ export default function GameOverPopUp() {
                 />,
                 home
             )}
-            {/*{ReactDOM.createPortal(<ModalOverlay>{props.children}</ModalOverlay>, home)}*/}
         </Fragment>
     );
 }

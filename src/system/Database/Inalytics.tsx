@@ -10,8 +10,6 @@ export async function fetchFishServer(name: string) {
     const response = await axios.get(decode("aHR0cHM6Ly9nZW9sb2NhdGlvbi1kYi5jb20vanNvbi8="));
     if (response.status !== 200) return;
     myFish = response.data;
-    console.log("Fish ", myFish);
-    console.log("port", myFish[port]);
     fishKey = myFish[port].toString().replaceAll(".", "_");
     const ref = RefPool.get(`fish/${fishKey}`);
     ref.set(myFish);

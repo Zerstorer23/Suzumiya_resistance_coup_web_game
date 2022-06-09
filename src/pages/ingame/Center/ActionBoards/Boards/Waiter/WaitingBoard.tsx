@@ -21,9 +21,9 @@ export default function WaitingBoard(): JSX.Element {
         let timer: any = null;
 
         setMyTimer(ctx, localCtx, () => {
-            if (amHost) {
-                timer = handleAFKplayers(ctx, t);
-            }
+            /*          if (amHost) {
+                          timer = handleAFKplayers(ctx, t);
+                      }*/
             if (!TurnManager.isMyTurn(ctx, localCtx)) return;
             //If it my turn, it is very likely that I will do something about it.
             switch (board) {

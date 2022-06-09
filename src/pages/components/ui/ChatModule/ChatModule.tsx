@@ -22,8 +22,6 @@ import {Player} from "system/GameStates/GameTypes";
 import {MAX_MUSIC_QUEUE, MAX_PERSONAL_QUEUE} from "pages/components/ui/MusicModule/MusicModule";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {ReferenceManager} from "system/Database/ReferenceManager";
-import {insert} from "lang/i18nHelper";
 
 export default function ChatModule() {
     const chatCtx = useContext(ChatContext);
@@ -148,14 +146,14 @@ function handleCommands(t: any, ctx: RoomContextType, localCtx: LocalContextType
             if (!amHost) return;
             TransitionManager.pushEndTurn(ctx);
             break;
-        case "kick":
-            if (!amHost) return;
-            kickPlayer(t, ctx, chatCtx, args);
-            break;
         case "reset":
             if (!amHost) return;
-            TransitionManager.pushEndGame(ctx, localCtx.getVal(LocalField.Id));
+            TransitionManager.pushLobby();
             break;
+        /*        case "kick"://reset and next is enough
+                    if (!amHost) return;
+                    kickPlayer(t, ctx, chatCtx, args);
+                    break;*/
         case "help":
             //print help
             break;
@@ -168,14 +166,19 @@ function handleCommands(t: any, ctx: RoomContextType, localCtx: LocalContextType
     }
 }
 
+/*
 function kickPlayer(t: any, ctx: RoomContextType, chatCtx: ChatContextType, args: string[]) {
     if (args.length < 2) return;
     const index = +args[1];
+    console.log(ctx.room.playerList);
     const id = ctx.room.playerList[index];
+    console.log("ID ", id);
     if (id === undefined) return;
-    const player = ctx.room.playerMap.get(id);
-    if (player === undefined) return null;
     const ref = ReferenceManager.getPlayerReference(id);
     ref.remove();
+    const player = ctx.room.playerMap.get(id);
+    console.log("Found ", player);
+    if (player === undefined) return null;
     sendChat(ChatFormat.important, "", insert(t, "_cmd_kick_player", player.name));
 }
+*/

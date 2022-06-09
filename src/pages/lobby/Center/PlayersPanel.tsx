@@ -89,7 +89,6 @@ export default function PlayersPanel() {
 
 function canStartGame(playerMap: PlayerMap) {
     const numReady = countReadyPlayers(playerMap);
-    console.log(numReady + " >= " + (playerMap.size - 1));
     return numReady >= (playerMap.size - 1);
 }
 
