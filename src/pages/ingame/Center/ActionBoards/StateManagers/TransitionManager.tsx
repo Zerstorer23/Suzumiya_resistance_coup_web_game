@@ -102,8 +102,8 @@ export function pushIsALieState(ctx: RoomContextType, challengerId: string) {
         const susCard = inferLieCard(ctx.room.game.state.board, newAction);
         if (susCard === CardRole.None) return TransitionAction.Abort;
         //We dont know who target is yet.
-        const killInfo = GameManager.createKillInfo(ActionType.IsALie, "");
-        killInfo.card = susCard;
+        const killInfo = GameManager.createKillInfo(ActionType.IsALie, board, "");
+        killInfo.challengedCard = susCard;
         killInfo.nextState = ChallengeState.Notify;
         newAction.param = killInfo;
         DS.logTransition("Move to challenged state " + board);
@@ -162,7 +162,7 @@ export function pushCalledState(
         newAction.targetId = targetId;
         console.log("New state = ", newState);
         if (newBoard === BoardState.CalledCoup) {
-            newAction.param = GameManager.createKillInfo(ActionType.Coup, targetId);
+            newAction.param = GameManager.createKillInfo(ActionType.Coup, newBoard, targetId);
             payCost(ctx, newAction);
         }
 

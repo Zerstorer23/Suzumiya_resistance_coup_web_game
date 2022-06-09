@@ -20,10 +20,18 @@ export enum ChallengeState {
 
 export type KillActionTypes =
     ActionType.IsALie
-    // | ActionType.DefendWithAmbassador
-    // | ActionType.DefendWithCaptain
     | ActionType.Assassinate
     | ActionType.Coup;
+export type PrevDiscardStates = BoardState.DukeBlocksChallenged
+    | BoardState.GetThreeChallenged
+    | BoardState.StealBlockChallenged
+    | BoardState.AssassinateChallenged
+    | BoardState.ContessaChallenged
+    | BoardState.AmbassadorChallenged
+    | BoardState.StealChallenged
+    | BoardState.CalledAssassinate
+    | BoardState.CalledCoup
+
 export type PostChallengeStates =
     BoardState.GetThreeAccepted
     | BoardState.CalledAssassinate
@@ -34,7 +42,8 @@ export type PostChallengeStates =
 
 export type KillInfo = {
     cause: KillActionTypes; //What caused this kill
-    card: CardRole; //If lie, what was expected?
+    challengedCard: CardRole; //If lie, what was expected?
+    prevState: PrevDiscardStates;
     ownerId: string; //id of player whos killed
     removed: number[]; //card index in deck that is removed. -1 when none chosne
     nextState: PostChallengeStates | ChallengeState; //

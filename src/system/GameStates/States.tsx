@@ -1,3 +1,5 @@
+import {PrevDiscardStates} from "system/GameStates/GameTypes";
+
 export const PAGE_INGAME = "game";
 export const PAGE_LOBBY = "lobby";
 
@@ -158,7 +160,7 @@ export const StateManager = {
                 return false;
         }
     },
-    getChallengedState(state: BoardState): BoardState | null {
+    getChallengedState(state: BoardState): PrevDiscardStates | null {
         /**
          * States that are after challenged
          */

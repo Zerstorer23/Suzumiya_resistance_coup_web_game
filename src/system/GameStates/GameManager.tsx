@@ -1,4 +1,4 @@
-import {GameAction, KillActionTypes, KillInfo} from "system/GameStates/GameTypes";
+import {GameAction, KillActionTypes, KillInfo, PrevDiscardStates} from "system/GameStates/GameTypes";
 import "firebase/compat/database";
 import {CardRole} from "system/cards/Card";
 import {BoardState} from "system/GameStates/States";
@@ -26,10 +26,11 @@ export const GameManager = {
         };
         return gameAction;
     },
-    createKillInfo(cause: KillActionTypes, ownerId: string): KillInfo {
+    createKillInfo(cause: KillActionTypes, prevState: PrevDiscardStates, ownerId: string): KillInfo {
         return {
             cause,
-            card: CardRole.None,
+            challengedCard: CardRole.None,
+            prevState,
             ownerId,
             removed: [-1, -1],
             nextState: BoardState.ChoosingBaseAction

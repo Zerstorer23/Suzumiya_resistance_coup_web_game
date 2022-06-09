@@ -45,7 +45,7 @@ function handleReveal(ctx: RoomContextType, localCtx: LocalContextType, killInfo
     const action = ctx.room.game.action;
     const susId = prepareChallenge(action, board);
     const susPlayer = ctx.room.playerMap.get(susId)!;
-    const [winnerId, loserId] = determineLoser(ctx, susId, susPlayer, killInfo.card);
+    const [winnerId, loserId] = determineLoser(ctx, susId, susPlayer, killInfo.challengedCard);
     const pierWon = loserId !== action.pierId;
     const [myId] = TurnManager.getMyInfo(ctx, localCtx);
     // console.log(`Pay penalty?  loser: ${loserId}  / lost? ${loserId === myId}`);
@@ -61,7 +61,7 @@ function pushPostChallengeState(ctx: RoomContextType, susId: string, winnerId: s
         //replace card if challenged won, meaning he didnt lose card.
         //I was sus and won, have my card changed.
         const deck = ctx.room.game.deck;
-        const index = DeckManager.findIndexOfCardIn(deck, susPlayer, killInfo.card);
+        const index = DeckManager.findIndexOfCardIn(deck, susPlayer, killInfo.challengedCard);
         if (index === -1) {
             console.trace("WTF no card?");
             return;

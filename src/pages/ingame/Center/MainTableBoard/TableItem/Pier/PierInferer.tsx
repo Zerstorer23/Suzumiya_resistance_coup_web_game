@@ -6,7 +6,7 @@ import {cardPool} from "system/cards/CardPool";
 import {CardRole} from "system/cards/Card";
 import {KillInfo, Player} from "system/GameStates/GameTypes";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
-import {formatInsert, insert} from "lang/i18nHelper";
+import {formatInsert} from "lang/i18nHelper";
 import {
     ChallengeResultBoard,
     claimElem,
@@ -28,7 +28,7 @@ export function inferPierPanel(
     }
     switch (board) {
         case BoardState.ChoosingBaseAction:
-            return <Fragment><p>{insert(t, "_choosing_action", pier.name)}</p></Fragment>;
+            return <Fragment><p>{formatInsert(t, "_choosing_action", pier.name)}</p></Fragment>;
         case BoardState.CalledCoup:
             return formatInsert(t, "_call_coup", pier.name, t("_action_Coup"), target?.name);
         case BoardState.GetOneAccepted:
@@ -90,7 +90,7 @@ export function inferPierPanel(
         case BoardState.DiscardingCard:
             return inferDiscarding(t, ctx, pierId, pier);
         case BoardState.DiscardingFinished:
-            return inferPostDiscard(t, ctx, pierId);
+            return inferPostDiscard(t, ctx, pierId, pier);
     }
     /**
      return <p>{`${localPlayer.name} gained 1 coin...`}</p>; */
@@ -107,7 +107,7 @@ function inferChallenged(
     if (pier === null) return <Fragment/>;
     const action = ctx.room.game.action;
     const killInfo: KillInfo = action.param as KillInfo;
-    let susCard = killInfo.card;
+    let susCard = killInfo.challengedCard;
     if (StateManager.targetIsChallenged(board)) {
         //Target Is challenged. Who challenged it?
         if (target === null) return <Fragment/>;

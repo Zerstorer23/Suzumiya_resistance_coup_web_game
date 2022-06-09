@@ -53,13 +53,13 @@ export function inferTargetPanel(
         case BoardState.StealBlockChallenged:
         case BoardState.ContessaChallenged:
             const killInfo: KillInfo = action.param as KillInfo;
-            let susCard = killInfo.card;
+            let susCard = killInfo.challengedCard;
             return <p>{formatInsert(t, "_notify_challenge_reveal", target.name, cardPool.get(susCard).getName(t))}</p>;
         ///===Discarding
         case BoardState.DiscardingCard:
             return inferDiscarding(t, ctx, targetId, target);
         case BoardState.DiscardingFinished:
-            return inferPostDiscard(t, ctx, targetId);
+            return inferPostDiscard(t, ctx, targetId, target);
     }
     return <Fragment/>;
 }
@@ -74,7 +74,7 @@ function inferChallenged(
     const [pier, target, challenger] = TurnManager.getShareholders(ctx);
     const action = ctx.room.game.action;
     const killInfo: KillInfo = action.param as KillInfo;
-    let susCard = killInfo.card;
+    let susCard = killInfo.challengedCard;
     if (StateManager.targetIsChallenged(board)) {
         return <p>
             {formatInsert(t, "_notify_challenge_reveal",

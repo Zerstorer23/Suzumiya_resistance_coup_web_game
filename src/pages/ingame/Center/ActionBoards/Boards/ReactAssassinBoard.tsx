@@ -37,7 +37,7 @@ export default function ReactAssassinBoard(): JSX.Element {
     const onMakeAction = (action: ActionType) => {
         switch (action) {
             case ActionType.Accept:
-                const killInfo = GameManager.createKillInfo(ActionType.Assassinate, myId);
+                const killInfo = GameManager.createKillInfo(ActionType.Assassinate, BoardState.CalledAssassinate, myId);
                 ActionManager.pushPrepareDiscarding(ctx, killInfo);
                 break;
             case ActionType.IsALie:

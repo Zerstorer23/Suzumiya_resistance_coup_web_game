@@ -26,7 +26,7 @@ export function inferChallengerPanel(
         case BoardState.DiscardingCard:
             return inferDiscarding(t, ctx, challengerId, challenger);
         case BoardState.DiscardingFinished:
-            return inferPostDiscard(t, ctx, challengerId);
+            return inferPostDiscard(t, ctx, challengerId, challenger);
     }
     return <Fragment/>;
 }
@@ -40,7 +40,7 @@ function inferChallenged(
     const board = ctx.room.game.state.board;
     const action = ctx.room.game.action;
     const killInfo: KillInfo = action.param as KillInfo;
-    let susCard = killInfo.card;
+    let susCard = killInfo.challengedCard;
     if (StateManager.targetIsChallenged(board)) {
         if (target === null) return <Fragment/>;
         return <p>{formatInsert(t, "_challenge_the_card",
