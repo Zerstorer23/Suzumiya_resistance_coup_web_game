@@ -17,6 +17,7 @@ import {useTranslation} from "react-i18next";
 export const MAX_MUSIC_QUEUE = 16;
 export const MAX_PERSONAL_QUEUE = 3;
 export const MAX_MUSIC_SEC = 2 * (60) + 22;
+export const USE_SMART_RANDOM = true;
 
 enum YtState {
     NotStarted = -1,
@@ -121,7 +122,7 @@ export default function MusicModule() {
 }
 
 function pollMusic(musicCtx: MusicContextType): boolean {
-    const me = musicCtx.dequeue();
+    const me = (USE_SMART_RANDOM) ? musicCtx.smartRandom() : musicCtx.dequeue();
     if (me === null) return false;
     pushCurrentMusic(musicCtx.current.c, me);
     return true;

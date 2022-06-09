@@ -3,6 +3,7 @@ import {IProps} from "system/types/CommonTypes";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import "firebase/compat/database";
 import {MAX_MUSIC_QUEUE, MAX_PERSONAL_QUEUE} from "pages/components/ui/MusicModule/MusicModule";
+import {randomInt} from "system/GameConstants";
 
 export type MusicEntry = {
     key: string,
@@ -16,6 +17,7 @@ export type MusicContextType = {
     enqueue: (a: MusicEntry) => void;
     remove: (a: MusicEntry) => void;
     dequeue: () => MusicEntry | null;
+    smartRandom: () => MusicEntry | null;
     setMusic: (cm: CounterMusicType) => void;
 };
 export type CounterMusicType = {
@@ -35,6 +37,7 @@ const MusicContext = React.createContext<MusicContextType>({
     remove: (a: MusicEntry) => {
     },
     dequeue: () => null,
+    smartRandom: () => null,
     setMusic: (a: any) => {
     },
 });
@@ -67,6 +70,15 @@ export function MusicProvider(props: IProps) {
         return me!;
     }
 
+    function smartRandom(): MusicEntry | null {
+        if (list.length === 0) return null;
+        const random = randomInt(0, Math.min(5, list.length - 1));
+        const me = list[random];
+        remove(me);
+        ReferenceManager.getRef(DbReferences.MUSIC_queue).child(me.key).remove();
+        return me!;
+    }
+
     function setMusic(cm: CounterMusicType) {
         setCurrent(cm);
     }
@@ -91,6 +103,7 @@ export function MusicProvider(props: IProps) {
         enqueue,
         remove,
         dequeue,
+        smartRandom,
         setMusic,
     };
     return (
