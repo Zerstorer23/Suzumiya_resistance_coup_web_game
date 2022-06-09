@@ -132,5 +132,9 @@
   "_on_ready": "준비",
   "_off_ready": "준비해제",
   "_not_enough_ready": "모두가 준비상태여야함",
+  "_music_invalid_url": "URL의 태도가 불량합니다",
+  "_music_success_enqueue": "님이 1곡을 넣었습니다.",
+  "_music_queue_full": "신청곡 큐가 다 찼습니다.",
+  "_music_personal_full": "너무 많은곡을 신청하셨습니다. ",
   "dymmy": "dummy"
 }

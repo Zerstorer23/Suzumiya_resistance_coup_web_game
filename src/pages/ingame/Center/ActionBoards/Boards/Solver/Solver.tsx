@@ -2,14 +2,13 @@ import {setMyTimer} from "pages/components/ui/MyTimer/MyTimer";
 import {LocalContextType} from "system/context/localInfo/local-context";
 import {BoardState} from "system/GameStates/States";
 import {PlayerType, TurnManager} from "system/GameStates/TurnManager";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import TransitionManager, {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {ReferenceManager} from "system/Database/ReferenceManager";
 
 export function waitAndEnd(ctx: RoomContextType, localCtx: LocalContextType) {
     setMyTimer(ctx, localCtx, () => {
-        ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+        TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
             return TransitionAction.EndTurn;
         });
     });
@@ -63,7 +62,7 @@ Assassin: ?Assassin->[CalledAssassinate: Wait]
 function handleGetOne(ctx: RoomContextType, localCtx: LocalContextType) {
     const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
     setMyTimer(ctx, localCtx, () => {
-        ActionManager.prepareAndPushState(ctx, () => {
+        TransitionManager.prepareAndPushState(ctx, () => {
             pier.coins++;
             ReferenceManager.updatePlayerReference(pierId, pier);
             return TransitionAction.EndTurn;
@@ -74,7 +73,7 @@ function handleGetOne(ctx: RoomContextType, localCtx: LocalContextType) {
 
 export function handleGetTwo(ctx: RoomContextType) {
     const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
-    ActionManager.prepareAndPushState(ctx, () => {
+    TransitionManager.prepareAndPushState(ctx, () => {
         pier.coins += 2;
         ReferenceManager.updatePlayerReference(pierId, pier);
         return TransitionAction.EndTurn;
@@ -85,7 +84,7 @@ export function handleGetThree(
     ctx: RoomContextType
 ) {
     const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
-    ActionManager.prepareAndPushState(ctx, () => {
+    TransitionManager.prepareAndPushState(ctx, () => {
         pier.coins += 3;
         ReferenceManager.updatePlayerReference(pierId, pier);
         return TransitionAction.EndTurn;
@@ -111,7 +110,7 @@ export function handleSteal(ctx: RoomContextType, localCtx: LocalContextType) {
     const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
     const [targetId, target] = TurnManager.getPlayerInfo(ctx, PlayerType.Target);
     setMyTimer(ctx, localCtx, () => {
-        ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+        TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
             const stealAmount = Math.min(target.coins, 2);
             pier.coins += stealAmount;
             target.coins -= stealAmount;

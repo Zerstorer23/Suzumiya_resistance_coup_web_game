@@ -6,8 +6,7 @@ import {DeckManager} from "system/cards/DeckManager";
 import {Card, CardRole} from "system/cards/Card";
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import {TurnManager} from "system/GameStates/TurnManager";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import TransitionManager, {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
 import {useTranslation} from "react-i18next";
 import useDefaultAction from "system/hooks/useDefaultAction";
@@ -50,7 +49,7 @@ export default function AmbassadorBoard(): JSX.Element {
             } else if (firstCardPicked === 3) {
                 DeckManager.swap(topIndex + 1, myPlayer!.icard, deck);
             }
-            ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+            TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
                 DeckManager.pushDeck(ctx, deck);
                 return TransitionAction.EndTurn;
             });
@@ -60,7 +59,7 @@ export default function AmbassadorBoard(): JSX.Element {
     const [count, setCount] = useState<number>(0);
     const [secondCardPicked, setSecondCardPicked] = useState<number>(-1);
     useDefaultAction(ctx, localCtx, () => {
-        ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+        TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
             return TransitionAction.EndTurn;
         });
     });
@@ -91,7 +90,7 @@ export default function AmbassadorBoard(): JSX.Element {
                 break;
         }
         DeckManager.pushDeck(ctx, deck);
-        ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+        TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
             return TransitionAction.EndTurn;
         });
     }, [firstCardPicked, secondCardPicked]);

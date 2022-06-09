@@ -6,8 +6,7 @@ import {DeckManager} from "system/cards/DeckManager";
 import {CardDeck} from "system/cards/Card";
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import {TurnManager} from "system/GameStates/TurnManager";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import TransitionManager, {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
 import {useTranslation} from "react-i18next";
 import useDefaultAction from "system/hooks/useDefaultAction";
@@ -90,7 +89,7 @@ function findDeadAfter(deck: CardDeck, index: number): number {
 }
 
 function endTurn(ctx: RoomContextType) {
-    ActionManager.prepareAndPushState(ctx, () => {
+    TransitionManager.prepareAndPushState(ctx, () => {
         return TransitionAction.EndTurn;
     });
 }

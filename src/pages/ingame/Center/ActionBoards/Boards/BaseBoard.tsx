@@ -7,7 +7,7 @@ import RoomContext from "system/context/roomInfo/room-context";
 import {actionPool} from "system/GameStates/ActionInfo";
 import {ActionType, StateManager} from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {DS} from "system/Debugger/DS";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
@@ -109,7 +109,7 @@ export default function BaseBoard(): JSX.Element {
 
     useDefaultAction(ctx, localCtx, () => {
         if (forceCoup) {
-            ActionManager.pushCalledState(ctx, ActionType.Coup, myId, myPlayer, myId);
+            TransitionManager.pushCalledState(ctx, ActionType.Coup, myId, myPlayer, myId);
         } else {
             onMakeAction(ActionType.GetOne);
         }
@@ -127,7 +127,7 @@ export default function BaseBoard(): JSX.Element {
     function onPlayerSelected(playerId: string) {
         if (!StateManager.isTargetableAction(savedAction)) return;
         console.log("Selected player " + playerId);
-        ActionManager.pushCalledState(ctx, savedAction, myId, myPlayer, playerId);
+        TransitionManager.pushCalledState(ctx, savedAction, myId, myPlayer, playerId);
     }
 
 
@@ -136,7 +136,7 @@ export default function BaseBoard(): JSX.Element {
         if (DS.StrictRules && getRequiredCoins(action) > myPlayer.coins) return;
         const handled = handleTargetableAction(action);
         if (handled) return;
-        ActionManager.pushCalledState(ctx, action, myId, myPlayer);
+        TransitionManager.pushCalledState(ctx, action, myId, myPlayer);
     }
 
     return (elem);

@@ -6,7 +6,7 @@ import ChatContext, {
     ChatFormat,
     sendChat,
 } from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
-import LocalContext, {LocalField} from "system/context/localInfo/local-context";
+import LocalContext, {LocalContextType, LocalField} from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import RoomContext from "system/context/roomInfo/room-context";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
@@ -20,6 +20,8 @@ import MusicContext, {
 } from "pages/components/ui/MusicModule/musicInfo/MusicContextProvider";
 import {Player} from "system/GameStates/GameTypes";
 import {MAX_MUSIC_QUEUE, MAX_PERSONAL_QUEUE} from "pages/components/ui/MusicModule/MusicModule";
+import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
+import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 
 export default function ChatModule() {
     const chatCtx = useContext(ChatContext);
@@ -52,10 +54,9 @@ export default function ChatModule() {
         const firstChar = text.at(0);
         const theRest = text.substring(1);
         if (firstChar === "!") {
-            handleMusic(chatCtx, musicCtx, theRest, myId, myPlayer);
+            handleMusic(t, chatCtx, musicCtx, theRest, myId, myPlayer);
         } else if (firstChar === "/") {
-            //TODO
-            //handleAdminFUnction
+            handleCommands(t, ctx, localCtx, chatCtx, theRest);
         } else {
             return false;
         }
@@ -106,33 +107,61 @@ export default function ChatModule() {
     );
 }
 
-function handleMusic(chatCtx: ChatContextType, musicCtx: MusicContextType, videoId: string, myId: string, myPlayer: Player) {
+function handleMusic(t: any, chatCtx: ChatContextType, musicCtx: MusicContextType, videoId: string, myId: string, myPlayer: Player) {
     const response = pushMusicToQueue(musicCtx, videoId, myId);
     switch (response) {
         case MusicResponse.Success:
-            sendChat(ChatFormat.announcement, "", `${myPlayer.name}님이 1곡을 넣었습니다.`);
+            sendChat(ChatFormat.announcement, "", `${myPlayer.name}${t("_music_success_enqueue")}`);
             break;
         case MusicResponse.InvalidURL:
             chatCtx.loadChat({
                 name: "",
                 format: ChatFormat.announcement,
-                msg: "URL의 태도가 불량합니다"
+                msg: t("_music_invalid_url")
             });
             break;
         case MusicResponse.FullQueue:
             chatCtx.loadChat({
                 name: "",
                 format: ChatFormat.announcement,
-                msg: `신청곡 큐가 다 찼습니다. (${MAX_MUSIC_QUEUE}개)`
+                msg: `${t("_music_queue_full")} (${MAX_MUSIC_QUEUE}max)`
             });
             break;
         case MusicResponse.Overloading:
             chatCtx.loadChat({
                 name: "",
                 format: ChatFormat.announcement,
-                msg: `너무 많은곡을 신청하셨습니다. (${MAX_PERSONAL_QUEUE})개`
+                msg: `${t("_music_personal_full")} (${MAX_PERSONAL_QUEUE}max)`
             });
             break;
+    }
+}
 
+function handleCommands(t: any, ctx: RoomContextType, localCtx: LocalContextType, chatCtx: ChatContextType, command: string) {
+    const args = command.split(" ");
+    const amHost = TurnManager.amHost(ctx, localCtx);
+    switch (args[0]) {
+        case "next":
+            if (!amHost) return;
+            TransitionManager.pushEndTurn(ctx);
+            //Push to next turn
+            break;
+        case "kick":
+            if (!amHost) return;
+            //Kick arg[1]
+            break;
+        case "reset":
+            if (!amHost) return;
+            //End game
+            break;
+        case "help":
+            //print help
+            break;
+        case "host":
+            //print host name
+            break;
+        case "list":
+            //print playerindex, name, isspectating.
+            break;
     }
 }

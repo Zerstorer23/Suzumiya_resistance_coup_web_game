@@ -6,8 +6,7 @@ import RoomContext from "system/context/roomInfo/room-context";
 import {actionPool} from "system/GameStates/ActionInfo";
 import {ActionType, BoardState} from "system/GameStates/States";
 import {CardRole} from "system/cards/Card";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import TransitionManager, {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
@@ -39,10 +38,10 @@ export default function ReactCaptainBoard(): JSX.Element {
 
     const onMakeAction = (action: ActionType) => {
         //Accept or Lie
-        const handled = ActionManager.handleAcceptOrLie(ctx, action, myId);
+        const handled = TransitionManager.handleAcceptOrLie(ctx, action, myId);
         if (handled) return;
         //Defending Action
-        ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+        TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
             switch (action) {
                 case ActionType.DefendWithAmbassador:
                     newState.board = BoardState.StealBlocked;

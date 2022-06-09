@@ -5,8 +5,7 @@ import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {actionPool} from "system/GameStates/ActionInfo";
 import {ActionType, BoardState} from "system/GameStates/States";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import TransitionManager, {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {GameManager} from "system/GameStates/GameManager";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
@@ -38,13 +37,13 @@ export default function ReactAssassinBoard(): JSX.Element {
         switch (action) {
             case ActionType.Accept:
                 const killInfo = GameManager.createKillInfo(ActionType.Assassinate, BoardState.CalledAssassinate, myId);
-                ActionManager.pushPrepareDiscarding(ctx, killInfo);
+                TransitionManager.pushPrepareDiscarding(ctx, killInfo);
                 break;
             case ActionType.IsALie:
-                ActionManager.pushIsALieState(ctx, myId);
+                TransitionManager.pushIsALieState(ctx, myId);
                 break;
             case ActionType.ContessaBlocksAssassination:
-                ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+                TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
                     newState.board = BoardState.AssassinBlocked;
                     playerClaimedRole(myId, myPlayer, action);
                     return TransitionAction.Success;

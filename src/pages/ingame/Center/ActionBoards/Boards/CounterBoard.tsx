@@ -5,7 +5,7 @@ import LocalContext, {LocalField,} from "system/context/localInfo/local-context"
 import RoomContext from "system/context/roomInfo/room-context";
 import {actionPool} from "system/GameStates/ActionInfo";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
 import {useTranslation} from "react-i18next";
 /*
@@ -47,7 +47,7 @@ export default function CounterBoard(): JSX.Element {
 
     function handleAccept(board: BoardState) {
         if (!StateManager.pierIsBlocked(board)) return;
-        ActionManager.pushAcceptedState(ctx);
+        TransitionManager.pushAcceptedState(ctx);
     }
 
     const onMakeAction = (action: ActionType) => {
@@ -57,7 +57,7 @@ export default function CounterBoard(): JSX.Element {
                 handleAccept(board);
                 break;
             case ActionType.IsALie:
-                ActionManager.pushIsALieState(ctx, myId);
+                TransitionManager.pushIsALieState(ctx, myId);
                 break;
         }
     };

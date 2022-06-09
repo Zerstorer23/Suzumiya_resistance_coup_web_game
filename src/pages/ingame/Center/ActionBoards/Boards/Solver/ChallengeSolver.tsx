@@ -4,7 +4,7 @@ import {DeckManager} from "system/cards/DeckManager";
 import {LocalContextType} from "system/context/localInfo/local-context";
 import {ChallengeState, GameAction, KillInfo, Player, PostChallengeStates,} from "system/GameStates/GameTypes";
 import {BoardState, StateManager} from "system/GameStates/States";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
@@ -70,7 +70,7 @@ function pushPostChallengeState(ctx: RoomContextType, susId: string, winnerId: s
         DeckManager.swap(index, random, deck);
         ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
     }
-    ActionManager.pushPrepareDiscarding(ctx, killInfo);
+    TransitionManager.pushPrepareDiscarding(ctx, killInfo);
 }
 
 function prepareChallenge(action: GameAction, board: BoardState): string {

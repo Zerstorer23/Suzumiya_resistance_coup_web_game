@@ -132,5 +132,9 @@
   "_on_ready": "Ready",
   "_is_host": "HOST",
   "_off_ready": "Unready",
+  "_music_invalid_url": "invalid url",
+  "_music_success_enqueue": " enqueued a song",
+  "_music_queue_full": " queue is full",
+  "_music_personal_full": " you put too many",
   "dymmy": "dummy"
 }

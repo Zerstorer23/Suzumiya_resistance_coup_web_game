@@ -5,8 +5,7 @@ import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
 import {actionPool} from "system/GameStates/ActionInfo";
 import {ActionType, BoardState} from "system/GameStates/States";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import TransitionManager, {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
@@ -28,7 +27,7 @@ export default function ReactForeignAidBoard(): JSX.Element {
     const onMakeAction = (action: ActionType) => {
         if (action !== ActionType.DukeBlocksForeignAid) return;
         //Only interested in when it is blocked
-        ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+        TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
             //Target == the one who blocks
             newAction.targetId = myId;
             newState.board = BoardState.CalledGetTwoBlocked;

@@ -1,6 +1,5 @@
 import {KillInfo, Player} from "system/GameStates/GameTypes";
-import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
-import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import TransitionManager, {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {BoardState} from "system/GameStates/States";
 import {DeckManager} from "system/cards/DeckManager";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
@@ -16,7 +15,7 @@ export function checkPostDiscarding(t: any, ctx: RoomContextType) {
     const winnerId = DeckManager.checkGameOver(ctx);
     if (winnerId !== "") {
         sendChat(ChatFormat.important, "", t("_notify_game_end"));
-        ActionManager.pushEndGame(ctx, winnerId);
+        TransitionManager.pushEndGame(ctx, winnerId);
         return;
     }
     switch (nextBoard) {
@@ -24,13 +23,13 @@ export function checkPostDiscarding(t: any, ctx: RoomContextType) {
         case BoardState.AmbassadorAccepted:
         case BoardState.StealAccepted:
         case BoardState.ForeignAidAccepted:
-            ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+            TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
                 newState.board = nextBoard;
                 return TransitionAction.Success;
             });
             break;
         default:
-            ActionManager.prepareAndPushState(ctx, () => {
+            TransitionManager.prepareAndPushState(ctx, () => {
                 return TransitionAction.EndTurn;
             });
             break;
@@ -40,7 +39,7 @@ export function checkPostDiscarding(t: any, ctx: RoomContextType) {
 export function handleCardKill(t: any, ctx: RoomContextType, index: number) {
     const deck = ctx.room.game.deck;
     DeckManager.killCardAt(deck, index);
-    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+    TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
         const killInfo = newAction.param as KillInfo;
         const player = ctx.room.playerMap.get(killInfo.ownerId)!;
         killInfo.removed[0] = index;
@@ -63,7 +62,7 @@ function handleDeadCase(t: any, deck: CardDeck, player: Player, killInfo: KillIn
 
 export function handleSuicide(ctx: RoomContextType, playerId: string) {
     const deck = ctx.room.game.deck;
-    ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
+    TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
         const player = ctx.room.playerMap.get(playerId)!;
         DeckManager.killCardAt(deck, player.icard);
         DeckManager.killCardAt(deck, player.icard + 1);

@@ -17,12 +17,12 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import {forceSetTimer} from "pages/components/ui/MyTimer/MyTimer";
 import {TurnState} from "system/GameStates/GameTypes";
 import {DS} from "system/Debugger/DS";
-import {pushEndGame} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import ImagePage from "pages/components/ui/ImagePage/ImagePage";
 import {Images} from "resources/Resources";
 import {WaitTime} from "system/GameConstants";
 import {DeckManager} from "system/cards/DeckManager";
 import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 
 export default function InGame() {
     const ctx = useContext(RoomContext);
@@ -47,7 +47,7 @@ export default function InGame() {
         const alive = DeckManager.countAlivePlayers(ctx);
         if (!DS.StrictRules || alive > 1) return true;
         setIsGameOver(true);
-        pushEndGame(ctx, myId);
+        TransitionManager.pushEndGame(ctx, myId);
         return true;
     }
 
@@ -57,7 +57,7 @@ export default function InGame() {
         setRoomCode((n) => n++);
         const alive = DeckManager.countAlivePlayers(ctx);
         if (alive <= 1) {
-            pushEndGame(ctx, myId);
+            TransitionManager.pushEndGame(ctx, myId);
         }
     }, [ctx.room.playerMap.size]);
 

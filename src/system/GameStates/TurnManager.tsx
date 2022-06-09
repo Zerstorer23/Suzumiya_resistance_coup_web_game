@@ -10,14 +10,15 @@ export enum PlayerType {
     CurrentTurn,
 }
 
-export const TurnManager = {
+class _TurnManager {
     /**
      *
      * @returns  use room hash to get first player
      */
     getFirstTurn(seed: number, playerSize: number): number {
         return seed % playerSize;
-    },
+    }
+
     /**
      *
      * @returns Get next safe turn
@@ -31,11 +32,13 @@ export const TurnManager = {
             currPlayer = playerMap.get(playerList[newTurn]);
         }
         return newTurn;
-    },
+    }
+
     amHost(ctx: RoomContextType, localCtx: LocalContextType) {
         const myId = localCtx.getVal(LocalField.Id);
         return ctx.room.header.hostId === myId;
-    },
+    }
+
     /**
      *
      * @param ctx
@@ -43,7 +46,8 @@ export const TurnManager = {
      */
     getCurrentPlayerId(ctx: RoomContextType) {
         return ctx.room.playerList[ctx.room.game.state.turn];
-    },
+    }
+
     /**
      *
      * @param ctx
@@ -56,7 +60,8 @@ export const TurnManager = {
             ctx.room.game.state.turn
         );
         return ctx.room.playerList[nextTurn];
-    },
+    }
+
     /**
      *
      * @param ctx
@@ -65,7 +70,8 @@ export const TurnManager = {
      */
     isMyTurn(ctx: RoomContextType, localCtx: LocalContextType) {
         return localCtx.getVal(LocalField.Id) === this.getCurrentPlayerId(ctx);
-    },
+    }
+
     /**
      *
      * @param ctx
@@ -77,7 +83,8 @@ export const TurnManager = {
         localCtx: LocalContextType
     ): [string, Player] {
         return this.getPlayerInfoById(ctx, localCtx.getVal(LocalField.Id));
-    },
+    }
+
     getPlayerInfo(
         ctx: RoomContextType,
         playerType: PlayerType
@@ -98,11 +105,13 @@ export const TurnManager = {
                 break;
         }
         return this.getPlayerInfoById(ctx, playerId);
-    },
+    }
+
     getPlayerInfoById(ctx: RoomContextType, playerId: string): [string, Player] {
         const player = ctx.room.playerMap.get(playerId)!;
         return [playerId, player];
-    },
+    }
+
     /**
      *
      * @param ctx
@@ -118,5 +127,8 @@ export const TurnManager = {
         const target = getNullable<Player>(playerMap, action.targetId);
         const challenger = getNullable<Player>(playerMap, action.challengerId);
         return [pier, target, challenger];
-    },
-};
+    }
+    
+}
+
+export const TurnManager = new _TurnManager();
