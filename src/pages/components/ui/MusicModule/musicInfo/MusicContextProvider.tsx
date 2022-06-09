@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import {IProps} from "system/types/CommonTypes";
-import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import "firebase/compat/database";
 import {MAX_MUSIC_QUEUE, MAX_PERSONAL_QUEUE} from "pages/components/ui/MusicModule/MusicModule";
 import {randomInt} from "system/GameConstants";
+import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 
 export type MusicEntry = {
     key: string,

@@ -7,7 +7,7 @@ import {BoardState, StateManager} from "system/GameStates/States";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {TurnManager} from "system/GameStates/TurnManager";
-import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
+import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 
 
 export function solveChallenges(ctx: RoomContextType, localCtx: LocalContextType) {

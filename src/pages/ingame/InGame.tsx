@@ -11,7 +11,6 @@ import {useContext, useEffect, useState} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 import {useHistory} from "react-router-dom";
-import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import GameOverPopUp from "pages/components/ui/PopUp/PopUp";
 import {Navigation} from "App";
 import {TurnManager} from "system/GameStates/TurnManager";
@@ -23,6 +22,7 @@ import ImagePage from "pages/components/ui/ImagePage/ImagePage";
 import {Images} from "resources/Resources";
 import {WaitTime} from "system/GameConstants";
 import {DeckManager} from "system/cards/DeckManager";
+import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 
 export default function InGame() {
     const ctx = useContext(RoomContext);

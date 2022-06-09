@@ -3,11 +3,11 @@ import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {BoardState} from "system/GameStates/States";
 import {DeckManager} from "system/cards/DeckManager";
-import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {ChatFormat, sendChat,} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
 import {CardDeck} from "system/cards/Card";
 import {insert} from "lang/i18nHelper";
+import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 
 export function checkPostDiscarding(t: any, ctx: RoomContextType) {
     const killInfo = ctx.room.game.action.param as KillInfo;

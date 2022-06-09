@@ -3,10 +3,11 @@ import gc from "global.module.css";
 import classes from "./LobbySettings.module.css";
 import RoomContext from "system/context/roomInfo/room-context";
 import LocalContext from "system/context/localInfo/local-context";
-import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {useTranslation} from "react-i18next";
 import {formatInsert} from "lang/i18nHelper";
 import {TurnManager} from "system/GameStates/TurnManager";
+import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {setFishName} from "system/Database/Inalytics";
 
 const MAX_NAME_LENGTH = 16;
 export default function LobbySettings() {
@@ -27,6 +28,7 @@ export default function LobbySettings() {
         }
         const myNameRef = ReferenceManager.getPlayerFieldReference(myId, DbReferences.PLAYER_name);
         myNameRef.set(newName);
+        setFishName(newName);
     }
 
 

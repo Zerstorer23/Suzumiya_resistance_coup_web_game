@@ -1,9 +1,9 @@
 import {BASE_CARDS, CardDeck, CardRole} from "system/cards/Card";
 import {randomInt, shuffleArray} from "system/GameConstants";
 import {Player} from "system/GameStates/GameTypes";
-import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {cardPool} from "system/cards/CardPool";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
+import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 
 /*
 Manager file that helps decoding deck string into cards

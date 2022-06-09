@@ -1,7 +1,7 @@
 import {useHistory} from "react-router-dom";
 import {Fragment, useContext, useEffect, useState} from "react";
 import RoomContext, {UpdateType} from "system/context/roomInfo/room-context";
-import {initialiseRoom, joinLobby, loadRoom, ReferenceManager, registerListeners,} from "system/Database/RoomDatabase";
+import {initialiseRoom, joinLobby, loadRoom, registerListeners,} from "system/Database/RoomDatabase";
 import {
     IProps,
     LISTEN_CHILD_ADDED,
@@ -19,6 +19,7 @@ import ChatLoader from "pages/components/ui/ChatModule/ChatLoader";
 import MusicLoader from "pages/components/ui/MusicModule/musicInfo/MusicLoader";
 import {cleanMusic} from "pages/components/ui/MusicModule/musicInfo/MusicContextProvider";
 import {cleanChats} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
+import {ReferenceManager} from "system/Database/ReferenceManager";
 
 export default function DataLoader(props: IProps) {
     const [isLoaded, setStatus] = useState(LoadStatus.init);

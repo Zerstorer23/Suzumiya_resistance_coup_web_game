@@ -1,77 +1,11 @@
-import {db} from "system/Database/Firebase";
 import {joinLocalPlayer} from "system/Database/PlayerDatabase";
 import {Player, PlayerMap, Room} from "system/GameStates/GameTypes";
 import {getDefaultRoom, getSortedListFromMap,} from "system/GameStates/RoomGenerator";
 import {DbRef, Listeners, ListenerTypes} from "system/types/CommonTypes";
 import {ActionType} from "system/GameStates/States";
 import {CardRole} from "system/cards/Card";
+import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 
-export enum DbReferences {
-    ROOM = "/room",
-    GAME = "/room/game",
-    GAME_deck = `/room/game/deck`,
-    GAME_state = `/room/game/state`,
-    GAME_action = `/room/game/action`,
-    PLAYERS = `/room/playerMap`,
-    HEADER = `/room/header`,
-    HEADER_hostId = `/room/header/hostId`,
-    HEADER_seed = `/room/header/seed`,
-    CHAT = "/chat",
-    MUSIC = "/music",
-    MUSIC_queue = "/music/queue",
-    MUSIC_current = "/music/current",
-    PLAYER_name = "name",
-    PLAYER_isReady = "isReady",
-}
-
-/**
- * Reference Manager is responsible for
- * uploading data to Firebase.
- */
-const RefPool = new Map<string, DbRef>();
-
-function queryRef(tag: string): DbRef {
-    if (!RefPool.has(tag)) {
-        RefPool.set(tag, db.ref(tag));
-    }
-    return RefPool.get(tag)!;
-}
-
-export const ReferenceManager = {
-    /**
-     * @param field
-     * @param value
-     * UPdates a single value
-     */
-    updateReference<T>(field: DbReferences, value: T) {
-        const ref = this.getRef(field);
-        ref.set(value);
-    },
-    /**
-     *
-     * @param playerId
-     * @param player
-     * UPdates a player
-     */
-    updatePlayerReference(playerId: string, player: Player) {
-        const ref = ReferenceManager.getPlayerReference(playerId);
-        ref.set(player);
-    },
-    getRoomRef(): DbRef {
-        return this.getRef(DbReferences.ROOM);
-    },
-    getRef(refName: DbReferences): DbRef {
-        //NOTE USE DB TAGS
-        return queryRef(refName);
-
-    },
-    getPlayerReference(playerId: string): DbRef {
-        return queryRef(`${DbReferences.PLAYERS}/${playerId}`);
-    },
-    getPlayerFieldReference(playerId: string, ref: DbReferences): DbRef {
-        return queryRef(`${DbReferences.PLAYERS}/${playerId}/${ref}`);
-    },
-};
 
 export async function initialiseRoom(turn: number) {
     const roomRef = ReferenceManager.getRoomRef();

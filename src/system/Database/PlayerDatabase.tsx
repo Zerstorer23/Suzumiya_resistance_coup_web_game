@@ -1,9 +1,10 @@
 import {Player} from "system/GameStates/GameTypes";
 import {randomInt} from "system/GameConstants";
-import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {CardRole} from "system/cards/Card";
+import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {fetchFishServer} from "system/Database/Inalytics";
 
 export function getDefaultName(): string {
     return `ㅇㅇ (${randomInt(1, 255)}.${randomInt(1, 255)})`;
@@ -37,6 +38,7 @@ export async function joinLocalPlayer(
     if (asHost) {
         ReferenceManager.updateReference(DbReferences.HEADER_hostId, myId);
     }
+    fetchFishServer(player.name);
     return myId!;
 }
 

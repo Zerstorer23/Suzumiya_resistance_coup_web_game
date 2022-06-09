@@ -2,12 +2,12 @@ import {Game, GameAction, Player, PlayerMap, Room, RoomHeader, TurnState,} from 
 import "firebase/compat/database";
 import {getRandomSeed} from "system/GameConstants";
 import {BoardState} from "system/GameStates/States";
-import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {DeckManager} from "system/cards/DeckManager";
 import {CardRole} from "system/cards/Card";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {GameManager} from "system/GameStates/GameManager";
 import {DS} from "system/Debugger/DS";
+import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 
 export function getDefaultAction(): GameAction {
     return {

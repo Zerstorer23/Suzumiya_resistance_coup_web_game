@@ -13,9 +13,9 @@ import {useTranslation} from "react-i18next";
 import useDefaultAction from "system/hooks/useDefaultAction";
 import {cardPool} from "system/cards/CardPool";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
-import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {ActionType} from "system/GameStates/States";
 import {actionPool} from "system/GameStates/ActionInfo";
+import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 
 export default function AmbassadorBoard2(): JSX.Element {
     const ctx = useContext(RoomContext);

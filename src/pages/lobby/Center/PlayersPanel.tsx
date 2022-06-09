@@ -12,7 +12,7 @@ import useKeyListener, {KeyCode} from "system/hooks/useKeyListener";
 import {InputCursor} from "system/context/localInfo/LocalContextProvider";
 import {useTranslation} from "react-i18next";
 import {insert} from "lang/i18nHelper";
-import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
+import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 
 
 export default function PlayersPanel() {

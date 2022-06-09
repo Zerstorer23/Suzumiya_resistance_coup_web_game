@@ -1,7 +1,7 @@
 import React, {Fragment, useState} from "react";
 import {IProps} from "system/types/CommonTypes";
-import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import classes from "pages/components/ui/ChatModule/ChatModule.module.css";
+import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 
 export type ChatContextType = {
     chatList: ChatEntry[];

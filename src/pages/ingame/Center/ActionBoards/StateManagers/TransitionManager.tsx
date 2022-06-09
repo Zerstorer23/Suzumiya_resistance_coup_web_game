@@ -1,12 +1,13 @@
 import {ChallengeState, GameAction, KillInfo, Player, TurnState,} from "system/GameStates/GameTypes";
 import {GameManager} from "system/GameStates/GameManager";
-import {DbReferences, playerClaimedRole, ReferenceManager} from "system/Database/RoomDatabase";
+import {playerClaimedRole} from "system/Database/RoomDatabase";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {CardRole} from "system/cards/Card";
 import {DS} from "system/Debugger/DS";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {ChatFormat, sendChat} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
+import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 
 
 export enum TransitionAction {
