@@ -16,9 +16,9 @@ import {
 import {GameAction, Player, Room, RoomHeader,} from "system/GameStates/GameTypes";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 import ChatLoader from "pages/components/ui/ChatModule/ChatLoader";
-import {cleanChats} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
 import MusicLoader from "pages/components/ui/MusicModule/musicInfo/MusicLoader";
 import {cleanMusic} from "pages/components/ui/MusicModule/musicInfo/MusicContextProvider";
+import {cleanChats} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
 
 export default function DataLoader(props: IProps) {
     const [isLoaded, setStatus] = useState(LoadStatus.init);
@@ -109,7 +109,6 @@ export default function DataLoader(props: IProps) {
         if (context.room.playerMap.size === 0) {
             //Join as host
             console.log("Join as host");
-            cleanChats();
             cleanMusic();
             setUpRoom();
         } else {
@@ -125,6 +124,7 @@ export default function DataLoader(props: IProps) {
     useEffect(() => {
         switch (isLoaded) {
             case LoadStatus.init:
+                cleanChats();
                 loadRoom().then((room: Room) => {
                     context.onRoomLoaded(room);
                     setStatus(LoadStatus.loaded);
