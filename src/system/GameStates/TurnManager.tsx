@@ -10,12 +10,12 @@ export enum PlayerType {
     CurrentTurn,
 }
 
-class _TurnManager {
+export class TurnManager {
     /**
      *
      * @returns  use room hash to get first player
      */
-    getFirstTurn(seed: number, playerSize: number): number {
+    public static getFirstTurn(seed: number, playerSize: number): number {
         return seed % playerSize;
     }
 
@@ -23,7 +23,7 @@ class _TurnManager {
      *
      * @returns Get next safe turn
      */
-    getNextTurn(playerMap: PlayerMap, playerList: string[], turn: number, startWithIncrement = true): number {
+    public static getNextTurn(playerMap: PlayerMap, playerList: string[], turn: number, startWithIncrement = true): number {
         let newTurn = (startWithIncrement) ? turn + 1 : turn;
         newTurn %= playerList.length;
         let currPlayer = playerMap.get(playerList[newTurn]);
@@ -34,7 +34,7 @@ class _TurnManager {
         return newTurn;
     }
 
-    amHost(ctx: RoomContextType, localCtx: LocalContextType) {
+    public static amHost(ctx: RoomContextType, localCtx: LocalContextType) {
         const myId = localCtx.getVal(LocalField.Id);
         return ctx.room.header.hostId === myId;
     }
@@ -44,7 +44,7 @@ class _TurnManager {
      * @param ctx
      * @returns this turn player's id
      */
-    getCurrentPlayerId(ctx: RoomContextType) {
+    public static getCurrentPlayerId(ctx: RoomContextType) {
         return ctx.room.playerList[ctx.room.game.state.turn];
     }
 
@@ -53,7 +53,7 @@ class _TurnManager {
      * @param ctx
      * @returns next turn player's id
      */
-    getNextPlayerId(ctx: RoomContextType) {
+    public static getNextPlayerId(ctx: RoomContextType) {
         const nextTurn = this.getNextTurn(
             ctx.room.playerMap,
             ctx.room.playerList,
@@ -68,7 +68,7 @@ class _TurnManager {
      * @param localCtx
      * @returns is this turn MY turn?
      */
-    isMyTurn(ctx: RoomContextType, localCtx: LocalContextType) {
+    public static isMyTurn(ctx: RoomContextType, localCtx: LocalContextType) {
         return localCtx.getVal(LocalField.Id) === this.getCurrentPlayerId(ctx);
     }
 
@@ -78,14 +78,14 @@ class _TurnManager {
      * @param localCtx
      * @returns My player Id , my Player
      */
-    getMyInfo(
+    public static getMyInfo(
         ctx: RoomContextType,
         localCtx: LocalContextType
     ): [string, Player] {
         return this.getPlayerInfoById(ctx, localCtx.getVal(LocalField.Id));
     }
 
-    getPlayerInfo(
+    public static getPlayerInfo(
         ctx: RoomContextType,
         playerType: PlayerType
     ): [string, Player] {
@@ -107,7 +107,7 @@ class _TurnManager {
         return this.getPlayerInfoById(ctx, playerId);
     }
 
-    getPlayerInfoById(ctx: RoomContextType, playerId: string): [string, Player] {
+    public static getPlayerInfoById(ctx: RoomContextType, playerId: string): [string, Player] {
         const player = ctx.room.playerMap.get(playerId)!;
         return [playerId, player];
     }
@@ -118,7 +118,7 @@ class _TurnManager {
      * @returns Players who are related to this game,
      * Pier, Target, Challenger
      */
-    getShareholders(
+    public static getShareholders(
         ctx: RoomContextType
     ): [Player | null, Player | null, Player | null] {
         const action = ctx.room.game.action;
@@ -128,7 +128,5 @@ class _TurnManager {
         const challenger = getNullable<Player>(playerMap, action.challengerId);
         return [pier, target, challenger];
     }
-    
-}
 
-export const TurnManager = new _TurnManager();
+}

@@ -136,5 +136,6 @@
   "_music_success_enqueue": "님이 1곡을 넣었습니다.",
   "_music_queue_full": "신청곡 큐가 다 찼습니다.",
   "_music_personal_full": "너무 많은곡을 신청하셨습니다. ",
+  "_cmd_kick_player": "$0님은 잠수로 판단되어 방장이 쪼까보냈습니다.",
   "dymmy": "dummy"
 }

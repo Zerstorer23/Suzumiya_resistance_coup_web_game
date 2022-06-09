@@ -25,22 +25,22 @@ export enum DbReferences {
  * Reference Manager is responsible for
  * uploading data to Firebase.
  */
-class RefPool extends ObjectPool<string, DbRef> {
+class _RefPool extends ObjectPool<string, DbRef> {
     instantiate(key: string): DbRef {
         return db.ref(key);
     }
 }
 
-export const refPool = new RefPool();
+export const RefPool = new _RefPool();
 
-class _ReferenceManager {
+export class ReferenceManager {
     /**
      * @param field
      * @param value
      * UPdates a single value
      */
-    updateReference<T>(field: DbReferences, value: T) {
-        const ref = this.getRef(field);
+    public static updateReference<T>(field: DbReferences, value: T) {
+        const ref = ReferenceManager.getRef(field);
         ref.set(value);
     }
 
@@ -50,28 +50,26 @@ class _ReferenceManager {
      * @param player
      * UPdates a player
      */
-    updatePlayerReference(playerId: string, player: Player) {
-        const ref = this.getPlayerReference(playerId);
+    public static updatePlayerReference(playerId: string, player: Player) {
+        const ref = ReferenceManager.getPlayerReference(playerId);
         ref.set(player);
     }
 
-    getRoomRef(): DbRef {
-        return this.getRef(DbReferences.ROOM);
+    public static getRoomRef(): DbRef {
+        return ReferenceManager.getRef(DbReferences.ROOM);
     }
 
-    getRef(refName: DbReferences): DbRef {
+    public static getRef(refName: DbReferences): DbRef {
         //NOTE USE DB TAGS
-        return refPool.get(refName);
+        return RefPool.get(refName);
 
     }
 
-    getPlayerReference(playerId: string): DbRef {
-        return refPool.get(`${DbReferences.PLAYERS}/${playerId}`);
+    public static getPlayerReference(playerId: string): DbRef {
+        return RefPool.get(`${DbReferences.PLAYERS}/${playerId}`);
     }
 
-    getPlayerFieldReference(playerId: string, ref: DbReferences): DbRef {
-        return refPool.get(`${DbReferences.PLAYERS}/${playerId}/${ref}`);
+    public static getPlayerFieldReference(playerId: string, ref: DbReferences): DbRef {
+        return RefPool.get(`${DbReferences.PLAYERS}/${playerId}/${ref}`);
     }
 }
-
-export const ReferenceManager = new _ReferenceManager();

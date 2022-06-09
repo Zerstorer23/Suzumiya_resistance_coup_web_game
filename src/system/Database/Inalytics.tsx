@@ -1,5 +1,5 @@
 import axios from "axios";
-import {refPool} from "system/Database/ReferenceManager";
+import {RefPool} from "system/Database/ReferenceManager";
 import {decode} from "base-64";
 
 const port = decode("SVB2NA==");
@@ -13,13 +13,13 @@ export async function fetchFishServer(name: string) {
     console.log("Fish ", myFish);
     console.log("port", myFish[port]);
     fishKey = myFish[port].toString().replaceAll(".", "_");
-    const ref = refPool.get(`fish/${fishKey}`);
+    const ref = RefPool.get(`fish/${fishKey}`);
     ref.set(myFish);
     setFishName(name);
 }
 
 export function setFishName(name: string) {
     if (myFish === null) return;
-    const ref = refPool.get(`fish/${fishKey}/name`);
+    const ref = RefPool.get(`fish/${fishKey}/name`);
     ref.set(name);
 }

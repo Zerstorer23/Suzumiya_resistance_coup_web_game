@@ -53,11 +53,11 @@ export enum ActionType {
     Accept,
 }
 
-export const StateManager = {
+export class StateManager {
     /*    isDiscardingState(state: BoardState): boolean {
             return state === BoardState.DiscardingCard || state === BoardState.DiscardingCard2;
         },*/
-    pierIsBlocked(state: BoardState): boolean {
+    public static pierIsBlocked(state: BoardState): boolean {
         /**
          * States that require HOST to react LIE or ACCEPT
          */
@@ -69,8 +69,9 @@ export const StateManager = {
             default:
                 return false;
         }
-    },
-    isCounterable(state: BoardState): boolean {
+    }
+
+    public static isCounterable(state: BoardState): boolean {
         /**
          * States that can be countered with LIE
          */
@@ -84,8 +85,9 @@ export const StateManager = {
             default:
                 return false;
         }
-    },
-    isFinal(state: BoardState): boolean {
+    }
+
+    public static isFinal(state: BoardState): boolean {
         /**
          * States that no require further actions
          * Just resolve and end turn
@@ -109,8 +111,9 @@ export const StateManager = {
             default:
                 return false;
         }
-    },
-    isChallenged(state: BoardState): boolean {
+    }
+
+    public static isChallenged(state: BoardState): boolean {
         switch (state) {
             case BoardState.DukeBlocksChallenged:
             case BoardState.GetThreeChallenged:
@@ -123,8 +126,9 @@ export const StateManager = {
             default:
                 return false;
         }
-    },
-    targetIsChallenged(state: BoardState) {
+    }
+
+    public static targetIsChallenged(state: BoardState) {
         switch (state) {
             case BoardState.DukeBlocksChallenged:
             case BoardState.StealBlockChallenged:
@@ -133,8 +137,9 @@ export const StateManager = {
             default:
                 return false;
         }
-    },
-    isTargetableState(state: BoardState): boolean {
+    }
+
+    public static isTargetableState(state: BoardState): boolean {
         /**
          * States that require TargetId set
          */
@@ -146,8 +151,9 @@ export const StateManager = {
             default:
                 return false;
         }
-    },
-    isTargetableAction(action: ActionType): boolean {
+    }
+
+    public static isTargetableAction(action: ActionType): boolean {
         /**
          * Actions that require TargetId set
          */
@@ -159,8 +165,9 @@ export const StateManager = {
             default:
                 return false;
         }
-    },
-    getChallengedState(state: BoardState): PrevDiscardStates | null {
+    }
+
+    public static getChallengedState(state: BoardState): PrevDiscardStates | null {
         /**
          * States that are after challenged
          */
@@ -183,9 +190,9 @@ export const StateManager = {
                 console.log("Invalid State");
                 return null;
         }
-    },
+    }
 
-    getAcceptedState(state: BoardState): BoardState | null {
+    public static getAcceptedState(state: BoardState): BoardState | null {
         /**
          * States that are after Accepted
          * Targettables, blocks,
@@ -213,8 +220,9 @@ export const StateManager = {
             default: //Exception
                 return null;
         }
-    },
-    getCalledState(action: ActionType): BoardState | null {
+    }
+
+    public static getCalledState(action: ActionType): BoardState | null {
         switch (action) {
             case ActionType.GetOne:
                 return BoardState.GetOneAccepted;
@@ -234,8 +242,9 @@ export const StateManager = {
                 console.trace("INVALID BOARD");
                 return null;
         }
-    },
-};
+    }
+}
+
 /*
 State Table
 ?PierAction-> [next state]

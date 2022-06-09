@@ -136,5 +136,6 @@
   "_music_success_enqueue": " enqueued a song",
   "_music_queue_full": " queue is full",
   "_music_personal_full": " you put too many",
+  "_cmd_kick_player": "$0 is kicked out",
   "dymmy": "dummy"
 }

@@ -4,7 +4,6 @@ import {playerClaimedRole} from "system/Database/RoomDatabase";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {CardRole} from "system/cards/Card";
-import {DS} from "system/Debugger/DS";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {ChatFormat, sendChat} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
 import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
@@ -33,7 +32,7 @@ class _TransitionManager {
             console.trace("Aborted state");
             return;
         }
-        DS.logTransition("Next state " + newState.board);
+        console.log("Next state " + newState.board);
         if (result === TransitionAction.EndTurn) {
             const res = this.setEndTurn(ctx, newAction, newState);
             if (!res) return;
@@ -83,8 +82,6 @@ class _TransitionManager {
             killInfo.challengedCard = susCard;
             killInfo.nextState = ChallengeState.Notify;
             newAction.param = killInfo;
-            DS.logTransition("Move to challenged state " + board);
-            DS.logTransition(newAction);
             return TransitionAction.Success;
         });
     }
@@ -99,7 +96,6 @@ class _TransitionManager {
             const board = StateManager.getAcceptedState(ctx.room.game.state.board);
             if (board === null) return TransitionAction.Abort;
             newState.board = board;
-            DS.logTransition("Move to Accepted " + board);
             return TransitionAction.Success;
         });
     }

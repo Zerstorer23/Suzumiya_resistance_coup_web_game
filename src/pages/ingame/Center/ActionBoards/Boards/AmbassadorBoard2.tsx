@@ -6,15 +6,14 @@ import {DeckManager} from "system/cards/DeckManager";
 import {CardDeck} from "system/cards/Card";
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import {TurnManager} from "system/GameStates/TurnManager";
-import TransitionManager, {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
 import {useTranslation} from "react-i18next";
 import useDefaultAction from "system/hooks/useDefaultAction";
 import {cardPool} from "system/cards/CardPool";
-import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {ActionType} from "system/GameStates/States";
 import {actionPool} from "system/GameStates/ActionInfo";
 import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 
 export default function AmbassadorBoard2(): JSX.Element {
     const ctx = useContext(RoomContext);
@@ -36,7 +35,7 @@ export default function AmbassadorBoard2(): JSX.Element {
         onMakeAction(cardIndicesArr[idx]);
     }, [keyInfo]);
     useDefaultAction(ctx, localCtx, () => { // AFK system
-        endTurn(ctx);
+        TransitionManager.pushEndTurn(ctx);
     });
 
     useEffect(() => {//When action is made...
@@ -58,7 +57,7 @@ export default function AmbassadorBoard2(): JSX.Element {
         const unSelected = cardIndicesArr.filter((value) => !selectedArr.includes(value));//Find the other unselected cards
         if (unSelected.length !== 2 || selectedArr.length !== 2) {//Cannot happen
             console.trace("Somethings wrong");
-            endTurn(ctx);
+            TransitionManager.pushEndTurn(ctx);
         }
         const newDeck = [...deck];//Copy deck
         newDeck[myPlayer.icard] = deck[selectedArr[0]];
@@ -66,7 +65,7 @@ export default function AmbassadorBoard2(): JSX.Element {
         newDeck[topIndex] = deck[unSelected[0]];
         newDeck[topIndex + 1] = deck[unSelected[1]];
         ReferenceManager.updateReference(DbReferences.GAME_deck, newDeck);//Update
-        endTurn(ctx);//End
+        TransitionManager.pushEndTurn(ctx);//End
     }, [selectedArr]);
 
     const onMakeAction = (index: number) => {
@@ -86,12 +85,6 @@ export default function AmbassadorBoard2(): JSX.Element {
 
 function findDeadAfter(deck: CardDeck, index: number): number {
     return (DeckManager.isDead(deck[index])) ? index : index + 1;
-}
-
-function endTurn(ctx: RoomContextType) {
-    TransitionManager.prepareAndPushState(ctx, () => {
-        return TransitionAction.EndTurn;
-    });
 }
 
 function generatePanels(cardIndicesArr: number[], selectedArr: number[], deck: CardDeck, onMakeAction: any): [JSX.Element[], JSX.Element[]] {

@@ -1,4 +1,4 @@
-import {Fragment, useContext, useEffect} from "react";
+import {Fragment, useContext, useEffect, useState} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import PlayersPanel from "./Center/PlayersPanel";
 import ChatComponent from "./chat/ChatComponent";
@@ -9,27 +9,37 @@ import {useHistory} from "react-router-dom";
 import {Navigation} from "App";
 
 export default function Lobby() {
-    const context = useContext(RoomContext);
+    const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const history = useHistory();
     const myId = localCtx.getVal(LocalField.Id);
-    const turns = context.room.game.state.turn;
+    const turns = ctx.room.game.state.turn;
 
+    const [valid, setValid] = useState(false);
     useEffect(() => {
         if (myId === null) {
+            setValid(false);
             history.replace(Navigation.Loading);
+            return;
         }
+        if (!ctx.room.playerMap.has(myId)) {
+            setValid(false);
+            localCtx.setVal(LocalField.Id, null);
+            history.replace(Navigation.Loading);
+            return;
+        }
+        setValid(true);
         if (turns >= 0) {
             history.replace(Navigation.InGame);
+            return;
         }
     }, [turns, myId]);
-    const panelElem = (
-        <div className={classes.container}>
-            {/* <p>{JSON.stringify(context.room)}</p> */}
+
+    return (<Fragment>
+        {(valid) && <div className={classes.container}>
             <LobbySettings/>
             <PlayersPanel/>
             <ChatComponent/>
-        </div>
-    );
-    return (myId === null) ? <Fragment/> : panelElem;
+        </div>}
+    </Fragment>);
 }
