@@ -22,8 +22,8 @@ export default function App(): JSX.Element {
           <LoadingPage />
         </Route>
         <Route path={Navigation.Lobby} exact>
-          {/* <Lobby /> */}
-          <IP />
+          <Lobby />
+          {/* <IP /> */}
         </Route>
         <Route path={Navigation.InGame} exact>
           <InGame />
