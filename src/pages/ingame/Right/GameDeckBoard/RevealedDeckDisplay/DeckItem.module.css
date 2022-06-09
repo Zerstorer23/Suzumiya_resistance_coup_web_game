@@ -6,20 +6,27 @@
     width: 30%;
 }
 
+.numDeadPanel {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
 .numDead {
-    display: inline;
-    font-size: 2rem;
+    font-size: 2.5rem;
+    font-weight: bold;
+    align-self: start;
 }
 
 .numTotal {
-    display: inline;
-    font-size: 0.5rem;
+    font-size: 1.5rem;
+    align-self: end;
+    justify-self: end;
 }
 
-.itemDesc {
-    padding-left: 0.5rem;
+.deckCounter {
     font-size: 1.2rem;
-    text-align: left;
+    text-align: center;
 }
 
 .itemDescPanel {

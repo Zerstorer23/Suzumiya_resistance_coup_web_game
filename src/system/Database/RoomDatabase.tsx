@@ -20,6 +20,8 @@ export enum DbReferences {
     MUSIC = "/music",
     MUSIC_queue = "/music/queue",
     MUSIC_current = "/music/current",
+    PLAYER_name = "name",
+    PLAYER_isReady = "isReady",
 }
 
 /**
@@ -65,6 +67,9 @@ export const ReferenceManager = {
     },
     getPlayerReference(playerId: string): DbRef {
         return queryRef(`${DbReferences.PLAYERS}/${playerId}`);
+    },
+    getPlayerFieldReference(playerId: string, ref: DbReferences): DbRef {
+        return queryRef(`${DbReferences.PLAYERS}/${playerId}/${ref}`);
     },
 };
 

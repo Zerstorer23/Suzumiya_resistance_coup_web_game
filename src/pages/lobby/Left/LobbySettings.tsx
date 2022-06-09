@@ -1,35 +1,32 @@
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import gc from "global.module.css";
 import classes from "./LobbySettings.module.css";
 import RoomContext from "system/context/roomInfo/room-context";
-import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
-import {Player} from "system/GameStates/GameTypes";
-import {ReferenceManager} from "system/Database/RoomDatabase";
+import LocalContext from "system/context/localInfo/local-context";
+import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {useTranslation} from "react-i18next";
 import {formatInsert} from "lang/i18nHelper";
-import animClasses from "animation.module.css";
+import {TurnManager} from "system/GameStates/TurnManager";
 
 const MAX_NAME_LENGTH = 16;
 export default function LobbySettings() {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const {t} = useTranslation();
-    const [flashCss, setCss] = useState("");
-    const myId: string | null = localCtx.getVal(LocalField.Id);
-    if (myId === null) {
+    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
+    if (myId === null || myPlayer === undefined) {
         return <p>Need to reload</p>;
     }
-    const myPlayer: Player = ctx.room.playerMap.get(myId)!;
-    const myRef = ReferenceManager.getPlayerReference(myId);
 
     async function onFinishEditName(event: any) {
         let newName: string = event.target.value;
         if (newName.length <= 1) return;
+        if (myPlayer.isReady) return;
         if (newName.length > MAX_NAME_LENGTH) {
             newName = newName.substring(0, MAX_NAME_LENGTH);
         }
-        myPlayer.name = newName;
-        myRef.set(myPlayer);
+        const myNameRef = ReferenceManager.getPlayerFieldReference(myId, DbReferences.PLAYER_name);
+        myNameRef.set(newName);
     }
 
 
@@ -39,10 +36,6 @@ export default function LobbySettings() {
         /* Copy the text inside the text field */
         navigator.clipboard.writeText(myUrl);
         /* Alert the copied text */
-        setCss(animClasses.flash);
-        setTimeout(() => {
-            setCss("");
-        }, 100);
     }
 
     return (
@@ -50,12 +43,12 @@ export default function LobbySettings() {
             <div className={classes.settingsContainer}>
                 <p className={classes.nameHeader}>{t("_name")}</p>
                 <input
-                    className={classes.fieldType}
+                    className={`${classes.fieldType} ${myPlayer.isReady && classes.isDisabled}`}
                     type="text"
                     onBlur={onFinishEditName}
                     defaultValue={myPlayer.name}
                 ></input>
-                <button className={`${classes.fieldType} ${flashCss}`}
+                <button className={`${classes.fieldType}`}
                         onClick={onClickCopy}>{t("_copy_link")}</button>
             </div>
             <div className={classes.creditsContainer}>

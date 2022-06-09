@@ -126,5 +126,11 @@
   "_is_comforted": "$b$0$b is somewhat comforted",
   "_music": "Music",
   "_call_get_one": "$b$0$b chose $b$1$b and received 1 coin",
+  "_seems_afk": "$b$0$b seems afk end turn",
+  "_is_ready": "Ready",
+  "_not_enough_ready": "Need more than half ready",
+  "_on_ready": "Ready",
+  "_is_host": "HOST",
+  "_off_ready": "Unready",
   "dymmy": "dummy"
 }

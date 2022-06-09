@@ -14,19 +14,11 @@ export default function ActionBoards(props: Props): JSX.Element {
     const [boardElem, setBoardElem] = useState(<BaseBoard/>);
 
     const board = ctx.room.game.state.board;
-
+    const turn = ctx.room.game.state.turn;
     useEffect(() => {
-        // if (board === BoardState.DiscardingCard) return;
         const elem = getBoardElemFromRoom(ctx, localCtx);
         setBoardElem((prev) => elem);
-    }, [board, ctx.room.playerMap.size]);
-
-    /*    useEffect(() => {
-            if (board !== BoardState.DiscardingCard) return;
-            const elem = getBoardElemFromRoom(ctx, localCtx);
-            setBoardElem((prev) => elem);
-        }, [board, ctx.room.game.action]);*/
-
+    }, [board, turn, ctx.room.playerMap.size]);
 
     return (
         <div className={`${gc.round_border} ${classes.container}`}>{boardElem}</div>

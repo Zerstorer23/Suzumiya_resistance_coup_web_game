@@ -5,6 +5,7 @@ import animClasses from "animation.module.css";
 export enum AnimType {
     FadeIn = animClasses.fadeIn,
     SlideRight = animClasses.slideRight,
+    ZoomIn = animClasses.zoomIn,
 }
 
 export default function useAnimFocus<T>(value: T, animType: AnimType) {

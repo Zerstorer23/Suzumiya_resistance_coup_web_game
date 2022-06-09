@@ -128,6 +128,10 @@ export function pushMusicToQueue(musicCtx: MusicContextType, url: string, reques
     if (myList.length >= MAX_PERSONAL_QUEUE) return MusicResponse.Overloading;
     if (musicCtx.list.length >= MAX_MUSIC_QUEUE) return MusicResponse.FullQueue;
     const urlToken = url.split("=");
+    //TODO
+    // ?vid-ddd?list=dssd
+    // ?list=dd?vid=ddd
+    // https://youtu.be/LbFoEnC0zEw
     const id = urlToken[urlToken.length - 1];
     if (id.length !== 11) return MusicResponse.InvalidURL;
     const minfo: MusicEntry = {

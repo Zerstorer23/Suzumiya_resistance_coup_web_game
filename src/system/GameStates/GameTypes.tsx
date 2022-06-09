@@ -3,7 +3,7 @@ import {ActionType, BoardState} from "system/GameStates/States";
 
 export type Player = {
     isSpectating: boolean; //may not need it
-    lastActive: Object | number;
+    isReady: boolean
     lastClaimed: CardRole;
     name: string;
     icard: number;

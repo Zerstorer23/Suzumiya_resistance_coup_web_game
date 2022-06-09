@@ -54,7 +54,8 @@ export default function ChatModule() {
         if (firstChar === "!") {
             handleMusic(chatCtx, musicCtx, theRest, myId, myPlayer);
         } else if (firstChar === "/") {
-
+            //TODO
+            //handleAdminFUnction
         } else {
             return false;
         }

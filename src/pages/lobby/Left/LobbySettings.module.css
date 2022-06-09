@@ -28,16 +28,16 @@
 }
 
 .fieldType {
-    height: 2.5rem;
-    width: 75%;
+    height: 2rem;
+    width: 100%;
     justify-self: center;
     text-align: center;
     align-content: center;
     margin: 0.2rem 0.2rem;
 }
 
-@keyframes flash {
-    from {
-
-    }
+.isDisabled {
+    pointer-events: none;
+    background-color: #dddddd;
 }
+

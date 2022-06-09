@@ -1,5 +1,4 @@
 import {Player} from "system/GameStates/GameTypes";
-import firebase from "firebase/compat/app";
 import {randomInt} from "system/GameConstants";
 import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import {TurnManager} from "system/GameStates/TurnManager";
@@ -13,7 +12,7 @@ export function getDefaultName(): string {
 export function getDefaultPlayer() {
     const newPlayer: Player = {
         isSpectating: false,
-        lastActive: firebase.database.ServerValue.TIMESTAMP,
+        isReady: false,
         lastClaimed: CardRole.None,
         name: getDefaultName(),
         icard: -2,

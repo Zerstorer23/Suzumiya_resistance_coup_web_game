@@ -1,4 +1,4 @@
-import {Fragment, useContext} from "react";
+import React, {Fragment, useContext, useEffect, useRef} from "react";
 import gc from "global.module.css";
 import classes from "./PlayerBoard.module.css";
 import PlayerItem from "./PlayerItem/PlayerItem";
@@ -11,18 +11,26 @@ export default function PlayerBoard(): JSX.Element {
     const playerMap = ctx.room.playerMap;
     const sortedList: string[] = getSortedListFromMap(playerMap);
     const {t} = useTranslation();
+    const currPlayerRef = useRef<HTMLDivElement>(null);
+    const turn = ctx.room.game.state.turn;
+    useEffect(() => {
+        currPlayerRef.current!.scrollIntoView({behavior: "smooth"});
+    }, [turn]);
     return (
         <Fragment>
             <div className={`${gc.round_border} ${classes.container}`}>
                 <p className={classes.header}>{t("_players")}</p>
                 <div className={classes.playersContainer}>
-                    {sortedList.map((playerId) => (
-                        <PlayerItem
-                            key={playerId}
-                            playerId={playerId}
-                            player={playerMap.get(playerId)!}
-                        />
-                    ))}
+                    {sortedList.map((playerId, index) => {
+                            return <Fragment key={playerId}>
+                                <PlayerItem
+                                    playerId={playerId}
+                                    player={playerMap.get(playerId)!}
+                                />
+                                {(index === turn) && <div ref={currPlayerRef}/>}
+                            </Fragment>;
+                        }
+                    )}
                 </div>
             </div>
         </Fragment>

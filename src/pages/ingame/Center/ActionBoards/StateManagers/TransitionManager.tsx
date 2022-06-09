@@ -45,11 +45,7 @@ export function prepareAndPushState(
 
 
 function setEndTurn(ctx: RoomContextType, newAction: GameAction, newState: TurnState): boolean {
-    DS.logTransition(`END TURN prev state = ${newState.board} / t ${newState.turn}`);
-    if (newState.board === BoardState.ChoosingBaseAction) {
-        console.trace("Cant end turn at state 0");
-        return false;
-    }
+    console.log(`END TURN prev state = ${newState.board} / t ${newState.turn}`);
     newState.board = BoardState.ChoosingBaseAction;
     newState.turn = TurnManager.getNextTurn(
         ctx.room.playerMap,
@@ -57,7 +53,7 @@ function setEndTurn(ctx: RoomContextType, newAction: GameAction, newState: TurnS
         newState.turn
     );
     resetAction(newAction, ctx.room.playerList[newState.turn]);
-    DS.logTransition(`next turn state = ${newState.board} / t ${newState.turn} / ${newAction.pierId}`);
+    console.log(`next turn state = ${newState.board} / t ${newState.turn} / ${newAction.pierId}`);
     return true;
 }
 

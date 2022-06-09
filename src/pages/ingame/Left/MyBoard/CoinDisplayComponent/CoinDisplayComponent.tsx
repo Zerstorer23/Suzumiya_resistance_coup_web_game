@@ -13,7 +13,6 @@ export default function CoinDisplayComponent(props: Props) {
     return (
         <HorizontalLayout className={classes.container}>
             <p className={classes.display}>{insert(t, "_coin_count", numCoins)}</p>
-
             <div className={classes.coinBox}>
                 {[...Array(numMax)].map((_, index) => {
                     return (

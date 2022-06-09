@@ -76,6 +76,7 @@ export function setStartingRoom(room: Room) {
         player.coins = (DS.abundantCoins) ? 7 : 2;
         player.icard = index * 2;
         player.isSpectating = false;
+        player.isReady = false;
         player.lastClaimed = CardRole.None;
         ReferenceManager.updatePlayerReference(playerId, player);
     });

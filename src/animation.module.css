@@ -19,6 +19,10 @@
     animation: flash 300ms ease-out forwards;
 }
 
+.zoomIn {
+    animation: zoom-into 500ms ease-out forwards;
+}
+
 .gone {
     display: none;
 }
@@ -82,5 +86,15 @@
     to {
         opacity: 1;
         background-color: -moz-default-background-color;
+    }
+}
+
+
+@keyframes zoom-into {
+    from {
+        transform: scale(3);
+    }
+    to {
+        transform: scale(1);
     }
 }
