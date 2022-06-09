@@ -8,11 +8,36 @@
     font-size: 1rem;
 }
 
+.settingsContainer {
+    width: 100%;
+    height: 50%;
+    border-bottom: navy groove 0.2rem;
+}
+
+.creditsContainer {
+    width: 100%;
+    height: 50%;
+}
+
+.nameHeader {
+    width: 100%;
+    text-align: left;
+    padding-left: 1rem;
+    transform: translateY(30%);
+    font-size: 1.4rem;
+}
+
 .fieldType {
-    height: 2rem;
-    width: 50%;
+    height: 2.5rem;
+    width: 75%;
     justify-self: center;
     text-align: center;
     align-content: center;
     margin: 0.2rem 0.2rem;
+}
+
+@keyframes flash {
+    from {
+
+    }
 }

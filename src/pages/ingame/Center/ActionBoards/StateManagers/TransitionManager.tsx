@@ -1,4 +1,4 @@
-import {ChallengeState, GameAction, KillInfo, TurnState,} from "system/GameStates/GameTypes";
+import {ChallengeState, GameAction, KillInfo, Player, TurnState,} from "system/GameStates/GameTypes";
 import {GameManager} from "system/GameStates/GameManager";
 import {DbReferences, playerClaimedRole, ReferenceManager} from "system/Database/RoomDatabase";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
@@ -6,7 +6,7 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import {CardRole} from "system/cards/Card";
 import {DS} from "system/Debugger/DS";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
-import {ChatFormat, sendChat} from "system/context/chatInfo/ChatContextProvider";
+import {ChatFormat, sendChat} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
 
 
 export enum TransitionAction {
@@ -34,7 +34,11 @@ export function prepareAndPushState(
     if (result === TransitionAction.EndTurn) {
         const res = setEndTurn(ctx, newAction, newState);
         if (!res) return;
-        sendChat(ChatFormat.announcement, "", `${ctx.room.playerMap.get(ctx.room.playerList[newState.turn])}'s turn`);
+
+        const nextPlayer = ctx.room.playerMap.get(ctx.room.playerList[newState.turn]);
+        if (nextPlayer !== undefined) {
+            sendChat(ChatFormat.announcement, "", `${nextPlayer.name}님의 턴`);
+        }
     }
     pushActionState(newAction, newState);
 }
@@ -98,8 +102,8 @@ export function pushIsALieState(ctx: RoomContextType, challengerId: string) {
         const susCard = inferLieCard(ctx.room.game.state.board, newAction);
         if (susCard === CardRole.None) return TransitionAction.Abort;
         //We dont know who target is yet.
-        const killInfo = GameManager.createKillInfo(ActionType.IsALie, "");
-        killInfo.card = susCard;
+        const killInfo = GameManager.createKillInfo(ActionType.IsALie, board, "");
+        killInfo.challengedCard = susCard;
         killInfo.nextState = ChallengeState.Notify;
         newAction.param = killInfo;
         DS.logTransition("Move to challenged state " + board);
@@ -146,19 +150,22 @@ export function pushCalledState(
     ctx: RoomContextType,
     action: ActionType,
     myId: string,
+    myPlayer: Player,
     targetId = ""
 ) {
     prepareAndPushState(ctx, (newAction, newState) => {
         const newBoard = StateManager.getCalledState(action);
         if (newBoard === null) return TransitionAction.Abort;
-        playerClaimedRole(myId, ctx.room.playerMap.get(myId)!, action);
+        playerClaimedRole(myId, myPlayer, action);
         newState.board = newBoard;
         newAction.pierId = myId;
         newAction.targetId = targetId;
-        DS.logTransition(myId + " Move to Called " + newBoard);
-        DS.logTransition(ctx.room);
-        DS.logTransition(newState);
-        DS.logTransition(newAction);
+        console.log("New state = ", newState);
+        if (newBoard === BoardState.CalledCoup) {
+            newAction.param = GameManager.createKillInfo(ActionType.Coup, newBoard, targetId);
+            payCost(ctx, newAction);
+        }
+
         return TransitionAction.Success;
     });
 }
@@ -187,8 +194,6 @@ export function pushPrepareDiscarding(
         newState.board = BoardState.DiscardingCard;
         newAction.param = killInfo;
         payCost(ctx, newAction);
-        DS.logTransition("Move to Discarding ");
-        console.log(newAction);
         return TransitionAction.Success;
     });
 }

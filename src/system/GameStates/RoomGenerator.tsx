@@ -1,5 +1,4 @@
 import {Game, GameAction, Player, PlayerMap, Room, RoomHeader, TurnState,} from "system/GameStates/GameTypes";
-import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 import {getRandomSeed} from "system/GameConstants";
 import {BoardState} from "system/GameStates/States";
@@ -8,6 +7,7 @@ import {DeckManager} from "system/cards/DeckManager";
 import {CardRole} from "system/cards/Card";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {GameManager} from "system/GameStates/GameManager";
+import {DS} from "system/Debugger/DS";
 
 export function getDefaultAction(): GameAction {
     return {
@@ -15,7 +15,6 @@ export function getDefaultAction(): GameAction {
         targetId: "",
         challengerId: "",
         param: "",
-        time: firebase.database.ServerValue.TIMESTAMP,
     };
 }
 
@@ -74,9 +73,10 @@ export function setStartingRoom(room: Room) {
     //Set Player Cards
     room.playerList.forEach((playerId, index) => {
         const player = room.playerMap.get(playerId)!;
-        player.coins = 2;
+        player.coins = (DS.abundantCoins) ? 7 : 2;
         player.icard = index * 2;
         player.isSpectating = false;
+        player.lastClaimed = CardRole.None;
         ReferenceManager.updatePlayerReference(playerId, player);
     });
     //Set Room

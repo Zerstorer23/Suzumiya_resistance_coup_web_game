@@ -4,7 +4,7 @@ import {CardRole} from "system/cards/Card";
 import {IProps} from "system/types/CommonTypes";
 import {Fragment, useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
-import {CardPool} from "system/cards/CardPool";
+import {cardPool} from "system/cards/CardPool";
 import {DeckManager} from "system/cards/DeckManager";
 import {useTranslation} from "react-i18next";
 import {insert} from "lang/i18nHelper";
@@ -15,10 +15,9 @@ export default function DeckItem(props: Prop): JSX.Element {
     const {t} = useTranslation();
     const deck = ctx.room.game.deck;
     const role = props.card;
-    const card = CardPool.getCard(role);
+    const card = cardPool.get(role);
     const deckTop = DeckManager.peekTopIndex(ctx);
     let counterText;
-    //TODO do the iteration here
     if (role === CardRole.None) {
         counterText = <Fragment> {
             insert(t, "_cin_deck", (deck.length - deckTop))}

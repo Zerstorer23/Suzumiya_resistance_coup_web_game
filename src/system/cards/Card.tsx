@@ -1,5 +1,7 @@
 import get, {Images} from "resources/Resources";
 import {DeckManager} from "system/cards/DeckManager";
+import {Fragment} from "react";
+import {formatInsert} from "lang/i18nHelper";
 
 /*
 Card role corresponding to database
@@ -22,6 +24,8 @@ export enum CardRole {
     DEAD_Contessa = "t",
     DEAD_Ambassador = "s",
 }
+
+export const BASE_CARDS = [CardRole.Duke, CardRole.Captain, CardRole.Assassin, CardRole.Ambassador, CardRole.Contessa];
 
 /*
 This class is intended to be used as UI purposed
@@ -89,28 +93,28 @@ export class Card {
                 return t("_unknown_name");
         }
     }
-    
 
-    getDesc(t: any) {
+
+    getDesc(t: any): JSX.Element {
         switch (this.cardRole) {
             case CardRole.Duke:
             case CardRole.DEAD_Duke:
-                return t("_duke_desc");
+                return formatInsert(t, "_duke_desc");
             case CardRole.Captain:
             case CardRole.DEAD_Captain:
-                return t("_captain_desc");
+                return formatInsert(t, "_captain_desc");
             case CardRole.Assassin:
             case CardRole.DEAD_Assassin:
-                return t("_assaassin_desc");
+                return formatInsert(t, "_assaassin_desc");
             case CardRole.Contessa:
             case CardRole.DEAD_Contessa:
-                return t("_contessa_desc");
+                return formatInsert(t, "_contessa_desc");
             case CardRole.Ambassador:
             case CardRole.DEAD_Ambassador:
-                return t("_ambassador_desc");
+                return formatInsert(t, "_ambassador_desc");
             case CardRole.None:
             default:
-                return "";
+                return <Fragment/>;
         }
     }
 }

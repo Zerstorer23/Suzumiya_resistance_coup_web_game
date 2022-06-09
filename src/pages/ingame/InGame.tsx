@@ -7,95 +7,105 @@ import MainTableBoard from "./Center/MainTableBoard/MainTableBoard";
 import ActionBoards from "./Center/ActionBoards/ActionBoards";
 import GameDeckBoard from "./Right/GameDeckBoard/GameDeckBoard";
 import InGameChatBoard from "./Right/ChatBoard/InGameChatBoard";
-import { useContext, useEffect, useState } from "react";
+import {useContext, useEffect, useState} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
-import LocalContext, {
-  LocalField,
-} from "system/context/localInfo/local-context";
-import { useHistory } from "react-router-dom";
-import { DbReferences, ReferenceManager } from "system/Database/RoomDatabase";
+import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
+import {useHistory} from "react-router-dom";
+import {DbReferences, ReferenceManager} from "system/Database/RoomDatabase";
 import GameOverPopUp from "pages/components/ui/PopUp/PopUp";
-import { Navigation } from "App";
-import { TurnManager } from "system/GameStates/TurnManager";
-import { setMyTimer } from "pages/components/ui/MyTimer/MyTimer";
-import { WaitTime } from "system/GameConstants";
-import { TurnState } from "system/GameStates/GameTypes";
+import {Navigation} from "App";
+import {TurnManager} from "system/GameStates/TurnManager";
+import {forceSetTimer} from "pages/components/ui/MyTimer/MyTimer";
+import {TurnState} from "system/GameStates/GameTypes";
+import {DS} from "system/Debugger/DS";
+import {pushEndGame} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import ImagePage from "pages/components/ui/ImagePage/ImagePage";
+import {Images} from "resources/Resources";
+import {WaitTime} from "system/GameConstants";
+import {DeckManager} from "system/cards/DeckManager";
 
 export default function InGame() {
-  const ctx = useContext(RoomContext);
-  const localCtx = useContext(LocalContext);
-  const history = useHistory();
-  const myId = localCtx.getVal(LocalField.Id);
-  const [roomCode, setRoomCode] = useState<number>(0);
-  const [isGameOver, setIsGameOver] = useState<boolean>(false);
-  const amHost = TurnManager.amHost(ctx, localCtx);
+    const ctx = useContext(RoomContext);
+    const localCtx = useContext(LocalContext);
+    const history = useHistory();
+    const myId = localCtx.getVal(LocalField.Id);
+    const [roomCode, setRoomCode] = useState<number>(0);
+    const [isGameOver, setIsGameOver] = useState<boolean>(false);
+    const amHost = TurnManager.amHost(ctx, localCtx);
 
-  function checkSanity() {
-    if (myId === ctx.room.header.hostId) {
-      ReferenceManager.updateReference(
-        DbReferences.GAME_action,
-        ctx.room.game.action
-      );
-      ReferenceManager.updateReference(
-        DbReferences.GAME_state,
-        ctx.room.game.state
-      );
-      ReferenceManager.updateReference(DbReferences.HEADER_hostId, myId);
+    function checkSanity(): boolean {
+        if (!amHost) return false;
+        ReferenceManager.updateReference(
+            DbReferences.GAME_action,
+            ctx.room.game.action
+        );
+        ReferenceManager.updateReference(
+            DbReferences.GAME_state,
+            ctx.room.game.state
+        );
+        ReferenceManager.updateReference(DbReferences.HEADER_hostId, myId);
+        const alive = DeckManager.countAlivePlayers(ctx);
+        if (!DS.StrictRules || alive > 1) return true;
+        setIsGameOver(true);
+        pushEndGame(ctx, myId);
+        return true;
     }
-  }
 
-  useEffect(() => {
-    checkSanity();
-    setRoomCode((n) => n++);
-  }, [ctx.room.playerMap.size]);
-
-  useEffect(() => {
-    if (myId === null) {
-      history.replace(Navigation.Loading);
-    }
-  }, [myId, history]);
-  const turn = ctx.room.game.state.turn;
-  useEffect(() => {
-    if (turn === -2) {
-      setIsGameOver(true);
-      //Set timer 5 sec,
-      //If I am host,  change turn on expire
-      setMyTimer(localCtx, WaitTime.WaitReactions, () => {
-        if (amHost) {
-          const state: TurnState = {
-            turn: -1,
-            board: 0,
-          };
-          ReferenceManager.updateReference(DbReferences.GAME_state, state);
+    useEffect(() => {
+        const res = checkSanity();
+        if (!res) return;
+        setRoomCode((n) => n++);
+        const alive = DeckManager.countAlivePlayers(ctx);
+        if (alive <= 1) {
+            pushEndGame(ctx, myId);
         }
-      });
-    } else if (turn === -1) {
-      setIsGameOver(false);
-      history.replace(Navigation.Lobby);
+    }, [ctx.room.playerMap.size]);
+
+    useEffect(() => {
+        if (myId === null) {
+            history.replace(Navigation.Loading);
+        }
+    }, [myId, history]);
+    const turn = ctx.room.game.state.turn;
+    useEffect(() => {
+        if (turn === -2) {
+            setIsGameOver(true);
+            forceSetTimer(localCtx, WaitTime.WaitReactions, () => {
+                if (!amHost) return;
+                const state: TurnState = {turn: -1, board: 0,};
+                ReferenceManager.updateReference(DbReferences.GAME_state, state);
+            });
+        } else if (turn === -1) {
+            setIsGameOver(false);
+            history.replace(Navigation.Lobby);
+        }
+    }, [turn]);
+
+    if (myId === null) {
+        return <ImagePage imgSrc={Images.LoadingImg}/>;
     }
-  }, [turn]);
-
-  if (myId === null) {
-    return <p>Loading...</p>;
-  }
-
-  return (
-    <div className={classes.container}>
-      {isGameOver && <GameOverPopUp />}
-      <HorizontalLayout>
-        <VerticalLayout className={`${classes.leftPanel}`}>
-          <PlayerBoard />
-          <MyBoard />
-        </VerticalLayout>
-        <VerticalLayout className={`${classes.centerPanel}`}>
-          <MainTableBoard />
-          <ActionBoards code={roomCode} />
-        </VerticalLayout>
-        <VerticalLayout className={`${classes.rightPanel}`}>
-          <GameDeckBoard />
-          <InGameChatBoard />
-        </VerticalLayout>
-      </HorizontalLayout>
-    </div>
-  );
+    if (isGameOver) {
+        return <div className={classes.container}>
+            <GameOverPopUp/>
+            <ImagePage imgSrc={Images.LoadingImg}/>;
+        </div>;
+    }
+    return (
+        <div className={classes.container}>
+            <HorizontalLayout>
+                <VerticalLayout className={`${classes.leftPanel}`}>
+                    <PlayerBoard/>
+                    <MyBoard/>
+                </VerticalLayout>
+                <VerticalLayout className={`${classes.centerPanel}`}>
+                    <MainTableBoard/>
+                    <ActionBoards code={roomCode}/>
+                </VerticalLayout>
+                <VerticalLayout className={`${classes.rightPanel}`}>
+                    <GameDeckBoard/>
+                    <InGameChatBoard/>
+                </VerticalLayout>
+            </HorizontalLayout>
+        </div>
+    );
 }

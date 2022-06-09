@@ -1,12 +1,13 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
 import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
-import {useContext, useEffect, useState} from "react";
+import {Fragment, useContext, useEffect, useState} from "react";
 import LocalContext, {LocalField,} from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
-import {ActionInfo} from "system/GameStates/ActionInfo";
+import {actionPool} from "system/GameStates/ActionInfo";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
+import {useTranslation} from "react-i18next";
 /*
     case BoardState.CalledGetThree:
     case BoardState.CalledChangeCards:
@@ -27,9 +28,16 @@ export default function CounterBoard(): JSX.Element {
     const localCtx = useContext(LocalContext);
     const myId = localCtx.getVal(LocalField.Id);
     const board = ctx.room.game.state.board;
+    const gameAction = ctx.room.game.action;
     const [actions, setActions] = useState<ActionType[]>(actionsAcceptable);
+    const {t} = useTranslation();
     useEffect(() => {
-        setActions((StateManager.isBlockedState(board)) ? actionsAcceptable : actionsNonAcceptable);
+        let actions = actionsNonAcceptable;
+        if (StateManager.pierIsBlocked(board) && myId === gameAction.pierId) {
+            actions = actionsAcceptable;
+        }
+//        (StateManager.pierIsBlocked(board)) ? actionsAcceptable : actionsNonAcceptable
+        setActions(actions);
     }, [board]);
     const keyInfo = useShortcutEffect(actions.length);
     useEffect(() => {
@@ -38,7 +46,7 @@ export default function CounterBoard(): JSX.Element {
     }, [keyInfo]);
 
     function handleAccept(board: BoardState) {
-        if (!StateManager.isBlockedState(board)) return;
+        if (!StateManager.pierIsBlocked(board)) return;
         ActionManager.pushAcceptedState(ctx);
     }
 
@@ -56,19 +64,22 @@ export default function CounterBoard(): JSX.Element {
 
 
     return (
-        <div className={classes.container}>
-            {actions.map((action: ActionType, index: number) => {
-                return (
-                    <BaseActionButton
-                        key={index}
-                        index={index}
-                        param={new ActionInfo(action)}
-                        onClickButton={() => {
-                            onMakeAction(action);
-                        }}
-                    />
-                );
-            })}
-        </div>
+        <Fragment>
+            <div className={classes.header}>{t("_react_action")}</div>
+            <div className={classes.container}>
+                {actions.map((action: ActionType, index: number) => {
+                    return (
+                        <BaseActionButton
+                            key={index}
+                            index={index}
+                            param={actionPool.get(action)}
+                            onClickButton={() => {
+                                onMakeAction(action);
+                            }}
+                        />
+                    );
+                })}
+            </div>
+        </Fragment>
     );
 }

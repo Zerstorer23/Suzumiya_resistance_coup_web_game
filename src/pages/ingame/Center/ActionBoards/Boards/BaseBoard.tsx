@@ -4,18 +4,18 @@ import BaseActionButton, {
 import {Fragment, useContext, useEffect, useState} from "react";
 import LocalContext, {LocalContextType, LocalField,} from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
-import {ActionInfo} from "system/GameStates/ActionInfo";
+import {actionPool} from "system/GameStates/ActionInfo";
 import {ActionType, StateManager} from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {DS} from "system/Debugger/DS";
-import {GameManager} from "system/GameStates/GameManager";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {useShortcutEffect} from "system/hooks/useShortcut";
 import {PlayerMap} from "system/GameStates/GameTypes";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import MiniPlayerItem from "pages/ingame/Center/ActionBoards/Boards/PlayerItem/MiniPlayerItem";
 import useDefaultAction from "system/hooks/useDefaultAction";
+import {useTranslation} from "react-i18next";
 
 const actionsDefault = [
     ActionType.GetOne,
@@ -28,16 +28,16 @@ const actionsDefault = [
 ];
 const coupAction = [ActionType.None, ActionType.None, ActionType.None, ActionType.None, ActionType.Coup];
 
-function createActionBoards(actions: ActionType[], onMakeAction: any): JSX.Element {
+function createActionBoards(t: any, actions: ActionType[], onMakeAction: any): JSX.Element {
     return <Fragment>
-        <div className={classes.header}>Do my action...</div>
+        <div className={classes.header}>{t("_do_my_action")}</div>
         <div className={classes.container}>
             {actions.map((action: ActionType, index: number) => {
                 return (
                     <BaseActionButton
                         key={index}
                         index={index}
-                        param={new ActionInfo(action)}
+                        param={actionPool.get(action)}
                         onClickButton={() => {
                             onMakeAction(action);
                         }}
@@ -49,12 +49,12 @@ function createActionBoards(actions: ActionType[], onMakeAction: any): JSX.Eleme
 
 }
 
-function createTargetPlayerBoards(ctx: RoomContextType, localCtx: LocalContextType, onPlayerSelected: (id: string) => void): JSX.Element {
+function createTargetPlayerBoards(t: any, ctx: RoomContextType, localCtx: LocalContextType, onPlayerSelected: (id: string) => void): JSX.Element {
     const playerList: string[] = ctx.room.playerList;
     const playerMap: PlayerMap = ctx.room.playerMap;
     const myId = localCtx.getVal(LocalField.Id);
     return <Fragment>
-        <div className={classes.playerHeader}>Choose a target...</div>
+        <div className={classes.header}>{t("_do_my_action")}</div>
         <div className={classes.playersContainer}>
             {playerList.map((playerId, index) => {
                 if (playerId === myId) return <Fragment key={playerId}/>;
@@ -75,16 +75,15 @@ export default function BaseBoard(): JSX.Element {
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const [savedAction, setSaved] = useState(ActionType.None);
-
+    const {t} = useTranslation();
     const forceCoup = myPlayer.coins >= 10;
     const [actions, setButtons] = useState<ActionType[]>(actionsDefault);
     const [elem, setJSX] = useState(<Fragment/>);
     useEffect(() => {
-        console.log("Selecting? " + savedAction);
         if (savedAction === ActionType.None) {
-            setJSX(createActionBoards(actions, onMakeAction));
+            setJSX(createActionBoards(t, actions, onMakeAction));
         } else {
-            setJSX(createTargetPlayerBoards(ctx, localCtx, onPlayerSelected));
+            setJSX(createTargetPlayerBoards(t, ctx, localCtx, onPlayerSelected));
         }
     }, [savedAction, actions]);
 
@@ -108,8 +107,12 @@ export default function BaseBoard(): JSX.Element {
         }
     }, [keyInfo, actions]);
 
-    useDefaultAction(localCtx, () => {
-        onMakeAction(ActionType.GetOne);
+    useDefaultAction(ctx, localCtx, () => {
+        if (forceCoup) {
+            ActionManager.pushCalledState(ctx, ActionType.Coup, myId, myPlayer, myId);
+        } else {
+            onMakeAction(ActionType.GetOne);
+        }
     });
 
 
@@ -124,21 +127,16 @@ export default function BaseBoard(): JSX.Element {
     function onPlayerSelected(playerId: string) {
         if (!StateManager.isTargetableAction(savedAction)) return;
         console.log("Selected player " + playerId);
-        //Coup is special
-        if (savedAction === ActionType.Coup) {
-            ActionManager.pushPrepareDiscarding(ctx, GameManager.createKillInfo(ActionType.Coup, playerId));
-            return;
-        }
-        ActionManager.pushCalledState(ctx, savedAction, myId, playerId);
+        ActionManager.pushCalledState(ctx, savedAction, myId, myPlayer, playerId);
     }
 
 
     function onMakeAction(action: ActionType) {
         if (action === ActionType.None) return;
-        if (DS.StrictRules && getRequiredCoins(action) < myPlayer.coins) return;
+        if (DS.StrictRules && getRequiredCoins(action) > myPlayer.coins) return;
         const handled = handleTargetableAction(action);
         if (handled) return;
-        ActionManager.pushCalledState(ctx, action, myId);
+        ActionManager.pushCalledState(ctx, action, myId, myPlayer);
     }
 
     return (elem);

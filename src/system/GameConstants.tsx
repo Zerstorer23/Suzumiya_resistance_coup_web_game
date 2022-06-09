@@ -6,7 +6,7 @@ export var PING = 100;
  * Enum for Waiting times.
  */
 export enum WaitTime {
-    MakingDecision = 5,
+    MakingDecision = 15,
     WaitReactions = 5,
     WaitConfirms = 3,
 }
@@ -63,4 +63,8 @@ export function getNullable<T>(map: Map<any, T>, key: any): T | null {
 export function isSafe(id: string, map: PlayerMap): boolean {
     if (id.length === 0) return true;
     return map.has(id);
+}
+
+export function isNull(obj: any): boolean {
+    return obj === null || obj === undefined;
 }

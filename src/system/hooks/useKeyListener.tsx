@@ -24,7 +24,6 @@ export default function useKeyListener(targets: KeyCode[], onKeyDown: (keyCode: 
     }, []);
 
     function onKeyEvent(event: any) {
-        // console.log(event.keyCode);
         if (!targets.includes(event.keyCode)) return;
         setKeyInfo((prevState) => ({idx: prevState.idx + 1, code: event.keyCode}));
     }

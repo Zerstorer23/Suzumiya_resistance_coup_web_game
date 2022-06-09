@@ -73,19 +73,19 @@ function handlePlayerUpdate(newRoom: Room, action: RoomActionType) {
         case UpdateType.Delete:
             newRoom.playerMap.delete(entry.id);
             newRoom.playerList = getSortedListFromMap(newRoom.playerMap);
-            if (entry.id === newRoom.header.hostId) {
+            if (entry.id === newRoom.header.hostId || !newRoom.playerMap.has(newRoom.header.hostId)) {
                 newRoom.header.hostId = newRoom.playerList[0];
-                console.log("Detected host disconnect " + newRoom.header.hostId);
+                console.warn("Detected host disconnect " + newRoom.header.hostId);
             }
             if (!checkGhostPlayers(newRoom)) {
                 //need reset
                 resetState(newRoom);
-                console.log("Detected ghost player ");
+                console.warn("Detected ghost player ");
             }
             if (newRoom.game.state.turn >= newRoom.playerMap.size) {
                 newRoom.game.state.board = BoardState.ChoosingBaseAction;
                 newRoom.game.state.turn = TurnManager.getNextTurn(newRoom.playerMap, newRoom.playerList, newRoom.game.state.turn, false);
-                console.log("Detected invalid turn");
+                console.warn("Detected invalid turn");
             }
             break;
     }
@@ -164,8 +164,6 @@ export default function RoomProvider(props: IProps) {
             mainParam: field,
             sideParam: data,
         };
-        /*        console.log("Field updated " + field);
-                console.log(data);*/
         dispatchRoomState(param);
     }
 

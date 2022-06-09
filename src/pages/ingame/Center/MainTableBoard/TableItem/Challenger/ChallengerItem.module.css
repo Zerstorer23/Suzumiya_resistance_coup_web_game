@@ -1,0 +1,40 @@
+
+.nameContainer {
+    width: 100%;
+    height: 25%;
+}
+
+.playerName {
+    background-color: coral;
+    font-size: 1.5rem;
+    border-top-right-radius: 1rem;
+    border-top-left-radius: 1rem;
+    text-align: center;
+    font-weight: bold;
+    width: auto;
+    margin: auto;
+}
+
+.show {
+    visibility: hidden;
+}
+
+.hide {
+    visibility: visible;
+}
+
+.mainImg {
+    width: 20%;
+    align-self: center;
+    justify-self: center;
+}
+
+.actionContainer {
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+}
+
+.actionContainer * {
+    font-size: 0.9rem;
+}

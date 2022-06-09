@@ -1,3 +1,5 @@
+import {PrevDiscardStates} from "system/GameStates/GameTypes";
+
 export const PAGE_INGAME = "game";
 export const PAGE_LOBBY = "lobby";
 
@@ -30,6 +32,7 @@ export enum BoardState {
     ContessaChallenged,
     ContessaAccepted,
     DiscardingCard,
+    DiscardingFinished,
 }
 
 //These are actions that each player can make
@@ -54,7 +57,7 @@ export const StateManager = {
     /*    isDiscardingState(state: BoardState): boolean {
             return state === BoardState.DiscardingCard || state === BoardState.DiscardingCard2;
         },*/
-    isBlockedState(state: BoardState): boolean {
+    pierIsBlocked(state: BoardState): boolean {
         /**
          * States that require HOST to react LIE or ACCEPT
          */
@@ -77,7 +80,6 @@ export const StateManager = {
             case BoardState.CalledSteal:
             case BoardState.CalledGetTwoBlocked:
             case BoardState.StealBlocked:
-            case BoardState.AssassinBlocked:
                 return true;
             default:
                 return false;
@@ -158,7 +160,7 @@ export const StateManager = {
                 return false;
         }
     },
-    getChallengedState(state: BoardState): BoardState | null {
+    getChallengedState(state: BoardState): PrevDiscardStates | null {
         /**
          * States that are after challenged
          */
@@ -225,7 +227,7 @@ export const StateManager = {
             case ActionType.Assassinate:
                 return BoardState.CalledAssassinate;
             case ActionType.Coup:
-                return BoardState.CalledGetTwo;
+                return BoardState.CalledCoup;
             case ActionType.Steal:
                 return BoardState.CalledSteal;
             default:

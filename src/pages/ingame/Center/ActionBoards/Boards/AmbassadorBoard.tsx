@@ -32,7 +32,6 @@ export default function AmbassadorBoard(): JSX.Element {
     const keyInfo = useShortcutEffect(cardArr.length);
     useEffect(() => {
         const idx = keyInfo.index;
-        //TODO
         if (idx !== -1) onMakeAction(idx);
     }, [keyInfo]);
 
@@ -40,7 +39,6 @@ export default function AmbassadorBoard(): JSX.Element {
      * Handle the case where deck only has 0 ~ 2 cards available  *
      **************************************************************/
 
-    //TODO: Dead Card
     useEffect(() => {
         if (DeckManager.playerAliveCardNum(deck, myPlayer.icard) === 1) {
             console.log("one card alive");
@@ -61,7 +59,7 @@ export default function AmbassadorBoard(): JSX.Element {
 
     const [count, setCount] = useState<number>(0);
     const [secondCardPicked, setSecondCardPicked] = useState<number>(-1);
-    useDefaultAction(localCtx, () => {
+    useDefaultAction(ctx, localCtx, () => {
         ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
             return TransitionAction.EndTurn;
         });
@@ -70,7 +68,6 @@ export default function AmbassadorBoard(): JSX.Element {
     useEffect(() => {
         if (count < 2) return;
         if (secondCardPicked === firstCardPicked) return;
-        console.log("swapping");
         if (firstCardPicked === 1) {
             DeckManager.swap(myPlayer!.icard + 1, myPlayer!.icard, deck);
         } else if (firstCardPicked === 2) {
@@ -94,15 +91,12 @@ export default function AmbassadorBoard(): JSX.Element {
                 break;
         }
         DeckManager.pushDeck(ctx, deck);
-        console.log("ending turn");
         ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
             return TransitionAction.EndTurn;
         });
     }, [firstCardPicked, secondCardPicked]);
 
     const onMakeAction = (index: number) => {
-        console.log("index: ", index);
-        console.log("count: ", count);
         if (count === 0) setFirstCardPicked(index);
         if (count !== 0) setSecondCardPicked(index);
         setCount((count: number) => {
@@ -110,12 +104,9 @@ export default function AmbassadorBoard(): JSX.Element {
         });
     };
 
-    //ADD SELCETED CSS STYLE
     return (
         <Fragment>
-            <div className={classes.header}>
-                Choose 2 cards that you want to keep...
-            </div>
+            <div className={classes.header}>{t("_amba_choose_cards")}</div>
             <p className={classes.centerText}>{t("_my_card_pool")}</p>
             <div className={classes.quarterContainer}>
                 {cardArr.map((action: Card, index: number) => {

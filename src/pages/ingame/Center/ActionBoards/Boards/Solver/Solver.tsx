@@ -1,7 +1,6 @@
 import {setMyTimer} from "pages/components/ui/MyTimer/MyTimer";
 import {LocalContextType} from "system/context/localInfo/local-context";
 import {ReferenceManager} from "system/Database/RoomDatabase";
-import {WaitTime} from "system/GameConstants";
 import {BoardState} from "system/GameStates/States";
 import {PlayerType, TurnManager} from "system/GameStates/TurnManager";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
@@ -9,7 +8,7 @@ import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/T
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 export function waitAndEnd(ctx: RoomContextType, localCtx: LocalContextType) {
-    setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
+    setMyTimer(ctx, localCtx, () => {
         ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
             return TransitionAction.EndTurn;
         });
@@ -63,7 +62,7 @@ Assassin: ?Assassin->[CalledAssassinate: Wait]
 //Get 1 : ?GetOne-> [GetOneAccepted : Solve Wait NextTurn]
 function handleGetOne(ctx: RoomContextType, localCtx: LocalContextType) {
     const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
-    setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
+    setMyTimer(ctx, localCtx, () => {
         ActionManager.prepareAndPushState(ctx, () => {
             pier.coins++;
             ReferenceManager.updatePlayerReference(pierId, pier);
@@ -111,7 +110,7 @@ export function handleGetThree(
 export function handleSteal(ctx: RoomContextType, localCtx: LocalContextType) {
     const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
     const [targetId, target] = TurnManager.getPlayerInfo(ctx, PlayerType.Target);
-    setMyTimer(localCtx, WaitTime.WaitConfirms, () => {
+    setMyTimer(ctx, localCtx, () => {
         ActionManager.prepareAndPushState(ctx, (newAction, newState) => {
             const stealAmount = Math.min(target.coins, 2);
             pier.coins += stealAmount;

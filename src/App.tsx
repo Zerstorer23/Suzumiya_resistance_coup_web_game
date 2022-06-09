@@ -1,8 +1,9 @@
-import Lobby from "./pages/lobby/Lobby";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import InGame from "./pages/ingame/InGame";
-import DataLoader from "pages/DataLoader/DataLoader";
-import { VideoPlayer } from "videoPlayer/videoPlayer";
+import DataLoader from "pages/components/ui/DataLoader/DataLoader";
+import Lobby from "pages/lobby/Lobby";
+import MusicModule from "pages/components/ui/MusicModule/MusicModule";
+import LoadingPage from "pages/components/ui/LoadingPage/LoadingPage";
 
 export enum Navigation {
   Loading = "/suzumiya/loading",
@@ -14,22 +15,19 @@ export enum Navigation {
 export default function App(): JSX.Element {
   return (
     <DataLoader>
+      <MusicModule />
       <Switch>
         <Route path={Navigation.Loading} exact>
-          <p>Loading...</p>
+          <LoadingPage />
         </Route>
         <Route path={Navigation.Lobby} exact>
-          {/* <Lobby/> */}
-          <VideoPlayer />
+          <Lobby />
         </Route>
         <Route path={Navigation.InGame} exact>
           <InGame />
         </Route>
-        <Route path={Navigation.vidPlayer} exact>
-          <VideoPlayer />
-        </Route>
         <Route path="*">
-          <p>Not found</p>
+          <Redirect to={Navigation.Loading} />
         </Route>
       </Switch>
     </DataLoader>

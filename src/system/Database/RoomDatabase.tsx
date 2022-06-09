@@ -16,7 +16,10 @@ export enum DbReferences {
     HEADER = `/room/header`,
     HEADER_hostId = `/room/header/hostId`,
     HEADER_seed = `/room/header/seed`,
-    CHAT = "/chat"
+    CHAT = "/chat",
+    MUSIC = "/music",
+    MUSIC_queue = "/music/queue",
+    MUSIC_current = "/music/current",
 }
 
 /**
@@ -88,8 +91,6 @@ export async function loadRoom(): Promise<Room> {
         }
         room.playerMap = parsePlayerMap(room.playerMap);
         room.playerList = getSortedListFromMap(room.playerMap);
-        console.log("LOaded room");
-        console.log(room);
         return room;
     }
 }

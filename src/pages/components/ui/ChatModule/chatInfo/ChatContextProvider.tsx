@@ -16,6 +16,7 @@ const ChatContext = React.createContext<ChatContextType>({
     },
     setter: () => {
     },
+
 });
 export type ChatEntry = {
     name: string;
@@ -36,14 +37,14 @@ export function cleanChats() {
 }
 
 export function ChatEntryToElem(key: any, ce: ChatEntry): JSX.Element {
-    const text = `[${ce.name}] ${ce.msg}`;
     switch (ce.format) {
         case ChatFormat.normal:
+            const text = `[${ce.name}] ${ce.msg}`;
             return <p className={classes.normalChat} key={key}>{text}</p>;
         case ChatFormat.announcement:
-            return <p className={classes.announceChat} key={key}>{text}</p>;
+            return <p className={classes.announceChat} key={key}>{ce.msg}</p>;
         case ChatFormat.important:
-            return <p className={classes.importantChat} key={key}>{text}</p>;
+            return <p className={classes.importantChat} key={key}>{ce.msg}</p>;
         case ChatFormat.hidden:
             return <Fragment key={key}/>;
     }
@@ -51,7 +52,7 @@ export function ChatEntryToElem(key: any, ce: ChatEntry): JSX.Element {
 
 export function ChatProvider(props: IProps) {
     const [chatList, setChatList] = useState<ChatEntry[]>([]);
-    
+
     function loadChat(ce: ChatEntry) {
         if (ce === null) return;
         setChatList((prev) => {

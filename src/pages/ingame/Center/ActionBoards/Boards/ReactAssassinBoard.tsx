@@ -3,7 +3,7 @@ import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.cs
 import {Fragment, useContext, useEffect} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
-import {ActionInfo} from "system/GameStates/ActionInfo";
+import {actionPool} from "system/GameStates/ActionInfo";
 import {ActionType, BoardState} from "system/GameStates/States";
 import * as ActionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
@@ -12,6 +12,7 @@ import {GameManager} from "system/GameStates/GameManager";
 import {playerClaimedRole} from "system/Database/RoomDatabase";
 import {useShortcutEffect} from "system/hooks/useShortcut";
 import useDefaultAction from "system/hooks/useDefaultAction";
+import {useTranslation} from "react-i18next";
 
 const actions = [
     ActionType.Accept,
@@ -23,7 +24,7 @@ export default function ReactAssassinBoard(): JSX.Element {
     const localCtx = useContext(LocalContext);
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
     const keyInfo = useShortcutEffect(actions.length);
-    useDefaultAction(localCtx, () => {
+    useDefaultAction(ctx, localCtx, () => {
         onMakeAction(ActionType.Accept);
     });
     useEffect(() => {
@@ -31,12 +32,12 @@ export default function ReactAssassinBoard(): JSX.Element {
         if (index < 0) return;
         onMakeAction(actions[index]);
     }, [keyInfo]);
-
+    const {t} = useTranslation();
 
     const onMakeAction = (action: ActionType) => {
         switch (action) {
             case ActionType.Accept:
-                const killInfo = GameManager.createKillInfo(ActionType.Assassinate, myId);
+                const killInfo = GameManager.createKillInfo(ActionType.Assassinate, BoardState.CalledAssassinate, myId);
                 ActionManager.pushPrepareDiscarding(ctx, killInfo);
                 break;
             case ActionType.IsALie:
@@ -54,13 +55,14 @@ export default function ReactAssassinBoard(): JSX.Element {
 
     return (
         <Fragment>
+            <div className={classes.header}>{t("_react_action")}</div>
             <div className={classes.halfContainer}>
                 {actions.map((action: ActionType, index: number) => {
                     return (
                         <BaseActionButton
                             key={index}
                             index={index}
-                            param={new ActionInfo(action)}
+                            param={actionPool.get(action)}
                             onClickButton={() => {
                                 onMakeAction(action);
                             }}

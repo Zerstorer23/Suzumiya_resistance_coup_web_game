@@ -1,6 +1,6 @@
 import {Fragment} from "react";
 
-export function insert(t: (k: string) => string, key: string, ...params: any[]) {
+export function insert(t: (k: string) => string, key: string, ...params: any[]): string {
     let text = t(key) as string;
     params.forEach((value, index, array) => {
         text = text.replaceAll(`$${index}`, value);
@@ -18,7 +18,7 @@ export function formatInsert(t: (k: string) => string, key: string, ...params: a
     const nlTokens = text.split("$n");
     return (<Fragment>{
         nlTokens.map((value, index, array) => {
-            return <Fragment>{value}<br/></Fragment>;
+            return <Fragment key={index}>{strongInsert(value)}<br/></Fragment>;
         })
     }
     </Fragment>);
@@ -31,8 +31,8 @@ function strongInsert(text: string): JSX.Element {
         {
             strTk.map((value, index) => {
                 inserted = !inserted;
-                if (!inserted) return <Fragment>{value}</Fragment>;
-                return <strong>{value}</strong>;
+                if (!inserted) return <Fragment key={index}>{value}</Fragment>;
+                return <strong key={index}>{value}</strong>;
             })
         }
     </Fragment>;

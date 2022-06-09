@@ -1,4 +1,14 @@
 import {ActionType} from "system/GameStates/States";
+import {ObjectPool} from "system/cards/ObjectPool";
+
+
+export class ActionPool extends ObjectPool<ActionType, ActionInfo> {
+    instantiate(key: ActionType): ActionInfo {
+        return new ActionInfo(key);
+    }
+}
+
+export const actionPool = new ActionPool();
 
 export class ActionInfo {
     actionType: ActionType;
