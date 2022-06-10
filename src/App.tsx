@@ -7,11 +7,11 @@ import Lobby from "pages/lobby/Lobby";
 import GameOverPage from "pages/gameOver/GameOverPage";
 
 export enum Navigation {
-    Loading = "/suzumiya/loading",
-    Lobby = "/suzumiya/",
-    InGame = "/suzumiya/game",
-    Finished = "/suzumiya/finish",
-    vidPlayer = "/suzumiya/video",
+    Loading = "/loading",
+    Lobby = "/",
+    InGame = "/game",
+    Finished = "/finish",
+    vidPlayer = "/video",
 }
 
 export default function App(): JSX.Element {
