@@ -122,7 +122,9 @@ export enum MusicResponse {
 }
 
 function filterVidID(url: string) {
-  if (url.includes("youtu.be")) {
+  if (url.length === 11) {
+    return url;
+  } else if (url.includes("youtu.be")) {
     //share url
     let temp = url.lastIndexOf("/");
     return url.substring(temp + 1, temp + 12);

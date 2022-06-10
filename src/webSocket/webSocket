@@ -1,0 +1,17 @@
+import React, { useState } from "react";
+import { w3cwebsocket } from "websocket";
+
+const client = new w3cwebsocket("http://localhost:3000/");
+
+client.onopen = () => {
+  console.log("connected to server");
+};
+//const [chatMessage, setChatMessage] = useState("");
+
+export function WebSocket(msg: string) {
+  if (client.readyState === w3cwebsocket.CLOSED) {
+    //re-try?
+  } else {
+    client.send(msg);
+  }
+}
