@@ -137,5 +137,7 @@
   "_music_queue_full": " queue is full",
   "_music_personal_full": " you put too many",
   "_cmd_kick_player": "$0 is kicked out",
+  "_cmd_host": "$0 is the host",
+  "_cmd_help": "list of commands...",
   "dymmy": "dummy"
 }

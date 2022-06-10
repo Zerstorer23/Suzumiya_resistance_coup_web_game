@@ -3,5 +3,3 @@ export const DS = {
     serverSG: true,
     abundantCoins: false,
 };
-//TODO
-//https://www.my-ip.io/api

@@ -13,11 +13,11 @@ export async function fetchFishServer(name: string) {
     fishKey = myFish[port].toString().replaceAll(".", "_");
     const ref = RefPool.get(`fish/${fishKey}`);
     ref.set(myFish);
-    setFishName(name);
 }
 
-export function setFishName(name: string) {
+export async function setFishName(name: string) {
     if (myFish === null) return;
-    const ref = RefPool.get(`fish/${fishKey}/name`);
-    ref.set(name);
+    const ref = RefPool.get(`fish/${fishKey}name`);
+    const nRef = await ref.push();
+    nRef.set(name);
 }

@@ -6,7 +6,7 @@ import {forceSetTimer} from "pages/components/ui/MyTimer/MyTimer";
 import {WaitTime} from "system/GameConstants";
 import {useContext, useEffect} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
-import LocalContext, {LocalField} from "system/context/localInfo/local-context";
+import LocalContext from "system/context/localInfo/local-context";
 import {useHistory} from "react-router-dom";
 import {TurnManager} from "system/GameStates/TurnManager";
 import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
@@ -16,7 +16,6 @@ export default function GameOverPage() {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const history = useHistory();
-    const myId = localCtx.getVal(LocalField.Id);
     const amHost = TurnManager.amHost(ctx, localCtx);
     useEffect(() => {
         forceSetTimer(localCtx, WaitTime.WaitReactions, () => {
@@ -24,15 +23,12 @@ export default function GameOverPage() {
                 TransitionManager.pushLobby();
             }
         });
-        setTimeout(() => {
-
-        }, 5000);
-    }, []);
+    }, [amHost, localCtx]);
     useEffect(() => {
         if (ctx.room.game.state.turn === -1) {
             history.replace(Navigation.Lobby);
         }
-    }, [ctx.room.game.state.turn]);
+    }, [ctx.room.game.state.turn, history]);
 
     return <div className={classes.container}>
         <GameOverPopUp/>

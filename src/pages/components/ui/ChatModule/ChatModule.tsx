@@ -2,6 +2,7 @@ import React, {useCallback, useContext, useEffect, useRef} from "react";
 import classes from "./ChatModule.module.css";
 import ChatContext, {
     ChatContextType,
+    ChatEntry,
     ChatEntryToElem,
     ChatFormat,
     sendChat,
@@ -22,7 +23,10 @@ import {Player} from "system/GameStates/GameTypes";
 import {MAX_MUSIC_QUEUE, MAX_PERSONAL_QUEUE} from "pages/components/ui/MusicModule/MusicModule";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import {insert} from "lang/i18nHelper";
 
+const LF = String.fromCharCode(10);
+const CR = String.fromCharCode(13);
 export default function ChatModule() {
     const chatCtx = useContext(ChatContext);
     const ctx = useContext(RoomContext);
@@ -65,9 +69,14 @@ export default function ChatModule() {
 
     const handleSend = useCallback(() => {
         let text = chatFieldRef.current!.value.toString();
-        chatFieldRef.current!.blur();
-        chatFieldRef.current!.value = "";
-        if (text.length <= 0) return;
+        chatFieldRef.current!.value = '';
+        text = text.replaceAll(LF, "");//LF
+        text = text.replaceAll(CR, "");//LF
+        console.log(text.length);
+        if (text.length <= 0) {
+            chatFieldRef.current!.blur();
+            return;
+        }
         if (handleSpecials(text)) return;
         if (text.length > 128) {
             text = text.substring(0, 128);
@@ -78,6 +87,10 @@ export default function ChatModule() {
 
     function toggleFocus(toggle: boolean) {
         localCtx.setVal(LocalField.InputFocus, (toggle) ? InputCursor.Chat : InputCursor.Idle);
+    }
+
+    function onFocus() {
+        toggleFocus(true);
     }
 
     return (
@@ -96,7 +109,7 @@ export default function ChatModule() {
                         toggleFocus(false);
                     }}
                     onFocus={() => {
-                        toggleFocus(true);
+                        onFocus();
                     }}
                 ></textarea>
                 <button className={classes.buttonSend} onClick={handleSend}>
@@ -155,15 +168,32 @@ function handleCommands(t: any, ctx: RoomContextType, localCtx: LocalContextType
                     kickPlayer(t, ctx, chatCtx, args);
                     break;*/
         case "help":
-            //print help
+            printHelp(t, chatCtx);
             break;
         case "host":
-            //print host name
-            break;
-        case "list":
-            //print playerindex, name, isspectating.
+            printHost(t, ctx, chatCtx);
             break;
     }
+}
+
+function printHost(t: any, ctx: RoomContextType, chatCtx: ChatContextType) {
+    const hostId = ctx.room.header.hostId;
+    const host = ctx.room.playerMap.get(hostId);
+    if (host === undefined) return;
+
+    const chatEntry: ChatEntry = {
+        format: ChatFormat.announcement,
+        name: "", msg: insert(t, "_cmd_host", host.name)
+    };
+    chatCtx.loadChat(chatEntry);
+}
+
+function printHelp(t: any, chatCtx: ChatContextType) {
+    const chatEntry: ChatEntry = {
+        format: ChatFormat.announcement,
+        name: "", msg: t("_cmd_help")
+    };
+    chatCtx.loadChat(chatEntry);
 }
 
 /*

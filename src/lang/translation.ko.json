@@ -137,5 +137,7 @@
   "_music_queue_full": "신청곡 큐가 다 찼습니다.",
   "_music_personal_full": "너무 많은곡을 신청하셨습니다. ",
   "_cmd_kick_player": "$0님은 잠수로 판단되어 방장이 쪼까보냈습니다.",
+  "_cmd_host": "$0님이 현재 방장입니다.",
+  "_cmd_help": "!유튜브링크 = 곡 삽입, \n /host = 현재방장확인, \n /next = 강제 턴넘기기 [방장용], \n /reset =강제 게임종료 [방장용]",
   "dymmy": "dummy"
 }
