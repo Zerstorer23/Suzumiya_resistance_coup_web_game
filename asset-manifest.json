@@ -1,29 +1,29 @@
 {
   "files": {
-    "main.css": "/suzumiya/static/css/main.86d4d7bf.css",
-    "main.js": "/suzumiya/static/js/main.35c66001.js",
-    "static/media/untitled.png": "/suzumiya/static/media/untitled.8267d27b6440ee00e515.png",
-    "static/media/objection.mp3": "/suzumiya/static/media/objection.981242a3ace6d27c03a6.mp3",
-    "static/media/haruhi.png": "/suzumiya/static/media/haruhi.c1eb865e5725e7145c77.png",
-    "static/media/haruhi_dead.png": "/suzumiya/static/media/haruhi_dead.7d49acc45ee12ac93f45.png",
-    "static/media/kyonko.png": "/suzumiya/static/media/kyonko.5bbc4a93b6c32183bd07.png",
-    "static/media/nagato2.png": "/suzumiya/static/media/nagato2.f450c0f49672ecd3be65.png",
-    "static/media/mikuru2.png": "/suzumiya/static/media/mikuru2.642993bc5807ee2ee353.png",
-    "static/media/mikuru_dead.png": "/suzumiya/static/media/mikuru_dead.dbe13d2b19f336cc75ac.png",
-    "static/media/kyonko_dead.png": "/suzumiya/static/media/kyonko_dead.4ae26586bf8f1b8e8377.png",
-    "static/media/kyon_dead.png": "/suzumiya/static/media/kyon_dead.4893d19aeff809f905d2.png",
-    "static/media/kyon.png": "/suzumiya/static/media/kyon.f11906f9a43713448b39.png",
-    "static/media/nagato_dead.png": "/suzumiya/static/media/nagato_dead.1c6fa0c4430084eb440e.png",
-    "static/media/ruleCard.png": "/suzumiya/static/media/ruleCard.5bfafc7e31d81ab37738.png",
-    "static/media/koihime_dead.png": "/suzumiya/static/media/koihime_dead.ee82cfe2bab32ddf330e.png",
-    "static/media/koihime.png": "/suzumiya/static/media/koihime.f026d9f4c6bc8c5d25a0.png",
-    "static/media/unknown.png": "/suzumiya/static/media/unknown.1c3c27e9b18c20378807.png",
-    "index.html": "/suzumiya/index.html",
-    "main.86d4d7bf.css.map": "/suzumiya/static/css/main.86d4d7bf.css.map",
-    "main.35c66001.js.map": "/suzumiya/static/js/main.35c66001.js.map"
+    "main.css": "/static/css/main.86d4d7bf.css",
+    "main.js": "/static/js/main.eb6688eb.js",
+    "static/media/untitled.png": "/static/media/untitled.8267d27b6440ee00e515.png",
+    "static/media/objection.mp3": "/static/media/objection.981242a3ace6d27c03a6.mp3",
+    "static/media/haruhi.png": "/static/media/haruhi.c1eb865e5725e7145c77.png",
+    "static/media/haruhi_dead.png": "/static/media/haruhi_dead.7d49acc45ee12ac93f45.png",
+    "static/media/kyonko.png": "/static/media/kyonko.5bbc4a93b6c32183bd07.png",
+    "static/media/nagato2.png": "/static/media/nagato2.f450c0f49672ecd3be65.png",
+    "static/media/mikuru2.png": "/static/media/mikuru2.642993bc5807ee2ee353.png",
+    "static/media/mikuru_dead.png": "/static/media/mikuru_dead.dbe13d2b19f336cc75ac.png",
+    "static/media/kyonko_dead.png": "/static/media/kyonko_dead.4ae26586bf8f1b8e8377.png",
+    "static/media/kyon_dead.png": "/static/media/kyon_dead.4893d19aeff809f905d2.png",
+    "static/media/kyon.png": "/static/media/kyon.f11906f9a43713448b39.png",
+    "static/media/nagato_dead.png": "/static/media/nagato_dead.1c6fa0c4430084eb440e.png",
+    "static/media/ruleCard.png": "/static/media/ruleCard.5bfafc7e31d81ab37738.png",
+    "static/media/koihime_dead.png": "/static/media/koihime_dead.ee82cfe2bab32ddf330e.png",
+    "static/media/koihime.png": "/static/media/koihime.f026d9f4c6bc8c5d25a0.png",
+    "static/media/unknown.png": "/static/media/unknown.1c3c27e9b18c20378807.png",
+    "index.html": "/index.html",
+    "main.86d4d7bf.css.map": "/static/css/main.86d4d7bf.css.map",
+    "main.eb6688eb.js.map": "/static/js/main.eb6688eb.js.map"
   },
   "entrypoints": [
     "static/css/main.86d4d7bf.css",
-    "static/js/main.35c66001.js"
+    "static/js/main.eb6688eb.js"
   ]
 }
