@@ -135,7 +135,7 @@ export default class TransitionManager {
     public static pushLobby(numGames: number) {
         const state: TurnState = {turn: -1, board: 0,};
         ReferenceManager.updateReference(DbReferences.GAME_state, state);
-        ReferenceManager.updateReference(DbReferences.HEADER_games, numGames - 1);
+        ReferenceManager.atomicDelta(DbReferences.HEADER_games, -1);
     }
 
     public static handleAcceptOrLie(

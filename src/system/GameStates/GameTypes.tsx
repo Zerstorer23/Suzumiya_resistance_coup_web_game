@@ -69,10 +69,14 @@ export type Game = {
     action: GameAction;
     state: TurnState;
 };
+export type RoomSettings = {
+    expansion: boolean;
+}
 export type RoomHeader = {
     seed: number;
     hostId: string;
     games: number;
+    settings: RoomSettings;
 };
 export type PlayerMap = Map<string, Player>;
 export type Room = {

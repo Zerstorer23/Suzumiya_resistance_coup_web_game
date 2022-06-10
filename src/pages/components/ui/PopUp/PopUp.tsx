@@ -13,6 +13,7 @@ import animClasses from "animation.module.css";
 import LocalContext, {LocalField} from "system/context/localInfo/local-context";
 import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 import {MyTimer} from "pages/components/ui/MyTimer/MyTimer";
+import {increaseWin} from "system/Database/Inalytics";
 
 function Backdrop() {
     return (
@@ -47,10 +48,13 @@ export default function GameOverPopUp() {
     const myId = localCtx.getVal(LocalField.Id);
     const winnerID = DeckManager.checkGameOver(ctx);
     const player = ctx.room.playerMap.get(winnerID);
+
     useEffect(() => {
         if (player === undefined) return;
         if (myId !== winnerID) return;
-        ReferenceManager.updatePlayerFieldReference(winnerID, DbReferences.PLAYER_wins, player.wins + 1);
+        increaseWin(playerCards);
+        const ref = ReferenceManager.getPlayerFieldReference(winnerID, DbReferences.PLAYER_wins);
+        ReferenceManager.atomicDeltaByRef(ref, 1);
     }, []);
     if (player === undefined) return <Fragment/>;
     const playerCards: CardRole[] = DeckManager.peekCards(

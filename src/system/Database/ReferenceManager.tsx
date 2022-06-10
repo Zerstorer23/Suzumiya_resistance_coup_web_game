@@ -2,6 +2,8 @@ import {Player} from "system/GameStates/GameTypes";
 import {DbRef} from "system/types/CommonTypes";
 import {ObjectPool} from "system/cards/ObjectPool";
 import {db} from "system/Database/Firebase";
+import firebase from "firebase/compat/app";
+import "firebase/compat/database";
 
 export enum DbReferences {
     ROOM = "/room",
@@ -14,6 +16,7 @@ export enum DbReferences {
     HEADER_hostId = `/room/header/hostId`,
     HEADER_seed = `/room/header/seed`,
     HEADER_games = `/room/header/games`,
+    HEADER_settings = `/room/header/settings`,
     CHAT = "/chat",
     MUSIC = "/music",
     MUSIC_queue = "/music/queue",
@@ -78,5 +81,14 @@ export class ReferenceManager {
     public static updatePlayerFieldReference(playerId: string, tag: DbReferences, value: any) {
         const ref = ReferenceManager.getPlayerFieldReference(playerId, tag);
         ref.set(value);
+    }
+
+    public static atomicDelta(refName: string, change: number) {
+        const ref = RefPool.get(refName);
+        ref.set(firebase.database.ServerValue.increment(change));
+    }
+
+    public static atomicDeltaByRef(ref: DbRef, change: number) {
+        ref.set(firebase.database.ServerValue.increment(change));
     }
 }

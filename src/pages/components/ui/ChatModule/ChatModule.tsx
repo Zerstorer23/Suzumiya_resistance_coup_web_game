@@ -169,7 +169,7 @@ function handleCommands(t: any, ctx: RoomContextType, localCtx: LocalContextType
         case "coins":
             if (!amHost) return;
             if (ctx.room.header.games > 2) return;
-            ReferenceManager.updateReference(DbReferences.HEADER_games, ctx.room.header.games + 5);
+            ReferenceManager.atomicDelta(DbReferences.HEADER_games, 5);
             chatCtx.loadChat({
                 format: ChatFormat.announcement,
                 name: "", msg: t("_coins_inserted")
