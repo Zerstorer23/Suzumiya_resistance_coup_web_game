@@ -139,5 +139,10 @@
   "_cmd_kick_player": "$0님은 잠수로 판단되어 방장이 쪼까보냈습니다.",
   "_cmd_host": "$0님이 현재 방장입니다.",
   "_cmd_help": "!유튜브링크 = 곡 삽입, \n /host = 현재방장확인, \n /next = 강제 턴넘기기 [방장용], \n /reset =강제 게임종료 [방장용]",
+  "_games_remaining": "$b$0$b 게임 남음",
+  "_prompt_how_to": "더 플레이 하려면 채팅에 \"/coins\" 입력",
+  "_prompt_play_more_want": "더 플레이 하려면 방장이 채팅에 \"/coins\" 입력",
+  "_coins_inserted": "게임을 더 하는것에 합의한 것으로 이해한것을 공표해도 괜찮은지 물은것에 대한 답을 받는것을 공개했습니다.",
+  "_name_with_wins": "$0 ($1 승)",
   "dymmy": "dummy"
 }

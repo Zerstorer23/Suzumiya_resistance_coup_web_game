@@ -139,5 +139,10 @@
   "_cmd_kick_player": "$0 is kicked out",
   "_cmd_host": "$0 is the host",
   "_cmd_help": "list of commands...",
+  "_games_remaining": "$b$0$b games remaining",
+  "_prompt_how_to": "If you want to play more, type \"/coins\" to the chat",
+  "_prompt_play_more_want": "If you want to play more, type \"/coins\" to the chat",
+  "_coins_inserted": "Host enlarged the game",
+  "_name_with_wins": "$0 ($1 wins)",
   "dymmy": "dummy"
 }

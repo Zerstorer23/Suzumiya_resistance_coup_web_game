@@ -4,6 +4,7 @@ import {Player} from "system/GameStates/GameTypes";
 import {IProps} from "system/types/CommonTypes";
 import animClasses from "animation.module.css";
 import {useTranslation} from "react-i18next";
+import {insert} from "lang/i18nHelper";
 
 type Prop = IProps & {
     player: Player;
@@ -12,10 +13,10 @@ type Prop = IProps & {
 
 
 export default function PlayerListItem(props: Prop) {
-    const name = props.player.name;
     const hostCss = props.isHost ? classes.isHost : "";
     const {t} = useTranslation();
-
+    const name = (props.player.wins === 0) ? props.player.name :
+        insert(t, "_name_with_wins", props.player.name, props.player.wins);
     let tagElem: JSX.Element;
     if (props.isHost) {
         tagElem = <div className={`${classes.hostPanel}`}>{t("_is_host")}</div>;
@@ -24,7 +25,6 @@ export default function PlayerListItem(props: Prop) {
     } else {
         tagElem = <div className={`${classes.readyPanel} ${animClasses.invisible}`}/>;
     }
-
     return (
         <div className={`${classes.item} ${animClasses.fadeIn}`}>
             {tagElem}

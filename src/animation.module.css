@@ -23,6 +23,10 @@
     animation: zoom-into 500ms ease-out forwards;
 }
 
+.zoomInSmall {
+    animation: zoom-into-small 300ms ease-out forwards;
+}
+
 .gone {
     display: none;
 }
@@ -93,6 +97,15 @@
 @keyframes zoom-into {
     from {
         transform: scale(3);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes zoom-into-small {
+    from {
+        transform: scale(2);
     }
     to {
         transform: scale(1);

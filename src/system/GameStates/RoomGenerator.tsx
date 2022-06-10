@@ -8,6 +8,7 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import {GameManager} from "system/GameStates/GameManager";
 import {DS} from "system/Debugger/DS";
 import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {GameConfigs} from "system/Debugger/GameConfigs";
 
 export function getDefaultAction(): GameAction {
     return {
@@ -33,6 +34,7 @@ export function getDefaultHeader(): RoomHeader {
     return {
         hostId: "",
         seed: getRandomSeed(),
+        games: GameConfigs.defaultGames,
     };
 }
 
@@ -73,7 +75,7 @@ export function setStartingRoom(room: Room) {
     //Set Player Cards
     room.playerList.forEach((playerId, index) => {
         const player = room.playerMap.get(playerId)!;
-        player.coins = (DS.abundantCoins) ? 7 : 2;
+        player.coins = (DS.abundantCoins) ? 7 : GameConfigs.startingCoins;
         player.icard = index * 2;
         player.isSpectating = false;
         player.isReady = false;

@@ -1,7 +1,7 @@
 import classes from "./PlayersPanel.module.css";
 import VerticalLayout from "pages/components/ui/VerticalLayout";
 import PlayerListItem from "./PlayerListItem";
-import {PlayerMap} from "system/GameStates/GameTypes";
+import {Player, PlayerMap} from "system/GameStates/GameTypes";
 import {Fragment, useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import {setStartingRoom} from "system/GameStates/RoomGenerator";
@@ -11,7 +11,7 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import useKeyListener, {KeyCode} from "system/hooks/useKeyListener";
 import {InputCursor} from "system/context/localInfo/LocalContextProvider";
 import {useTranslation} from "react-i18next";
-import {insert} from "lang/i18nHelper";
+import {formatInsert, insert} from "lang/i18nHelper";
 import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 
 
@@ -50,23 +50,9 @@ export default function PlayersPanel() {
         }
     }
 
-    let buttonKey;
-    if (amHost) {
-        if (playerList.length <= 1) {
-            buttonKey = "_not_enough_people";
-        } else if (!canStartGame(playerMap)) {
-            buttonKey = "_not_enough_ready";
-        } else {
-            buttonKey = "_start";
-        }
-    } else {
-        if (!myPlayer.isReady) {
-            buttonKey = "_on_ready";
-        } else {
-            buttonKey = "_waiting_at_lobby";
-        }
-    }
-
+    let buttonKey = getButtonKey(amHost, playerList, playerMap, myPlayer);
+    const numGames = ctx.room.header.games;
+    const remainingCss = getRemainingCss(numGames);
     return (
         <VerticalLayout className={`${gc.round_border} ${classes.container} `}>
             <div className={classes.headerContainer}>
@@ -80,9 +66,22 @@ export default function PlayersPanel() {
                                            isHost={id === ctx.room.header.hostId}/>;
                 })
             }</VerticalLayout>
-            <button className={classes.buttonStart} onClick={onClickStart}>
-                {t(buttonKey)}
-            </button>
+            <div className={classes.bottomPanel}>
+                <div className={`${classes.remainingGames} ${remainingCss}`}>
+                    <p>
+                        {formatInsert(t, "_games_remaining", numGames)}
+                    </p>
+                </div>
+                {
+                    (numGames > 0) ?
+                        <button className={classes.buttonStart} onClick={onClickStart}>
+                            {t(buttonKey)}
+                        </button> :
+                        <p className={classes.noMoreCoins}>
+                            {amHost ? t("_prompt_how_to") : t("_prompt_play_more_want")}
+                        </p>
+                }
+            </div>
         </VerticalLayout>
     );
 }
@@ -98,4 +97,28 @@ function countReadyPlayers(playerMap: PlayerMap): number {
         if (player.isReady) count++;
     });
     return count;
+}
+
+function getRemainingCss(n: number) {
+    if (n > 6) return classes.lightBlue;
+    if (n > 3) return classes.lightYellow;
+    return classes.lightRed;
+}
+
+function getButtonKey(amHost: boolean, playerList: string[], playerMap: Map<string, Player>, myPlayer: Player) {
+    if (amHost) {
+        if (playerList.length <= 1) {
+            return "_not_enough_people";
+        } else if (!canStartGame(playerMap)) {
+            return "_not_enough_ready";
+        } else {
+            return "_start";
+        }
+    } else {
+        if (!myPlayer.isReady) {
+            return "_on_ready";
+        } else {
+            return "_waiting_at_lobby";
+        }
+    }
 }

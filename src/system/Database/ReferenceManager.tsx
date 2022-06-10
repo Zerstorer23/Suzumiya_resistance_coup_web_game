@@ -13,12 +13,14 @@ export enum DbReferences {
     HEADER = `/room/header`,
     HEADER_hostId = `/room/header/hostId`,
     HEADER_seed = `/room/header/seed`,
+    HEADER_games = `/room/header/games`,
     CHAT = "/chat",
     MUSIC = "/music",
     MUSIC_queue = "/music/queue",
     MUSIC_current = "/music/current",
     PLAYER_name = "name",
     PLAYER_isReady = "isReady",
+    PLAYER_wins = "wins",
 }
 
 /**
@@ -71,5 +73,10 @@ export class ReferenceManager {
 
     public static getPlayerFieldReference(playerId: string, ref: DbReferences): DbRef {
         return RefPool.get(`${DbReferences.PLAYERS}/${playerId}/${ref}`);
+    }
+
+    public static updatePlayerFieldReference(playerId: string, tag: DbReferences, value: any) {
+        const ref = ReferenceManager.getPlayerFieldReference(playerId, tag);
+        ref.set(value);
     }
 }

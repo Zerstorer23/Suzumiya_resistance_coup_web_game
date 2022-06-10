@@ -3,7 +3,7 @@
 }
 
 .headerContainer {
-    display: flex;
+    position: relative;
     border-bottom: 2px dashed rgb(18, 31, 103);
     padding-bottom: 20px;
     padding-top: 10px;
@@ -15,7 +15,7 @@
     text-align: center;
     align-self: center;
     font-size: 32px;
-    flex: 1;
+    height: 10%;
 }
 
 .headerPlayerNum {
@@ -26,7 +26,7 @@
 }
 
 .list {
-    flex: 8;
+    height: 70%;
     overflow-y: scroll;
     width: 100%;
     -ms-overflow-style: none;
@@ -37,8 +37,57 @@
     display: none;
 }
 
+.bottomPanel {
+    display: flex;
+    height: 20%;
+    width: 100%;
+    border-radius: 3rem;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    /*background-color: azure;*/
+}
+
+.remainingGames {
+    height: 25%;
+    width: 30%;
+    border-radius: 2rem;
+    transform: translateY(-10%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lightBlue {
+    background-color: azure;
+}
+
+.lightYellow {
+    background-color: navajowhite;
+}
+
+.lightRed {
+    background-color: crimson;
+}
+
+.remainingGames p {
+    display: block;
+}
 
 .buttonStart {
-    flex: 1;
     width: 100%;
+    height: 70%;
+    align-self: flex-end;
+    justify-self: flex-end;
+    margin: 0.25rem 0;
+}
+
+.noMoreCoins {
+    text-align: center;
+    width: 80%;
+    font-size: 1.5rem;
+    border-radius: 1rem;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    border: 1px red dashed;
 }

@@ -24,6 +24,7 @@ import {MAX_MUSIC_QUEUE, MAX_PERSONAL_QUEUE} from "pages/components/ui/MusicModu
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {insert} from "lang/i18nHelper";
+import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 
 const LF = String.fromCharCode(10);
 const CR = String.fromCharCode(13);
@@ -161,7 +162,18 @@ function handleCommands(t: any, ctx: RoomContextType, localCtx: LocalContextType
             break;
         case "reset":
             if (!amHost) return;
-            TransitionManager.pushLobby();
+            TransitionManager.pushLobby(ctx.room.header.games);
+            break;
+        case "coi":
+        case "coin":
+        case "coins":
+            if (!amHost) return;
+            if (ctx.room.header.games > 2) return;
+            ReferenceManager.updateReference(DbReferences.HEADER_games, ctx.room.header.games + 5);
+            chatCtx.loadChat({
+                format: ChatFormat.announcement,
+                name: "", msg: t("_coins_inserted")
+            });
             break;
         /*        case "kick"://reset and next is enough
                     if (!amHost) return;

@@ -150,9 +150,10 @@ class _TransitionManager {
         });
     }
 
-    public pushLobby() {
+    public pushLobby(numGames: number) {
         const state: TurnState = {turn: -1, board: 0,};
         ReferenceManager.updateReference(DbReferences.GAME_state, state);
+        ReferenceManager.updateReference(DbReferences.HEADER_games, numGames - 1);
     }
 
     private setEndTurn(ctx: RoomContextType, newAction: GameAction, newState: TurnState): boolean {

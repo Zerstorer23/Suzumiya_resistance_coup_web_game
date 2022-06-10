@@ -6,6 +6,7 @@ export enum AnimType {
     FadeIn = animClasses.fadeIn,
     SlideRight = animClasses.slideRight,
     ZoomIn = animClasses.zoomIn,
+    ZoomInSmall = animClasses.zoomInSmall,
 }
 
 export default function useAnimFocus<T>(value: T, animType: AnimType) {

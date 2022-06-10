@@ -3,7 +3,8 @@ import {ActionType, BoardState} from "system/GameStates/States";
 
 export type Player = {
     isSpectating: boolean; //may not need it
-    isReady: boolean
+    isReady: boolean;
+    wins: number;
     lastClaimed: CardRole;
     name: string;
     icard: number;
@@ -71,6 +72,7 @@ export type Game = {
 export type RoomHeader = {
     seed: number;
     hostId: string;
+    games: number;
 };
 export type PlayerMap = Map<string, Player>;
 export type Room = {

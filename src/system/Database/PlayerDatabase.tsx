@@ -14,6 +14,7 @@ export function getDefaultPlayer() {
     const newPlayer: Player = {
         isSpectating: false,
         isReady: false,
+        wins: 0,
         lastClaimed: CardRole.None,
         name: getDefaultName(),
         icard: -2,

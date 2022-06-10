@@ -22,8 +22,8 @@ export default function PlayerItem(props: Props): JSX.Element {
     const deck = ctx.room.game.deck;
     const {t} = useTranslation();
     const numAlive = DeckManager.playerAliveCardNum(deck, props.player.icard);
-    const coinCss = useAnimFocus(props.player.coins, AnimType.FadeIn);
-    const cardCss = useAnimFocus(numAlive, AnimType.FadeIn);
+    const coinCss = useAnimFocus(props.player.coins, AnimType.ZoomInSmall);
+    const cardCss = useAnimFocus(numAlive, AnimType.ZoomInSmall);
     const claimCss = useAnimFocus(props.player.lastClaimed, AnimType.SlideRight);
 
     if (props.player.isSpectating) return <Fragment/>;
