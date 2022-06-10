@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/suzumiya/static/css/main.c9f98b57.css",
-    "main.js": "/suzumiya/static/js/main.741e5b73.js",
+    "main.css": "/suzumiya/static/css/main.218ce6ea.css",
+    "main.js": "/suzumiya/static/js/main.871bf272.js",
     "static/media/untitled.png": "/suzumiya/static/media/untitled.8267d27b6440ee00e515.png",
     "static/media/objection.mp3": "/suzumiya/static/media/objection.981242a3ace6d27c03a6.mp3",
     "static/media/haruhi.png": "/suzumiya/static/media/haruhi.c1eb865e5725e7145c77.png",
@@ -19,11 +19,11 @@
     "static/media/koihime.png": "/suzumiya/static/media/koihime.f026d9f4c6bc8c5d25a0.png",
     "static/media/unknown.png": "/suzumiya/static/media/unknown.1c3c27e9b18c20378807.png",
     "index.html": "/suzumiya/index.html",
-    "main.c9f98b57.css.map": "/suzumiya/static/css/main.c9f98b57.css.map",
-    "main.741e5b73.js.map": "/suzumiya/static/js/main.741e5b73.js.map"
+    "main.218ce6ea.css.map": "/suzumiya/static/css/main.218ce6ea.css.map",
+    "main.871bf272.js.map": "/suzumiya/static/js/main.871bf272.js.map"
   },
   "entrypoints": [
-    "static/css/main.c9f98b57.css",
-    "static/js/main.741e5b73.js"
+    "static/css/main.218ce6ea.css",
+    "static/js/main.871bf272.js"
   ]
 }
