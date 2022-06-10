@@ -1,12 +1,11 @@
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {Fragment} from "react";
-import {cardPool} from "system/cards/CardPool";
 import {KillInfo, Player} from "system/GameStates/GameTypes";
 import {BoardState, StateManager} from "system/GameStates/States";
 import {PostKillPanel} from "pages/ingame/Center/ActionBoards/Boards/Discard/DiscardPanels";
 import {formatInsert} from "lang/i18nHelper";
-import {Card} from "system/cards/Card";
+import {Card, CardRole} from "system/cards/Card";
 
 export function rejectionElem(t: any) {
     return (<Fragment>
@@ -20,16 +19,15 @@ export function claimElem(t: any, player: Player, roleText: string, descKey: str
     return formatInsert(t, "_call_general", player.name, roleText, t(descKey));
 }
 
-function handleLostChallenge(iChallenged: boolean, t: any, myPlayer: Player, susCard: Card) {
+function handleLostChallenge(iChallenged: boolean, t: any, myPlayer: Player, susCard: CardRole) {
     if (iChallenged) {//I lost because I challenged wrong
         return (<p>{formatInsert(t, "_notify_lose_card", myPlayer.name)}</p>);
     }
     //I lost because I was challenged and didn't have card.
-    return (<p>{formatInsert(t, "_notify_i_lost_card",
-        myPlayer.name, susCard.getName(t))}</p>);
+    return (<p>{formatInsert(t, "_notify_i_lost_card", myPlayer.name, Card.getName(t, susCard))}</p>);
 }
 
-function handleNotLostNotChallenge(killInfo: KillInfo, ctx: RoomContextType, t: any, playerId: string, myPlayer: Player, susCard: Card) {
+function handleNotLostNotChallenge(killInfo: KillInfo, ctx: RoomContextType, t: any, playerId: string, myPlayer: Player, susCard: CardRole) {
     const nextState = killInfo.nextState;
     const action = ctx.room.game.action;
     const prevState = killInfo.prevState;
@@ -68,7 +66,7 @@ function handleNotLostNotChallenge(killInfo: KillInfo, ctx: RoomContextType, t: 
                 break;
         }
         return (<Fragment>
-            <p>{formatInsert(t, "_challenge_has_card", myPlayer.name, susCard.getName(t))}</p>
+            <p>{formatInsert(t, "_challenge_has_card", myPlayer.name, Card.getName(t, susCard))}</p>
             <p>{formatInsert(t, "_challenge_replace_card", myPlayer.name)}</p>
             {nextStateElem}
         </Fragment>);
@@ -87,16 +85,15 @@ export function ChallengeResultBoard(
     killInfo: KillInfo): JSX.Element {
     const iLost = killInfo.ownerId === playerId;
     const iChallenged = playerId === challengerId;
-    const susCard = cardPool.get(killInfo.challengedCard);
     if (iLost) {
-        return handleLostChallenge(iChallenged, t, myPlayer, susCard);
+        return handleLostChallenge(iChallenged, t, myPlayer, killInfo.challengedCard);
     }
     //I didn't lose and I challenged correctly
     if (iChallenged) {
         return (<p>{formatInsert(t, "_challenge_success", myPlayer.name)}</p>);
     }
     //I didn't lose, not a challenger.
-    return handleNotLostNotChallenge(killInfo, ctx, t, playerId, myPlayer, susCard);
+    return handleNotLostNotChallenge(killInfo, ctx, t, playerId, myPlayer, killInfo.challengedCard);
 }
 
 export function inferPostDiscard(t: any, ctx: RoomContextType, playerId: string, player: Player): JSX.Element {

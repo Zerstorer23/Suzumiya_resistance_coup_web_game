@@ -18,33 +18,34 @@ export enum CardRole {
     Assassin = "A",
     Contessa = "T",
     Ambassador = "S",
+    Inquisitor = "I",
     DEAD_Duke = "d",
     DEAD_Captain = "c",
     DEAD_Assassin = "a",
     DEAD_Contessa = "t",
     DEAD_Ambassador = "s",
+    DEAD_Inquisitor = "i",
 }
 
 export const BASE_CARDS = [CardRole.Duke, CardRole.Captain, CardRole.Assassin, CardRole.Ambassador, CardRole.Contessa];
+export const EXPANSION_CARDS = [CardRole.Duke, CardRole.Captain, CardRole.Assassin, CardRole.Ambassador, CardRole.Inquisitor];
 
 /*
 This class is intended to be used as UI purposed
 does not go into database
 */
 export class Card {
-    cardRole: CardRole;
 
-    constructor(role: CardRole) {
-        this.cardRole = role;
+    public static isDead(role: CardRole): boolean {
+        return DeckManager.isDead(role);
     }
 
-    isDead(): boolean {
-        return DeckManager.isDead(this.cardRole);
-    }
-
-    getImage() {
-        switch (this.cardRole) {
-
+    public static getImage(role: CardRole) {
+        switch (role) {
+            case CardRole.Inquisitor:
+                return get(Images.Mikuru);
+            case CardRole.DEAD_Inquisitor:
+                return get(Images.MikuruDead);
             case CardRole.Duke:
                 return get(Images.Koihime);
             case CardRole.DEAD_Duke:
@@ -71,8 +72,8 @@ export class Card {
         }
     }
 
-    getName(t: any) {
-        switch (this.cardRole) {
+    public static getName(t: any, role: CardRole): string {
+        switch (role) {
             case CardRole.Duke:
             case CardRole.DEAD_Duke:
                 return t("_duke_name");
@@ -88,6 +89,9 @@ export class Card {
             case CardRole.DEAD_Ambassador:
             case CardRole.Ambassador:
                 return t("_ambassador_name");
+            case CardRole.DEAD_Inquisitor:
+            case CardRole.Inquisitor:
+                return t("_inquisitor_name");
             case CardRole.None:
             default:
                 return t("_unknown_name");
@@ -95,8 +99,8 @@ export class Card {
     }
 
 
-    getDesc(t: any): JSX.Element {
-        switch (this.cardRole) {
+    public static getDesc(t: any, role: CardRole): JSX.Element {
+        switch (role) {
             case CardRole.Duke:
             case CardRole.DEAD_Duke:
                 return formatInsert(t, "_duke_desc");

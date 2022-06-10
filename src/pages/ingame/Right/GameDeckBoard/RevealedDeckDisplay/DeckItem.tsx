@@ -1,10 +1,9 @@
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import classes from "pages/ingame/Right/GameDeckBoard/RevealedDeckDisplay/DeckItem.module.css";
-import {CardRole} from "system/cards/Card";
+import {Card, CardRole} from "system/cards/Card";
 import {IProps} from "system/types/CommonTypes";
 import {useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
-import {cardPool} from "system/cards/CardPool";
 import {DeckManager} from "system/cards/DeckManager";
 import {useTranslation} from "react-i18next";
 import {insert} from "lang/i18nHelper";
@@ -16,7 +15,6 @@ export default function DeckItem(props: Prop): JSX.Element {
     const {t} = useTranslation();
     const deck = ctx.room.game.deck;
     const role = props.card;
-    const card = cardPool.get(role);
     const deckTop = DeckManager.peekTopIndex(ctx);
     const total = deck.length / 5;
     const count = DeckManager.countCards(deck, role);
@@ -36,7 +34,7 @@ export default function DeckItem(props: Prop): JSX.Element {
     }
     return (
         <HorizontalLayout className={`${props.className} ${classes.itemContainer}`}>
-            <img className={classes.itemImg} alt="card" src={`${card.getImage()}`}/>
+            <img className={classes.itemImg} alt="card" src={`${Card.getImage(role)}`}/>
             <div className={classes.itemDescPanel}>
                 {counterText}
             </div>

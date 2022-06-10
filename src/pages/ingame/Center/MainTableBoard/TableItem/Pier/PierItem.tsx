@@ -8,8 +8,9 @@ import {useTranslation} from "react-i18next";
 import {insert} from "lang/i18nHelper";
 import {inferPierPanel} from "pages/ingame/Center/MainTableBoard/TableItem/Pier/PierInferer";
 import useAnimFocus, {AnimType} from "system/hooks/useAnimFocus";
-import {cardPool} from "system/cards/CardPool";
+
 import {BoardState} from "system/GameStates/States";
+import {Card} from "system/cards/Card";
 
 
 export default function PierItem(props: IProps) {
@@ -30,16 +31,16 @@ export default function PierItem(props: IProps) {
     if (pier === null || pier === undefined) return <Fragment/>;
     const showIcon = (board !== BoardState.ChoosingBaseAction);
 
-    const lastCard = cardPool.get(pier.lastClaimed);
+    const lastCard = (pier.lastClaimed);
     return (
         <HorizontalLayout className={`${props.className}`}>
             <div className={classes.profileContainer}>
                 {(showIcon) && <img
-                    src={`${lastCard.getImage()}`}
-                    alt={lastCard.getName(t)}
+                    src={`${Card.getImage(lastCard)}`}
+                    alt={Card.getName(t, lastCard)}
                     className={classes.imgLastUsed}
                 />}
-                <p className={classes.textLastClaim}>{insert(t, "_last_claim", lastCard.getName(t))}</p>
+                <p className={classes.textLastClaim}>{insert(t, "_last_claim", Card.getName(t, lastCard))}</p>
                 <p className={classes.playerName}>{pier.name}</p>
             </div>
             <div className={`${classes.actionContainer} ${panelCss}`}>

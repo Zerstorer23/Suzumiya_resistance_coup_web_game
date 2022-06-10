@@ -3,12 +3,12 @@ import {Fragment, useContext, useEffect} from "react";
 import ReactDOM from "react-dom";
 import {IProps} from "system/types/CommonTypes";
 import {Player} from "system/GameStates/GameTypes";
-import {CardRole} from "system/cards/Card";
+import {Card, CardRole} from "system/cards/Card";
 import RoomContext from "system/context/roomInfo/room-context";
 import {DeckManager} from "system/cards/DeckManager";
 import {useTranslation} from "react-i18next";
 import {formatInsert} from "lang/i18nHelper";
-import {cardPool} from "system/cards/CardPool";
+
 import animClasses from "animation.module.css";
 import LocalContext, {LocalField} from "system/context/localInfo/local-context";
 import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
@@ -34,8 +34,8 @@ function GameOverWindow(props: GOprops) {
         <div className={`${classes.modal} ${animClasses.slideDown}`}>
             <p>{formatInsert(t, "_game_winner", props.player.name)}</p>
             <p>{formatInsert(t, "_game_cardUsed",
-                cardPool.get(props.card1).getName(t),
-                cardPool.get(props.card2).getName(t))}</p>
+                Card.getName(t, props.card1),
+                Card.getName(t, props.card2))}</p>
             <p>{t("_return_lobby")}<MyTimer/></p>
         </div>
     );

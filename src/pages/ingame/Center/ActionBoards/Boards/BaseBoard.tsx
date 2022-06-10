@@ -4,7 +4,6 @@ import BaseActionButton, {
 import {Fragment, useContext, useEffect, useState} from "react";
 import LocalContext, {LocalContextType, LocalField,} from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
-import {actionPool} from "system/GameStates/ActionInfo";
 import {ActionType, StateManager} from "system/GameStates/States";
 import classes from "./BaseBoard.module.css";
 import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
@@ -37,7 +36,8 @@ function createActionBoards(t: any, actions: ActionType[], onMakeAction: any): J
                     <BaseActionButton
                         key={index}
                         index={index}
-                        param={actionPool.get(action)}
+                        isCardRole={false}
+                        param={action}
                         onClickButton={() => {
                             onMakeAction(action);
                         }}

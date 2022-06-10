@@ -12,7 +12,7 @@ import {LocalContextType} from "system/context/localInfo/local-context";
 import ReactForeignAidBoard from "pages/ingame/Center/ActionBoards/Boards/ReactForeignAidBoard";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {Fragment} from "react";
-import AmbassadorBoard2 from "pages/ingame/Center/ActionBoards/Boards/AmbassadorBoard2";
+import AmbassadorBoard from "pages/ingame/Center/ActionBoards/Boards/AmbassadorBoard";
 
 export function getBoardElemFromRoom(ctx: RoomContextType, localCtx: LocalContextType): JSX.Element {
     const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
@@ -49,7 +49,7 @@ function handleMyTurn(boardState: BoardState, action: GameAction, myId: string):
         case BoardState.ChoosingBaseAction:
             return <BaseBoard/>;
         case BoardState.AmbassadorAccepted:
-            return <AmbassadorBoard2/>;
+            return <AmbassadorBoard/>;
         default:
             return <WaitingBoard/>;
     }

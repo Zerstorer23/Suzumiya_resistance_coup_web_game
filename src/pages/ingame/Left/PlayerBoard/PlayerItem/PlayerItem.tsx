@@ -8,11 +8,12 @@ import RoomContext from "system/context/roomInfo/room-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {DeckManager} from "system/cards/DeckManager";
 import {Images} from "resources/Resources";
-import {cardPool} from "system/cards/CardPool";
+
 import {useTranslation} from "react-i18next";
 import useAnimFocus, {AnimType} from "system/hooks/useAnimFocus";
 import gc from "global.module.css";
 import ImageText from "pages/components/ui/ImageButton/ImageText";
+import {Card} from "system/cards/Card";
 
 type Props = IProps & {
     player: Player;
@@ -51,7 +52,7 @@ export default function PlayerItem(props: Props): JSX.Element {
         <div className={`${classes.clickContainer}`}>
             <HorizontalLayout className={`${classes.container} ${gc.borderColor} ${panelColor}`}>
                 <img
-                    src={`${cardPool.get(props.player.lastClaimed).getImage()}`}
+                    src={`${Card.getImage(props.player.lastClaimed)}`}
                     alt="lastUsd"
                     className={`${classes.characterIcon} ${claimCss}`}
                 />

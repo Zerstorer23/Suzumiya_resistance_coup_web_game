@@ -3,7 +3,7 @@ import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.cs
 import {Fragment, useContext, useEffect} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
-import {actionPool} from "system/GameStates/ActionInfo";
+
 import {ActionType, BoardState} from "system/GameStates/States";
 import TransitionManager, {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {TurnManager} from "system/GameStates/TurnManager";
@@ -61,7 +61,8 @@ export default function ReactAssassinBoard(): JSX.Element {
                         <BaseActionButton
                             key={index}
                             index={index}
-                            param={actionPool.get(action)}
+                            isCardRole={false}
+                            param={(action)}
                             onClickButton={() => {
                                 onMakeAction(action);
                             }}

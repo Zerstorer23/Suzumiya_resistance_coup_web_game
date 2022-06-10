@@ -1,8 +1,8 @@
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {LocalContextType} from "system/context/localInfo/local-context";
 import {Fragment} from "react";
-import {cardPool} from "system/cards/CardPool";
-import {CardRole} from "system/cards/Card";
+
+import {Card, CardRole} from "system/cards/Card";
 import {KillInfo, Player} from "system/GameStates/GameTypes";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import {formatInsert} from "lang/i18nHelper";
@@ -34,15 +34,15 @@ export function inferTargetPanel(
         case BoardState.CalledAssassinate:
             return <p>{formatInsert(t, "_target_is_deciding", target.name)}</p>;
         case BoardState.DukeBlocksAccepted:
-            return claimElem(t, target!, cardPool.get(CardRole.Duke).getName(t), "_call_aid_block");
+            return claimElem(t, target!, Card.getName(t, CardRole.Duke), "_call_aid_block");
 
         //====BLOCKS
         case BoardState.CalledGetTwoBlocked:
-            return claimElem(t, target, cardPool.get(CardRole.Duke).getName(t), "_call_aid_block");
+            return claimElem(t, target, Card.getName(t, CardRole.Duke), "_call_aid_block");
         case BoardState.StealBlocked:
-            return claimElem(t, target, cardPool.get(action.param as CardRole).getName(t), "_call_steal_block");
+            return claimElem(t, target, Card.getName(t, action.param as CardRole), "_call_steal_block");
         case BoardState.AssassinBlocked:
-            return claimElem(t, target, cardPool.get(CardRole.Contessa).getName(t), "_call_assassinate_block");
+            return claimElem(t, target, Card.getName(t, CardRole.Contessa), "_call_assassinate_block");
         case BoardState.StealAccepted:
             return <p>{formatInsert(t, "_got_stolen", target?.name)}</p>;
         case BoardState.StealBlockAccepted:
@@ -54,7 +54,7 @@ export function inferTargetPanel(
         case BoardState.ContessaChallenged:
             const killInfo: KillInfo = action.param as KillInfo;
             let susCard = killInfo.challengedCard;
-            return <p>{formatInsert(t, "_notify_challenge_reveal", target.name, cardPool.get(susCard).getName(t))}</p>;
+            return <p>{formatInsert(t, "_notify_challenge_reveal", target.name, Card.getName(t, susCard))}</p>;
         ///===Discarding
         case BoardState.DiscardingCard:
             return inferDiscarding(t, ctx, targetId, target);
@@ -78,7 +78,7 @@ function inferChallenged(
     if (StateManager.targetIsChallenged(board)) {
         return <p>
             {formatInsert(t, "_notify_challenge_reveal",
-                targetPlayer.name, cardPool.get(susCard).getName(t))}
+                targetPlayer.name, Card.getName(t, susCard))}
         </p>;
     }
     switch (board) {
@@ -90,7 +90,7 @@ function inferChallenged(
             //I challenged Pier
             return <p>{formatInsert(t, "_challenge_the_card",
                 targetPlayer.name, pier.name,
-                cardPool.get(susCard).getName(t))}
+                Card.getName(t, susCard))}
             </p>;
     }
     return <Fragment/>;

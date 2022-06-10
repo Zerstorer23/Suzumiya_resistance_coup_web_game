@@ -35,7 +35,7 @@ export function getDefaultHeader(): RoomHeader {
         hostId: "",
         seed: getRandomSeed(),
         games: GameConfigs.defaultGames,
-        settings: {expansion: false},
+        settings: {expansion: DS.expansionPack},
     };
 }
 
