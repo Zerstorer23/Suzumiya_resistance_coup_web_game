@@ -1,90 +1,91 @@
-import React, {useState} from "react";
-import {IProps} from "system/types/CommonTypes";
+import React, { useState } from "react";
+import { IProps } from "system/types/CommonTypes";
 import "firebase/compat/database";
-import {MAX_MUSIC_QUEUE, MAX_PERSONAL_QUEUE} from "pages/components/ui/MusicModule/MusicModule";
-import {randomInt} from "system/GameConstants";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {
+  MAX_MUSIC_QUEUE,
+  MAX_PERSONAL_QUEUE,
+} from "pages/components/ui/MusicModule/MusicModule";
+import { randomInt } from "system/GameConstants";
+import {
+  DbReferences,
+  ReferenceManager,
+} from "system/Database/ReferenceManager";
 
 export type MusicEntry = {
-    key: string,
-    pid: string,
-    vid: string,
-}
+  key: string;
+  pid: string;
+  vid: string;
+};
 // export type MusicDBType = MusicContextType & { queue: any };
 export type MusicContextType = {
-    list: MusicEntry[];
-    current: CounterMusicType,
-    enqueue: (a: MusicEntry) => void;
-    remove: (a: MusicEntry) => void;
-    dequeue: () => MusicEntry | null;
-    smartRandom: () => MusicEntry | null;
-    setMusic: (cm: CounterMusicType) => void;
+  list: MusicEntry[];
+  current: CounterMusicType;
+  enqueue: (a: MusicEntry) => void;
+  remove: (a: MusicEntry) => void;
+  dequeue: () => MusicEntry | null;
+  smartRandom: () => MusicEntry | null;
+  setMusic: (cm: CounterMusicType) => void;
 };
 export type CounterMusicType = {
-    c: number,
-    entry: MusicEntry
+  c: number;
+  entry: MusicEntry;
 };
 const defaultEntry: CounterMusicType = {
-    c: -1,
-    entry: {key: "", pid: "", vid: ""}
+  c: -1,
+  entry: { key: "", pid: "", vid: "" },
 };
 
 const MusicContext = React.createContext<MusicContextType>({
-    list: [],
-    current: {...defaultEntry},
-    enqueue: (a: MusicEntry) => {
-    },
-    remove: (a: MusicEntry) => {
-    },
-    dequeue: () => null,
-    smartRandom: () => null,
-    setMusic: (a: any) => {
-    },
+  list: [],
+  current: { ...defaultEntry },
+  enqueue: (a: MusicEntry) => {},
+  remove: (a: MusicEntry) => {},
+  dequeue: () => null,
+  smartRandom: () => null,
+  setMusic: (a: any) => {},
 });
 
-
 export function MusicProvider(props: IProps) {
-    const [list, setList] = useState<MusicEntry[]>([]);
-    const [current, setCurrent] = useState<CounterMusicType>({...defaultEntry});
+  const [list, setList] = useState<MusicEntry[]>([]);
+  const [current, setCurrent] = useState<CounterMusicType>({ ...defaultEntry });
 
-    function enqueue(me: MusicEntry) {
-        setList((prev) => {
-            return [...prev, me];
-        });
-    }
+  function enqueue(me: MusicEntry) {
+    setList((prev) => {
+      return [...prev, me];
+    });
+  }
 
-    function remove(removed: MusicEntry) {
-        setList((prev) => {
-            const newState = prev.filter((entry) => {
-                return entry.key !== removed.key;
-            });
-            return (newState);
-        });
-    }
+  function remove(removed: MusicEntry) {
+    setList((prev) => {
+      const newState = prev.filter((entry) => {
+        return entry.key !== removed.key;
+      });
+      return newState;
+    });
+  }
 
-    function dequeue(): MusicEntry | null {
-        if (list.length === 0) return null;
-        const me = list.shift()!;
-        remove(me);
-        ReferenceManager.getRef(DbReferences.MUSIC_queue).child(me.key).remove();
-        return me!;
-    }
+  function dequeue(): MusicEntry | null {
+    if (list.length === 0) return null;
+    const me = list.shift()!;
+    remove(me);
+    ReferenceManager.getRef(DbReferences.MUSIC_queue).child(me.key).remove();
+    return me!;
+  }
 
-    function smartRandom(): MusicEntry | null {
-        if (list.length === 0) return null;
-        const random = randomInt(0, Math.min(5, list.length - 1));
-        const me = list[random];
-        remove(me);
-        ReferenceManager.getRef(DbReferences.MUSIC_queue).child(me.key).remove();
-        return me!;
-    }
+  function smartRandom(): MusicEntry | null {
+    if (list.length === 0) return null;
+    const random = randomInt(0, Math.min(5, list.length - 1));
+    const me = list[random];
+    remove(me);
+    ReferenceManager.getRef(DbReferences.MUSIC_queue).child(me.key).remove();
+    return me!;
+  }
 
-    function setMusic(cm: CounterMusicType) {
-        setCurrent(cm);
-    }
+  function setMusic(cm: CounterMusicType) {
+    setCurrent(cm);
+  }
 
-
-    /*    function loadData(a: MusicDBType) {
+  /*    function loadData(a: MusicDBType) {
             const queueObj = a.queue;
             const list: MusicEntry[] = [];
             if (queueObj !== undefined) {
@@ -97,70 +98,81 @@ export function MusicProvider(props: IProps) {
             setCurrent(a.current);
         }*/
 
-    const context: MusicContextType = {
-        list,
-        current,
-        enqueue,
-        remove,
-        dequeue,
-        smartRandom,
-        setMusic,
-    };
-    return (
-        <MusicContext.Provider value={context}>
-            {props.children}
-        </MusicContext.Provider>
-    );
+  const context: MusicContextType = {
+    list,
+    current,
+    enqueue,
+    remove,
+    dequeue,
+    smartRandom,
+    setMusic,
+  };
+  return (
+    <MusicContext.Provider value={context}>
+      {props.children}
+    </MusicContext.Provider>
+  );
 }
 
 export enum MusicResponse {
-    Success,
-    InvalidURL,
-    FullQueue,
-    Overloading,
+  Success,
+  InvalidURL,
+  FullQueue,
+  Overloading,
 }
 
+function filterVidID(url: string) {
+  if (url.includes("youtu.be")) {
+    //share url
+    let temp = url.lastIndexOf("/");
+    return url.substring(temp + 1, temp + 12);
+  } else {
+    let temp = url.indexOf("v=");
+    return url.substring(temp + 2, temp + 13);
+  }
+}
 
-export function pushMusicToQueue(musicCtx: MusicContextType, url: string, requesterId: string): MusicResponse {
-    const myList = musicCtx.list.filter((entry) => {
-        return entry.pid === requesterId;
-    });
-    if (myList.length >= MAX_PERSONAL_QUEUE) return MusicResponse.Overloading;
-    if (musicCtx.list.length >= MAX_MUSIC_QUEUE) return MusicResponse.FullQueue;
-    const urlToken = url.split("=");
-    //TODO
-    // ?vid-ddd?list=dssd
-    // ?list=dd?vid=ddd
-    // https://youtu.be/LbFoEnC0zEw
-    const id = urlToken[urlToken.length - 1];
-    if (id.length !== 11) return MusicResponse.InvalidURL;
-    const minfo: MusicEntry = {
-        key: "",
-        pid: requesterId,
-        vid: id,
-    };
-    console.log("c ", musicCtx.current.c);
-    if (musicCtx.current.c < 0) {
-        const currRef = ReferenceManager.getRef(DbReferences.MUSIC_current);
-        currRef.set({c: 0, entry: minfo});
-    } else {
-        console.log("UPdate push arr");
-        const ref = ReferenceManager.getRef(DbReferences.MUSIC_queue);
-        ref.push(minfo);
-    }
-    return MusicResponse.Success;
+export function pushMusicToQueue(
+  musicCtx: MusicContextType,
+  url: string,
+  requesterId: string
+): MusicResponse {
+  const myList = musicCtx.list.filter((entry) => {
+    return entry.pid === requesterId;
+  });
+  if (myList.length >= MAX_PERSONAL_QUEUE) return MusicResponse.Overloading;
+  if (musicCtx.list.length >= MAX_MUSIC_QUEUE) return MusicResponse.FullQueue;
+  const id = filterVidID(url);
+  if (id.length !== 11) return MusicResponse.InvalidURL;
+  const minfo: MusicEntry = {
+    key: "",
+    pid: requesterId,
+    vid: id,
+  };
+  console.log("c ", musicCtx.current.c);
+  if (musicCtx.current.c < 0) {
+    const currRef = ReferenceManager.getRef(DbReferences.MUSIC_current);
+    currRef.set({ c: 0, entry: minfo });
+  } else {
+    console.log("UPdate push arr");
+    const ref = ReferenceManager.getRef(DbReferences.MUSIC_queue);
+    ref.push(minfo);
+  }
+  return MusicResponse.Success;
 }
 
 export function pushCurrentMusic(c: number, me: MusicEntry) {
-    ReferenceManager.updateReference(DbReferences.MUSIC_current, {c: c + 1, entry: me});
+  ReferenceManager.updateReference(DbReferences.MUSIC_current, {
+    c: c + 1,
+    entry: me,
+  });
 }
 
 export function cleanMusic() {
-    const cRef = ReferenceManager.getRef(DbReferences.MUSIC_current);
-    const qRef = ReferenceManager.getRef(DbReferences.MUSIC_queue);
-    qRef.remove();
-    cRef.set(defaultEntry);
+  const cRef = ReferenceManager.getRef(DbReferences.MUSIC_current);
+  const qRef = ReferenceManager.getRef(DbReferences.MUSIC_queue);
+  qRef.remove();
+  cRef.set(defaultEntry);
 }
-
 
 export default MusicContext;
