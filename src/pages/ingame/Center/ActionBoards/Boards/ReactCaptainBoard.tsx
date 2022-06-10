@@ -54,7 +54,7 @@ export default function ReactCaptainBoard(): JSX.Element {
                 default:
                     return TransitionAction.Abort;
             }
-            playerClaimedRole(myId, myPlayer, action);
+            playerClaimedRole({id: myId, player: myPlayer}, action);
             return TransitionAction.Success;
         });
     };

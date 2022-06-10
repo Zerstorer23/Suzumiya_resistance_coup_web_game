@@ -5,6 +5,8 @@ import RoomContext from "system/context/roomInfo/room-context";
 import LocalContext, {LocalField} from "system/context/localInfo/local-context";
 import {Navigation} from "App";
 import {useHistory} from "react-router-dom";
+import classes from "pages/lobby/Lobby.module.css";
+import gc from "global.module.css";
 
 export default function LoadingPage() {
     const ctx = useContext(RoomContext);
@@ -21,5 +23,8 @@ export default function LoadingPage() {
         }
     }, [turns, myId]);
 
-    return <ImagePage imgSrc={Images.LoadingImg} titleKey={"_loading"}/>;
+    return <div className={`${classes.container} ${gc.panelBackground}`}>
+        <ImagePage imgSrc={Images.LoadingImg} titleKey={"_loading"}/>;
+
+    </div>
 }

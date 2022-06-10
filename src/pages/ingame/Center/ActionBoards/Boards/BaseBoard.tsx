@@ -109,7 +109,7 @@ export default function BaseBoard(): JSX.Element {
 
     useDefaultAction(ctx, localCtx, () => {
         if (forceCoup) {
-            TransitionManager.pushCalledState(ctx, ActionType.Coup, myId, myPlayer, myId);
+            TransitionManager.pushCalledState(ctx, ActionType.Coup, {id: myId, player: myPlayer}, myId);
         } else {
             onMakeAction(ActionType.GetOne);
         }
@@ -127,7 +127,7 @@ export default function BaseBoard(): JSX.Element {
     function onPlayerSelected(playerId: string) {
         if (!StateManager.isTargetableAction(savedAction)) return;
         console.log("Selected player " + playerId);
-        TransitionManager.pushCalledState(ctx, savedAction, myId, myPlayer, playerId);
+        TransitionManager.pushCalledState(ctx, savedAction, {id: myId, player: myPlayer}, playerId);
     }
 
 
@@ -136,7 +136,7 @@ export default function BaseBoard(): JSX.Element {
         if (DS.StrictRules && getRequiredCoins(action) > myPlayer.coins) return;
         const handled = handleTargetableAction(action);
         if (handled) return;
-        TransitionManager.pushCalledState(ctx, action, myId, myPlayer);
+        TransitionManager.pushCalledState(ctx, action, {id: myId, player: myPlayer});
     }
 
     return (elem);

@@ -11,8 +11,8 @@ import {DeckManager} from "system/cards/DeckManager";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
 import {cardPool} from "system/cards/CardPool";
 import {useTranslation} from "react-i18next";
-import {insert} from "lang/i18nHelper";
 import {CursorState} from "system/context/localInfo/LocalContextProvider";
+import gc from "global.module.css";
 
 type Prop = IProps & {
     index: number;
@@ -57,7 +57,7 @@ export default function BaseActionButton(props: Prop) {
     let subClassName = "";
     if (isCard) {
         iconElem = <img
-            className={`${classes.characterIcon}`}
+            className={`${classes.characterIcon} ${gc.absoluteLeftCenter}`}
             src={`${cardPool.get(relatedRole).getImage()}`}
             alt="card"
         />;
@@ -67,8 +67,8 @@ export default function BaseActionButton(props: Prop) {
     const hasEnoughMoney = myPlayer.coins >= cost;
     let subText = hasCard ? "" : t("_lie_marker");
     if (!hasEnoughMoney) {
-        subClassName = classes.noCoinText;
-        subText = insert(t, "_coin_cost", cost);
+        subClassName = classes.lieText;
+        subText = t("_coin_cost");
     }
 
     const disableCss = hasEnoughMoney ? classes.cell : classes.cellDisabled;
@@ -86,8 +86,8 @@ export default function BaseActionButton(props: Prop) {
         >
             <HorizontalLayout>
                 {iconElem}
-                <p className={classes.nameText}>{name}</p>
-                <p className={subClassName}>{subText}</p>
+                <p className={`${classes.nameText} ${gc.absoluteCenter}`}>{name}</p>
+                <p className={`${subClassName} ${gc.absoluteRightCenter}`}>{subText}</p>
             </HorizontalLayout>
             <div className={classes.shortcutHint}>{props.index + 1}</div>
         </button>

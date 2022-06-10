@@ -5,6 +5,7 @@ import {IProps} from "system/types/CommonTypes";
 import animClasses from "animation.module.css";
 import {useTranslation} from "react-i18next";
 import {insert} from "lang/i18nHelper";
+import gc from "global.module.css";
 
 type Prop = IProps & {
     player: Player;
@@ -26,7 +27,7 @@ export default function PlayerListItem(props: Prop) {
         tagElem = <div className={`${classes.readyPanel} ${animClasses.invisible}`}/>;
     }
     return (
-        <div className={`${classes.item} ${animClasses.fadeIn}`}>
+        <div className={`${classes.item} ${gc.borderBottom} ${animClasses.fadeIn}`}>
             {tagElem}
             <p className={`${hostCss} ${classes.namePanel}`}>{name}</p>
         </div>

@@ -31,7 +31,7 @@ export default function ReactForeignAidBoard(): JSX.Element {
             //Target == the one who blocks
             newAction.targetId = myId;
             newState.board = BoardState.CalledGetTwoBlocked;
-            playerClaimedRole(myId, myPlayer, action);
+            playerClaimedRole({id: myId, player: myPlayer}, action);
             return TransitionAction.Success;
         });
     };

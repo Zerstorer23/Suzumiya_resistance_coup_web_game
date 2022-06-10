@@ -13,7 +13,7 @@ export default function GameDeckBoard(): JSX.Element {
     //pass deck
     const {t} = useTranslation();
     return (
-        <div className={`${gc.round_border} ${classes.container}`}>
+        <div className={`${gc.round_border} ${gc.borderColor} ${classes.container}`}>
             <h6 className={classes.title}>{t("_revealed_cards")}</h6>
             <div className={`${classes.gridContainer}`}>
                 {cardsInDeck.map((role, index, array) => {

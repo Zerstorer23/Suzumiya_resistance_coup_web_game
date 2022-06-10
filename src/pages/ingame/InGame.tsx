@@ -17,6 +17,7 @@ import {DS} from "system/Debugger/DS";
 import {DeckManager} from "system/cards/DeckManager";
 import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import gc from "global.module.css";
 
 export default function InGame() {
     const ctx = useContext(RoomContext);
@@ -68,7 +69,7 @@ export default function InGame() {
     }, [turn]);
     if (myId === null) return <Fragment/>;
     return (
-        <div className={classes.container}>
+        <div className={`${classes.container} ${gc.panelBackground}`}>
             <HorizontalLayout>
                 <VerticalLayout className={`${classes.leftPanel}`}>
                     <PlayerBoard/>

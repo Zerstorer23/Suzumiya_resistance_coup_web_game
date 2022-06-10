@@ -54,8 +54,8 @@ export default function PlayersPanel() {
     const numGames = ctx.room.header.games;
     const remainingCss = getRemainingCss(numGames);
     return (
-        <VerticalLayout className={`${gc.round_border} ${classes.container} `}>
-            <div className={classes.headerContainer}>
+        <VerticalLayout className={`${gc.round_border} ${gc.borderColor} ${classes.container} `}>
+            <div className={`${classes.headerContainer} ${gc.borderBottom}`}>
                 <p className={classes.headerTitle}>{t("_game_title")}</p>
                 <p className={classes.headerPlayerNum}>{insert(t, "_connected", currPlayer)}</p>
             </div>
@@ -67,7 +67,7 @@ export default function PlayersPanel() {
                 })
             }</VerticalLayout>
             <div className={classes.bottomPanel}>
-                <div className={`${classes.remainingGames} ${remainingCss}`}>
+                <div className={`${classes.remainingGames} ${gc.borderColor} ${remainingCss}`}>
                     <p>
                         {formatInsert(t, "_games_remaining", numGames)}
                     </p>
@@ -77,7 +77,7 @@ export default function PlayersPanel() {
                         <button className={classes.buttonStart} onClick={onClickStart}>
                             {t(buttonKey)}
                         </button> :
-                        <p className={classes.noMoreCoins}>
+                        <p className={`${classes.noMoreCoins} ${gc.borderColor}`}>
                             {amHost ? t("_prompt_how_to") : t("_prompt_play_more_want")}
                         </p>
                 }

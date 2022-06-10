@@ -14,23 +14,12 @@ import LocalContext, {LocalField} from "system/context/localInfo/local-context";
 import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
 import {MyTimer} from "pages/components/ui/MyTimer/MyTimer";
 
-function Backdrop(props: IProps) {
+function Backdrop() {
     return (
-        <div
-            className={classes.backdrop}
-            //            onClick={props.onClickBackdrop}
-        />
+        <div className={classes.backdrop}/>
     );
 }
 
-/*function ModalOverlay(props: IProps) {
-    return (
-        <div className={classes.modal}>
-            <div className={classes.content}>{props.children}</div>
-
-        </div>
-    );
-}*/
 
 type GOprops = IProps & {
     player: Player;
@@ -42,13 +31,11 @@ function GameOverWindow(props: GOprops) {
     const {t} = useTranslation();
     return (
         <div className={`${classes.modal} ${animClasses.slideDown}`}>
-            <div className={classes.content}>
-                <p>{formatInsert(t, "_game_winner", props.player.name)}</p>
-                <p>{formatInsert(t, "_game_cardUsed",
-                    cardPool.get(props.card1).getName(t),
-                    cardPool.get(props.card2).getName(t))}</p>
-                <p>{t("_return_lobby")}<MyTimer/></p>
-            </div>
+            <p>{formatInsert(t, "_game_winner", props.player.name)}</p>
+            <p>{formatInsert(t, "_game_cardUsed",
+                cardPool.get(props.card1).getName(t),
+                cardPool.get(props.card2).getName(t))}</p>
+            <p>{t("_return_lobby")}<MyTimer/></p>
         </div>
     );
 }

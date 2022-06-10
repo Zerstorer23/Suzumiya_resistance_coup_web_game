@@ -21,6 +21,6 @@ export default function ActionBoards(props: Props): JSX.Element {
     }, [board, turn, ctx.room.playerMap.size]);
 
     return (
-        <div className={`${gc.round_border} ${classes.container}`}>{boardElem}</div>
+        <div className={`${gc.round_border} ${gc.borderColor} ${classes.container}`}>{boardElem}</div>
     );
 }

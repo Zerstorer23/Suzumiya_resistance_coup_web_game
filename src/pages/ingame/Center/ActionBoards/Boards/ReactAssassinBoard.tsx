@@ -45,7 +45,7 @@ export default function ReactAssassinBoard(): JSX.Element {
             case ActionType.ContessaBlocksAssassination:
                 TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
                     newState.board = BoardState.AssassinBlocked;
-                    playerClaimedRole(myId, myPlayer, action);
+                    playerClaimedRole({id: myId, player: myPlayer}, action);
                     return TransitionAction.Success;
                 });
                 break;

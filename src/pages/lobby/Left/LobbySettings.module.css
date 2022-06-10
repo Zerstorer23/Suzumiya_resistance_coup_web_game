@@ -8,10 +8,13 @@
     font-size: 1rem;
 }
 
+.nameTextArea {
+    font-size: 1.2rem;
+}
+
 .settingsContainer {
     width: 100%;
     height: 50%;
-    border-bottom: navy groove 0.2rem;
 }
 
 .creditsContainer {
@@ -40,6 +43,6 @@
 
 .isDisabled {
     pointer-events: none;
-    background-color: #dddddd;
+    background-color: #000000;
 }
 

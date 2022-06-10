@@ -16,22 +16,22 @@ import {AudioFile, audioPool} from "resources/AudioManager";
 export default function MainTableBoard(): JSX.Element {
     const {t} = useTranslation();
     const ctx = useContext(RoomContext);
-    const board = ctx.room.game.state.board
+    const board = ctx.room.game.state.board;
     useEffect(() => {
         if (StateManager.isChallenged(board)) {
             audioPool.play(AudioFile.Objection);
         }
-    }, [board])
+    }, [board]);
 
     return (
-        <div className={`${gc.round_border} ${classes.container}`}>
+        <div className={`${gc.round_border} ${gc.borderColor} ${classes.container}`}>
             <VerticalLayout>
                 <p className={classes.timer}>
                     <MyTimer/>{t("_seconds_remaining")}
                 </p>
-                <PierItem className={`${classes.pierContainer} ${animClasses.slideDown}`}/>
+                <PierItem className={`${classes.pierContainer} ${animClasses.slideDown} ${gc.borderBottom}`}/>
                 <HorizontalLayout className={classes.horizontalContainer}>
-                    <TargetItem className={`${classes.targetContainer} ${animClasses.slideUp}`}/>
+                    <TargetItem className={`${classes.targetContainer} ${gc.borderRight} ${animClasses.slideUp}`}/>
                     <ChallengerItem className={`${classes.challengerContainer} ${animClasses.slideUp}`}/>
                 </HorizontalLayout>
             </VerticalLayout>

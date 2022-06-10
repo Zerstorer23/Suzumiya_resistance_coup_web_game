@@ -3,8 +3,8 @@
     padding: 0;
     box-sizing: border-box;
     font-size: 1rem;
+    color: rgba(255, 255, 255, 255);
 }
-
 
 body {
     margin: 0;
@@ -20,6 +20,20 @@ code {
     monospace;
 }
 
+button {
+    background-color: rgba(64, 70, 78, 255);
+    border: 0.2rem solid rgba(32, 32, 32, 255);
+    border-radius: 0.7rem;
+}
+
 button:hover {
-    background-color: burlywood;
+    background-color: rgba(141, 151, 161, 255);
+}
+
+textarea {
+    background-color: rgba(23, 31, 42, 255);
+    border: 0.2rem solid rgba(62, 71, 84, 255);
+    border-radius: 0.7rem;
+    display: block;
+    resize: none;
 }

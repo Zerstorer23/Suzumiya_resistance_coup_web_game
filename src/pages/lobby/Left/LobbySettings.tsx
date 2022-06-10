@@ -41,15 +41,14 @@ export default function LobbySettings() {
     }
 
     return (
-        <div className={`${classes.container} ${gc.round_border}`}>
-            <div className={classes.settingsContainer}>
+        <div className={`${classes.container} ${gc.round_border} ${gc.borderColor}`}>
+            <div className={`${classes.settingsContainer} ${gc.borderBottom}`}>
                 <p className={classes.nameHeader}>{t("_name")}</p>
-                <input
-                    className={`${classes.fieldType} ${myPlayer.isReady && classes.isDisabled}`}
-                    type="text"
+                <textarea
+                    className={`${classes.fieldType} ${classes.nameTextArea} ${myPlayer.isReady && classes.isDisabled}`}
                     onBlur={onFinishEditName}
                     defaultValue={myPlayer.name}
-                ></input>
+                ></textarea>
                 <button className={`${classes.fieldType}`}
                         onClick={onClickCopy}>{t("_copy_link")}</button>
             </div>

@@ -38,9 +38,7 @@
 
 .inputField {
     height: 100%;
-    display: block;
     width: 80%;
-    resize: none;
 }
 
 .buttonSend {

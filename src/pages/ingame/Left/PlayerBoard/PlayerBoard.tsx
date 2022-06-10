@@ -19,7 +19,7 @@ export default function PlayerBoard(): JSX.Element {
     }, [turn]);
     return (
         <Fragment>
-            <div className={`${gc.round_border} ${classes.container}`}>
+            <div className={`${gc.round_border} ${gc.borderColor} ${classes.container}`}>
                 <p className={classes.header}>{t("_players")}</p>
                 <div className={classes.playersContainer}>
                     {sortedList.map((playerId, index) => {

@@ -42,7 +42,7 @@ export default function MyBoard(): JSX.Element {
     }
 
     return (
-        <div className={`${gc.round_border} ${classes.container}`}>
+        <div className={`${gc.round_border} ${gc.borderColor} ${classes.container}`}>
             {showRuleCard && <img className={`${classes.ruleCard} ${animClasses.fadeIn}`} alt={"cardInfo"}
                                   src={`${getImage(Images.RuleCard)}`}/>}
             <VerticalLayout>

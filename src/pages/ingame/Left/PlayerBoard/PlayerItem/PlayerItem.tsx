@@ -7,10 +7,12 @@ import LocalContext, {LocalField,} from "system/context/localInfo/local-context"
 import RoomContext from "system/context/roomInfo/room-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {DeckManager} from "system/cards/DeckManager";
-import getImage, {Images} from "resources/Resources";
+import {Images} from "resources/Resources";
 import {cardPool} from "system/cards/CardPool";
 import {useTranslation} from "react-i18next";
 import useAnimFocus, {AnimType} from "system/hooks/useAnimFocus";
+import gc from "global.module.css";
+import ImageText from "pages/components/ui/ImageButton/ImageText";
 
 type Props = IProps & {
     player: Player;
@@ -39,7 +41,6 @@ export default function PlayerItem(props: Props): JSX.Element {
         panelColor = classes.nextTurn;
         subtitle = "_next_turn";
     } else if (isMe) {
-        //My panel has highest priority and is unselectable
         panelColor = classes.isMe;
         subtitle = "_me";
     }
@@ -48,7 +49,7 @@ export default function PlayerItem(props: Props): JSX.Element {
 
     return (
         <div className={`${classes.clickContainer}`}>
-            <HorizontalLayout className={`${classes.container} ${panelColor}`}>
+            <HorizontalLayout className={`${classes.container} ${gc.borderColor} ${panelColor}`}>
                 <img
                     src={`${cardPool.get(props.player.lastClaimed).getImage()}`}
                     alt="lastUsd"
@@ -58,17 +59,12 @@ export default function PlayerItem(props: Props): JSX.Element {
                     <p className={`${namePanelClass} `}>{props.player.name}</p>
                     <p className={`${classes.subtitle} `}>{subtitle === null ? "" : t(subtitle)}</p>
                 </div>
-
-                <div className={`${classes.iconPanel} ${cardCss}`}>
-                    <img alt="" src={`${getImage(Images.Card)}`} className={classes.icon}/>
-                    <p className={`${classes.iconText} `}>
-                        {numAlive}
-                    </p>
-                </div>
-                <div className={`${classes.iconPanel} ${coinCss}`}>
-                    <img alt="" src={`${getImage(Images.Coin)}`} className={classes.icon}/>
-                    <div className={classes.iconText}>{props.player.coins}</div>
-                </div>
+                <ImageText image={Images.Card} className={cardCss}>
+                    {numAlive}
+                </ImageText>
+                <ImageText image={Images.Coin} className={coinCss}>
+                    {props.player.coins}
+                </ImageText>
             </HorizontalLayout>
         </div>
     );

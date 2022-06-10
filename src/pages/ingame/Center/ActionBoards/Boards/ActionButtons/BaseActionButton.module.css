@@ -1,6 +1,5 @@
 .cell {
     position: relative;
-    background-color: antiquewhite;
     height: 100%;
     width: 100%;
     justify-self: center;
@@ -9,18 +8,14 @@
 }
 
 
-.cell:hover {
-    background-color: bisque;
-}
-
 .cell:focus {
-    background-color: aquamarine;
+    background-color: darkblue;
 }
 
 
 .cellDisabled {
     position: relative;
-    background-color: grey;
+    background-color: rgba(64, 64, 64, 95%);
     height: 100%;
     width: 100%;
     justify-self: center;
@@ -46,28 +41,9 @@
     /*visibility: ;*/
 }
 
-.nameText {
-    height: 100%;
-    display: block;
-    flex: 8;
-    justify-self: center;
-    align-self: center;
-    text-align: center;
-}
 
 .lieText {
     color: crimson;
-    height: 100%;
-    display: block;
-    justify-self: center;
-    align-self: center;
-    text-align: center;
-    margin-right: 0.5rem;
-}
-
-.noCoinText {
-    color: aliceblue;
-    height: 100%;
     display: block;
     justify-self: center;
     align-self: center;

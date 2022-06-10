@@ -27,7 +27,7 @@
   "_deck_card_pool": "┌─────Deck Cards─────┐",
   "_dead": "Dead",
   "_coin_count": "Coins: $0",
-  "_coin_cost": "$0 coins",
+  "_coin_cost": "[No coins]",
   "_lie_marker": "[Lie]",
   "_send": "Send",
   "_seconds_remaining": "seconds remaining...",

@@ -5,7 +5,9 @@ import {Player} from "system/GameStates/GameTypes";
 import {Fragment, useContext} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import {DeckManager} from "system/cards/DeckManager";
-import getImage, {Images} from "resources/Resources";
+import {Images} from "resources/Resources";
+import gc from "global.module.css";
+import ImageText from "pages/components/ui/ImageButton/ImageText";
 
 type Props = IProps & {
     player: Player;
@@ -26,19 +28,15 @@ export default function MiniPlayerItem(props: Props): JSX.Element {
     const mainText = (baseIndex <= 8) ? `[${baseIndex}] ${props.player.name}` : props.player.name;
 
     return (
-        <div className={`${classes.clickContainer} ${classes.selectable}`} onClick={onClickPanel}>
-            <HorizontalLayout className={`${classes.container}`}>
-                <p className={`${classes.namePanel} `}>{mainText}</p>
-                <div className={`${classes.iconPanel} `}>
-                    <img alt="" src={`${getImage(Images.Card)}`} className={classes.icon}/>
-                    <p className={classes.iconText}>
-                        {DeckManager.playerAliveCardNum(deck, props.player.icard)}
-                    </p>
-                </div>
-                <div className={`${classes.iconPanel} `}>
-                    <img alt="" src={`${getImage(Images.Coin)}`} className={classes.icon}/>
-                    <div className={classes.iconText}>{props.player.coins}</div>
-                </div>
+        <div className={`${classes.clickContainer} ${gc.borderColor} ${classes.selectable}`} onClick={onClickPanel}>
+            <HorizontalLayout className={`${classes.container}  `}>
+                <p className={`${classes.namePanel}`}>{mainText}</p>
+                <ImageText image={Images.Card} className={classes.icon}>
+                    {DeckManager.playerAliveCardNum(deck, props.player.icard)}
+                </ImageText>
+                <ImageText image={Images.Coin} className={classes.icon}>
+                    {props.player.coins}
+                </ImageText>
             </HorizontalLayout>
         </div>
     );

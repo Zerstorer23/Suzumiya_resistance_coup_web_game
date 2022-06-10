@@ -1,5 +1,5 @@
 import {joinLocalPlayer} from "system/Database/PlayerDatabase";
-import {Player, PlayerMap, Room} from "system/GameStates/GameTypes";
+import {Player, PlayerEntry, PlayerMap, Room} from "system/GameStates/GameTypes";
 import {getDefaultRoom, getSortedListFromMap,} from "system/GameStates/RoomGenerator";
 import {DbRef, Listeners, ListenerTypes} from "system/types/CommonTypes";
 import {ActionType} from "system/GameStates/States";
@@ -77,30 +77,30 @@ export function registerListeners(): Listeners {
     return parseListeners();
 }
 
-export function playerClaimedRole(id: string, player: Player, action: ActionType) {
+export function playerClaimedRole(playerEntry: PlayerEntry, action: ActionType) {
     switch (action) {
         case ActionType.Steal:
         case ActionType.DefendWithCaptain:
-            player.lastClaimed = CardRole.Captain;
+            playerEntry.player.lastClaimed = CardRole.Captain;
             break;
         case ActionType.GetThree:
-            player.lastClaimed = CardRole.Duke;
+            playerEntry.player.lastClaimed = CardRole.Duke;
             break;
         case ActionType.Assassinate:
-            player.lastClaimed = CardRole.Assassin;
+            playerEntry.player.lastClaimed = CardRole.Assassin;
             break;
         case ActionType.ContessaBlocksAssassination:
-            player.lastClaimed = CardRole.Contessa;
+            playerEntry.player.lastClaimed = CardRole.Contessa;
             break;
         case ActionType.DukeBlocksForeignAid:
-            player.lastClaimed = CardRole.Duke;
+            playerEntry.player.lastClaimed = CardRole.Duke;
             break;
         case ActionType.ChangeCards:
         case ActionType.DefendWithAmbassador:
-            player.lastClaimed = CardRole.Ambassador;
+            playerEntry.player.lastClaimed = CardRole.Ambassador;
             break;
         default:
             return;
     }
-    ReferenceManager.updatePlayerReference(id, player);
+    ReferenceManager.updatePlayerReference(playerEntry.id, playerEntry.player);
 }

@@ -11,6 +11,7 @@ import {forceSetTimer} from "pages/components/ui/MyTimer/MyTimer";
 import {WaitTime} from "system/GameConstants";
 import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {Navigation} from "App";
+import gc from "global.module.css";
 
 export default function GameOverPage() {
     const ctx = useContext(RoomContext);
@@ -29,7 +30,7 @@ export default function GameOverPage() {
         }
     }, [ctx.room.game.state.turn]);
 
-    return <div className={classes.container}>
+    return <div className={`${classes.container} ${gc.panelBackground}`}>
         <GameOverPopUp/>
         <ImagePage imgSrc={Images.LoadingImg}/>;
     </div>;
