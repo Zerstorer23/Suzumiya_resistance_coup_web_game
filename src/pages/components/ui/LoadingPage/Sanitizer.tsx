@@ -6,7 +6,6 @@ import LocalContext, {
 } from "system/context/localInfo/local-context";
 import { useHistory } from "react-router-dom";
 import { Navigation } from "App";
-import { connect } from "sendSocket/sendSocket";
 
 export default function Sanitizer(props: IProps) {
   const ctx = useContext(RoomContext);
