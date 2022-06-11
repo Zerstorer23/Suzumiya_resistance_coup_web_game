@@ -64,7 +64,8 @@ export default function LobbySettings() {
                 {amHost && <Fragment>
                     <br/>
                     <br/>
-                    <input type="checkbox" id="expansion" ref={expansionCheckRef} onClick={onChecked}
+                    <input type="checkbox" id="expansion" ref={expansionCheckRef}
+                           onChange={onChecked}
                            checked={(ctx.room.header.settings.expansion)}/>
                     <label htmlFor="expansion"> {t("_check_expansion")}</label>
                     <br/>
