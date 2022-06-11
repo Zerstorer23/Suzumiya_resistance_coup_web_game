@@ -16,6 +16,7 @@ export class DeckManager {
             case CardRole.DEAD_Assassin:
             case CardRole.DEAD_Contessa:
             case CardRole.DEAD_Ambassador:
+            case CardRole.DEAD_Inquisitor:
             case CardRole.None:
             case undefined:
                 return true;
