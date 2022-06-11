@@ -17,7 +17,7 @@
   "_ambassador_name": "Ambassador",
   "_ambassador_desc": "Ambassador can view and swap cards with the top 2 cards from deck",
   "_inquisitor_name": "Inquisitor",
-  "_inquisitor_desc": "Forces a player to choose one card and replace that card with a random card from the deck",
+  "_inquisitor_desc": "Inquisitor can force a player to choose one card and replace that card with a random card from the deck",
   "_unknown_name": "?",
   "_cin_deck": "$0 in deck",
   "_me": "Me",
