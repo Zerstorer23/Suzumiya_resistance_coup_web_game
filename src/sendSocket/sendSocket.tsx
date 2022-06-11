@@ -1,22 +1,20 @@
-import React, { useState } from "react";
-import { w3cwebsocket } from "websocket";
+import React from "react";
 
-let client: w3cwebsocket;
+let client: WebSocket;
 
 export async function connect() {
-  client = new w3cwebsocket("wss://127.0.0.1:9917/");
-  client.onopen = () => {
-    console.log("connected to server");
-  };
+  console.log("connect called");
+  client = new WebSocket("wss://127.0.0.1:9917");
+  client.addEventListener("open", function (event) {
+    console.log("hello");
+  });
 }
 
-//const [chatMessage, setChatMessage] = useState("");
-
 export async function sendToPort(msg: string) {
-  if (client.readyState === w3cwebsocket.CLOSED) {
-    //infinite loop?
+  if (client.readyState === WebSocket.CLOSED) {
+    client = new WebSocket("wss://127.0.0.1:9917");
     return;
-  } else if (client.readyState === w3cwebsocket.OPEN) {
+  } else if (client.readyState === WebSocket.OPEN) {
     client.send(msg);
   }
 }
