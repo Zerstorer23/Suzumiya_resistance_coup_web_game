@@ -50,6 +50,12 @@ export function inferPierPanel(
                 {rejectionElem(t)}
             </Fragment>);
 
+        case BoardState.CalledInquisition:
+            return <Fragment>
+                <p>{formatInsert(t, "_call_inquisition", pier.name,
+                    Card.getName(t, CardRole.Inquisitor), target?.name)}</p>
+                {rejectionElem(t)}
+            </Fragment>;
         //Blocks
         case BoardState.CalledGetTwoBlocked:
         case BoardState.StealBlocked:
@@ -61,6 +67,8 @@ export function inferPierPanel(
             return claimElem(t, pier, t("_action_foreign_aid"), "_accept_gettwo");
         case BoardState.GetThreeAccepted:
             return claimElem(t, pier, Card.getName(t, CardRole.Duke), "_accept_get_three");
+        case BoardState.InquisitionAccepted:
+            return claimElem(t, pier, Card.getName(t, CardRole.Inquisitor), "_accept_inquisition_pier");
         case BoardState.CalledChangeCards:
             return <Fragment>
                 {claimElem(t, pier,
@@ -90,6 +98,7 @@ export function inferPierPanel(
             return inferDiscarding(t, ctx, pierId, pier);
         case BoardState.DiscardingFinished:
             return inferPostDiscard(t, ctx, pierId, pier);
+
     }
     /**
      return <p>{`${localPlayer.name} gained 1 coin...`}</p>; */

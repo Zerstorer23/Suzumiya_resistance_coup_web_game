@@ -116,6 +116,9 @@ export class Card {
             case CardRole.Ambassador:
             case CardRole.DEAD_Ambassador:
                 return formatInsert(t, "_ambassador_desc");
+            case CardRole.Inquisitor:
+            case CardRole.DEAD_Inquisitor:
+                return formatInsert(t, "_inquisitor_desc");
             case CardRole.None:
             default:
                 return <Fragment/>;

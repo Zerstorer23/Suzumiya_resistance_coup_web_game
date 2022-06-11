@@ -116,11 +116,13 @@ export function handleInquisition(ctx: RoomContextType, localCtx: LocalContextTy
     const pierEntry = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
     const targetEntry = TurnManager.getPlayerInfo(ctx, PlayerType.Target);
     const deck = ctx.room.game.deck;
+    setTimeout(() => {
+        inquisiteTarget(ctx, targetEntry, deck);
+        inquisitePier(ctx, pierEntry, deck);
+        ReferenceManager.updateReference(DbFields.GAME_deck, deck);
+    }, 1000);
     setMyTimer(ctx, localCtx, () => {
         TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
-            inquisiteTarget(ctx, targetEntry, deck);
-            inquisitePier(ctx, pierEntry, deck);
-            ReferenceManager.updateReference(DbFields.GAME_deck, deck);
             return TransitionAction.EndTurn;
         });
     });
@@ -135,7 +137,6 @@ export function inquisiteTarget(ctx: RoomContextType, entry: PlayerEntry, deck: 
     if (index === null) return;
     const randomDeckIndex = DeckManager.getRandomFromDeck(ctx);
     //swap
-    console.log("Swapped Target");
     DeckManager.swap(index, randomDeckIndex, deck);
     // return deck no need though
     return deck;
@@ -145,14 +146,10 @@ export function inquisitePier(ctx: RoomContextType, entry: PlayerEntry, deck: Ca
     if (entry.player === null || entry.player === undefined) return;
     //If not alive, return
     if (DeckManager.playerIsDead(deck, entry.player)) return;
-    //If alive, find mikuru
+    //If alive, find mikuru or random
     const index = DeckManager.getRandomFromPlayer(entry.player, deck, CardRole.Inquisitor);
     if (index === null) return;
-    //if mikuru no exist, return
-    if (deck[index] !== CardRole.Inquisitor) return;
     const randomDeckIndex = DeckManager.getRandomFromDeck(ctx);
-    //if mikuru exists , swap
-    console.log("Swapped pier");
     DeckManager.swap(index, randomDeckIndex, deck);
     // return deck
     return deck;

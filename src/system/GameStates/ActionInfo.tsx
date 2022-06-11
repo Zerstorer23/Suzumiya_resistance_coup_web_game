@@ -3,6 +3,8 @@ import {ActionType} from "system/GameStates/States";
 export class ActionInfo {
     public static getName(t: any, actionType: ActionType) {
         switch (actionType) {
+            case ActionType.InquisiteCards:
+                return t("_action_inquisition");
             case ActionType.Accept:
                 return t("_action_accept");
             case ActionType.Assassinate:
@@ -29,6 +31,7 @@ export class ActionInfo {
                 return t("_action_none");
             case ActionType.Steal:
                 return t("_action_steal");
+
             case ActionType.DukeBlocksForeignAid:
                 return t("_action_DukeBlocksForeignAid");
         }

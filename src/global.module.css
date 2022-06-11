@@ -41,6 +41,10 @@
     border-right: 0.2rem solid rgba(62, 71, 84, 255);
 }
 
+.borderLeft {
+    border-left: 0.2rem solid rgba(62, 71, 84, 255);
+}
+
 .darkFont {
     color: black;
 }

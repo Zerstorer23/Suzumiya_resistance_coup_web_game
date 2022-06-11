@@ -16,7 +16,7 @@ export default function LobbySettings() {
     const {t} = useTranslation();
     const myEntry = TurnManager.getMyInfo(ctx, localCtx);
     if (myEntry.id === null || myEntry.player === undefined) {
-        return <p>Need to reload</p>;
+        return <p>연결이 잘못됨. 새로고침해주세요.</p>;
     }
 
     async function onFinishEditName(event: any) {
@@ -48,6 +48,14 @@ export default function LobbySettings() {
                 ></textarea>
                 <button className={`${classes.fieldType}`}
                         onClick={onClickCopy}>{t("_copy_link")}</button>
+                <a href={"https://gall.dcinside.com/mgallery/board/view/?id=haruhiism&no=142721"} target={"_blank"}>룰
+                    북 (새탭)</a>
+                <br/>
+                <a href={"https://bismark439.itch.io/hamang-chat"} target={"_blank"}>중계기(아직 미지원)</a>
+                <br/>
+                <a href={"https://docs.google.com/forms/d/e/1FAIpQLSexSyVua158WXfLUVat-pFZOL8wLl3Tyu_Y8_ZAJ-R16ZJWOg/viewform?usp=sf_link"}
+                   target={"_blank"}>설문</a>
+                <p>모바일 유저는 데스크탑보기모드 꼭 켜주라!</p>
             </div>
             <div className={classes.creditsContainer}>
                 <p>{formatInsert(t, "_rule_three_lines")}</p>

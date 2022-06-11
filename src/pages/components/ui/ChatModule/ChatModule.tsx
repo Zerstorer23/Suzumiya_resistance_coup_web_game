@@ -25,6 +25,7 @@ import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {insert} from "lang/i18nHelper";
 import {DbFields, ReferenceManager} from "system/Database/ReferenceManager";
+import {GameConfigs} from "system/Debugger/GameConfigs";
 
 const LF = String.fromCharCode(10);
 const CR = String.fromCharCode(13);
@@ -169,7 +170,7 @@ function handleCommands(t: any, ctx: RoomContextType, localCtx: LocalContextType
         case "coins":
             if (!amHost) return;
             if (ctx.room.header.games > 2) return;
-            ReferenceManager.atomicDelta(DbFields.HEADER_games, 5);
+            ReferenceManager.atomicDelta(DbFields.HEADER_games, GameConfigs.addGames);
             chatCtx.loadChat({
                 format: ChatFormat.announcement,
                 name: "", msg: t("_coins_inserted")

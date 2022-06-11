@@ -12,6 +12,8 @@ import {
     inferPostDiscard
 } from "pages/ingame/Center/MainTableBoard/TableItem/BoardInferer";
 import {TurnManager} from "system/GameStates/TurnManager";
+import {DeckManager} from "system/cards/DeckManager";
+import {GameManager} from "system/GameStates/GameManager";
 
 export function inferTargetPanel(
     t: any,
@@ -21,6 +23,7 @@ export function inferTargetPanel(
     target: Player | undefined,
 ): JSX.Element {
     if (target === undefined) return <Fragment/>;
+    const room = GameManager.parseRoom(ctx);
     const board = ctx.room.game.state.board;
     const action = ctx.room.game.action;
     if (StateManager.isChallenged(board)) {
@@ -30,12 +33,18 @@ export function inferTargetPanel(
         case BoardState.CalledCoup:
             return <p>{formatInsert(t, "_in_trouble", target.name)}</p>;
         case BoardState.CalledSteal:
-            return <p>{formatInsert(t, "_target_is_deciding", target.name)}</p>;
+        case BoardState.CalledInquisition:
         case BoardState.CalledAssassinate:
             return <p>{formatInsert(t, "_target_is_deciding", target.name)}</p>;
         case BoardState.DukeBlocksAccepted:
             return claimElem(t, target!, Card.getName(t, CardRole.Duke), "_call_aid_block");
-
+        case BoardState.InquisitionAccepted:
+            const hadContessa = (DeckManager.playerHasCard(room.deck, CardRole.Contessa, target));
+            const tkey = hadContessa ? "_accept_inquisition_yes_contessa" : "_accept_inquisition_no_contessa";
+            return <Fragment>
+                <p>{formatInsert(t, "_accept_inquisition_target", target.name)}</p>
+                <p>{formatInsert(t, tkey, target.name, Card.getName(t, CardRole.Contessa))}</p>
+            </Fragment>;
         //====BLOCKS
         case BoardState.CalledGetTwoBlocked:
             return claimElem(t, target, Card.getName(t, CardRole.Duke), "_call_aid_block");
@@ -85,6 +94,7 @@ function inferChallenged(
         //I am targeted
         case BoardState.AssassinateChallenged:
         case BoardState.StealChallenged:
+        case BoardState.InquisitionChallenged:
             if (pier === null || challenger === null) return <Fragment/>;
             if (action.challengerId !== targetId) return <Fragment/>;
             //I challenged Pier

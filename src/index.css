@@ -37,3 +37,11 @@ textarea {
     display: block;
     resize: none;
 }
+
+a {
+
+}
+
+a:hover {
+    color: rgba(141, 151, 161, 255);
+}

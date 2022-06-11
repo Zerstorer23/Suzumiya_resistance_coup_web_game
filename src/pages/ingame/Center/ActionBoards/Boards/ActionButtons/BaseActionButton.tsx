@@ -142,6 +142,10 @@ function analyseParam(t: any, isCard: boolean, param: CardRole | ActionType, myC
                 relatedRole = CardRole.Duke;
                 isCard = true;
                 break;
+            case ActionType.InquisiteCards:
+                relatedRole = CardRole.Inquisitor;
+                isCard = true;
+                break;
             case ActionType.Coup:
                 hasCard = true;
                 cost = 7;

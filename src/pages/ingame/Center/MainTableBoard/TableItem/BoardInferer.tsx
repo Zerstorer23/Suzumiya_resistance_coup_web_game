@@ -61,6 +61,9 @@ function handleNotLostNotChallenge(killInfo: KillInfo, ctx: RoomContextType, t: 
             case BoardState.ForeignAidAccepted:
                 nextStateElem = <p>{formatInsert(t, "_next_foreign_aid", pier.name)}</p>;
                 break;
+            case BoardState.InquisitionAccepted:
+                nextStateElem = <p>{formatInsert(t, "_next_inquisition", pier.name, target?.name)}</p>;
+                break;
             default:
                 nextStateElem = <Fragment/>;
                 break;
@@ -70,10 +73,12 @@ function handleNotLostNotChallenge(killInfo: KillInfo, ctx: RoomContextType, t: 
             <p>{formatInsert(t, "_challenge_replace_card", myPlayer.name)}</p>
             {nextStateElem}
         </Fragment>);
-    } else {
-        //I am the target
-        return <p>{formatInsert(t, "_in_trouble", myPlayer.name)}</p>;
     }
+    //I am the target
+    if (killInfo.ownerId === action.pierId) {
+        return <p>{formatInsert(t, "_is_satisfied", myPlayer.name)}</p>;
+    }
+    return <p>{formatInsert(t, "_in_trouble", myPlayer.name)}</p>;
 }
 
 export function ChallengeResultBoard(
@@ -104,7 +109,7 @@ export function inferPostDiscard(t: any, ctx: RoomContextType, playerId: string,
         return (<PostKillPanel/>);
     }
     const nextState = killInfo.nextState;
-    if (StateManager.isTargetableState(nextState as BoardState) && playerId === action.targetId) {
+    if (StateManager.isTargetAcceptedState(nextState as BoardState) && playerId === action.targetId) {
         return <p>{formatInsert(t, "_in_trouble", player.name)}</p>;
     }
     return (<p>{formatInsert(t, "_is_satisfied", player.name)}</p>);

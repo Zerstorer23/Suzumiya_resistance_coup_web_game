@@ -162,6 +162,19 @@ export class StateManager {
         }
     }
 
+    public static isTargetAcceptedState(state: BoardState): boolean {
+        /**
+         * States that require TargetId set
+         */
+        switch (state) {
+            case BoardState.StealAccepted:
+            case BoardState.InquisitionAccepted:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public static isTargetableAction(action: ActionType): boolean {
         /**
          * Actions that require TargetId set

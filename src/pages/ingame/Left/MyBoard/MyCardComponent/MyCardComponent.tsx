@@ -6,7 +6,7 @@ import {useContext} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import RoomContext from "system/context/roomInfo/room-context";
-
+import gc from "global.module.css";
 import useAnimFocus, {AnimType} from "system/hooks/useAnimFocus";
 import {Card} from "system/cards/Card";
 
@@ -32,11 +32,11 @@ export default function MyCardComponent(props: Props): JSX.Element {
                 alt="card"
             />
             {isDead ? (
-                <div className={`${classes.descPanel} `}>
+                <div className={`${classes.descPanel} ${gc.borderLeft}`}>
                     <p className={classes.deadPanel}>{t("_dead")}</p>
                 </div>
             ) : (
-                <div className={`${classes.descPanel} `}>
+                <div className={`${classes.descPanel} ${gc.borderLeft}`}>
                     <p>{Card.getDesc(t, card)}</p>
                 </div>
             )}

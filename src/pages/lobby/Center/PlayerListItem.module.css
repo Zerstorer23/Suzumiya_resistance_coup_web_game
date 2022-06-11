@@ -35,8 +35,9 @@
     width: 10%;
     height: 80%;
     text-align: center;
-    background-color: red;
+    background-color: rgba(255, 0, 0, 0.5);
     color: #ffe70e;
+    font-weight: bold;
     font-size: 1.3rem;
     border-radius: 1rem;
 }
