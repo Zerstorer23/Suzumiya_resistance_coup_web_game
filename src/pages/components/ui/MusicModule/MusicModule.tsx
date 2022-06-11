@@ -95,6 +95,10 @@ export default function MusicModule() {
         if (musicCtx.current.c < 0) return;
         setPlayerState(PlayerState.Injecting);
     }, [musicCtx.current.c]);
+    useEffect(() => {
+        if (!amHost) return;
+        setPlayerState(PlayerState.WaitingMusic);
+    }, [ctx.room.header.hostId]);
 
     function onClickButton() {
         setShowPanel((b) => !b);

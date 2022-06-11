@@ -39,11 +39,12 @@ export function useShortcutEffect(size: number) {
             document.removeEventListener('keydown', onKeyEvent);
         };
     }, []);
-
+    
     function onKeyEvent(event: any) {
         if (!targets.includes(event.keyCode)) return;
         const index = keyCodeToIndex(event.keyCode, size - 1);
         if (index < 0) return;
+        console.log("Key detected " + index + " / focus" + localCtx.getVal(LocalField.InputFocus));
         if (localCtx.getVal(LocalField.InputFocus) !== InputCursor.Idle) return;
         setKeyInfo((prevState) => ({counter: prevState.counter + 1, index}));
     }
