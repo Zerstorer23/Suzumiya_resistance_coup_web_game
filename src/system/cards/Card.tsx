@@ -12,7 +12,7 @@ small = dead card
 export type CardDeck = CardRole[];
 
 export enum CardRole {
-    None = "N",
+    None = "n",
     Duke = "D",
     Captain = "C",
     Assassin = "A",
