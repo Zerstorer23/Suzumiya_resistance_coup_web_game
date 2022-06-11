@@ -15,9 +15,9 @@ export default function Sanitizer(props: IProps) {
   const myId = localCtx.getVal(LocalField.Id);
   const turns = ctx.room.game.state.turn;
 
-  useEffect(() => {
-    connect();
-  }, []);
+  //   useEffect(() => {
+  //     connect();
+  //   }, []);
 
   const [valid, setValid] = useState(false);
   useEffect(() => {

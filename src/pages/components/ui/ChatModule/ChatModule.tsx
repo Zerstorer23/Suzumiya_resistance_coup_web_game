@@ -92,7 +92,7 @@ export default function ChatModule() {
     if (text.length > 128) {
       text = text.substring(0, 128);
     }
-    sendToPort(text);
+    //sendToPort(text);
     sendChat(ChatFormat.normal, myEntry.player.name, text);
   }, [handleSpecials, myEntry.player]);
 
