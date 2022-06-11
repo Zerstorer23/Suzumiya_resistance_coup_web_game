@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.f73fb5a6.css",
-    "main.js": "/static/js/main.b10c71f8.js",
+    "main.js": "/static/js/main.0223c8b2.js",
     "static/media/untitled.png": "/static/media/untitled.8267d27b6440ee00e515.png",
     "static/media/objection.mp3": "/static/media/objection.981242a3ace6d27c03a6.mp3",
     "static/media/haruhi.png": "/static/media/haruhi.c1eb865e5725e7145c77.png",
@@ -13,6 +13,7 @@
     "static/media/kyonko_dead.png": "/static/media/kyonko_dead.4ae26586bf8f1b8e8377.png",
     "static/media/kyon_dead.png": "/static/media/kyon_dead.4893d19aeff809f905d2.png",
     "static/media/kyon.png": "/static/media/kyon.f11906f9a43713448b39.png",
+    "static/media/ruleCardExpansion.png": "/static/media/ruleCardExpansion.52f380ac2e3102a721ee.png",
     "static/media/nagato_dead.png": "/static/media/nagato_dead.1c6fa0c4430084eb440e.png",
     "static/media/ruleCard.png": "/static/media/ruleCard.5bfafc7e31d81ab37738.png",
     "static/media/koihime_dead.png": "/static/media/koihime_dead.ee82cfe2bab32ddf330e.png",
@@ -20,10 +21,10 @@
     "static/media/unknown.png": "/static/media/unknown.1c3c27e9b18c20378807.png",
     "index.html": "/index.html",
     "main.f73fb5a6.css.map": "/static/css/main.f73fb5a6.css.map",
-    "main.b10c71f8.js.map": "/static/js/main.b10c71f8.js.map"
+    "main.0223c8b2.js.map": "/static/js/main.0223c8b2.js.map"
   },
   "entrypoints": [
     "static/css/main.f73fb5a6.css",
-    "static/js/main.b10c71f8.js"
+    "static/js/main.0223c8b2.js"
   ]
 }
