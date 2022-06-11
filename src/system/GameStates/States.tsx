@@ -113,6 +113,7 @@ export class StateManager {
             case BoardState.AssassinateChallenged:
             case BoardState.ContessaChallenged:
             case BoardState.InquisitionChallenged:
+            case BoardState.InquisitionAccepted:
                 return true;
             default:
                 return false;
