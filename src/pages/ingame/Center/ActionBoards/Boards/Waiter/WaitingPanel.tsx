@@ -1,4 +1,4 @@
-import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
+import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard/BaseBoard.module.css";
 import {useContext} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";

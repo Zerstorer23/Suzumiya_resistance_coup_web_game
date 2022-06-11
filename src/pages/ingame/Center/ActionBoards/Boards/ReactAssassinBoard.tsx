@@ -1,5 +1,5 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
-import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
+import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard/BaseBoard.module.css";
 import {Fragment, useContext, useEffect} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
@@ -21,7 +21,7 @@ const actions = [
 export default function ReactAssassinBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
-    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
+    const myEntry = TurnManager.getMyInfo(ctx, localCtx);
     const keyInfo = useShortcutEffect(actions.length);
     useDefaultAction(ctx, localCtx, () => {
         onMakeAction(ActionType.Accept);
@@ -36,16 +36,16 @@ export default function ReactAssassinBoard(): JSX.Element {
     const onMakeAction = (action: ActionType) => {
         switch (action) {
             case ActionType.Accept:
-                const killInfo = GameManager.createKillInfo(ActionType.Assassinate, BoardState.CalledAssassinate, myId);
+                const killInfo = GameManager.createKillInfo(ActionType.Assassinate, BoardState.CalledAssassinate, myEntry.id);
                 TransitionManager.pushPrepareDiscarding(ctx, killInfo);
                 break;
             case ActionType.IsALie:
-                TransitionManager.pushIsALieState(ctx, myId);
+                TransitionManager.pushIsALieState(ctx, myEntry.id);
                 break;
             case ActionType.ContessaBlocksAssassination:
                 TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
                     newState.board = BoardState.AssassinBlocked;
-                    playerClaimedRole({id: myId, player: myPlayer}, action);
+                    playerClaimedRole(myEntry, action);
                     return TransitionAction.Success;
                 });
                 break;

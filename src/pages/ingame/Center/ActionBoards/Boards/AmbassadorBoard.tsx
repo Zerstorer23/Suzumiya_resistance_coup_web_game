@@ -1,4 +1,4 @@
-import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
+import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard/BaseBoard.module.css";
 import RoomContext from "system/context/roomInfo/room-context";
 import {Fragment, useContext, useEffect, useState} from "react";
 import LocalContext from "system/context/localInfo/local-context";
@@ -10,7 +10,7 @@ import {useShortcutEffect} from "system/hooks/useShortcut";
 import {useTranslation} from "react-i18next";
 import useDefaultAction from "system/hooks/useDefaultAction";
 import {ActionType} from "system/GameStates/States";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {DbFields, ReferenceManager} from "system/Database/ReferenceManager";
 import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 
 export default function AmbassadorBoard(): JSX.Element {
@@ -18,7 +18,8 @@ export default function AmbassadorBoard(): JSX.Element {
     const deck = ctx.room.game.deck;
     const {t} = useTranslation();
     const localCtx = useContext(LocalContext);
-    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
+    const myEntry = TurnManager.getMyInfo(ctx, localCtx);
+    const myPlayer = myEntry.player;
     //get 2 cards from top of the deck
     const topIndex = DeckManager.peekTopIndex(ctx);
     const cardIndicesArr = [myPlayer.icard, myPlayer.icard + 1, topIndex, topIndex + 1];
@@ -27,10 +28,6 @@ export default function AmbassadorBoard(): JSX.Element {
     //Max Exchangable
     const numAlive = DeckManager.playerAliveCardNum(deck, myPlayer.icard);
     const keyInfo = useShortcutEffect(cardIndicesArr.length);
-    console.log("Cards", cardIndicesArr);
-    console.log("selected", selectedArr);
-    console.log("Top", topIndex);
-    console.log("icard", myPlayer.icard);
     useEffect(() => { // Shortcut system
         const idx = keyInfo.index;
         if (idx < 0) return;
@@ -69,7 +66,7 @@ export default function AmbassadorBoard(): JSX.Element {
         newDeck[myPlayer.icard + 1] = deck[selectedArr[1]];
         newDeck[topIndex] = deck[unSelected[0]];
         newDeck[topIndex + 1] = deck[unSelected[1]];
-        ReferenceManager.updateReference(DbReferences.GAME_deck, newDeck);//Update
+        ReferenceManager.updateReference(DbFields.GAME_deck, newDeck);//Update
         TransitionManager.pushEndTurn(ctx);//End
     }, [selectedArr]);
 

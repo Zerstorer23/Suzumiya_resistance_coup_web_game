@@ -1,7 +1,7 @@
 import {ActionType} from "system/GameStates/States";
 
 export class ActionInfo {
-    public static getName(t: any, actionType: ActionType): string {
+    public static getName(t: any, actionType: ActionType) {
         switch (actionType) {
             case ActionType.Accept:
                 return t("_action_accept");

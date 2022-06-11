@@ -1,6 +1,6 @@
 import {LocalContextType, LocalField,} from "system/context/localInfo/local-context";
 import {getNullable} from "system/GameConstants";
-import {Player, PlayerMap} from "system/GameStates/GameTypes";
+import {Player, PlayerEntry, PlayerMap} from "system/GameStates/GameTypes";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 
 export enum PlayerType {
@@ -81,14 +81,14 @@ export class TurnManager {
     public static getMyInfo(
         ctx: RoomContextType,
         localCtx: LocalContextType
-    ): [string, Player] {
+    ): PlayerEntry {
         return this.getPlayerInfoById(ctx, localCtx.getVal(LocalField.Id));
     }
 
     public static getPlayerInfo(
         ctx: RoomContextType,
         playerType: PlayerType
-    ): [string, Player] {
+    ): PlayerEntry {
         let playerId = "";
         switch (playerType) {
             case PlayerType.Pier:
@@ -107,9 +107,9 @@ export class TurnManager {
         return this.getPlayerInfoById(ctx, playerId);
     }
 
-    public static getPlayerInfoById(ctx: RoomContextType, playerId: string): [string, Player] {
+    public static getPlayerInfoById(ctx: RoomContextType, playerId: string): PlayerEntry {
         const player = ctx.room.playerMap.get(playerId)!;
-        return [playerId, player];
+        return {id: playerId, player};
     }
 
     /**

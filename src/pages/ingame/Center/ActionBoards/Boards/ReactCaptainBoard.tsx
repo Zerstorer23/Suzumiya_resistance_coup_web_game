@@ -1,5 +1,5 @@
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
-import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
+import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard/BaseBoard.module.css";
 import {Fragment, useContext, useEffect} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";
@@ -22,7 +22,7 @@ const actions = [
 export default function ReactCaptainBoard(): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
-    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
+    const myEntry = TurnManager.getMyInfo(ctx, localCtx);
     const keyInfo = useShortcutEffect(actions.length);
     const {t} = useTranslation();
     useDefaultAction(ctx, localCtx, () => {
@@ -38,7 +38,7 @@ export default function ReactCaptainBoard(): JSX.Element {
 
     const onMakeAction = (action: ActionType) => {
         //Accept or Lie
-        const handled = TransitionManager.handleAcceptOrLie(ctx, action, myId);
+        const handled = TransitionManager.handleAcceptOrLie(ctx, action, myEntry.id);
         if (handled) return;
         //Defending Action
         TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
@@ -54,7 +54,7 @@ export default function ReactCaptainBoard(): JSX.Element {
                 default:
                     return TransitionAction.Abort;
             }
-            playerClaimedRole({id: myId, player: myPlayer}, action);
+            playerClaimedRole(myEntry, action);
             return TransitionAction.Success;
         });
     };

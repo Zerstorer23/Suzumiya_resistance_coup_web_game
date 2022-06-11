@@ -19,12 +19,12 @@ import MusicContext, {
     MusicResponse,
     pushMusicToQueue
 } from "pages/components/ui/MusicModule/musicInfo/MusicContextProvider";
-import {Player} from "system/GameStates/GameTypes";
+import {PlayerEntry} from "system/GameStates/GameTypes";
 import {MAX_MUSIC_QUEUE, MAX_PERSONAL_QUEUE} from "pages/components/ui/MusicModule/MusicModule";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {insert} from "lang/i18nHelper";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {DbFields, ReferenceManager} from "system/Database/ReferenceManager";
 
 const LF = String.fromCharCode(10);
 const CR = String.fromCharCode(13);
@@ -35,7 +35,7 @@ export default function ChatModule() {
     const musicCtx = useContext(MusicContext);
     const {t} = useTranslation();
 
-    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
+    const myEntry = TurnManager.getMyInfo(ctx, localCtx);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const chatFieldRef = useRef<HTMLTextAreaElement>(null);
 
@@ -59,14 +59,14 @@ export default function ChatModule() {
         const firstChar = text.at(0);
         const theRest = text.substring(1);
         if (firstChar === "!") {
-            handleMusic(t, chatCtx, musicCtx, theRest, myId, myPlayer);
+            handleMusic(t, chatCtx, musicCtx, theRest, myEntry);
         } else if (firstChar === "/") {
             handleCommands(t, ctx, localCtx, chatCtx, theRest);
         } else {
             return false;
         }
         return true;
-    }, [myId, chatCtx, musicCtx]);
+    }, [myEntry, chatCtx, musicCtx]);
 
     const handleSend = useCallback(() => {
         let text = chatFieldRef.current!.value.toString();
@@ -82,8 +82,8 @@ export default function ChatModule() {
         if (text.length > 128) {
             text = text.substring(0, 128);
         }
-        sendChat(ChatFormat.normal, myPlayer.name, text);
-    }, [handleSpecials, myPlayer]);
+        sendChat(ChatFormat.normal, myEntry.player.name, text);
+    }, [handleSpecials, myEntry.player]);
 
 
     function toggleFocus(toggle: boolean) {
@@ -121,11 +121,11 @@ export default function ChatModule() {
     );
 }
 
-function handleMusic(t: any, chatCtx: ChatContextType, musicCtx: MusicContextType, videoId: string, myId: string, myPlayer: Player) {
-    const response = pushMusicToQueue(musicCtx, videoId, myId);
+function handleMusic(t: any, chatCtx: ChatContextType, musicCtx: MusicContextType, videoId: string, myEntry: PlayerEntry) {
+    const response = pushMusicToQueue(musicCtx, videoId, myEntry.id);
     switch (response) {
         case MusicResponse.Success:
-            sendChat(ChatFormat.announcement, "", `${myPlayer.name}${t("_music_success_enqueue")}`);
+            sendChat(ChatFormat.announcement, "", `${myEntry.player.name}${t("_music_success_enqueue")}`);
             break;
         case MusicResponse.InvalidURL:
             chatCtx.loadChat({
@@ -169,7 +169,7 @@ function handleCommands(t: any, ctx: RoomContextType, localCtx: LocalContextType
         case "coins":
             if (!amHost) return;
             if (ctx.room.header.games > 2) return;
-            ReferenceManager.atomicDelta(DbReferences.HEADER_games, 5);
+            ReferenceManager.atomicDelta(DbFields.HEADER_games, 5);
             chatCtx.loadChat({
                 format: ChatFormat.announcement,
                 name: "", msg: t("_coins_inserted")

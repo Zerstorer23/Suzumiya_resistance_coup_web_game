@@ -6,7 +6,7 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import {CardRole} from "system/cards/Card";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {ChatFormat, sendChat} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {DbFields, ReferenceManager} from "system/Database/ReferenceManager";
 
 
 export enum TransitionAction {
@@ -134,8 +134,8 @@ export default class TransitionManager {
 
     public static pushLobby(numGames: number) {
         const state: TurnState = {turn: -1, board: 0,};
-        ReferenceManager.updateReference(DbReferences.GAME_state, state);
-        ReferenceManager.atomicDelta(DbReferences.HEADER_games, -1);
+        ReferenceManager.updateReference(DbFields.GAME_state, state);
+        ReferenceManager.atomicDelta(DbFields.HEADER_games, -1);
     }
 
     public static handleAcceptOrLie(
@@ -171,8 +171,8 @@ export default class TransitionManager {
      * Call this to apply action to DB
      */
     private static pushActionState(gameAction: GameAction, newState: TurnState) {
-        ReferenceManager.updateReference(DbReferences.GAME_action, gameAction);
-        ReferenceManager.updateReference(DbReferences.GAME_state, newState);
+        ReferenceManager.updateReference(DbFields.GAME_action, gameAction);
+        ReferenceManager.updateReference(DbFields.GAME_state, newState);
     }
 
     private static inferLieCard(board: BoardState, action: GameAction): CardRole {
@@ -188,6 +188,8 @@ export default class TransitionManager {
                 return CardRole.Assassin;
             case BoardState.AssassinBlocked:
                 return CardRole.Contessa;
+            case BoardState.CalledInquisition:
+                return CardRole.Inquisitor;
             case BoardState.StealBlocked:
                 return action.param as CardRole;
         }

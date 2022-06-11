@@ -1,7 +1,7 @@
 import React, {Fragment, useState} from "react";
 import {IProps} from "system/types/CommonTypes";
 import classes from "pages/components/ui/ChatModule/ChatModule.module.css";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {DbFields, ReferenceManager} from "system/Database/ReferenceManager";
 
 export type ChatContextType = {
     chatList: ChatEntry[];
@@ -32,7 +32,7 @@ export enum ChatFormat {
 }
 
 export function cleanChats() {
-    const ref = ReferenceManager.getRef(DbReferences.CHAT);
+    const ref = ReferenceManager.getRef(DbFields.CHAT);
     ref.remove();
 }
 
@@ -77,7 +77,7 @@ export function ChatProvider(props: IProps) {
 
 export function sendChat(format: number, name: string, msg: string) {
     const ce: ChatEntry = {name, msg, format};
-    const ref = ReferenceManager.getRef(DbReferences.CHAT);
+    const ref = ReferenceManager.getRef(DbFields.CHAT);
     ref.push(ce);
 }
 

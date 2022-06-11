@@ -1,4 +1,4 @@
-import BaseBoard from "pages/ingame/Center/ActionBoards/Boards/BaseBoard";
+import BaseBoard from "pages/ingame/Center/ActionBoards/Boards/BaseBoard/BaseBoard";
 import CounterBoard from "pages/ingame/Center/ActionBoards/Boards/CounterBoard";
 import SolverBoard from "pages/ingame/Center/ActionBoards/Boards/Solver/SolverBoard";
 import WaitingBoard from "pages/ingame/Center/ActionBoards/Boards/Waiter/WaitingBoard";
@@ -13,22 +13,21 @@ import ReactForeignAidBoard from "pages/ingame/Center/ActionBoards/Boards/ReactF
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {Fragment} from "react";
 import AmbassadorBoard from "pages/ingame/Center/ActionBoards/Boards/AmbassadorBoard";
+import {GameManager} from "system/GameStates/GameManager";
 
 export function getBoardElemFromRoom(ctx: RoomContextType, localCtx: LocalContextType): JSX.Element {
-    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    if (myPlayer.isSpectating) return <WaitingBoard/>;
-
+    const myEntry = TurnManager.getMyInfo(ctx, localCtx);
+    if (myEntry.player.isSpectating) return <WaitingBoard/>;
+    const room = GameManager.parseRoom(ctx);
     const isMyTurn: boolean = TurnManager.isMyTurn(ctx, localCtx);
-    // console.log(`turn : ${ctx.room.game.state.turn} / myId = ${myId} / ct ${ctx.room.playerList[ctx.room.game.state.turn]} / myturn? ${isMyTurn}`);
-    const board = ctx.room.game.state.board;
-    if (board === BoardState.DiscardingCard) return handleDiscarding(ctx, myId);
-    const amTargeted: boolean = ctx.room.game.action.targetId === myId;
+    if (room.board === BoardState.DiscardingCard) return handleDiscarding(ctx, myEntry.id);
+    const amTargeted: boolean = room.action.targetId === myEntry.id;
     if (isMyTurn) {
-        return handleMyTurn(board, ctx.room.game.action, myId);
+        return handleMyTurn(room.board, room.action, myEntry.id);
     } else if (amTargeted) {
-        return handleTargeted(board);
+        return handleTargeted(room.board);
     } else {
-        return handleNotMyTurn(board, ctx.room.game);
+        return handleNotMyTurn(room.board, room.game);
     }
 }
 
@@ -37,7 +36,7 @@ function handleMyTurn(boardState: BoardState, action: GameAction, myId: string):
         return <SolverBoard/>;
     }
     if (StateManager.pierIsBlocked(boardState)) {
-        return <CounterBoard/>;
+        return <CounterBoard canAccept={true}/>;
     }
     switch (boardState) {
         case BoardState.CalledCoup:
@@ -58,7 +57,7 @@ function handleMyTurn(boardState: BoardState, action: GameAction, myId: string):
 function handleNotMyTurn(board: BoardState, game: Game): JSX.Element {
     const hasChallenger: boolean = game.action.challengerId.length > 0;
     if (board === BoardState.CalledGetTwo) return <ReactForeignAidBoard/>;
-    if (!hasChallenger && StateManager.isCounterable(board)) return <CounterBoard/>;
+    if (!hasChallenger && StateManager.isCounterable(board)) return <CounterBoard canAccept={false}/>;
     return <WaitingBoard/>;
 }
 
@@ -70,6 +69,8 @@ function handleTargeted(boardState: BoardState): JSX.Element {
             return <ReactAssassinBoard/>;
         case BoardState.CalledSteal:
             return <ReactCaptainBoard/>;
+        case BoardState.CalledInquisition:
+            return <CounterBoard canAccept={true}/>;
         case BoardState.CalledGetTwoBlocked:
         default:
             return <WaitingBoard/>;

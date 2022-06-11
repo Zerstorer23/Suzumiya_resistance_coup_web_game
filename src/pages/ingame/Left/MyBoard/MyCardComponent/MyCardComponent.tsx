@@ -18,8 +18,8 @@ type Props = IProps & {
 export default function MyCardComponent(props: Props): JSX.Element {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
-    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    const card = (ctx.room.game.deck[myPlayer.icard + props.offset]);
+    const myEntry = TurnManager.getMyInfo(ctx, localCtx);
+    const card = (ctx.room.game.deck[myEntry.player.icard + props.offset]);
     const {t} = useTranslation();
     const isDead = Card.isDead(card);
     const anim = useAnimFocus(card, AnimType.FadeIn);

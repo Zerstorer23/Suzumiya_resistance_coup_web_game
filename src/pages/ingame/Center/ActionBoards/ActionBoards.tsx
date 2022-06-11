@@ -1,5 +1,5 @@
 import gc from "global.module.css";
-import BaseBoard from "pages/ingame/Center/ActionBoards/Boards/BaseBoard";
+import BaseBoard from "pages/ingame/Center/ActionBoards/Boards/BaseBoard/BaseBoard";
 import {useContext, useEffect, useState} from "react";
 import LocalContext from "system/context/localInfo/local-context";
 import RoomContext from "system/context/roomInfo/room-context";

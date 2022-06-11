@@ -4,7 +4,7 @@ import MusicContext, {
     CounterMusicType,
     MusicEntry
 } from "pages/components/ui/MusicModule/musicInfo/MusicContextProvider";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {DbFields, ReferenceManager} from "system/Database/ReferenceManager";
 
 export default function MusicLoader() {
     const musicCtx = useContext(MusicContext);
@@ -30,8 +30,8 @@ export default function MusicLoader() {
     }
 
     useEffect(() => {
-        const queueRef = ReferenceManager.getRef(DbReferences.MUSIC_queue);
-        const currRef = ReferenceManager.getRef(DbReferences.MUSIC_current);
+        const queueRef = ReferenceManager.getRef(DbFields.MUSIC_queue);
+        const currRef = ReferenceManager.getRef(DbFields.MUSIC_current);
         queueRef.on(LISTEN_CHILD_ADDED, onMusicAdded);
         queueRef.on(LISTEN_CHILD_REMOVED, onMusicRemoved);
         currRef.get().then((snapshot) => {

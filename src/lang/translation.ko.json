@@ -126,6 +126,7 @@
   "_tutorial_defendCaptain": "$b방어:$b$n조작을 막습니다.",
   "_tutorial_defendAMbassaador": "$b방어:$b$n조작을 막습니다.",
   "_tutorial_defendAccept": "$b체념:$b$n이 상황을 받아들입니다.",
+  "_tutorial_inquisite": "$b시공의폭풍:$b$n이 카드와 상대의 카드 무작위 1장이 덱의 카드와 교체됩니다. 상대의 패 중에 쿈이 있으면 쿈이 교체됩니다. 거짓 선언인 경우 미쿠루는 교체되지않습니다.",
   "_playing_next": "다음곡 재생 시작. 남은 곡: $0",
   "_music": "음악",
   "_seems_afk": "현재 플레이어가 잠수중인거같아 강제로 턴을 끝냅니다.",

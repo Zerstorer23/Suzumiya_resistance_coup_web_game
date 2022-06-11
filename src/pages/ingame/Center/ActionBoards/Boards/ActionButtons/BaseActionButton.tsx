@@ -37,8 +37,8 @@ export default function BaseActionButton(props: Prop) {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const {t} = useTranslation();
-    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    const myCards = DeckManager.peekCards(ctx.room.game.deck, myPlayer.icard, 2);
+    const myEntry = TurnManager.getMyInfo(ctx, localCtx);
+    const myCards = DeckManager.peekCards(ctx.room.game.deck, myEntry.player.icard, 2);
 
     if (checkEmptyCard(t, props.isCardRole, param)) return <Fragment/>;
 
@@ -65,7 +65,7 @@ export default function BaseActionButton(props: Prop) {
         subClassName = classes.lieText;
     }
 
-    const hasEnoughMoney = myPlayer.coins >= cost;
+    const hasEnoughMoney = myEntry.player.coins >= cost;
     let subText = hasCard ? "" : t("_lie_marker");
     if (!hasEnoughMoney) {
         subClassName = classes.lieText;
@@ -158,6 +158,8 @@ function analyseParam(t: any, isCard: boolean, param: CardRole | ActionType, myC
 
 function getTutorialText(actionType: ActionType): string | null {
     switch (actionType) {
+        case ActionType.InquisiteCards:
+            return "_tutorial_inquisite";
         case ActionType.None:
             return null;
         case ActionType.GetOne:
@@ -186,6 +188,5 @@ function getTutorialText(actionType: ActionType): string | null {
             return "_tutorial_defendAMbassaador";
         case ActionType.Accept:
             return "_tutorial_defendAccept";
-        //TODO MIKURU ACTION TYPE TUTORIAL
     }
 }

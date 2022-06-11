@@ -5,7 +5,7 @@ import {db} from "system/Database/Firebase";
 import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 
-export enum DbReferences {
+export enum DbFields {
     ROOM = "/room",
     GAME = "/room/game",
     GAME_deck = `/room/game/deck`,
@@ -21,9 +21,13 @@ export enum DbReferences {
     MUSIC = "/music",
     MUSIC_queue = "/music/queue",
     MUSIC_current = "/music/current",
+}
+
+export enum PlayerDbFields {
     PLAYER_name = "name",
     PLAYER_isReady = "isReady",
     PLAYER_wins = "wins",
+    PLAYER_coins = "coins",
 }
 
 /**
@@ -44,7 +48,7 @@ export class ReferenceManager {
      * @param value
      * UPdates a single value
      */
-    public static updateReference<T>(field: DbReferences, value: T) {
+    public static updateReference<T>(field: DbFields, value: T) {
         const ref = ReferenceManager.getRef(field);
         ref.set(value);
     }
@@ -61,24 +65,24 @@ export class ReferenceManager {
     }
 
     public static getRoomRef(): DbRef {
-        return ReferenceManager.getRef(DbReferences.ROOM);
+        return ReferenceManager.getRef(DbFields.ROOM);
     }
 
-    public static getRef(refName: DbReferences): DbRef {
+    public static getRef(refName: DbFields): DbRef {
         //NOTE USE DB TAGS
         return RefPool.get(refName);
 
     }
 
     public static getPlayerReference(playerId: string): DbRef {
-        return RefPool.get(`${DbReferences.PLAYERS}/${playerId}`);
+        return RefPool.get(`${DbFields.PLAYERS}/${playerId}`);
     }
 
-    public static getPlayerFieldReference(playerId: string, ref: DbReferences): DbRef {
-        return RefPool.get(`${DbReferences.PLAYERS}/${playerId}/${ref}`);
+    public static getPlayerFieldReference(playerId: string, ref: PlayerDbFields): DbRef {
+        return RefPool.get(`${DbFields.PLAYERS}/${playerId}/${ref}`);
     }
 
-    public static updatePlayerFieldReference(playerId: string, tag: DbReferences, value: any) {
+    public static updatePlayerFieldReference(playerId: string, tag: PlayerDbFields, value: any) {
         const ref = ReferenceManager.getPlayerFieldReference(playerId, tag);
         ref.set(value);
     }
@@ -89,6 +93,11 @@ export class ReferenceManager {
     }
 
     public static atomicDeltaByRef(ref: DbRef, change: number) {
+        ref.set(firebase.database.ServerValue.increment(change));
+    }
+
+    public static atomicDeltaByPlayerField(playerId: string, refName: PlayerDbFields, change: number) {
+        const ref = this.getPlayerFieldReference(playerId, refName);
         ref.set(firebase.database.ServerValue.increment(change));
     }
 }

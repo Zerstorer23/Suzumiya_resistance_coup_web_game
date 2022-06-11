@@ -4,7 +4,7 @@ import {getDefaultRoom, getSortedListFromMap,} from "system/GameStates/RoomGener
 import {DbRef, Listeners, ListenerTypes} from "system/types/CommonTypes";
 import {ActionType} from "system/GameStates/States";
 import {CardRole} from "system/cards/Card";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {DbFields, ReferenceManager} from "system/Database/ReferenceManager";
 
 
 export async function initialiseRoom(turn: number) {
@@ -37,23 +37,23 @@ export async function loadRoom(): Promise<Room> {
 function parseGame(listeners: Listeners) {
     listeners.set(
         ListenerTypes.Deck,
-        ReferenceManager.getRef(DbReferences.GAME_deck)
+        ReferenceManager.getRef(DbFields.GAME_deck)
     );
     listeners.set(
         ListenerTypes.State,
-        ReferenceManager.getRef(DbReferences.GAME_state)
+        ReferenceManager.getRef(DbFields.GAME_state)
     );
     listeners.set(
         ListenerTypes.gameAction,
-        ReferenceManager.getRef(DbReferences.GAME_action)
+        ReferenceManager.getRef(DbFields.GAME_action)
     );
 }
 
 function parseHeader(listeners: Listeners) {
-    const headerRef = ReferenceManager.getRef(DbReferences.HEADER);
+    const headerRef = ReferenceManager.getRef(DbFields.HEADER);
     listeners.set(ListenerTypes.Header, headerRef);
 
-    const playersRef = ReferenceManager.getRef(DbReferences.PLAYERS);
+    const playersRef = ReferenceManager.getRef(DbFields.PLAYERS);
     listeners.set(ListenerTypes.PlayerList, playersRef);
 }
 

@@ -6,7 +6,7 @@ import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {ChatFormat, sendChat,} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
 import {CardDeck} from "system/cards/Card";
 import {insert} from "lang/i18nHelper";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {DbFields, ReferenceManager} from "system/Database/ReferenceManager";
 
 export function checkPostDiscarding(t: any, ctx: RoomContextType) {
     const killInfo = ctx.room.game.action.param as KillInfo;
@@ -23,6 +23,7 @@ export function checkPostDiscarding(t: any, ctx: RoomContextType) {
         case BoardState.AmbassadorAccepted:
         case BoardState.StealAccepted:
         case BoardState.ForeignAidAccepted:
+        case BoardState.InquisitionAccepted:
             TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
                 newState.board = nextBoard;
                 return TransitionAction.Success;
@@ -44,7 +45,7 @@ export function handleCardKill(t: any, ctx: RoomContextType, index: number) {
         const player = ctx.room.playerMap.get(killInfo.ownerId)!;
         killInfo.removed[0] = index;
         newAction.param = killInfo;
-        ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
+        ReferenceManager.updateReference(DbFields.GAME_deck, deck);
         handleDeadCase(t, deck, player, killInfo);
         newState.board = BoardState.DiscardingFinished;
         return TransitionAction.Success;
@@ -70,7 +71,7 @@ export function handleSuicide(ctx: RoomContextType, playerId: string) {
         killedInfo.removed[0] = player.icard;
         killedInfo.removed[1] = player.icard + 1;
         newAction.param = killedInfo;
-        ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
+        ReferenceManager.updateReference(DbFields.GAME_deck, deck);
         player.isSpectating = true;
         player.coins = 0;
         ReferenceManager.updatePlayerReference(killedInfo.ownerId, player);

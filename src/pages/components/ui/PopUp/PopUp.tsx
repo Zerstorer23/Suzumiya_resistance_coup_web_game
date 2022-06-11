@@ -11,7 +11,7 @@ import {formatInsert} from "lang/i18nHelper";
 
 import animClasses from "animation.module.css";
 import LocalContext, {LocalField} from "system/context/localInfo/local-context";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {PlayerDbFields, ReferenceManager} from "system/Database/ReferenceManager";
 import {MyTimer} from "pages/components/ui/MyTimer/MyTimer";
 import {increaseWin} from "system/Database/Inalytics";
 
@@ -53,7 +53,7 @@ export default function GameOverPopUp() {
         if (player === undefined) return;
         if (myId !== winnerID) return;
         increaseWin(playerCards);
-        const ref = ReferenceManager.getPlayerFieldReference(winnerID, DbReferences.PLAYER_wins);
+        const ref = ReferenceManager.getPlayerFieldReference(winnerID, PlayerDbFields.PLAYER_wins);
         ReferenceManager.atomicDeltaByRef(ref, 1);
     }, []);
     if (player === undefined) return <Fragment/>;

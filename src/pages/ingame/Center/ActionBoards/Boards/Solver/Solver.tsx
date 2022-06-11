@@ -4,7 +4,10 @@ import {BoardState} from "system/GameStates/States";
 import {PlayerType, TurnManager} from "system/GameStates/TurnManager";
 import TransitionManager, {TransitionAction} from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
-import {ReferenceManager} from "system/Database/ReferenceManager";
+import {DbFields, PlayerDbFields, ReferenceManager} from "system/Database/ReferenceManager";
+import {PlayerEntry} from "system/GameStates/GameTypes";
+import {CardDeck, CardRole} from "system/cards/Card";
+import {DeckManager} from "system/cards/DeckManager";
 
 export function waitAndEnd(ctx: RoomContextType, localCtx: LocalContextType) {
     setMyTimer(ctx, localCtx, () => {
@@ -19,13 +22,13 @@ export function solveState(ctx: RoomContextType, localCtx: LocalContextType) {
     const board = ctx.room.game.state.board;
     switch (board) {
         case BoardState.GetOneAccepted:
-            handleGetOne(ctx, localCtx);
+            handleGetCoins(ctx, localCtx, true, 1);
             break;
         case BoardState.ForeignAidAccepted:
-            handleGetTwo(ctx);
+            handleGetCoins(ctx, localCtx, true, 2);
             break;
         case BoardState.GetThreeAccepted:
-            handleGetThree(ctx);
+            handleGetCoins(ctx, localCtx, true, 3);
             break;
         case BoardState.StealAccepted:
             handleSteal(ctx, localCtx);
@@ -34,6 +37,9 @@ export function solveState(ctx: RoomContextType, localCtx: LocalContextType) {
             break;
         case BoardState.ChoosingBaseAction:
             console.trace("Why solve this??");
+            return;
+        case BoardState.InquisitionAccepted:
+            handleInquisition(ctx, localCtx);
             return;
         case BoardState.StealBlockAccepted:
         case BoardState.DukeBlocksAccepted:
@@ -59,34 +65,20 @@ Assassin: ?Assassin->[CalledAssassinate: Wait]
 */
 
 //Get 1 : ?GetOne-> [GetOneAccepted : Solve Wait NextTurn]
-function handleGetOne(ctx: RoomContextType, localCtx: LocalContextType) {
-    const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
-    setMyTimer(ctx, localCtx, () => {
-        TransitionManager.prepareAndPushState(ctx, () => {
-            pier.coins++;
-            ReferenceManager.updatePlayerReference(pierId, pier);
-            return TransitionAction.EndTurn;
+function handleGetCoins(ctx: RoomContextType, localCtx: LocalContextType, wait: boolean, amount: number) {
+    const pierEntry = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
+    if (wait) {
+        setMyTimer(ctx, localCtx, () => {
+            incrementCoins(ctx, pierEntry.id, amount);
         });
-    });
-
+    } else {
+        incrementCoins(ctx, pierEntry.id, amount);
+    }
 }
 
-export function handleGetTwo(ctx: RoomContextType) {
-    const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
+function incrementCoins(ctx: RoomContextType, playerId: string, amount: number) {
     TransitionManager.prepareAndPushState(ctx, () => {
-        pier.coins += 2;
-        ReferenceManager.updatePlayerReference(pierId, pier);
-        return TransitionAction.EndTurn;
-    });
-}
-
-export function handleGetThree(
-    ctx: RoomContextType
-) {
-    const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
-    TransitionManager.prepareAndPushState(ctx, () => {
-        pier.coins += 3;
-        ReferenceManager.updatePlayerReference(pierId, pier);
+        ReferenceManager.atomicDeltaByPlayerField(playerId, PlayerDbFields.PLAYER_coins, amount);
         return TransitionAction.EndTurn;
     });
 }
@@ -107,17 +99,61 @@ export function handleGetThree(
  * take from target
  */
 export function handleSteal(ctx: RoomContextType, localCtx: LocalContextType) {
-    const [pierId, pier] = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
-    const [targetId, target] = TurnManager.getPlayerInfo(ctx, PlayerType.Target);
+    const pierEntry = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
+    const targetEntry = TurnManager.getPlayerInfo(ctx, PlayerType.Target);
     setMyTimer(ctx, localCtx, () => {
         TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
-            const stealAmount = Math.min(target.coins, 2);
-            pier.coins += stealAmount;
-            target.coins -= stealAmount;
-            ReferenceManager.updatePlayerReference(pierId, pier);
-            ReferenceManager.updatePlayerReference(targetId, target);
+            const stealAmount = Math.min(targetEntry.player.coins, 2);
+            ReferenceManager.atomicDeltaByPlayerField(pierEntry.id, PlayerDbFields.PLAYER_coins, stealAmount);
+            ReferenceManager.atomicDeltaByPlayerField(targetEntry.id, PlayerDbFields.PLAYER_coins, -stealAmount);
             return TransitionAction.EndTurn;
         });
     });
 
+}
+
+export function handleInquisition(ctx: RoomContextType, localCtx: LocalContextType) {
+    const pierEntry = TurnManager.getPlayerInfo(ctx, PlayerType.Pier);
+    const targetEntry = TurnManager.getPlayerInfo(ctx, PlayerType.Target);
+    const deck = ctx.room.game.deck;
+    setMyTimer(ctx, localCtx, () => {
+        TransitionManager.prepareAndPushState(ctx, (newAction, newState) => {
+            inquisiteTarget(ctx, targetEntry, deck);
+            inquisitePier(ctx, pierEntry, deck);
+            ReferenceManager.updateReference(DbFields.GAME_deck, deck);
+            return TransitionAction.EndTurn;
+        });
+    });
+}
+
+export function inquisiteTarget(ctx: RoomContextType, entry: PlayerEntry, deck: CardDeck) {
+    if (entry.player === null || entry.player === undefined) return;
+    //If not alive, return
+    if (DeckManager.playerIsDead(deck, entry.player)) return;
+    //If alive, find kyon or random
+    const index = DeckManager.getRandomFromPlayer(entry.player, deck, CardRole.Contessa);
+    if (index === null) return;
+    const randomDeckIndex = DeckManager.getRandomFromDeck(ctx);
+    //swap
+    console.log("Swapped Target");
+    DeckManager.swap(index, randomDeckIndex, deck);
+    // return deck no need though
+    return deck;
+}
+
+export function inquisitePier(ctx: RoomContextType, entry: PlayerEntry, deck: CardDeck) {
+    if (entry.player === null || entry.player === undefined) return;
+    //If not alive, return
+    if (DeckManager.playerIsDead(deck, entry.player)) return;
+    //If alive, find mikuru
+    const index = DeckManager.getRandomFromPlayer(entry.player, deck, CardRole.Inquisitor);
+    if (index === null) return;
+    //if mikuru no exist, return
+    if (deck[index] !== CardRole.Inquisitor) return;
+    const randomDeckIndex = DeckManager.getRandomFromDeck(ctx);
+    //if mikuru exists , swap
+    console.log("Swapped pier");
+    DeckManager.swap(index, randomDeckIndex, deck);
+    // return deck
+    return deck;
 }

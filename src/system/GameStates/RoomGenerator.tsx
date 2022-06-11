@@ -7,7 +7,7 @@ import {CardRole} from "system/cards/Card";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {GameManager} from "system/GameStates/GameManager";
 import {DS} from "system/Debugger/DS";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {DbFields, ReferenceManager} from "system/Database/ReferenceManager";
 import {GameConfigs} from "system/Debugger/GameConfigs";
 
 export function getDefaultAction(): GameAction {
@@ -69,10 +69,9 @@ export function getSortedListFromMap(map: PlayerMap): string[] {
  * @param room
  */
 export function setStartingRoom(room: Room) {
-    const numPlayer = room.playerMap.size;
     const seed = getRandomSeed();
     //Set Header
-    ReferenceManager.updateReference(DbReferences.HEADER_seed, seed);
+    ReferenceManager.updateReference(DbFields.HEADER_seed, seed);
     //Set Player Cards
     room.playerList.forEach((playerId, index) => {
         const player = room.playerMap.get(playerId)!;
@@ -85,12 +84,12 @@ export function setStartingRoom(room: Room) {
     });
     //Set Room
     const action = GameManager.createGameAction(room.playerList[seed % room.playerList.length]);
-    ReferenceManager.updateReference(DbReferences.GAME_action, action);
-    const deck: CardRole[] = DeckManager.generateStartingDeck(numPlayer);
+    ReferenceManager.updateReference(DbFields.GAME_action, action);
+    const deck: CardRole[] = DeckManager.generateStartingDeck(room);
     const state: TurnState = {
         turn: TurnManager.getFirstTurn(seed, room.playerList.length),
         board: BoardState.ChoosingBaseAction
     };
-    ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
-    ReferenceManager.updateReference(DbReferences.GAME_state, state);
+    ReferenceManager.updateReference(DbFields.GAME_deck, deck);
+    ReferenceManager.updateReference(DbFields.GAME_state, state);
 }

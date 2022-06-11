@@ -12,13 +12,13 @@ import useKeyListener, {KeyCode} from "system/hooks/useKeyListener";
 import {InputCursor} from "system/context/localInfo/LocalContextProvider";
 import {useTranslation} from "react-i18next";
 import {formatInsert, insert} from "lang/i18nHelper";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {PlayerDbFields, ReferenceManager} from "system/Database/ReferenceManager";
 
 
 export default function PlayersPanel() {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
-    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
+    const myEntry = TurnManager.getMyInfo(ctx, localCtx);
     const amHost = TurnManager.amHost(ctx, localCtx);
     const playerMap: PlayerMap = ctx.room.playerMap;
     const currPlayer = playerMap.size;
@@ -26,7 +26,7 @@ export default function PlayersPanel() {
     const {t} = useTranslation();
 
     useKeyListener([KeyCode.Space], onKey);
-    if (myPlayer === undefined || myPlayer === null) return <Fragment/>;
+    if (myEntry.player === undefined || myEntry.player === null) return <Fragment/>;
 
     function onKey(keyCode: KeyCode) {
         if (localCtx.getVal(LocalField.InputFocus) === InputCursor.Chat) return;
@@ -44,13 +44,13 @@ export default function PlayersPanel() {
             setStartingRoom(room);
         } else {
             //My action is ready
-            const toggleReady = !myPlayer.isReady;
-            const ref = ReferenceManager.getPlayerFieldReference(myId, DbReferences.PLAYER_isReady);
+            const toggleReady = !myEntry.player.isReady;
+            const ref = ReferenceManager.getPlayerFieldReference(myEntry.id, PlayerDbFields.PLAYER_isReady);
             ref.set(toggleReady);
         }
     }
 
-    let buttonKey = getButtonKey(amHost, playerList, playerMap, myPlayer);
+    let buttonKey = getButtonKey(amHost, playerList, playerMap, myEntry.player);
     const numGames = ctx.room.header.games;
     const remainingCss = getRemainingCss(numGames);
     return (
