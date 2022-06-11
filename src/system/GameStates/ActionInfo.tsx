@@ -1,24 +1,10 @@
 import {ActionType} from "system/GameStates/States";
-import {ObjectPool} from "system/cards/ObjectPool";
-
-
-export class ActionPool extends ObjectPool<ActionType, ActionInfo> {
-    instantiate(key: ActionType): ActionInfo {
-        return new ActionInfo(key);
-    }
-}
-
-export const actionPool = new ActionPool();
 
 export class ActionInfo {
-    actionType: ActionType;
-
-    constructor(actionType: ActionType) {
-        this.actionType = actionType;
-    }
-
-    getName(t: any): string {
-        switch (this.actionType) {
+    public static getName(t: any, actionType: ActionType) {
+        switch (actionType) {
+            case ActionType.InquisiteCards:
+                return t("_action_inquisition");
             case ActionType.Accept:
                 return t("_action_accept");
             case ActionType.Assassinate:
@@ -45,6 +31,7 @@ export class ActionInfo {
                 return t("_action_none");
             case ActionType.Steal:
                 return t("_action_steal");
+
             case ActionType.DukeBlocksForeignAid:
                 return t("_action_DukeBlocksForeignAid");
         }

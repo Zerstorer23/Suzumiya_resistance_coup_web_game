@@ -1,23 +1,6 @@
 import {WaitTime} from "system/GameConstants";
 import {BoardState} from "system/GameStates/States";
 
-/*function inferChallengeTime(action: GameAction): WaitTime {
-    const challInfo = action.param as KillInfo;
-    switch (challInfo.nextState) {
-        case ChallengeState.Notify:
-            return WaitTime.WaitConfirms;
-        default:
-            return WaitTime.WaitConfirms;
-    }
-}*/
-
-/*function inferDiscardingTime(action: GameAction) {
-    const killInfo = action.param as KillInfo;
-    if (killInfo.removed === undefined) return WaitTime.WaitConfirms;
-    console.log("Inferring discarding time", killInfo);
-    if (killInfo.removed[0] < 0) return WaitTime.MakingDecision;
-    return WaitTime.WaitConfirms;
-}*/
 
 export function inferWaitTime(board: BoardState): number {
     switch (board) {
@@ -34,6 +17,7 @@ export function inferWaitTime(board: BoardState): number {
         case BoardState.CalledGetTwo:
         case BoardState.CalledGetThree:
         case BoardState.CalledChangeCards:
+        case BoardState.CalledInquisition:
             return WaitTime.WaitReactions;
         case BoardState.GetOneAccepted:
         case BoardState.DukeBlocksAccepted:
@@ -50,6 +34,8 @@ export function inferWaitTime(board: BoardState): number {
         case BoardState.StealBlockChallenged:
         case BoardState.AssassinateChallenged:
         case BoardState.StealChallenged:
+        case BoardState.InquisitionAccepted:
+        case BoardState.InquisitionChallenged:
             return WaitTime.WaitConfirms;
     }
 }

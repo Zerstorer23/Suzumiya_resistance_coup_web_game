@@ -9,9 +9,9 @@ import {useTranslation} from "react-i18next";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {DeckManager} from "system/cards/DeckManager";
 import {CardRole} from "system/cards/Card";
-import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard.module.css";
+import classes from "pages/ingame/Center/ActionBoards/Boards/BaseBoard/BaseBoard.module.css";
 import BaseActionButton from "pages/ingame/Center/ActionBoards/Boards/ActionButtons/BaseActionButton";
-import {cardPool} from "system/cards/CardPool";
+
 import {useShortcutEffect} from "system/hooks/useShortcut";
 
 const MAX_PCARD = 2;
@@ -21,9 +21,9 @@ export default function DiscardBoard(): JSX.Element {
     const localCtx = useContext(LocalContext);
     const killInfo = ctx.room.game.action.param as KillInfo;
     const deck = ctx.room.game.deck;
-    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    const numAlive = DeckManager.playerAliveCardNum(deck, myPlayer.icard);
-    const myCards: CardRole[] = DeckManager.peekCards(deck, myPlayer.icard, MAX_PCARD);
+    const myEntry = TurnManager.getMyInfo(ctx, localCtx);
+    const numAlive = DeckManager.playerAliveCardNum(deck, myEntry.player.icard);
+    const myCards: CardRole[] = DeckManager.peekCards(deck, myEntry.player.icard, MAX_PCARD);
     const {t} = useTranslation();
 
 
@@ -33,11 +33,12 @@ export default function DiscardBoard(): JSX.Element {
             return;
         }
         setMyTimer(ctx, localCtx, () => {
-            if (myId !== killInfo.ownerId) return;
+            if (myEntry.id !== killInfo.ownerId) return;
             if (killInfo.removed === undefined) return;
             if (killInfo.removed[0] >= 0) return;
-            const killed = onMakeAction(0);
-            if (!killed) onMakeAction(1);
+            const randomAlive = DeckManager.getRandomFromPlayer(myEntry.player, deck);
+            if (randomAlive === null) return;
+            onMakeAction(randomAlive - myEntry.player.icard);
         });
     }, [killInfo.removed]);
 
@@ -50,7 +51,7 @@ export default function DiscardBoard(): JSX.Element {
     }, [keyInfo]);
 
     function onMakeAction(index: number): boolean {
-        const myIndex = myPlayer.icard + index;
+        const myIndex = myEntry.player.icard + index;
         const card = deck[myIndex];
         if (DeckManager.isDead(card) || card === CardRole.None) return false;
         handleCardKill(t, ctx, myIndex);
@@ -65,9 +66,8 @@ export default function DiscardBoard(): JSX.Element {
                         <BaseActionButton
                             key={index}
                             index={index}
-                            param={cardPool.get(
-                                DeckManager.isDead(role) ? CardRole.None : role
-                            )}
+                            isCardRole={true}
+                            param={DeckManager.isDead(role) ? CardRole.None : role}
                             onClickButton={() => {
                                 onMakeAction(index);
                             }}

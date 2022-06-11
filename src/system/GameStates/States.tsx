@@ -1,4 +1,4 @@
-import {PrevDiscardStates} from "system/GameStates/GameTypes";
+import {AcceptedStates, CalledStates, PrevDiscardStates} from "system/GameStates/GameTypes";
 
 export const PAGE_INGAME = "game";
 export const PAGE_LOBBY = "lobby";
@@ -31,6 +31,9 @@ export enum BoardState {
     AssassinBlocked,
     ContessaChallenged,
     ContessaAccepted,
+    CalledInquisition,
+    InquisitionAccepted,
+    InquisitionChallenged,
     DiscardingCard,
     DiscardingFinished,
 }
@@ -47,6 +50,7 @@ export enum ActionType {
     ContessaBlocksAssassination,
     DukeBlocksForeignAid,
     ChangeCards,
+    InquisiteCards,
     IsALie,
     DefendWithCaptain,
     DefendWithAmbassador,
@@ -81,6 +85,7 @@ export class StateManager {
             case BoardState.CalledSteal:
             case BoardState.CalledGetTwoBlocked:
             case BoardState.StealBlocked:
+            case BoardState.CalledInquisition:
                 return true;
             default:
                 return false;
@@ -107,6 +112,8 @@ export class StateManager {
             case BoardState.StealBlockChallenged:
             case BoardState.AssassinateChallenged:
             case BoardState.ContessaChallenged:
+            case BoardState.InquisitionChallenged:
+            case BoardState.InquisitionAccepted:
                 return true;
             default:
                 return false;
@@ -122,6 +129,7 @@ export class StateManager {
             case BoardState.ContessaChallenged:
             case BoardState.AmbassadorChallenged:
             case BoardState.StealChallenged:
+            case BoardState.InquisitionChallenged:
                 return true;
             default:
                 return false;
@@ -147,6 +155,20 @@ export class StateManager {
             case BoardState.CalledCoup:
             case BoardState.CalledSteal:
             case BoardState.CalledAssassinate:
+            case BoardState.CalledInquisition:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static isTargetAcceptedState(state: BoardState): boolean {
+        /**
+         * States that require TargetId set
+         */
+        switch (state) {
+            case BoardState.StealAccepted:
+            case BoardState.InquisitionAccepted:
                 return true;
             default:
                 return false;
@@ -161,6 +183,7 @@ export class StateManager {
             case ActionType.Coup:
             case ActionType.Steal:
             case ActionType.Assassinate:
+            case ActionType.InquisiteCards:
                 return true;
             default:
                 return false;
@@ -186,13 +209,15 @@ export class StateManager {
                 return BoardState.StealBlockChallenged;
             case BoardState.AssassinBlocked:
                 return BoardState.ContessaChallenged;
+            case BoardState.CalledInquisition:
+                return BoardState.InquisitionChallenged;
             default: //Exception
                 console.log("Invalid State");
                 return null;
         }
     }
 
-    public static getAcceptedState(state: BoardState): BoardState | null {
+    public static getAcceptedState(state: BoardState): AcceptedStates | null {
         /**
          * States that are after Accepted
          * Targettables, blocks,
@@ -210,6 +235,8 @@ export class StateManager {
                 return BoardState.AmbassadorAccepted;
             case BoardState.CalledGetThree:
                 return BoardState.GetThreeAccepted;
+            case BoardState.CalledInquisition:
+                return BoardState.InquisitionAccepted;
             //Block calls
             case BoardState.AssassinBlocked:
                 return BoardState.ContessaAccepted;
@@ -222,7 +249,7 @@ export class StateManager {
         }
     }
 
-    public static getCalledState(action: ActionType): BoardState | null {
+    public static getCalledState(action: ActionType): CalledStates | null {
         switch (action) {
             case ActionType.GetOne:
                 return BoardState.GetOneAccepted;
@@ -238,6 +265,8 @@ export class StateManager {
                 return BoardState.CalledCoup;
             case ActionType.Steal:
                 return BoardState.CalledSteal;
+            case ActionType.InquisiteCards:
+                return BoardState.CalledInquisition;
             default:
                 console.trace("INVALID BOARD");
                 return null;
@@ -285,5 +314,8 @@ Assassin: ?Assassin->[CalledAssassinate: Wait]
                       /Block->  [AssassinateChallengedWithContessa : Wait]
                                         ?Lie->[ContessaChallenged:Solve Wait NextTurn]
                                         ?Accept->[ContessaAccepted:Solve Wait NextTurn]
+Inquisitor: ?Inquisite->[CalledInquisition:Wait]
+                        /Accept -> [InquisitionAccepted : solve]
+                        /Lie -> [InquisitionChallenged : solve]
 */
 

@@ -17,6 +17,7 @@ import asakura_dead from "resources/images/asakura_dead.png";
 import mikuru from "resources/images/mikuru2.png";
 import loadingImg from "resources/images/untitled.png";
 import ruleCardImg from "resources/images/ruleCard.png";
+import ruleCardExpansion from "resources/images/ruleCardExpansion.png";
 
 /*
 This file adds reference to all image files
@@ -44,7 +45,7 @@ export enum Images {
     Card,
     LoadingImg,
     RuleCard,
-
+    RuleCardExpansion,
 }
 
 /*
@@ -90,6 +91,8 @@ export default function getImage(res: Images): NodeModule {
             return loadingImg;
         case Images.RuleCard:
             return ruleCardImg;
+        case Images.RuleCardExpansion:
+            return ruleCardExpansion;
         default:
             return unknown;
     }

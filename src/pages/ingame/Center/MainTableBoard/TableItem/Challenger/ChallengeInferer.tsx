@@ -2,11 +2,11 @@ import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {LocalContextType} from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {Fragment} from "react";
-import {cardPool} from "system/cards/CardPool";
 import {KillInfo, Player} from "system/GameStates/GameTypes";
 import {ActionType, BoardState, StateManager} from "system/GameStates/States";
 import {formatInsert} from "lang/i18nHelper";
 import {ChallengeResultBoard, inferPostDiscard} from "pages/ingame/Center/MainTableBoard/TableItem/BoardInferer";
+import {Card} from "system/cards/Card";
 
 export function inferChallengerPanel(
     t: any,
@@ -45,13 +45,13 @@ function inferChallenged(
         if (target === null) return <Fragment/>;
         return <p>{formatInsert(t, "_challenge_the_card",
             challenger.name, target.name,
-            cardPool.get(susCard).getName(t))}
+            Card.getName(t, susCard))}
         </p>;
     }
     if (pier === null) return <Fragment/>;
     return <p>{formatInsert(t, "_challenge_the_card",
         challenger.name, pier.name,
-        cardPool.get(susCard).getName(t))}
+        Card.getName(t, susCard))}
     </p>;
 }
 

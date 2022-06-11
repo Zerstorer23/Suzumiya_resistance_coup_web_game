@@ -15,8 +15,9 @@ import {Navigation} from "App";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {DS} from "system/Debugger/DS";
 import {DeckManager} from "system/cards/DeckManager";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {DbFields, ReferenceManager} from "system/Database/ReferenceManager";
 import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
+import gc from "global.module.css";
 
 export default function InGame() {
     const ctx = useContext(RoomContext);
@@ -29,14 +30,14 @@ export default function InGame() {
     function checkSanity(): boolean {
         if (!amHost) return false;
         ReferenceManager.updateReference(
-            DbReferences.GAME_action,
+            DbFields.GAME_action,
             ctx.room.game.action
         );
         ReferenceManager.updateReference(
-            DbReferences.GAME_state,
+            DbFields.GAME_state,
             ctx.room.game.state
         );
-        ReferenceManager.updateReference(DbReferences.HEADER_hostId, myId);
+        ReferenceManager.updateReference(DbFields.HEADER_hostId, myId);
         const alive = DeckManager.countAlivePlayers(ctx);
         if (!DS.StrictRules || alive > 1) return true;
         TransitionManager.pushEndGame(ctx, myId);
@@ -68,7 +69,7 @@ export default function InGame() {
     }, [turn]);
     if (myId === null) return <Fragment/>;
     return (
-        <div className={classes.container}>
+        <div className={`${classes.container} ${gc.panelBackground}`}>
             <HorizontalLayout>
                 <VerticalLayout className={`${classes.leftPanel}`}>
                     <PlayerBoard/>
@@ -79,7 +80,7 @@ export default function InGame() {
                     <ActionBoards code={roomCode}/>
                 </VerticalLayout>
                 <VerticalLayout className={`${classes.rightPanel}`}>
-                    <GameDeckBoard/>
+                    <GameDeckBoard expansion={ctx.room.header.settings.expansion}/>
                     <InGameChatBoard/>
                 </VerticalLayout>
             </HorizontalLayout>

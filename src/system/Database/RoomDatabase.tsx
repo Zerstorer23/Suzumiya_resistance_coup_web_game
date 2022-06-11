@@ -1,10 +1,10 @@
 import {joinLocalPlayer} from "system/Database/PlayerDatabase";
-import {Player, PlayerMap, Room} from "system/GameStates/GameTypes";
+import {Player, PlayerEntry, PlayerMap, Room} from "system/GameStates/GameTypes";
 import {getDefaultRoom, getSortedListFromMap,} from "system/GameStates/RoomGenerator";
 import {DbRef, Listeners, ListenerTypes} from "system/types/CommonTypes";
 import {ActionType} from "system/GameStates/States";
 import {CardRole} from "system/cards/Card";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {DbFields, ReferenceManager} from "system/Database/ReferenceManager";
 
 
 export async function initialiseRoom(turn: number) {
@@ -37,23 +37,23 @@ export async function loadRoom(): Promise<Room> {
 function parseGame(listeners: Listeners) {
     listeners.set(
         ListenerTypes.Deck,
-        ReferenceManager.getRef(DbReferences.GAME_deck)
+        ReferenceManager.getRef(DbFields.GAME_deck)
     );
     listeners.set(
         ListenerTypes.State,
-        ReferenceManager.getRef(DbReferences.GAME_state)
+        ReferenceManager.getRef(DbFields.GAME_state)
     );
     listeners.set(
         ListenerTypes.gameAction,
-        ReferenceManager.getRef(DbReferences.GAME_action)
+        ReferenceManager.getRef(DbFields.GAME_action)
     );
 }
 
 function parseHeader(listeners: Listeners) {
-    const headerRef = ReferenceManager.getRef(DbReferences.HEADER);
+    const headerRef = ReferenceManager.getRef(DbFields.HEADER);
     listeners.set(ListenerTypes.Header, headerRef);
 
-    const playersRef = ReferenceManager.getRef(DbReferences.PLAYERS);
+    const playersRef = ReferenceManager.getRef(DbFields.PLAYERS);
     listeners.set(ListenerTypes.PlayerList, playersRef);
 }
 
@@ -77,30 +77,33 @@ export function registerListeners(): Listeners {
     return parseListeners();
 }
 
-export function playerClaimedRole(id: string, player: Player, action: ActionType) {
+export function playerClaimedRole(playerEntry: PlayerEntry, action: ActionType) {
     switch (action) {
         case ActionType.Steal:
         case ActionType.DefendWithCaptain:
-            player.lastClaimed = CardRole.Captain;
+            playerEntry.player.lastClaimed = CardRole.Captain;
             break;
         case ActionType.GetThree:
-            player.lastClaimed = CardRole.Duke;
+            playerEntry.player.lastClaimed = CardRole.Duke;
             break;
         case ActionType.Assassinate:
-            player.lastClaimed = CardRole.Assassin;
+            playerEntry.player.lastClaimed = CardRole.Assassin;
             break;
         case ActionType.ContessaBlocksAssassination:
-            player.lastClaimed = CardRole.Contessa;
+            playerEntry.player.lastClaimed = CardRole.Contessa;
             break;
         case ActionType.DukeBlocksForeignAid:
-            player.lastClaimed = CardRole.Duke;
+            playerEntry.player.lastClaimed = CardRole.Duke;
             break;
         case ActionType.ChangeCards:
         case ActionType.DefendWithAmbassador:
-            player.lastClaimed = CardRole.Ambassador;
+            playerEntry.player.lastClaimed = CardRole.Ambassador;
+            break;
+        case ActionType.InquisiteCards:
+            playerEntry.player.lastClaimed = CardRole.Inquisitor;
             break;
         default:
             return;
     }
-    ReferenceManager.updatePlayerReference(id, player);
+    ReferenceManager.updatePlayerReference(playerEntry.id, playerEntry.player);
 }

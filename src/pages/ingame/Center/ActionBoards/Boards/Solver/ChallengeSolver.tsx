@@ -6,8 +6,7 @@ import {ChallengeState, GameAction, KillInfo, Player, PostChallengeStates,} from
 import {BoardState, StateManager} from "system/GameStates/States";
 import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
-import {TurnManager} from "system/GameStates/TurnManager";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {DbFields, ReferenceManager} from "system/Database/ReferenceManager";
 
 
 export function solveChallenges(ctx: RoomContextType, localCtx: LocalContextType) {
@@ -34,25 +33,23 @@ function inferNextStateFromChallenge(doPierAction: boolean, board: BoardState): 
             return BoardState.StealAccepted;
         case BoardState.DukeBlocksChallenged:
             return BoardState.ForeignAidAccepted;
+        case BoardState.InquisitionChallenged:
+            return BoardState.InquisitionAccepted;
         default:
             return BoardState.ChoosingBaseAction;
     }
 }
 
 function handleReveal(ctx: RoomContextType, localCtx: LocalContextType, killInfo: KillInfo) {
-
     const board = ctx.room.game.state.board;
     const action = ctx.room.game.action;
     const susId = prepareChallenge(action, board);
     const susPlayer = ctx.room.playerMap.get(susId)!;
     const [winnerId, loserId] = determineLoser(ctx, susId, susPlayer, killInfo.challengedCard);
     const pierWon = loserId !== action.pierId;
-    const [myId] = TurnManager.getMyInfo(ctx, localCtx);
-    // console.log(`Pay penalty?  loser: ${loserId}  / lost? ${loserId === myId}`);
     killInfo.ownerId = loserId;
     killInfo.nextState = inferNextStateFromChallenge(pierWon, board);
     pushPostChallengeState(ctx, susId, winnerId, susPlayer, killInfo);
-
 }
 
 function pushPostChallengeState(ctx: RoomContextType, susId: string, winnerId: string, susPlayer: Player, killInfo: KillInfo) {
@@ -68,7 +65,7 @@ function pushPostChallengeState(ctx: RoomContextType, susId: string, winnerId: s
         }
         const random = DeckManager.getRandomFromDeck(ctx);
         DeckManager.swap(index, random, deck);
-        ReferenceManager.updateReference(DbReferences.GAME_deck, deck);
+        ReferenceManager.updateReference(DbFields.GAME_deck, deck);
     }
     TransitionManager.pushPrepareDiscarding(ctx, killInfo);
 }

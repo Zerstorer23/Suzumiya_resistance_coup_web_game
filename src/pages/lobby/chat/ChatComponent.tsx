@@ -5,7 +5,7 @@ import ChatModule from "pages/components/ui/ChatModule/ChatModule";
 
 export default function ChatComponent() {
     return (
-        <div className={`${gc.round_border} ${classes.container}`}>
+        <div className={`${gc.round_border} ${gc.borderColor} ${classes.container}`}>
             <ChatModule/>
         </div>
     );

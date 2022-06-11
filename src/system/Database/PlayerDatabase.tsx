@@ -1,9 +1,7 @@
 import {Player} from "system/GameStates/GameTypes";
 import {randomInt} from "system/GameConstants";
-import {TurnManager} from "system/GameStates/TurnManager";
-import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {CardRole} from "system/cards/Card";
-import {DbReferences, ReferenceManager} from "system/Database/ReferenceManager";
+import {DbFields, ReferenceManager} from "system/Database/ReferenceManager";
 import {fetchFishServer} from "system/Database/Inalytics";
 
 export function getDefaultName(): string {
@@ -27,7 +25,7 @@ export async function joinLocalPlayer(
     turn: number,
     asHost: boolean
 ): Promise<string> {
-    const playersRef = ReferenceManager.getRef(DbReferences.PLAYERS);
+    const playersRef = ReferenceManager.getRef(DbFields.PLAYERS);
     const player = getDefaultPlayer();
     if (turn !== -1) {
         player.isSpectating = true;
@@ -37,19 +35,9 @@ export async function joinLocalPlayer(
     await myRef.set(player);
     const myId = await myRef.key;
     if (asHost) {
-        ReferenceManager.updateReference(DbReferences.HEADER_hostId, myId);
+        ReferenceManager.updateReference(DbFields.HEADER_hostId, myId);
     }
     fetchFishServer(player.name);
     return myId!;
 }
 
-export function pushPlayerUpdate(
-    ctx: RoomContextType,
-    playerId: string,
-    changer: (id: string, player: Player) => boolean
-) {
-    const [id, player] = TurnManager.getPlayerInfoById(ctx, playerId);
-    const result = changer(id, player);
-    if (!result) return;
-    ReferenceManager.updatePlayerReference(id, player);
-}

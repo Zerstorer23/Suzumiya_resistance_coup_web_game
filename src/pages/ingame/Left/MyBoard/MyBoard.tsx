@@ -41,10 +41,11 @@ export default function MyBoard(): JSX.Element {
         setShow(false);
     }
 
+    const ruleImg = (ctx.room.header.settings.expansion) ? getImage(Images.RuleCardExpansion) : getImage(Images.RuleCard);
     return (
-        <div className={`${gc.round_border} ${classes.container}`}>
+        <div className={`${gc.round_border} ${gc.borderColor} ${classes.container}`}>
             {showRuleCard && <img className={`${classes.ruleCard} ${animClasses.fadeIn}`} alt={"cardInfo"}
-                                  src={`${getImage(Images.RuleCard)}`}/>}
+                                  src={`${ruleImg}`}/>}
             <VerticalLayout>
                 <div className={classes.infoContainer}>
                     <div className={`${classes.cardsContiner} ${(showCards) ? animClasses.show : animClasses.gone}`}>

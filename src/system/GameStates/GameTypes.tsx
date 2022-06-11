@@ -30,6 +30,7 @@ export type PrevDiscardStates = BoardState.DukeBlocksChallenged
     | BoardState.ContessaChallenged
     | BoardState.AmbassadorChallenged
     | BoardState.StealChallenged
+    | BoardState.InquisitionChallenged
     | BoardState.CalledAssassinate
     | BoardState.CalledCoup
 
@@ -39,7 +40,26 @@ export type PostChallengeStates =
     | BoardState.AmbassadorAccepted
     | BoardState.StealAccepted
     | BoardState.ForeignAidAccepted
-    | BoardState.ChoosingBaseAction;
+    | BoardState.ChoosingBaseAction
+    | BoardState.InquisitionAccepted;
+
+export type AcceptedStates = BoardState.DiscardingCard
+    | BoardState.StealAccepted
+    | BoardState.ForeignAidAccepted
+    | BoardState.AmbassadorAccepted
+    | BoardState.GetThreeAccepted
+    | BoardState.InquisitionAccepted
+    | BoardState.ContessaAccepted
+    | BoardState.DukeBlocksAccepted
+    | BoardState.StealBlockAccepted
+export type CalledStates = BoardState.GetOneAccepted
+    | BoardState.CalledGetTwo
+    | BoardState.CalledGetThree
+    | BoardState.CalledChangeCards
+    | BoardState.CalledAssassinate
+    | BoardState.CalledCoup
+    | BoardState.CalledSteal
+    | BoardState.CalledInquisition
 
 export type KillInfo = {
     cause: KillActionTypes; //What caused this kill
@@ -69,10 +89,14 @@ export type Game = {
     action: GameAction;
     state: TurnState;
 };
+export type RoomSettings = {
+    expansion: boolean;
+}
 export type RoomHeader = {
     seed: number;
     hostId: string;
     games: number;
+    settings: RoomSettings;
 };
 export type PlayerMap = Map<string, Player>;
 export type Room = {
@@ -81,3 +105,12 @@ export type Room = {
     game: Game;
     header: RoomHeader;
 };
+export type SimpleRoom = {
+    action: GameAction;
+    board: BoardState;
+    turn: number;
+    deck: CardDeck;
+    playerMap: PlayerMap;
+    playerList: string[];
+    game: Game;
+}

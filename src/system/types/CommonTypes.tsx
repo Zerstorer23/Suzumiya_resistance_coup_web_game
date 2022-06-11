@@ -2,7 +2,7 @@ import firebase from "firebase/compat/app";
 
 export type IProps = {
     className?: string;
-    children?: JSX.Element[] | JSX.Element;
+    children?: JSX.Element[] | JSX.Element | any;
 };
 
 export type ItemPair = {

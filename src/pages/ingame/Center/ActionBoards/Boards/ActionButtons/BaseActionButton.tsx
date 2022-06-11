@@ -9,15 +9,15 @@ import LocalContext, {LocalField} from "system/context/localInfo/local-context";
 import {TurnManager} from "system/GameStates/TurnManager";
 import {DeckManager} from "system/cards/DeckManager";
 import HorizontalLayout from "pages/components/ui/HorizontalLayout";
-import {cardPool} from "system/cards/CardPool";
 import {useTranslation} from "react-i18next";
-import {insert} from "lang/i18nHelper";
 import {CursorState} from "system/context/localInfo/LocalContextProvider";
+import gc from "global.module.css";
 
 type Prop = IProps & {
     index: number;
     cssIndex?: number;
-    param: Card | ActionInfo;
+    isCardRole: boolean;
+    param: CardRole | ActionType;
     onClickButton: () => void;
 };
 
@@ -37,13 +37,14 @@ export default function BaseActionButton(props: Prop) {
     const ctx = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
     const {t} = useTranslation();
-    const [myId, myPlayer] = TurnManager.getMyInfo(ctx, localCtx);
-    const myCards = DeckManager.peekCards(ctx.room.game.deck, myPlayer.icard, 2);
+    const myEntry = TurnManager.getMyInfo(ctx, localCtx);
+    const myCards = DeckManager.peekCards(ctx.room.game.deck, myEntry.player.icard, 2);
 
-    if (checkEmptyCard(t, param)) return <Fragment/>;
+    if (checkEmptyCard(t, props.isCardRole, param)) return <Fragment/>;
 
     function onMouseOver(e: any) {
-        const key = getTutorialText(param);
+        if (props.isCardRole) return;
+        const key = getTutorialText(param as ActionType);
         if (key === null) return;
         localCtx.setVal(LocalField.TutorialSelector, key);
     }
@@ -52,23 +53,23 @@ export default function BaseActionButton(props: Prop) {
         localCtx.setVal(LocalField.TutorialSelector, CursorState.Idle);
     }
 
-    const [name, hasCard, isCard, relatedRole, cost] = analyseParam(t, param, myCards);
+    const [name, hasCard, isCard, relatedRole, cost] = analyseParam(t, props.isCardRole, param, myCards);
     let iconElem = <Fragment/>;
     let subClassName = "";
     if (isCard) {
         iconElem = <img
-            className={`${classes.characterIcon}`}
-            src={`${cardPool.get(relatedRole).getImage()}`}
+            className={`${classes.characterIcon} ${gc.absoluteLeftCenter}`}
+            src={`${Card.getImage(relatedRole)}`}
             alt="card"
         />;
         subClassName = classes.lieText;
     }
 
-    const hasEnoughMoney = myPlayer.coins >= cost;
+    const hasEnoughMoney = myEntry.player.coins >= cost;
     let subText = hasCard ? "" : t("_lie_marker");
     if (!hasEnoughMoney) {
-        subClassName = classes.noCoinText;
-        subText = insert(t, "_coin_cost", cost);
+        subClassName = classes.lieText;
+        subText = t("_coin_cost");
     }
 
     const disableCss = hasEnoughMoney ? classes.cell : classes.cellDisabled;
@@ -86,75 +87,83 @@ export default function BaseActionButton(props: Prop) {
         >
             <HorizontalLayout>
                 {iconElem}
-                <p className={classes.nameText}>{name}</p>
-                <p className={subClassName}>{subText}</p>
+                <p className={`${classes.nameText} ${gc.absoluteCenter}`}>{name}</p>
+                <p className={`${subClassName} ${gc.absoluteRightCenter}`}>{subText}</p>
             </HorizontalLayout>
             <div className={classes.shortcutHint}>{props.index + 1}</div>
         </button>
     );
 }
 
-function checkEmptyCard(t: any, param: any): boolean {
-    if (param instanceof Card) {
-        if (DeckManager.isDead(param.cardRole)) return true;
+function checkEmptyCard(t: any, isCard: boolean, param: CardRole | ActionType): boolean {
+    if (isCard) {
+        if (param === CardRole.None) return true;
+        if (DeckManager.isDead(param as CardRole)) return true;
     } else {
-        if (param.actionType === ActionType.None) return true;
+        if (param === ActionType.None) return true;
     }
     return false;
 }
 
-function analyseParam(t: any, param: any, myCards: CardRole[]): [string, boolean, boolean, CardRole, number] {
-    let name = "";
-    let hasCard = false;
-    let isCard = true;
+function analyseParam(t: any, isCard: boolean, param: CardRole | ActionType, myCards: CardRole[]): [string, boolean, boolean, CardRole, number] {
+    let name: string;
+    let hasCard: boolean;
     let relatedRole = CardRole.None;
     let cost = 0;
 
-    if (param instanceof Card) {
+    if (isCard) {
         hasCard = true;
-        relatedRole = param.cardRole;
-        name = param.getName(t);
+        relatedRole = param as CardRole;
+        name = Card.getName(t, relatedRole);
     } else {
         //ActionInfo Case
-        switch (param.actionType) {
+        switch (param as ActionType) {
             case ActionType.ChangeCards:
             case ActionType.DefendWithAmbassador:
                 relatedRole = CardRole.Ambassador;
+                isCard = true;
                 break;
             case ActionType.Assassinate:
                 relatedRole = CardRole.Assassin;
+                isCard = true;
                 cost = 3;
                 break;
             case ActionType.ContessaBlocksAssassination:
                 relatedRole = CardRole.Contessa;
+                isCard = true;
                 break;
             case ActionType.DefendWithCaptain:
             case ActionType.Steal:
                 relatedRole = CardRole.Captain;
+                isCard = true;
                 break;
             case ActionType.GetThree:
             case ActionType.DukeBlocksForeignAid:
                 relatedRole = CardRole.Duke;
+                isCard = true;
+                break;
+            case ActionType.InquisiteCards:
+                relatedRole = CardRole.Inquisitor;
+                isCard = true;
                 break;
             case ActionType.Coup:
                 hasCard = true;
-                isCard = false;
                 cost = 7;
                 break;
             default:
                 hasCard = true;
-                isCard = false;
                 break;
         }
-        name = param.getName(t);
+        name = ActionInfo.getName(t, param as ActionType);
         hasCard = myCards.includes(relatedRole) || !isCard;
     }
     return [name, hasCard, isCard, relatedRole, cost];
 }
 
-function getTutorialText(param: Card | ActionInfo): string | null {
-    if (param instanceof Card) return null;
-    switch (param.actionType) {
+function getTutorialText(actionType: ActionType): string | null {
+    switch (actionType) {
+        case ActionType.InquisiteCards:
+            return "_tutorial_inquisite";
         case ActionType.None:
             return null;
         case ActionType.GetOne:
