@@ -106,6 +106,7 @@ export default function ChatModule() {
             <HorizontalLayout className={classes.sendBox}>
                 <textarea
                     ref={chatFieldRef}
+                    placeholder={t("_chat_hint")}
                     className={classes.inputField}
                     onBlur={() => {
                         toggleFocus(false);

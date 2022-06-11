@@ -99,6 +99,9 @@ export function playerClaimedRole(playerEntry: PlayerEntry, action: ActionType) 
         case ActionType.DefendWithAmbassador:
             playerEntry.player.lastClaimed = CardRole.Ambassador;
             break;
+        case ActionType.InquisiteCards:
+            playerEntry.player.lastClaimed = CardRole.Inquisitor;
+            break;
         default:
             return;
     }

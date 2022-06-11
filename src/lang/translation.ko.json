@@ -154,5 +154,9 @@
   "_prompt_play_more_want": "더 플레이 하려면 방장이 채팅에 \"/coins\" 입력",
   "_coins_inserted": "게임을 더 하는것에 합의한 것으로 이해한것을 공표해도 괜찮은지 물은것에 대한 답을 받는것을 공개했습니다.",
   "_name_with_wins": "$0 ($1승)",
+  "_chat_hint": "Enter로 채팅입력...",
+  "_check_expansion": "칠석 확장팩",
+  "_announce_expansion_on": "확장팩 ON",
+  "_announce_expansion_off": "확장팩 OFF",
   "dymmy": "dummy"
 }
