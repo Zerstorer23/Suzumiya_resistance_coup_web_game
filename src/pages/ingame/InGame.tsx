@@ -16,8 +16,8 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import {DS} from "system/Debugger/DS";
 import {DeckManager} from "system/cards/DeckManager";
 import {DbFields, ReferenceManager} from "system/Database/ReferenceManager";
-import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import gc from "global.module.css";
+import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 
 export default function InGame() {
     const ctx = useContext(RoomContext);
