@@ -20,9 +20,7 @@ export default function GameOverPage() {
     const amHost = TurnManager.amHost(ctx, localCtx);
     useEffect(() => {
         forceSetTimer(localCtx, WaitTime.WaitReactions, () => {
-            console.log("am host?");
             if (!amHost) return;
-            console.log("push lobby");
             TransitionManager.pushLobby(ctx.room.header.games);
         });
     }, [amHost]);
