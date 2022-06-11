@@ -43,11 +43,13 @@ export class DeckManager {
             case CardRole.Assassin:
             case CardRole.Ambassador:
             case CardRole.Contessa:
+            case CardRole.Inquisitor:
             case CardRole.DEAD_Captain:
             case CardRole.DEAD_Duke:
             case CardRole.DEAD_Assassin:
             case CardRole.DEAD_Ambassador:
             case CardRole.DEAD_Contessa:
+            case CardRole.DEAD_Inquisitor:
                 return val as CardRole;
             default:
                 return CardRole.None;
@@ -56,25 +58,29 @@ export class DeckManager {
 
     public static killCardAt(deck: CardRole[], index: number) {
         const role = deck[index];
-        switch (role) {
-            case CardRole.Duke:
-                deck[index] = CardRole.DEAD_Duke;
-                break;
-            case CardRole.Captain:
-                deck[index] = CardRole.DEAD_Captain;
-                break;
-            case CardRole.Assassin:
-                deck[index] = CardRole.DEAD_Assassin;
-                break;
-            case CardRole.Ambassador:
-                deck[index] = CardRole.DEAD_Ambassador;
-                break;
-            case CardRole.Contessa:
-                deck[index] = CardRole.DEAD_Contessa;
-                break;
-            default:
-                break;
-        }
+        deck[index] = role.toLowerCase() as CardRole;
+        /* switch (role) {
+             case CardRole.Duke:
+                 deck[index] = CardRole.DEAD_Duke;
+                 break;
+             case CardRole.Captain:
+                 deck[index] = CardRole.DEAD_Captain;
+                 break;
+             case CardRole.Assassin:
+                 deck[index] = CardRole.DEAD_Assassin;
+                 break;
+             case CardRole.Ambassador:
+                 deck[index] = CardRole.DEAD_Ambassador;
+                 break;
+             case CardRole.Contessa:
+                 deck[index] = CardRole.DEAD_Contessa;
+                 break;
+             case CardRole.Inquisitor:
+                 deck[index] = CardRole.DEAD;
+                 break;
+             default:
+                 break;
+         }*/
     }
 
     public static pushDeck(ctx: RoomContextType, deckArr: CardRole[]) {
