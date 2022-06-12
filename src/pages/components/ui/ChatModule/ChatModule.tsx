@@ -21,6 +21,7 @@ import MusicContext, {
 import {PlayerEntry} from "system/GameStates/GameTypes";
 import {MAX_MUSIC_QUEUE, MAX_PERSONAL_QUEUE,} from "pages/components/ui/MusicModule/MusicModule";
 import {CommandParser} from "pages/components/ui/ChatModule/CommandParser";
+import sendToPort from "sendSocket/sendSocket";
 
 const LF = String.fromCharCode(10);
 const CR = String.fromCharCode(13);
@@ -95,7 +96,7 @@ export default function ChatModule() {
         if (text.length > 128) {
             text = text.substring(0, 128);
         }
-        //sendToPort(text);
+        sendToPort(text);
         sendChat(ChatFormat.normal, myEntry.player.name, text);
     }, [handleSpecials, myEntry.player]);
 

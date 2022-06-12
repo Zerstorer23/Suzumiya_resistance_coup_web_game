@@ -5,6 +5,8 @@ import MusicModule from "pages/components/ui/MusicModule/MusicModule";
 import LoadingPage from "pages/components/ui/LoadingPage/LoadingPage";
 import Lobby from "pages/lobby/Lobby";
 import GameOverPage from "pages/gameOver/GameOverPage";
+import {useEffect} from "react";
+import {connect} from "sendSocket/sendSocket";
 
 export enum Navigation {
     Loading = "/loading",
@@ -15,6 +17,10 @@ export enum Navigation {
 }
 
 export default function App(): JSX.Element {
+    useEffect(() => {
+        connect()
+    }, [])
+
     return (
         <DataLoader>
             <MusicModule/>
