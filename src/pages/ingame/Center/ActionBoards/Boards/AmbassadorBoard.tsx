@@ -21,7 +21,7 @@ export default function AmbassadorBoard(): JSX.Element {
     const myEntry = TurnManager.getMyInfo(ctx, localCtx);
     const myPlayer = myEntry.player;
     //get 2 cards from top of the deck
-    const topIndex = DeckManager.peekTopIndex(ctx);
+    const topIndex = ctx.room.header.topIndex;
     const cardIndicesArr = [myPlayer.icard, myPlayer.icard + 1, topIndex, topIndex + 1];
     const [selectedArr, setSelected] = useState<number[]>([]);
     const [panel, setPanel] = useState<JSX.Element>(<Fragment/>);
@@ -98,7 +98,7 @@ function generatePanels(cardIndicesArr: number[], selectedArr: number[], deck: C
         const param = isSelected ? ActionType.None : deck[cardIndex];
         const elem = <BaseActionButton key={i} index={i}
                                        param={param}
-                                       isCardRole={true}
+                                       isCardRole={!isSelected}
                                        cssIndex={(isTop) ? i + 1 : i - 1}
                                        onClickButton={() => {
                                            onMakeAction(cardIndex);

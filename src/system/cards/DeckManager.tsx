@@ -10,20 +10,8 @@ Manager file that helps decoding deck string into cards
 
 export class DeckManager {
     public static isDead(role: CardRole): boolean {
-        return role === role.toLowerCase();
-        /*  switch (role) {
-              case CardRole.DEAD_Duke:
-              case CardRole.DEAD_Captain:
-              case CardRole.DEAD_Assassin:
-              case CardRole.DEAD_Contessa:
-              case CardRole.DEAD_Ambassador:
-              case CardRole.DEAD_Inquisitor:
-              case CardRole.None:
-              case undefined:
-                  return true;
-              default:
-                  return false;
-          }*/
+        const roleStr = role as string;
+        return roleStr === roleStr.toLowerCase();
     }
 
     public static playerIsDead(deck: CardDeck, player: Player): boolean {
@@ -63,29 +51,7 @@ export class DeckManager {
 
     public static killCardAt(deck: CardRole[], index: number) {
         const role = deck[index];
-        deck[index] = role.toLowerCase() as CardRole;
-        /* switch (role) {
-                 case CardRole.Duke:
-                     deck[index] = CardRole.DEAD_Duke;
-                     break;
-                 case CardRole.Captain:
-                     deck[index] = CardRole.DEAD_Captain;
-                     break;
-                 case CardRole.Assassin:
-                     deck[index] = CardRole.DEAD_Assassin;
-                     break;
-                 case CardRole.Ambassador:
-                     deck[index] = CardRole.DEAD_Ambassador;
-                     break;
-                 case CardRole.Contessa:
-                     deck[index] = CardRole.DEAD_Contessa;
-                     break;
-                 case CardRole.Inquisitor:
-                     deck[index] = CardRole.DEAD;
-                     break;
-                 default:
-                     break;
-             }*/
+        deck[index] = (role as string).toLowerCase() as CardRole;
     }
 
     public static pushDeck(ctx: RoomContextType, deckArr: CardRole[]) {
@@ -126,18 +92,9 @@ export class DeckManager {
         return arr;
     }
 
-    public static peekTopIndex(ctx: RoomContextType): number {
-        let max = 0;
-        const playerMap = ctx.room.playerMap;
-        playerMap.forEach((player) => {
-            max = Math.max(player.icard);
-        });
-        max += 2;
-        return max;
-    }
 
     public static getRandomFromDeck(ctx: RoomContextType): number {
-        const top = this.peekTopIndex(ctx);
+        const top = ctx.room.header.topIndex;
         return randomInt(top, ctx.room.game.deck.length - 1);
     }
 

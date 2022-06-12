@@ -30,6 +30,7 @@ export default function WaitingBoard(): JSX.Element {
                 case BoardState.CalledGetTwo:
                 case BoardState.CalledGetThree:
                 case BoardState.CalledChangeCards:
+                case BoardState.CalledInquisition:
                     TransitionManager.pushAcceptedState(ctx);
                     break;
                 case BoardState.DiscardingFinished:

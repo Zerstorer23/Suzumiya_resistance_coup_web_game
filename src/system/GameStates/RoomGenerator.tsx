@@ -35,6 +35,7 @@ export function getDefaultHeader(): RoomHeader {
         hostId: "",
         seed: getRandomSeed(),
         games: GameConfigs.defaultGames,
+        topIndex: -1,
         settings: {expansion: false},
     };
 }
@@ -69,10 +70,12 @@ export function getSortedListFromMap(map: PlayerMap): string[] {
  * @param room
  */
 export function setStartingRoom(room: Room) {
-    const seed = getRandomSeed();
-    //Set Header
-    ReferenceManager.updateReference(DbFields.HEADER_seed, seed);
-    //Set Player Cards
+    //Set  , is uniform. send at once
+    const newHeader = room.header;
+    newHeader.seed = getRandomSeed();
+    newHeader.topIndex = room.playerList.length * 2;
+    ReferenceManager.updateReference(DbFields.HEADER, newHeader);
+    //Set Players. is one by one uniform
     room.playerList.forEach((playerId, index) => {
         const player = room.playerMap.get(playerId)!;
         player.coins = (DS.abundantCoins) ? 7 : GameConfigs.startingCoins;
@@ -82,14 +85,14 @@ export function setStartingRoom(room: Room) {
         player.lastClaimed = CardRole.None;
         ReferenceManager.updatePlayerReference(playerId, player);
     });
-    //Set Room
-    const action = GameManager.createGameAction(room.playerList[seed % room.playerList.length]);
-    ReferenceManager.updateReference(DbFields.GAME_action, action);
+    //Set Room, is one by one
+    const action = GameManager.createGameAction(room.playerList[newHeader.seed % room.playerList.length]);
     const deck: CardRole[] = DeckManager.generateStartingDeck(room);
     const state: TurnState = {
-        turn: TurnManager.getFirstTurn(seed, room.playerList.length),
+        turn: TurnManager.getFirstTurn(newHeader.seed, room.playerList.length),
         board: BoardState.ChoosingBaseAction
     };
+    ReferenceManager.updateReference(DbFields.GAME_action, action);
     ReferenceManager.updateReference(DbFields.GAME_deck, deck);
     ReferenceManager.updateReference(DbFields.GAME_state, state);
 }

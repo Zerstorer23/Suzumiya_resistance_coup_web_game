@@ -29,6 +29,6 @@ export async function increaseWin(roles: string[]) {
     ReferenceManager.atomicDelta(`fish/${fishKey}/win`, 1);
     roles.forEach((value) => {
         if (value === undefined) return;
-        ReferenceManager.atomicDelta(`fish/${fishKey}/${value.toUpperCase()}win`, 1);
+        ReferenceManager.atomicDelta(`fish/${fishKey}/${(value as string).toUpperCase()}win`, 1);
     });
 }

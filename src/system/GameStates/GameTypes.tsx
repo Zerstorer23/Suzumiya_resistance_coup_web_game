@@ -96,6 +96,7 @@ export type RoomHeader = {
     seed: number;
     hostId: string;
     games: number;
+    topIndex: number;
     settings: RoomSettings;
 };
 export type PlayerMap = Map<string, Player>;

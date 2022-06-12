@@ -56,15 +56,12 @@ export default function ChatModule() {
             console.log("focused ? " + focused);
             localCtx.setVal(LocalField.InputFocus, focused ? InputCursor.Chat : InputCursor.Idle);
         }, [focused]);*/
-    const focused = localCtx.getVal(LocalField.InputFocus);
     /*  useEffect(() => {
           const active = document.activeElement === chatFieldRef.current!;
           // console.log("active ? " + active);
           localCtx.setVal(LocalField.InputFocus, active ? InputCursor.Chat : InputCursor.Idle);
       }, [document.activeElement]);*/
-    useEffect(() => {
-        console.log("Focus? " + focused);
-    }, [focused]);
+
 
     const handleSpecials = useCallback(
         (text: string) => {

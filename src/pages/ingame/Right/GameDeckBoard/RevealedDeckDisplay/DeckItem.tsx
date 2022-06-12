@@ -15,7 +15,7 @@ export default function DeckItem(props: Prop): JSX.Element {
     const {t} = useTranslation();
     const deck = ctx.room.game.deck;
     const role = props.card;
-    const deckTop = DeckManager.peekTopIndex(ctx);
+    const deckTop = ctx.room.header.topIndex;
     const total = deck.length / 5;
     const count = DeckManager.countCards(deck, role);
     const cssAnim = useAnimFocus(count, AnimType.ZoomIn);

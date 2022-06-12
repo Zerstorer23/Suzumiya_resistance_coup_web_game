@@ -152,6 +152,7 @@ function analyseParam(t: any, isCard: boolean, param: CardRole | ActionType, myC
                 break;
             default:
                 hasCard = true;
+                cost = 0;
                 break;
         }
         name = ActionInfo.getName(t, param as ActionType);
