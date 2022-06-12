@@ -12,14 +12,16 @@ import {useContext, useEffect} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import {StateManager} from "system/GameStates/States";
 import {AudioFile, audioPool} from "resources/AudioManager";
+import LocalContext from "system/context/localInfo/local-context";
 
 export default function MainTableBoard(): JSX.Element {
     const {t} = useTranslation();
     const ctx = useContext(RoomContext);
+    const localCtx = useContext(LocalContext);
     const board = ctx.room.game.state.board;
     useEffect(() => {
         if (StateManager.isChallenged(board)) {
-            audioPool.play(AudioFile.Objection);
+            audioPool.play(localCtx, AudioFile.Objection);
         }
     }, [board]);
 

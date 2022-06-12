@@ -56,7 +56,7 @@ function handleDeadCase(t: any, deck: CardDeck, player: Player, killInfo: KillIn
     const isDead = DeckManager.playerIsDead(deck, player);
     if (!isDead) return;
     player.isSpectating = true;
-    player.coins = 0;
+    // player.coins = 0;
     ReferenceManager.updatePlayerReference(killInfo.ownerId, player);
     sendChat(ChatFormat.important, "", insert(t, "_notify_dead_player", player.name));
 }
@@ -73,7 +73,7 @@ export function handleSuicide(ctx: RoomContextType, playerId: string) {
         newAction.param = killedInfo;
         ReferenceManager.updateReference(DbFields.GAME_deck, deck);
         player.isSpectating = true;
-        player.coins = 0;
+        // player.coins = 0;
         ReferenceManager.updatePlayerReference(killedInfo.ownerId, player);
         newState.board = BoardState.DiscardingFinished;
         return TransitionAction.Success;

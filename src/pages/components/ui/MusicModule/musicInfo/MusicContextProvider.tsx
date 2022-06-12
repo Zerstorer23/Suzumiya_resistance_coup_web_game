@@ -134,7 +134,7 @@ function filterVidID(url: string) {
 export function pushMusicToQueue(
     musicCtx: MusicContextType,
     url: string,
-    requesterId: string
+    requesterId: string,
 ): MusicResponse {
     const myList = musicCtx.list.filter((entry) => {
         return entry.pid === requesterId;

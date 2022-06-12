@@ -33,21 +33,23 @@ export function useShortcutEffect(size: number) {
     const localCtx = useContext(LocalContext);
     const [keyInfo, setKeyInfo] = useState<KeyIndexType>({counter: 0, index: -1});
     ///====Key listener====///
+    const focus = localCtx.getVal(LocalField.InputFocus);
     useEffect(() => {
         document.addEventListener('keydown', onKeyEvent);
         return () => {
             document.removeEventListener('keydown', onKeyEvent);
         };
-    }, []);
-    
+    }, [focus]);
+
     function onKeyEvent(event: any) {
         if (!targets.includes(event.keyCode)) return;
         const index = keyCodeToIndex(event.keyCode, size - 1);
         if (index < 0) return;
-        console.log("Key detected " + index + " / focus" + localCtx.getVal(LocalField.InputFocus));
-        if (localCtx.getVal(LocalField.InputFocus) !== InputCursor.Idle) return;
+        console.log("Key detected " + index + " / focus" + focus);
+        if (focus !== InputCursor.Idle) return;
         setKeyInfo((prevState) => ({counter: prevState.counter + 1, index}));
     }
+
 
     return keyInfo;
 }

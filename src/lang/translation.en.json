@@ -155,8 +155,11 @@
   "_coins_inserted": "Host enlarged the game",
   "_name_with_wins": "$0 ($1 wins)",
   "_chat_hint": "Press Enter to chat...",
+  "_muted_true": "Muted",
+  "_muted_false": "Unmuted",
   "_check_expansion": "Expansion pack",
   "_announce_expansion_on": "Expansion pack is ON",
   "_announce_expansion_off": "Expansion pack is OFF",
+  "_song_owner_announce": "This is $0's song",
   "dymmy": "dummy"
 }

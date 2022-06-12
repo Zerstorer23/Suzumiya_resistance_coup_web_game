@@ -21,6 +21,7 @@ export default function LocalProvider(props: IProps) {
     const [myId, setMyId] = useState<string | null>(null);
     const [tutorialSelector, setTutorialSelected] = useState<CursorState>(CursorState.Idle);
     const [inputFocused, setInputFocused] = useState<InputCursor>(InputCursor.Idle);
+    const [isMuted, setIsMuted] = useState<boolean>(false);
     const [timerOption, setTimerOption] = useState<TimerOptionType>({
         duration: WaitTime.MakingDecision,
         onExpire: () => {
@@ -46,6 +47,10 @@ export default function LocalProvider(props: IProps) {
     map.set(LocalField.InputFocus, {
         val: inputFocused,
         set: setInputFocused,
+    });
+    map.set(LocalField.Muted, {
+        val: isMuted,
+        set: setIsMuted,
     });
 
     /*

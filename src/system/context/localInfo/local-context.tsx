@@ -14,7 +14,8 @@ export enum LocalField {
     Id,
     TutorialSelector,
     Timer,
-    InputFocus
+    InputFocus,
+    Muted,
 }
 
 export type TimerOptionType = {

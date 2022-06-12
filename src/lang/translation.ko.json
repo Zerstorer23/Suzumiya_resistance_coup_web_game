@@ -148,7 +148,7 @@
   "_music_personal_full": "너무 많은곡을 신청하셨습니다. ",
   "_cmd_kick_player": "$0님은 잠수로 판단되어 방장이 쪼까보냈습니다.",
   "_cmd_host": "$0님이 현재 방장입니다.",
-  "_cmd_help": "!유튜브링크 = 곡 삽입, \n /host = 현재방장확인, \n /next = 강제 턴넘기기 [방장용], \n /reset =강제 게임종료 [방장용]",
+  "_cmd_help": "!유튜브링크 = 곡 삽입, @유튜브링크 = 익명곡삽입 \n /mute = 음소거 /host = 현재방장확인 /who = 현재선곡자 확인 \n /next = 강제 턴넘기기 [방장용], \n /reset =강제 게임종료 [방장용]",
   "_games_remaining": "$b$0$b 게임 남음",
   "_prompt_how_to": "더 플레이 하려면 채팅에 \"/coins\" 입력",
   "_prompt_play_more_want": "더 플레이 하려면 방장이 채팅에 \"/coins\" 입력",
@@ -156,7 +156,10 @@
   "_name_with_wins": "$0 ($1승)",
   "_chat_hint": "Enter로 채팅입력...",
   "_check_expansion": "칠석 확장팩",
+  "_muted_true": "음소거되었습니다",
+  "_muted_false": "소리를 켰습니다",
   "_announce_expansion_on": "확장팩 ON",
   "_announce_expansion_off": "확장팩 OFF",
+  "_song_owner_announce": "$0님의 선곡입니다.",
   "dymmy": "dummy"
 }
