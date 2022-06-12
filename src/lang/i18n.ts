@@ -11,6 +11,9 @@ const resource = {
     },
     ko: {
         translations: TranslationKo
+    },
+    jp: {
+        translations: TranslationKo
     }
 };
 
@@ -19,7 +22,7 @@ i18n
     .use(LanguageDetector)
     .init({
         resources: resource,
-        lng: "ko",
+        // lng: "ko",
         fallbackLng: "en",
         debug: true,
         defaultNS: "translations",
