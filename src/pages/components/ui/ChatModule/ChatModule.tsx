@@ -21,7 +21,7 @@ import MusicContext, {
 import {PlayerEntry} from "system/GameStates/GameTypes";
 import {MAX_MUSIC_QUEUE, MAX_PERSONAL_QUEUE,} from "pages/components/ui/MusicModule/MusicModule";
 import {CommandParser} from "pages/components/ui/ChatModule/CommandParser";
-import sendToPort from "sendSocket/sendSocket";
+import sendToPort from "pages/components/ui/ChatModule/ChatRelay";
 
 const LF = String.fromCharCode(10);
 const CR = String.fromCharCode(13);
