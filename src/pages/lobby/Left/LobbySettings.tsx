@@ -75,10 +75,10 @@ export default function LobbySettings() {
                 <a href={"https://gall.dcinside.com/mgallery/board/view/?id=haruhiism&no=142721"} target={"_blank"}>
                     룰 북 (새탭)</a>
                 <br/>
-                <a href={"https://https://chat.haruhi.boats/"} target={"_blank"}>중계기</a>
+                <a href={"https://chat.haruhi.boats/"} target={"_blank"}>중계기</a>
                 <br/>
-                <a href={"https://docs.google.com/forms/d/e/1FAIpQLSexSyVua158WXfLUVat-pFZOL8wLl3Tyu_Y8_ZAJ-R16ZJWOg/viewform?usp=sf_link"}
-                   target={"_blank"}>설문</a>
+                {/*     <a href={"https://docs.google.com/forms/d/e/1FAIpQLSexSyVua158WXfLUVat-pFZOL8wLl3Tyu_Y8_ZAJ-R16ZJWOg/viewform?usp=sf_link"}
+                   target={"_blank"}>설문</a>*/}
                 <p>모바일 유저는 데스크탑보기모드 꼭 켜주라!</p>
             </div>
             <div className={classes.creditsContainer}>
