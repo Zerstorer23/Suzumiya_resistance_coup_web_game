@@ -9,21 +9,46 @@
 }
 
 .modal {
-    position: fixed;
-    top: 15vh;
-    left: 5%;
-    width: 90%;
+    position: absolute;
+    top: 10%;
+    left: 30%;
+    width: 40%;
+    height: 80%;
     background-color: black;
     padding: 1rem;
     border-radius: 1.2rem;
     border: 0.3rem solid #dddddd;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     z-index: 30;
+    transform: translate(-50%, -50%);
 }
 
+.image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    max-width: 100%;
+    max-height: 80%;
+    height: auto;
+    width: auto;
+}
+
+.text {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.text strong {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+/*
 @media (min-width: 768px) {
     .modal {
         width: 40rem;
         left: calc(50% - 20rem);
     }
 }
+*/

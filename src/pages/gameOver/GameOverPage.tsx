@@ -1,6 +1,4 @@
 import classes from "pages/ingame/InGame.module.css";
-import ImagePage from "pages/components/ui/ImagePage/ImagePage";
-import {Images} from "resources/Resources";
 import {useContext, useEffect} from "react";
 import RoomContext from "system/context/roomInfo/room-context";
 import LocalContext from "system/context/localInfo/local-context";
@@ -9,9 +7,9 @@ import {TurnManager} from "system/GameStates/TurnManager";
 import GameOverPopUp from "pages/components/ui/PopUp/PopUp";
 import {forceSetTimer} from "pages/components/ui/MyTimer/MyTimer";
 import {WaitTime} from "system/GameConstants";
-import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 import {Navigation} from "App";
 import gc from "global.module.css";
+import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
 
 export default function GameOverPage() {
     const ctx = useContext(RoomContext);
@@ -32,6 +30,5 @@ export default function GameOverPage() {
 
     return <div className={`${classes.container} ${gc.panelBackground}`}>
         <GameOverPopUp/>
-        <ImagePage imgSrc={Images.LoadingImg}/>;
     </div>;
 }

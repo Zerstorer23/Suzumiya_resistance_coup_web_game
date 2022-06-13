@@ -30,13 +30,15 @@ type GOprops = IProps & {
 
 function GameOverWindow(props: GOprops) {
     const {t} = useTranslation();
+    const img = Card.getVictoryImage(props.card1, props.card2);
     return (
         <div className={`${classes.modal} ${animClasses.slideDown}`}>
-            <p>{formatInsert(t, "_game_winner", props.player.name)}</p>
-            <p>{formatInsert(t, "_game_cardUsed",
+            <img className={classes.image} src={`${img}`} alt={"victory"}/>
+            <p className={classes.text}>{formatInsert(t, "_game_winner", props.player.name)}</p>
+            <p className={classes.text}>{formatInsert(t, "_game_cardUsed",
                 Card.getName(t, props.card1),
                 Card.getName(t, props.card2))}</p>
-            <p>{t("_return_lobby")}<MyTimer/></p>
+            <p className={classes.text}>{t("_return_lobby")}<MyTimer/></p>
         </div>
     );
 }

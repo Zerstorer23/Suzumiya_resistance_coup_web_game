@@ -2,6 +2,7 @@ import get, {Images} from "resources/Resources";
 import {DeckManager} from "system/cards/DeckManager";
 import {Fragment} from "react";
 import {formatInsert} from "lang/i18nHelper";
+import {randomInt} from "system/GameConstants";
 
 /*
 Card role corresponding to database
@@ -133,5 +134,63 @@ export class Card {
             default:
                 return <Fragment/>;
         }
+    }
+
+    public static getVictoryImage(role1: CardRole, role2: CardRole) {
+        role1 = (role1 as string).toUpperCase() as CardRole;
+        role2 = (role2 as string).toUpperCase() as CardRole;
+        switch (role1) {
+            case CardRole.Assassin:
+                switch (role2) {
+                    case CardRole.Inquisitor:
+                        return get([Images.WinAsakuraMikuru, Images.WinAsakuraMikuru2][randomInt(0, 1)]);
+                }
+                return get(Images.WinAsakura);
+            case CardRole.Ambassador:
+                switch (role2) {
+                    case CardRole.Contessa:
+                        return get([Images.WinHaruhiKyon, Images.WinHaruhiKyon2][randomInt(0, 1)]);
+                    case CardRole.Inquisitor:
+                        return get([Images.WinHaruhiMikuru, Images.WinHaruhiMikuru2][randomInt(0, 1)]);
+                    case CardRole.Captain:
+                        return get([Images.WinHaruhiNagato, Images.WinHaruhiNagato2][randomInt(0, 1)]);
+                }
+                return get(Images.WinHaruhi);
+            case CardRole.Duke:
+                switch (role2) {
+                    case CardRole.Contessa:
+                        return get(Images.WinKyonkoItsuki);
+                }
+                return get(Images.WinItsuki);
+            case CardRole.Contessa:
+                switch (role2) {
+                    case CardRole.Captain:
+                        return get([Images.WinKyonNagato, Images.WinKyonNagato2][randomInt(0, 1)]);
+                    case CardRole.Ambassador:
+                        return get([Images.WinHaruhiKyon, Images.WinHaruhiKyon2][randomInt(0, 1)]);
+                    case CardRole.Duke:
+                        return get(Images.WinKyonkoItsuki);
+                }
+                return get(Images.Kyonko);
+            case CardRole.Inquisitor:
+                switch (role2) {
+                    case CardRole.Inquisitor:
+                        return get(Images.WinMikuruMikuru);
+                    case CardRole.Assassin:
+                        return get([Images.WinAsakuraMikuru, Images.WinAsakuraMikuru2][randomInt(0, 1)]);
+                    case CardRole.Ambassador:
+                        return get([Images.WinHaruhiMikuru, Images.WinHaruhiMikuru2][randomInt(0, 1)]);
+                }
+                return get([Images.WinMikuru, Images.WinMikuru2][randomInt(0, 1)]);
+            case CardRole.Captain:
+                switch (role2) {
+                    case CardRole.Ambassador:
+                        return get([Images.WinHaruhiNagato, Images.WinHaruhiNagato2][randomInt(0, 1)]);
+                    case CardRole.Contessa:
+                        return get([Images.WinKyonNagato, Images.WinKyonNagato2][randomInt(0, 1)]);
+                }
+                return get([Images.WinNagato, Images.WinNagato2][randomInt(0, 1)]);
+        }
+        return get(Images.LoadingImg);
     }
 }
