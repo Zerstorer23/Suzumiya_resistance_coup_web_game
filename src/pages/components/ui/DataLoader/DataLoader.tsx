@@ -1,4 +1,3 @@
-import {useHistory} from "react-router-dom";
 import {Fragment, useContext, useEffect, useState} from "react";
 import RoomContext, {UpdateType} from "system/context/roomInfo/room-context";
 import {initialiseRoom, joinLobby, loadRoom, registerListeners,} from "system/Database/RoomDatabase";
@@ -25,7 +24,6 @@ export default function DataLoader(props: IProps) {
     const [isLoaded, setStatus] = useState(LoadStatus.init);
     const context = useContext(RoomContext);
     const localCtx = useContext(LocalContext);
-    const history = useHistory();
     ///====LOAD AND LISTEN DB===///
     //https://firebase.google.com/docs/reference/node/firebase.database.Reference#on
     function checkNull<T>(snapshot: Snapshot): [boolean, T] {
@@ -150,14 +148,8 @@ export default function DataLoader(props: IProps) {
     const myId = localCtx.getVal(LocalField.Id);
     useEffect(() => {
         if (myId === null) return;
-        /*        const turn = context.room.game.state.turn;
-                if (turn < 0) {
-                    history.replace(Navigation.Lobby);
-                }*/
         setStatus(LoadStatus.outerSpace);
     }, [myId]);
-    // const finishedLoading = isLoaded === LoadStatus.outerSpace;
-    // const elem = (finishedLoading)?<LoadingPage/>
     return (
         <Fragment>
             <ChatLoader/>
