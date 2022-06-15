@@ -48,10 +48,6 @@ export default function InGame() {
         const res = checkSanity();
         if (!res) return;
         setRoomCode((n) => n++);
-        const alive = DeckManager.countAlivePlayers(ctx);
-        if (alive <= 1) {
-            TransitionManager.pushEndGame(ctx, myId);
-        }
     }, [ctx.room.playerMap.size]);
 
     useEffect(() => {

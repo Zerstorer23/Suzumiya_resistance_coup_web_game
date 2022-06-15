@@ -12,7 +12,7 @@ import useKeyListener, {KeyCode} from "system/hooks/useKeyListener";
 import {InputCursor} from "system/context/localInfo/LocalContextProvider";
 import {useTranslation} from "react-i18next";
 import {formatInsert, insert} from "lang/i18nHelper";
-import {PlayerDbFields, ReferenceManager} from "system/Database/ReferenceManager";
+import {DbFields, PlayerDbFields, ReferenceManager} from "system/Database/ReferenceManager";
 
 
 export default function PlayersPanel() {
@@ -47,6 +47,10 @@ export default function PlayersPanel() {
             const toggleReady = !myEntry.player.isReady;
             const ref = ReferenceManager.getPlayerFieldReference(myEntry.id, PlayerDbFields.PLAYER_isReady);
             ref.set(toggleReady);
+            if (!ctx.room.playerMap.has(ctx.room.header.hostId)) {
+                const newHost = ctx.room.playerList[0];
+                ReferenceManager.updateReference(DbFields.HEADER_hostId, newHost);
+            }
         }
     }
 
