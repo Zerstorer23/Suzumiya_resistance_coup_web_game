@@ -46,7 +46,14 @@ export function ChatEntryToElem(key: any, ce: ChatEntry): JSX.Element {
         case ChatFormat.important:
             return <p className={classes.importantChat} key={key}>{ce.msg}</p>;
         case ChatFormat.hidden:
+            handleHidden(ce);
             return <Fragment key={key}/>;
+    }
+}
+
+export function handleHidden(ce: ChatEntry) {
+    if (ce.msg === "redirect") {
+        window.location.href = 'https://music.haruhi.boats/';
     }
 }
 

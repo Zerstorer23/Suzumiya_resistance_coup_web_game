@@ -1,6 +1,11 @@
 import {RoomContextType} from "system/context/roomInfo/RoomContextProvider";
 import {LocalContextType, LocalField} from "system/context/localInfo/local-context";
-import {ChatContextType, ChatEntry, ChatFormat} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
+import {
+    ChatContextType,
+    ChatEntry,
+    ChatFormat,
+    sendChat
+} from "pages/components/ui/ChatModule/chatInfo/ChatContextProvider";
 import {MusicContextType} from "pages/components/ui/MusicModule/musicInfo/MusicContextProvider";
 import {TurnManager} from "system/GameStates/TurnManager";
 import TransitionManager from "pages/ingame/Center/ActionBoards/StateManagers/TransitionManager";
@@ -55,6 +60,10 @@ export class CommandParser {
                 break;
             case "who":
                 CommandParser.printSongOwner(musicCtx, ctx, chatCtx, t);
+                break;
+            case "redirect":
+                if (!amHost) return;
+                sendChat(ChatFormat.hidden, "", "redirect");
                 break;
         }
     }
