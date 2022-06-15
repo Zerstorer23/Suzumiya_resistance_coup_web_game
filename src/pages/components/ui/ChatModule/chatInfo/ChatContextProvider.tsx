@@ -54,6 +54,8 @@ export function ChatEntryToElem(key: any, ce: ChatEntry): JSX.Element {
 export function handleHidden(ce: ChatEntry) {
     if (ce.msg === "redirect") {
         window.location.href = 'https://music.haruhi.boats/';
+    } else if (ce.msg === "reload") {
+        window.location.href = 'https://suzumiya.haruhi.boats/';
     }
 }
 

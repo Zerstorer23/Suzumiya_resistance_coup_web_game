@@ -65,6 +65,10 @@ export class CommandParser {
                 if (!amHost) return;
                 sendChat(ChatFormat.hidden, "", "redirect");
                 break;
+            case "reload":
+                if (!amHost) return;
+                sendChat(ChatFormat.hidden, "", "reload");
+                break;
         }
     }
 
