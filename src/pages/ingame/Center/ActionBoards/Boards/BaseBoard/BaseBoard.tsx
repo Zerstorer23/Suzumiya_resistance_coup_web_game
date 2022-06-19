@@ -86,7 +86,6 @@ export default function BaseBoard(): JSX.Element {
 
     function onPlayerSelected(playerId: string) {
         if (!StateManager.isTargetableAction(savedAction)) return;
-        console.log("Selected player " + playerId);
         TransitionManager.pushCalledState(ctx, savedAction, myEntry, playerId);
     }
 

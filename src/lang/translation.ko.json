@@ -161,5 +161,9 @@
   "_announce_expansion_on": "확장팩 ON",
   "_announce_expansion_off": "확장팩 OFF",
   "_song_owner_announce": "$0님의 선곡입니다.",
+  "_notify_suicide": "$0 님이 도전실패와 암살로 게임에서 사라졌습니다.",
+  "_notify_death_lie": "$0 님이 도전실패로 카드를 1장 잃었습니다.",
+  "_notify_death_coup": "$0 님이 소실로 카드를 1장 잃었습니다.",
+  "_notify_death_assassinate": "$0 님이 암살로 카드를 1장 잃었습니다.",
   "dymmy": "dummy"
 }

@@ -161,5 +161,9 @@
   "_announce_expansion_on": "Expansion pack is ON",
   "_announce_expansion_off": "Expansion pack is OFF",
   "_song_owner_announce": "This is $0's song",
+  "_notify_suicide": "$0 lost the challenge and was assassinated. Is removed from the game.",
+  "_notify_death_lie": "$0 lost a card for losing a challenge",
+  "_notify_death_coup": "$0 lost a card for being couped.",
+  "_notify_death_assassinate": "$0 lost a card by assassination.",
   "dymmy": "dummy"
 }

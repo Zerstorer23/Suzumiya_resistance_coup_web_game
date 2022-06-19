@@ -10,8 +10,20 @@ Manager file that helps decoding deck string into cards
 
 export class DeckManager {
     public static isDead(role: CardRole): boolean {
-        const roleStr = role as string;
-        return roleStr === roleStr.toLowerCase();
+        if (role === undefined || role === null) return true;
+        switch (role) {
+            case CardRole.DEAD_Duke:
+            case CardRole.DEAD_Captain:
+            case CardRole.DEAD_Assassin:
+            case CardRole.DEAD_Contessa:
+            case CardRole.DEAD_Ambassador:
+            case CardRole.DEAD_Inquisitor:
+                return true;
+            default:
+                return false;
+        }
+        /*  const roleStr = role as string;
+          return roleStr === roleStr.toLowerCase();*/
     }
 
     public static playerIsDead(deck: CardDeck, player: Player): boolean {

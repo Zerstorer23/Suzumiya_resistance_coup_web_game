@@ -29,7 +29,7 @@ export default function DiscardBoard(): JSX.Element {
 
     useEffect(() => {
         if (killInfo.nextState === BoardState.CalledAssassinate && numAlive === 2) {
-            handleSuicide(ctx, killInfo.ownerId);
+            handleSuicide(t, ctx, killInfo.ownerId);
             return;
         }
         setMyTimer(ctx, localCtx, () => {
